@@ -1,0 +1,106 @@
+package com.doro.interview.catalog.content;
+
+import com.doro.interview.catalog.content.ContentModels.ContentSet;
+import com.doro.interview.catalog.content.ContentModels.QuestionDoc;
+import com.doro.interview.catalog.content.ContentModels.TopicDoc;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+/**
+ * 저장소의 실제 content/ 를 검사한다(Spring·DB 없이, CI 에서 항상 실행).
+ * 콘텐츠를 늘리거나 줄이면 아래 기대 수를 고치는 커밋이 함께 와야 한다. 일부러 막아 둔 것이다: 질문이 조용히 빠지는 일을 잡는다.
+ */
+class ContentIntegrityTest {
+
+    private static final int QUESTIONS = 159;
+    private static final int TOPICS = 7;
+    private static final int TRICKY = 39;
+
+    private static ContentSet content;
+
+    @BeforeAll
+    static void load() {
+        content = new ContentParser().parse("classpath:content/");
+    }
+
+    @Test
+    void 검증기가_문제를_찾지_못한다() {
+        assertThat(ContentValidator.validate(content)).isEmpty();
+    }
+
+    @Test
+    void 질문_주제_꼬리_질문_수가_기대와_같다() {
+        assertThat(content.categories()).hasSize(1);
+        assertThat(content.topics()).hasSize(TOPICS);
+        assertThat(content.questions()).hasSize(QUESTIONS);
+        assertThat(content.questions().stream().filter(q -> q.tier().equals("TRICKY")).count()).isEqualTo(TRICKY);
+    }
+
+    @Test
+    void 주제별_질문_수가_시드_문서와_같다() {
+        Map<String, Long> perTopic = content.questions().stream()
+                .collect(Collectors.groupingBy(QuestionDoc::topic, Collectors.counting()));
+        assertThat(perTopic).containsExactlyInAnyOrderEntriesOf(Map.of(
+                "ioc-di", 22L, "aop-proxy", 20L, "transaction", 25L, "spring-mvc", 23L,
+                "jpa", 31L, "spring-boot", 21L, "spring-misc", 17L));
+    }
+
+    @Test
+    void slug는_주제접두사_두자리번호_형식이고_주제_안에서_번호가_겹치지_않는다() {
+        Map<String, String> prefixOf = content.topics().stream().collect(Collectors.toMap(TopicDoc::slug, TopicDoc::slugPrefix));
+        Set<String> seen = new HashSet<>();
+        for (QuestionDoc q : content.questions()) {
+            assertThat(q.slug()).matches(prefixOf.get(q.topic()) + "-\\d{2}");
+            assertThat(seen.add(q.slug())).as("중복 slug " + q.slug()).isTrue();
+        }
+    }
+
+    @Test
+    void 제목은_주제_안에서_겹치지_않는다() {
+        for (TopicDoc t : content.topics()) {
+            List<String> titles = content.questions().stream().filter(q -> q.topic().equals(t.slug())).map(QuestionDoc::title).toList();
+            assertThat(titles).as(t.slug()).doesNotHaveDuplicates();
+        }
+    }
+
+    @Test
+    void 본문은_모범_답변으로_시작하고_키워드_줄은_본문에_없다() {
+        for (QuestionDoc q : content.questions()) {
+            assertThat(q.body()).as(q.slug()).startsWith("**모범 답변");
+            assertThat(q.body()).as(q.slug()).doesNotContain("**핵심 키워드**:");
+            assertThat(q.keywords()).as(q.slug()).allSatisfy(k -> assertThat(k).isNotBlank());
+        }
+    }
+
+    @Test
+    void 시드는_모두_초안이고_주제는_비공개다() {
+        assertThat(content.questions()).allSatisfy(q -> {
+            assertThat(q.status()).isEqualTo("DRAFT");
+            assertThat(q.reviewedAt()).isNull();
+        });
+        assertThat(content.topics()).noneMatch(TopicDoc::published);
+    }
+
+    @Test
+    void 주제마다_출처_URL이_있고_기준_버전이_있다() {
+        for (TopicDoc t : content.topics()) {
+            assertThat(t.sources()).as(t.slug()).isNotEmpty();
+            assertThat(t.baseVersion()).as(t.slug()).isNotBlank();
+        }
+    }
+
+    @Test
+    void 문서가_표시_없는_사실을_공식으로_본다고_밝힌_주제만_OFFICIAL이다() {
+        Map<String, String> evidence = content.topics().stream().collect(Collectors.toMap(TopicDoc::slug, TopicDoc::defaultEvidence));
+        assertThat(evidence).containsEntry("aop-proxy", "OFFICIAL").containsEntry("spring-boot", "OFFICIAL");
+        assertThat(evidence.values().stream().filter("OFFICIAL"::equals).count()).isEqualTo(2);
+    }
+}
