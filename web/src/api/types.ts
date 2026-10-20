@@ -233,3 +233,26 @@ export interface ReviewCandidate {
 export interface Prefs {
   includeUnlearnedDefault: boolean;
 }
+
+/** 내 질문(사용자 전용). slug 는 `my-<id>` 이고 체크·시험은 이 slug 로 가리킨다. */
+export interface MineQuestion {
+  id: string;
+  slug: string;
+  title: string;
+  answerText: string;
+  keywords: string[];
+  tier: Tier;
+  sourceLabel: string | null;
+  createdAt: string;
+  updatedAt: string;
+  learned: boolean;
+  reviewCandidate: boolean;
+}
+
+export interface MineDraft {
+  title: string;
+  answerText: string;
+  keywords: string[];
+  tier: Tier;
+  sourceLabel: string | null;
+}

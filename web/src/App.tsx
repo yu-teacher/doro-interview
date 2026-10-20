@@ -5,6 +5,7 @@ import { UpdateNotice } from './components/UpdateNotice';
 import { ConceptPage } from './pages/ConceptPage';
 import { ConceptsPage } from './pages/ConceptsPage';
 import { HomePage } from './pages/HomePage';
+import { MineDetailPage, MinePage } from './pages/MinePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { QuestionPage } from './pages/QuestionPage';
 import { QuizPage } from './pages/QuizPage';
@@ -30,6 +31,8 @@ const PAGES: Record<AppRoutePath, ReactElement> = {
   '/skim': <SkimPage />,
   '/skim/:topic': <SkimTopicPage />,
   '/stats': <StatsPage />,
+  '/mine': <MinePage />,
+  '/mine/:id': <MineDetailPage />,
 };
 
 /** 경로 정의. 시험에서는 MemoryRouter 안에 이것만 넣는다. */
