@@ -23,8 +23,8 @@ class ContentIntegrityTest {
     private static final int QUESTIONS = 188;
     private static final int TOPICS = 8;
     private static final int TRICKY = 44;
-    /** 검수 배치를 커밋할 때마다 올린다(B1: tx-01~08). */
-    private static final int REVIEWED = 8;
+    /** 검수 배치를 커밋할 때마다 올린다(B2: tx-01~14). */
+    private static final int REVIEWED = 14;
 
     private static ContentSet content;
 
