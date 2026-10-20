@@ -96,7 +96,7 @@ function BulkForm({ onSaved, remaining }: { onSaved: () => void; remaining: numb
             ))}
           </select>
         </label>
-        <label className="block min-w-0 flex-1">
+        <label className="block min-w-[12rem] flex-1">
           <span className="font-semibold">출처 표시(모두 같게, 선택)</span>
           <input type="text" value={source} onChange={(e) => setSource(e.target.value)} className={`${FIELD} mt-1`} autoComplete="off" />
         </label>

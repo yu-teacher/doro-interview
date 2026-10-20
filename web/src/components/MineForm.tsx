@@ -178,7 +178,7 @@ export function MineForm({ draftId, initial, submitLabel, onSubmit, onCancel, re
             ))}
           </select>
         </div>
-        <div className="min-w-0 flex-1">
+        <div className="min-w-[12rem] flex-1">
           <label htmlFor={ids.source} className="block font-semibold">
             출처 표시 <span className="text-sm font-normal text-[var(--color-muted)]">(선택, 예: 강사 추천)</span>
           </label>
