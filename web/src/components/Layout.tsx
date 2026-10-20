@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { SERVICE_NAME } from '../config';
 import { conceptsPath, searchPath } from '../routes';
+import { loginUrl, useSession } from '../session/SessionProvider';
 
 function SearchForm() {
   const navigate = useNavigate();
@@ -42,6 +43,38 @@ function SearchForm() {
   );
 }
 
+/** 로그인 상태에 따른 헤더 메뉴. 상태를 알 수 없으면(오류) 추측하지 않고 다시 시도를 안내한다. */
+function SessionNav() {
+  const { state, refresh, logout } = useSession();
+  const { pathname, search } = useLocation();
+  const button = 'inline-flex min-h-11 shrink-0 items-center underline';
+  switch (state.status) {
+    case 'authenticated':
+      return (
+        <button type="button" onClick={() => void logout()} className={button}>
+          로그아웃
+        </button>
+      );
+    case 'anonymous':
+      return (
+        <a href={loginUrl(pathname + search)} className="inline-flex min-h-11 shrink-0 items-center">
+          로그인
+        </a>
+      );
+    case 'error':
+      return (
+        <span role="status" className="inline-flex flex-wrap items-center gap-2 text-sm">
+          로그인 상태를 확인하지 못했습니다.
+          <button type="button" onClick={refresh} className={button}>
+            다시 시도
+          </button>
+        </span>
+      );
+    default:
+      return null;
+  }
+}
+
 /**
  * 화면(경로)이 바뀌면 맨 위로 올리고 본문으로 포커스를 옮긴다. 일반 페이지 이동에서 브라우저가 해 주는 일을 SPA 에서도 하는 것이다
  * (스크린 리더가 새 화면의 시작을 읽고, 키보드 사용자가 헤더를 다시 거치지 않는다). 첫 렌더에서는 하지 않는다.
@@ -72,13 +105,14 @@ export function Layout() {
         본문으로 건너뛰기
       </a>
       <header className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <nav aria-label="주요 메뉴" className="flex items-center gap-4">
-          <Link to="/" className="inline-flex min-h-11 items-center text-lg font-bold no-underline">
+        <nav aria-label="주요 메뉴" className="flex flex-wrap items-center gap-x-4">
+          <Link to="/" className="inline-flex min-h-11 shrink-0 items-center text-lg font-bold no-underline">
             {SERVICE_NAME}
           </Link>
-          <Link to={conceptsPath()} className="inline-flex min-h-11 items-center">
+          <Link to={conceptsPath()} className="inline-flex min-h-11 shrink-0 items-center">
             개념
           </Link>
+          <SessionNav />
         </nav>
         <SearchForm />
       </header>

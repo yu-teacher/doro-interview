@@ -5,6 +5,7 @@ import { AsyncView } from '../components/AsyncView';
 import { QuestionCard } from '../components/QuestionCard';
 import { useApi } from '../hooks/useApi';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { useSessionKey } from '../session/SessionProvider';
 
 function ConceptContent({ detail }: { detail: ConceptDetail }) {
   useDocumentTitle(detail.concept.name);
@@ -24,7 +25,8 @@ function ConceptContent({ detail }: { detail: ConceptDetail }) {
 
 export function ConceptPage() {
   const { concept = '' } = useParams();
-  const { state, reload } = useApi(`concept:${concept}`, (signal) => fetchConcept(concept, signal));
+  const session = useSessionKey();
+  const { state, reload } = useApi(`concept:${concept}:${session.key}`, (signal) => fetchConcept(concept, signal), session.ready);
   return (
     <AsyncView state={state} reload={reload} notFoundMessage="찾을 수 없는 개념입니다.">
       {(detail) => <ConceptContent detail={detail} />}

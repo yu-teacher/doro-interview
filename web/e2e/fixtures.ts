@@ -22,6 +22,8 @@ function summary(i: number) {
 }
 
 const questions = Array.from({ length: 14 }, (_, i) => summary(i + 1));
+/** 로그인한 사용자의 응답: 질문마다 체크 여부(`learned`)가 붙는다. */
+const questionsLearned = questions.map((q, i) => ({ ...q, learned: i % 3 === 0 }));
 const topicSummary = { slug: 'transaction', name: '트랜잭션과 전파·격리·롤백 규칙, readOnly 와 예외 처리 전체 정리', description: '전파·격리·롤백·읽기 전용', baseVersion: 'Spring Framework 7 / Boot 4', counts: { basic: 5, deep: 5, tricky: 4 } };
 
 const detail = {
@@ -55,21 +57,48 @@ const search = {
 const ok = (data: unknown) => ({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, data }) });
 const fail = (status: number, code: string, message: string) => ({ status, contentType: 'application/json', body: JSON.stringify({ success: false, code, message, status }) });
 
-/** `/interview/api/**` 요청을 가로채 가짜 응답을 준다. 등록하지 않은 주소는 404. */
-export async function installApi(page: Page): Promise<void> {
+export type SessionMode = 'anonymous' | 'authenticated' | 'error';
+
+const LONG_NOTE = `${LONG_TOKEN} 는 TransactionAttributeSource 를 보고 어드바이스를 적용할지 판단한다.\n${'헷갈린 점을 적어 둔 긴 메모입니다. '.repeat(12)}`;
+const progressSummary = {
+  total: 19, learned: 7,
+  topics: [{ topicSlug: 'transaction', total: 14, learned: 5 }, { topicSlug: 'jpa', total: 5, learned: 2 }],
+};
+
+/**
+ * `/interview/api/**` 요청을 가로채 가짜 응답을 준다. 등록하지 않은 주소는 404.
+ * `session` 은 로그인 상태(기본 비로그인): 로그인이면 체크 상태·진도·노트가 같이 나오고, error 면 세션 조회가 실패한다.
+ */
+export async function installApi(page: Page, session: SessionMode = 'anonymous'): Promise<void> {
+  const authenticated = session === 'authenticated';
   await page.route(/\/interview\/api\//, async (route) => {
     const url = new URL(route.request().url());
     const path = url.pathname.replace('/interview/api', '');
     const q = url.searchParams.get('q');
+    const method = route.request().method();
     switch (true) {
+      case path === '/v1/bff/session':
+        return session === 'error'
+          ? route.fulfill(fail(503, 'AUTH-503-02', '로그인 서비스에 연결할 수 없습니다.'))
+          : route.fulfill(ok(authenticated ? { authenticated: true, user: { userId: '11111111-1111-1111-1111-111111111111' } } : { authenticated: false }));
+      case path === '/v1/bff/logout' && method === 'POST':
+        return route.fulfill(ok(null));
+      case path === '/v1/progress/summary':
+        return authenticated ? route.fulfill(ok(progressSummary)) : route.fulfill(fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
+      case path.startsWith('/v1/progress') && method === 'PUT':
+        return route.fulfill(ok({ ok: true }));
+      case path.startsWith('/v1/notes/') && method === 'GET':
+        return route.fulfill(ok({ slug: path.split('/').pop(), body: LONG_NOTE, updatedAt: '2026-10-20T00:00:00Z' }));
+      case path.startsWith('/v1/notes/') && method === 'PUT':
+        return route.fulfill(ok({ slug: path.split('/').pop(), body: LONG_NOTE, updatedAt: '2026-10-20T01:00:00Z' }));
       case path === '/v1/categories':
         return route.fulfill(ok(categories));
       case path === '/v1/topics/transaction':
-        return route.fulfill(ok({ summary: topicSummary, categorySlug: 'spring', categoryName: '스프링', sources: [{ url: 'https://docs.spring.io/spring-framework/reference/data-access/transaction.html', note: null }], questions }));
+        return route.fulfill(ok({ summary: topicSummary, categorySlug: 'spring', categoryName: '스프링', sources: [{ url: 'https://docs.spring.io/spring-framework/reference/data-access/transaction.html', note: null }], questions: authenticated ? questionsLearned : questions }));
       case path === '/v1/topics/boom':
         return route.fulfill({ status: 502, contentType: 'text/html', body: '<html>502 Bad Gateway</html>' });
       case path === '/v1/questions/tx-04':
-        return route.fulfill(ok(detail));
+        return route.fulfill(ok(authenticated ? { ...detail, learned: false } : detail));
       case path === '/v1/concepts':
         return route.fulfill(ok(conceptViews));
       case path === '/v1/concepts/proxy':

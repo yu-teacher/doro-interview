@@ -103,6 +103,45 @@ export async function auditAxe(page: Page): Promise<string[]> {
   return page.evaluate(async () => {
     const axe = (window as unknown as { axe: { run: (ctx: Document, opts: object) => Promise<{ violations: { id: string; help: string; nodes: { target: string[] }[] }[] }> } }).axe;
     const result = await axe.run(document, {});
-    return result.violations.map((v) => `${v.id}: ${v.help} (${v.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(' | ')})`);
+    const violations = result.violations.map((v) => `${v.id}: ${v.help} (${v.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(' | ')})`);
+    return violations.concat(nonTextContrast());
+
+    /**
+     * 글자가 아닌 요소의 대비(WCAG 1.4.11, 3:1). axe 는 이것을 재지 않는다: 진도 막대의 채워진 부분이 바탕(트랙)과 3:1 이상 달라야
+     * 색을 구분하는 사람이 진도를 읽을 수 있다. 숫자(n/m)도 함께 있지만 막대 자체도 기준을 지킨다.
+     */
+    function nonTextContrast(): string[] {
+      const rgb = (css: string): number[] | null => {
+        const m = css.match(/rgba?\(([^)]+)\)/);
+        if (!m) {
+          return null;
+        }
+        const parts = m[1].split(/[ ,/]+/).filter(Boolean).map(Number);
+        return parts.length >= 3 ? parts.slice(0, 3) : null;
+      };
+      const lum = ([r, g, b]: number[]): number => {
+        const f = (c: number) => ((c / 255) <= 0.03928 ? c / 255 / 12.92 : (((c / 255) + 0.055) / 1.055) ** 2.4);
+        return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+      };
+      const problems: string[] = [];
+      for (const bar of Array.from(document.querySelectorAll('[role=progressbar]'))) {
+        const fill = bar.firstElementChild;
+        if (!fill) {
+          continue;
+        }
+        const track = rgb(getComputedStyle(bar).backgroundColor);
+        const fg = rgb(getComputedStyle(fill).backgroundColor);
+        if (!track || !fg) {
+          problems.push(`non-text-contrast: 진도 막대의 색을 읽지 못했다 (${bar.getAttribute('aria-label')})`);
+          continue;
+        }
+        const [a, b] = [lum(track), lum(fg)];
+        const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+        if (ratio < 3) {
+          problems.push(`non-text-contrast: 진도 막대 채움과 바탕의 대비 ${ratio.toFixed(2)}:1 < 3:1 (${bar.getAttribute('aria-label')})`);
+        }
+      }
+      return problems;
+    }
   });
 }

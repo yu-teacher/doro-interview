@@ -85,10 +85,26 @@ describe('URL 쿼리', () => {
     expect(isFiltered(EMPTY_FILTERS)).toBe(false);
   });
 
+  it('내 체크 상태: 서버가 준 learned 로, 또는 낙관적 값(isLearned)으로 거른다', () => {
+    const mine: QuestionSummary[] = [q('a', { learned: true }), q('b', { learned: false }), q('c')];
+    const slugs = (f: Partial<Filters>, isLearned?: (x: QuestionSummary) => boolean) =>
+      filterQuestions(mine, { ...EMPTY_FILTERS, ...f }, isLearned).map((x) => x.slug);
+    expect(slugs({ learned: 'yes' })).toEqual(['a']);
+    expect(slugs({ learned: 'no' })).toEqual(['b', 'c']); // 키가 없는(비로그인) 질문은 아직 안 한 것으로 본다
+    expect(slugs({ learned: 'yes' }, (x) => x.slug === 'b')).toEqual(['b']);
+    expect(slugs({ learned: 'all' })).toEqual(['a', 'b', 'c']);
+  });
+
   it('왕복해도 같다', () => {
-    const f: Filters = { tier: 'DEEP', extraOnly: true, importance: 'ge2', concept: 'proxy', text: '전파 속성' };
+    const f: Filters = { tier: 'DEEP', extraOnly: true, importance: 'ge2', concept: 'proxy', text: '전파 속성', learned: 'no' };
     expect(parseFilters(toSearchParams(f))).toEqual(f);
     expect(isFiltered(f)).toBe(true);
+  });
+
+  it('체크 상태 필터의 알 수 없는 값은 무시한다', () => {
+    expect(parseFilters(new URLSearchParams('ls=maybe')).learned).toBe('all');
+    expect(parseFilters(new URLSearchParams('ls=yes')).learned).toBe('yes');
+    expect(toSearchParams({ ...EMPTY_FILTERS, learned: 'all' }).size).toBe(0);
   });
 
   it('알 수 없는 값은 무시한다', () => {

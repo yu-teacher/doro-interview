@@ -29,3 +29,7 @@ export function topicView(questions: QuestionSummary[], over: Partial<TopicView>
     categorySlug: 'spring', categoryName: '스프링', sources: [{ url: 'https://docs.spring.io/tx', note: null }], questions, ...over,
   };
 }
+
+export const SESSION_URL = '/interview/api/v1/bff/session';
+export const authed = (userId = 'u-1') => ({ authenticated: true, user: { userId } });
+export const anonymous = () => ({ authenticated: false });

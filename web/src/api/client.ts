@@ -16,6 +16,27 @@ export class ApiError extends Error {
   get isNotFound(): boolean {
     return this.status === 404;
   }
+
+  get isUnauthorized(): boolean {
+    return this.status === 401;
+  }
+}
+
+/** 쓰기 요청이 CSRF 검사를 통과하려면 이 서비스의 커스텀 헤더가 있어야 한다(게이트웨이가 확인한다). */
+export const CSRF_HEADER = 'X-Interview-Csrf';
+
+/** 사용자에게 보여 줄 문구. 게이트웨이가 만든 오류(세션·CSRF)는 서버 문구 대신 하는 일을 알려 주는 말로 바꾼다. */
+export function userMessage(error: ApiError): string {
+  if (error.isUnauthorized) {
+    return '로그인이 필요합니다. 다시 로그인해 주세요.';
+  }
+  if (error.code === 'AUTH-403-03') {
+    return '보안 확인에 실패했습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.';
+  }
+  if (error.code === 'AUTH-503-02') {
+    return '로그인 서비스에 잠시 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.';
+  }
+  return error.message;
 }
 
 type Params = Record<string, string | number | undefined>;
@@ -47,11 +68,27 @@ function isEnvelope(value: unknown): value is ApiEnvelope<unknown> {
   return typeof value === 'object' && value !== null && typeof (value as { success?: unknown }).success === 'boolean';
 }
 
-/** GET 하고 표준 응답 봉투에서 `data` 를 꺼낸다. 취소(AbortError)는 그대로 던진다. */
-export async function apiGet<T>(path: string, params?: Params, signal?: AbortSignal): Promise<T> {
+type Method = 'GET' | 'PUT' | 'POST';
+
+interface Options {
+  params?: Params;
+  body?: unknown;
+  signal?: AbortSignal;
+}
+
+async function request<T>(method: Method, path: string, { params, body, signal }: Options): Promise<T> {
+  const headers: Record<string, string> = { Accept: 'application/json' };
+  const init: RequestInit = { method, headers, signal };
+  if (method !== 'GET') {
+    headers[CSRF_HEADER] = '1';
+  }
+  if (body !== undefined) {
+    headers['Content-Type'] = 'application/json';
+    init.body = JSON.stringify(body);
+  }
   let response: Response;
   try {
-    response = await fetch(buildUrl(path, params), { headers: { Accept: 'application/json' }, signal });
+    response = await fetch(buildUrl(path, params), init);
   } catch (e) {
     if (e instanceof DOMException && e.name === 'AbortError') {
       throw e;
@@ -59,15 +96,25 @@ export async function apiGet<T>(path: string, params?: Params, signal?: AbortSig
     throw new ApiError(0, 'NETWORK', '서버에 연결할 수 없습니다. 네트워크를 확인하고 다시 시도해 주세요.');
   }
 
-  const body = parseJson(await response.text());
-  if (!isEnvelope(body)) {
+  const parsed = parseJson(await response.text());
+  if (!isEnvelope(parsed)) {
     if (response.status >= 500) {
       throw new ApiError(response.status, 'UPSTREAM', '서버가 응답하지 않습니다. 잠시 후 다시 시도해 주세요.');
     }
     throw new ApiError(response.status, 'BAD_RESPONSE', '서버 응답을 읽을 수 없습니다.');
   }
-  if (!response.ok || !body.success) {
-    throw new ApiError(body.status ?? response.status, body.code ?? 'UNKNOWN', body.message ?? '요청을 처리하지 못했습니다.');
+  if (!response.ok || !parsed.success) {
+    throw new ApiError(parsed.status ?? response.status, parsed.code ?? 'UNKNOWN', parsed.message ?? '요청을 처리하지 못했습니다.');
   }
-  return body.data as T;
+  return parsed.data as T;
+}
+
+/** GET 하고 표준 응답 봉투에서 `data` 를 꺼낸다. 취소(AbortError)는 그대로 던진다. */
+export function apiGet<T>(path: string, params?: Params, signal?: AbortSignal): Promise<T> {
+  return request<T>('GET', path, { params, signal });
+}
+
+/** 상태를 바꾸는 요청(PUT/POST): CSRF 헤더를 자동으로 붙이고 JSON 본문을 보낸다. */
+export function apiSend<T>(method: 'PUT' | 'POST', path: string, body?: unknown, signal?: AbortSignal): Promise<T> {
+  return request<T>(method, path, { body, signal });
 }

@@ -43,6 +43,8 @@ export interface QuestionSummary {
   importance: number | null;
   /** 개념 slug(사전 순서) */
   concepts: string[];
+  /** 로그인했을 때만 있다(체크했는지). 비로그인 응답에는 키가 없다. */
+  learned?: boolean;
 }
 
 export interface SourceView {
@@ -99,6 +101,8 @@ export interface QuestionDetail {
   followups: QuestionRef[];
   prerequisites: QuestionRef[];
   related: QuestionRef[];
+  /** 로그인했을 때만 있다 */
+  learned?: boolean;
 }
 
 export interface ConceptView {
@@ -124,4 +128,38 @@ export interface SearchResult {
   words: string[];
   total: number;
   hits: SearchHit[];
+}
+
+export interface SessionInfo {
+  authenticated: boolean;
+  user?: { userId: string };
+}
+
+export interface TopicProgress {
+  topicSlug: string;
+  total: number;
+  learned: number;
+}
+
+export interface ProgressSummary {
+  total: number;
+  learned: number;
+  topics: TopicProgress[];
+}
+
+export interface LearnedResult {
+  slug: string;
+  learned: boolean;
+}
+
+export interface TopicLearnedResult {
+  topic: string;
+  learned: boolean;
+  count: number;
+}
+
+export interface NoteInfo {
+  slug: string;
+  body: string | null;
+  updatedAt: string | null;
 }

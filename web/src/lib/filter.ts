@@ -3,6 +3,9 @@ import type { QuestionSummary, Tier } from '../api/types';
 /** 주제 화면의 필터. URL 쿼리와 오가므로 값은 문자열로 직렬화된다(공유·뒤로 가기가 동작한다). */
 export type ImportanceFilter = 'all' | '3' | 'ge2' | 'none';
 
+/** 내 체크 상태: 전체 / 학습함 / 아직 안 함(로그인했을 때만 쓴다) */
+export type LearnedFilter = 'all' | 'yes' | 'no';
+
 export interface Filters {
   tier: Tier | 'ALL';
   extraOnly: boolean;
@@ -10,23 +13,27 @@ export interface Filters {
   /** 개념 slug, 없으면 빈 문자열 */
   concept: string;
   text: string;
+  learned: LearnedFilter;
 }
 
-export const EMPTY_FILTERS: Filters = { tier: 'ALL', extraOnly: false, importance: 'all', concept: '', text: '' };
+export const EMPTY_FILTERS: Filters = { tier: 'ALL', extraOnly: false, importance: 'all', concept: '', text: '', learned: 'all' };
 
 const TIER_VALUES = new Set<string>(['BASIC', 'DEEP', 'TRICKY']);
 const IMPORTANCE_VALUES = new Set<string>(['all', '3', 'ge2', 'none']);
+const LEARNED_VALUES = new Set<string>(['all', 'yes', 'no']);
 
 /** URL 쿼리에서 필터를 읽는다. 알 수 없는 값은 무시하고 기본값을 쓴다. */
 export function parseFilters(params: URLSearchParams): Filters {
   const tier = params.get('tier') ?? '';
   const importance = params.get('imp') ?? '';
+  const learned = params.get('ls') ?? '';
   return {
     tier: TIER_VALUES.has(tier) ? (tier as Tier) : 'ALL',
     extraOnly: params.get('extra') === '1',
     importance: IMPORTANCE_VALUES.has(importance) ? (importance as ImportanceFilter) : 'all',
     concept: params.get('concept') ?? '',
     text: (params.get('q') ?? '').slice(0, 100),
+    learned: LEARNED_VALUES.has(learned) ? (learned as LearnedFilter) : 'all',
   };
 }
 
@@ -47,6 +54,9 @@ export function toSearchParams(filters: Filters): URLSearchParams {
   }
   if (filters.text.trim()) {
     params.set('q', filters.text.trim());
+  }
+  if (filters.learned !== 'all') {
+    params.set('ls', filters.learned);
   }
   return params;
 }
@@ -69,7 +79,12 @@ function matchesImportance(importance: number | null, filter: ImportanceFilter):
 }
 
 /** 질문 목록에 필터를 적용한다(서버가 준 순서를 유지한다). 글 검색은 제목과 키워드에서 대소문자 없이 부분 일치, 단어는 모두 있어야 한다. */
-export function filterQuestions(questions: QuestionSummary[], filters: Filters): QuestionSummary[] {
+export function filterQuestions(
+  questions: QuestionSummary[],
+  filters: Filters,
+  /** 체크 상태 조회(낙관적 갱신이 반영된 값). 없으면 서버가 준 `learned` 를 쓴다. */
+  isLearned: (q: QuestionSummary) => boolean = (q) => q.learned === true,
+): QuestionSummary[] {
   const words = filters.text.trim().toLowerCase().split(/\s+/).filter(Boolean);
   return questions.filter((q) => {
     if (filters.tier !== 'ALL' && q.tier !== filters.tier) {
@@ -84,6 +99,9 @@ export function filterQuestions(questions: QuestionSummary[], filters: Filters):
     if (filters.concept && !q.concepts.includes(filters.concept)) {
       return false;
     }
+    if (filters.learned !== 'all' && isLearned(q) !== (filters.learned === 'yes')) {
+      return false;
+    }
     if (words.length > 0) {
       const haystack = (q.title + ' ' + q.keywords.join(' ')).toLowerCase();
       return words.every((w) => haystack.includes(w));
@@ -93,8 +111,12 @@ export function filterQuestions(questions: QuestionSummary[], filters: Filters):
 }
 
 /** tier 탭에 보여 줄 개수: tier 를 뺀 나머지 필터를 적용한 결과의 tier 별 개수. */
-export function tierCounts(questions: QuestionSummary[], filters: Filters): Record<Tier | 'ALL', number> {
-  const rest = filterQuestions(questions, { ...filters, tier: 'ALL' });
+export function tierCounts(
+  questions: QuestionSummary[],
+  filters: Filters,
+  isLearned?: (q: QuestionSummary) => boolean,
+): Record<Tier | 'ALL', number> {
+  const rest = filterQuestions(questions, { ...filters, tier: 'ALL' }, isLearned);
   return {
     ALL: rest.length,
     BASIC: rest.filter((q) => q.tier === 'BASIC').length,

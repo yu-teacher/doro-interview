@@ -8,6 +8,7 @@ import { QuestionPage } from './pages/QuestionPage';
 import { SearchPage } from './pages/SearchPage';
 import { TopicPage } from './pages/TopicPage';
 import { BASE_PATH } from './config';
+import { SessionProvider } from './session/SessionProvider';
 
 /** 경로 정의. 시험에서는 MemoryRouter 안에 이것만 넣는다. */
 export function AppRoutes() {
@@ -29,7 +30,9 @@ export function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter basename={BASE_PATH}>
-      <AppRoutes />
+      <SessionProvider>
+        <AppRoutes />
+      </SessionProvider>
     </BrowserRouter>
   );
 }

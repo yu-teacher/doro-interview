@@ -5,6 +5,7 @@ import { AsyncView } from '../components/AsyncView';
 import { QuestionCard } from '../components/QuestionCard';
 import { useApi } from '../hooks/useApi';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { useSessionKey } from '../session/SessionProvider';
 
 function Results({ q, result }: { q: string; result: SearchResult }) {
   useDocumentTitle(`‘${q}’ 검색`);
@@ -34,8 +35,11 @@ export function SearchPage() {
   const [params] = useSearchParams();
   const q = (params.get('q') ?? '').trim();
   useDocumentTitle(q ? null : '검색');
-  const { state, reload } = useApi(`search:${q}`, (signal) =>
-    q ? searchQuestions(q, undefined, signal) : Promise.resolve({ words: [], total: 0, hits: [] } satisfies SearchResult),
+  const session = useSessionKey();
+  const { state, reload } = useApi(
+    `search:${q}:${session.key}`,
+    (signal) => (q ? searchQuestions(q, undefined, signal) : Promise.resolve({ words: [], total: 0, hits: [] } satisfies SearchResult)),
+    session.ready,
   );
   if (!q) {
     return (
