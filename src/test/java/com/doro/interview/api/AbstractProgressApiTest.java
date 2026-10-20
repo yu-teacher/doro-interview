@@ -94,10 +94,11 @@ abstract class AbstractProgressApiTest extends AbstractAuthTest {
         return node;
     }
 
-    /** 응답 트리에서 learned 키를 모두 지운다. */
+    /** 응답 트리에서 사용자 상태 키(learned, reviewCandidate)를 모두 지운다. */
     JsonNode withoutLearned(JsonNode node) {
         if (node.isObject()) {
             ((ObjectNode) node).remove("learned");
+            ((ObjectNode) node).remove("reviewCandidate");
             node.forEach(this::withoutLearned);
         } else if (node.isArray()) {
             node.forEach(this::withoutLearned);

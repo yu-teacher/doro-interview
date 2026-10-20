@@ -23,46 +23,61 @@ final class CatalogResponses {
     private CatalogResponses() {
     }
 
-    /** {@code learned} 가 null 이면 비로그인, 아니면 그 질문을 체크했는지. */
-    private static Boolean flag(Set<String> learned, String slug) {
-        return learned == null ? null : learned.contains(slug);
+    /** 로그인한 사용자의 질문별 상태: 체크한 질문과 "다시 공부 후보"(체크했고 마지막 시험 결과가 틀림). 비로그인이면 null 로 다룬다. */
+    record UserFlags(Set<String> learned, Set<String> review) {
+        Boolean learned(String slug) {
+            return learned.contains(slug);
+        }
+
+        Boolean review(String slug) {
+            return review.contains(slug);
+        }
+    }
+
+    private static Boolean learnedFlag(UserFlags flags, String slug) {
+        return flags == null ? null : flags.learned(slug);
+    }
+
+    private static Boolean reviewFlag(UserFlags flags, String slug) {
+        return flags == null ? null : flags.review(slug);
     }
 
     record QuestionSummaryResponse(String slug, String topicSlug, String tier, int difficulty, String title, List<String> keywords,
                                    boolean hasExtra, Integer importance, List<String> concepts,
-                                   @JsonInclude(JsonInclude.Include.NON_NULL) Boolean learned) {
-        static QuestionSummaryResponse of(QuestionSummary q, Set<String> learned) {
+                                   @JsonInclude(JsonInclude.Include.NON_NULL) Boolean learned,
+                                   @JsonInclude(JsonInclude.Include.NON_NULL) Boolean reviewCandidate) {
+        static QuestionSummaryResponse of(QuestionSummary q, UserFlags flags) {
             return new QuestionSummaryResponse(q.slug(), q.topicSlug(), q.tier(), q.difficulty(), q.title(), q.keywords(),
-                    q.hasExtra(), q.importance(), q.concepts(), flag(learned, q.slug()));
+                    q.hasExtra(), q.importance(), q.concepts(), learnedFlag(flags, q.slug()), reviewFlag(flags, q.slug()));
         }
 
-        static List<QuestionSummaryResponse> of(List<QuestionSummary> list, Set<String> learned) {
-            return list.stream().map(q -> of(q, learned)).toList();
+        static List<QuestionSummaryResponse> of(List<QuestionSummary> list, UserFlags flags) {
+            return list.stream().map(q -> of(q, flags)).toList();
         }
     }
 
     record TopicResponse(TopicSummary summary, String categorySlug, String categoryName, List<SourceView> sources,
                          List<QuestionSummaryResponse> questions) {
-        static TopicResponse of(TopicView t, Set<String> learned) {
+        static TopicResponse of(TopicView t, UserFlags learned) {
             return new TopicResponse(t.summary(), t.categorySlug(), t.categoryName(), t.sources(),
                     QuestionSummaryResponse.of(t.questions(), learned));
         }
     }
 
     record SearchHitResponse(QuestionSummaryResponse question, String topicName, int score, List<String> matchedIn) {
-        static SearchHitResponse of(SearchHit h, Set<String> learned) {
+        static SearchHitResponse of(SearchHit h, UserFlags learned) {
             return new SearchHitResponse(QuestionSummaryResponse.of(h.question(), learned), h.topicName(), h.score(), h.matchedIn());
         }
     }
 
     record SearchResponse(List<String> words, int total, List<SearchHitResponse> hits) {
-        static SearchResponse of(SearchResult r, Set<String> learned) {
+        static SearchResponse of(SearchResult r, UserFlags learned) {
             return new SearchResponse(r.words(), r.total(), r.hits().stream().map(h -> SearchHitResponse.of(h, learned)).toList());
         }
     }
 
     record ConceptDetailResponse(ConceptView concept, List<QuestionSummaryResponse> questions) {
-        static ConceptDetailResponse of(ConceptDetail d, Set<String> learned) {
+        static ConceptDetailResponse of(ConceptDetail d, UserFlags learned) {
             return new ConceptDetailResponse(d.concept(), QuestionSummaryResponse.of(d.questions(), learned));
         }
     }

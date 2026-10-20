@@ -12,7 +12,9 @@ import com.doro.interview.catalog.SearchQuery;
 import com.doro.interview.common.exception.ErrorCode;
 import com.doro.interview.common.exception.InterviewException;
 import com.doro.interview.common.response.ApiResponse;
+import com.doro.interview.api.CatalogResponses.UserFlags;
 import com.doro.interview.progress.read.ProgressReader;
+import com.doro.interview.quiz.read.QuizStatsReader;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,11 +43,13 @@ public class CatalogController {
     private final CatalogReader reader;
     private final CurrentUser currentUser;
     private final ProgressReader progress;
+    private final QuizStatsReader quizStats;
 
-    public CatalogController(CatalogReader reader, CurrentUser currentUser, ProgressReader progress) {
+    public CatalogController(CatalogReader reader, CurrentUser currentUser, ProgressReader progress, QuizStatsReader quizStats) {
         this.reader = reader;
         this.currentUser = currentUser;
         this.progress = progress;
+        this.quizStats = quizStats;
     }
 
     @GetMapping("/categories")
@@ -62,8 +66,9 @@ public class CatalogController {
     @GetMapping("/questions/{slug}")
     public ApiResponse<QuestionDetailResponse> question(@PathVariable String slug, HttpServletResponse response) {
         var question = requireFound(reader.question(validSlug(slug)));
-        Set<String> learned = learnedAmong(List.of(question.slug()), response);
-        return ApiResponse.cacheable(QuestionDetailResponse.from(question, learned == null ? null : learned.contains(question.slug())));
+        UserFlags flags = learnedAmong(List.of(question.slug()), response);
+        return ApiResponse.cacheable(QuestionDetailResponse.from(question, flags == null ? null : flags.learned(question.slug()),
+                flags == null ? null : flags.review(question.slug())));
     }
 
     @GetMapping("/concepts")
@@ -90,16 +95,20 @@ public class CatalogController {
     }
 
     /**
-     * 로그인한 사용자라면 주어진 질문 중 체크한 것(응답이 사용자별이라 `private` 표시), 비로그인이면 null.
+     * 로그인한 사용자라면 주어진 질문 중 체크한 것과 "다시 공부 후보"(응답이 사용자별이라 `private` 표시), 비로그인이면 null.
      * 사용자 행은 만들지 않는 읽기 전용 조회다(행은 첫 쓰기에서 생긴다).
      */
-    private Set<String> learnedAmong(List<String> slugs, HttpServletResponse response) {
+    private UserFlags learnedAmong(List<String> slugs, HttpServletResponse response) {
         Optional<UUID> user = currentUser.id();
         if (user.isEmpty()) {
             return null;
         }
         response.setHeader("Cache-Control", "private, no-cache");
-        return progress.learnedAmong(user.get(), slugs);
+        Set<String> learned = progress.learnedAmong(user.get(), slugs);
+        // 후보 = 체크했고 마지막 출제 결과가 틀림. 체크 해제하면 후보에서도 빠진다.
+        Set<String> review = new java.util.HashSet<>(quizStats.lastWrongAmong(user.get(), slugs));
+        review.retainAll(learned);
+        return new UserFlags(learned, Set.copyOf(review));
     }
 
     private static String validSlug(String slug) {

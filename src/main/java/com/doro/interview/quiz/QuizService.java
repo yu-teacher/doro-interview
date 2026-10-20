@@ -197,6 +197,54 @@ public class QuizService {
         }
     }
 
+    // ------------------------------------------------------------------ 현황·설정
+
+    /** 많이 틀린 질문 한 줄. */
+    public record MissedQuestion(String questionSlug, int missCount, int askCount) {
+    }
+
+    /** 최근 30일의 출제 현황(맞음·틀림·건너뜀은 문항 단위, 세션 수는 시작한 시험 수)과 자주 틀린 질문. */
+    public record Stats(int askedLast30Days, int correctLast30Days, int wrongLast30Days, int skippedLast30Days, int sessionsLast30Days,
+                        List<MissedQuestion> mostMissed) {
+    }
+
+    public static final int MOST_MISSED_LIMIT = 10;
+
+    @Transactional(readOnly = true)
+    public Stats stats(UUID userId) {
+        OffsetDateTime since = toOffset(clock.instant().minus(java.time.Duration.ofDays(30)));
+        int[] counts = new int[3]; // correct, wrong, skipped
+        jdbc.query("""
+                SELECT i.result, count(*) AS n FROM quiz_item i JOIN quiz_session s ON s.id = i.session_id
+                WHERE s.user_id = ? AND i.result IS NOT NULL AND i.answered_at >= ? GROUP BY i.result""", rs -> {
+            int n = rs.getInt("n");
+            switch (rs.getString("result")) {
+                case "CORRECT" -> counts[0] = n;
+                case "WRONG" -> counts[1] = n;
+                default -> counts[2] = n;
+            }
+        }, userId, since);
+        int sessions = jdbc.queryForObject("SELECT count(*) FROM quiz_session WHERE user_id = ? AND started_at >= ?", Integer.class, userId, since);
+        List<MissedQuestion> missed = jdbc.query("""
+                SELECT question_slug, miss_count, ask_count FROM quiz_question_stats WHERE user_id = ? AND miss_count > 0
+                ORDER BY miss_count DESC, last_asked_at DESC, question_slug LIMIT ?""",
+                (rs, n) -> new MissedQuestion(rs.getString("question_slug"), rs.getInt("miss_count"), rs.getInt("ask_count")), userId, MOST_MISSED_LIMIT);
+        return new Stats(counts[0] + counts[1], counts[0], counts[1], counts[2], sessions, List.copyOf(missed));
+    }
+
+    /** "미학습 포함" 의 기본값(설정이 없으면 꺼짐). */
+    @Transactional(readOnly = true)
+    public boolean includeUnlearnedDefault(UUID userId) {
+        return jdbc.queryForList("SELECT include_unlearned_default FROM user_pref WHERE user_id = ?", Boolean.class, userId).stream().findFirst().orElse(false);
+    }
+
+    @Transactional
+    public void setIncludeUnlearnedDefault(UUID userId, boolean value) {
+        jdbc.update("""
+                INSERT INTO user_pref (user_id, include_unlearned_default) VALUES (?, ?)
+                ON CONFLICT (user_id) DO UPDATE SET include_unlearned_default = EXCLUDED.include_unlearned_default""", userId, value);
+    }
+
     // ------------------------------------------------------------------ 내부
 
     private Optional<UUID> ownerOf(UUID sessionId) {
