@@ -8,7 +8,7 @@ keywords: ["RDB 시점 스냅샷", "AOF 쓰기 로그", "마지막 스냅샷 이
 has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
-sources: ["https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/"]
+sources: ["https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/", "https://raw.githubusercontent.com/redis/redis/7.4/redis.conf"]
 concepts: [redis]
 importance: 2
 links: [{to: "cch-10", kind: FOLLOWUP}, {to: "osm-13", kind: RELATED}]
