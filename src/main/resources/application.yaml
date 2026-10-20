@@ -1,0 +1,44 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: doro-interview
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:25433}/${DB_NAME:service_interview}
+    username: ${DB_USER:doro_admin}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    table: interview_schema_history
+    locations: classpath:db/migration
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      # 의존 서비스 상세는 인증 없이 노출하지 않는다. 상태(UP/DOWN)만 공개된다.
+      show-details: when-authorized
+
+logging:
+  level:
+    root: INFO
+    com.doro.interview: ${LOG_LEVEL_APP:INFO}
+
+# 질문 콘텐츠(content/ 디렉터리, jar 의 classpath:content/)를 시작할 때 DB 에 반영한다(docs/M0-PLAN.md S4).
+interview:
+  content:
+    location: classpath:content/
+    # true: 콘텐츠 파일이 깨져 있으면 기동을 막는다(반쯤 반영된 콘텐츠로 뜨지 않게). 급할 때만 false.
+    fail-fast: ${INTERVIEW_CONTENT_FAIL_FAST:true}

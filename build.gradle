@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.1.0'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.doro'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << '-parameters'
+}
+
+dependencies {
+    // Spring Boot Starters. 로그인(Doro SDK)·Guard 는 M2 에서 붙인다.
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Database & Flyway
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-database-postgresql'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// 질문 콘텐츠(content/)를 jar 의 classpath:content/ 로 함께 싣는다. 서버에 파일을 따로 두지 않는다.
+processResources {
+    from('content') {
+        into 'content'
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    maxHeapSize = '1024m'
+    // 테스트는 scripts/ci-test.sh 가 올리는 격리 Postgres 를 쓴다(개발·운영 DB 가 아니다). 비밀번호는 테스트 전용 값이다.
+    environment 'DB_PASSWORD', System.getenv('DB_PASSWORD') ?: 'ci-only-password'
+    environment 'DB_PORT', System.getenv('DB_PORT') ?: System.getenv('CI_DB_PORT') ?: '25433'
+}
+
+jar {
+    enabled = false
+}
