@@ -79,7 +79,7 @@
 
 | 모듈 | 소유 | 쓰는 주체 |
 |---|---|---|
-| `account` (사용자) | 이 서비스 안의 **사용자 사본** `interview_user(user_id, nickname, created_at, deleted_at)`, 현재 사용자 확인(`GET /api/v1/bff/session`), 탈퇴 동기화 | 시스템(첫 session 조회, 탈퇴 동기화) |
+| `account` (사용자) | 이 서비스 안의 **사용자 사본** `interview_user(user_id, created_at, deleted_at)`, 현재 사용자 확인(`GET /api/v1/bff/session`), 탈퇴 동기화 | 시스템(첫 session 조회, 탈퇴 동기화) |
 | `catalog` (사전) | `category`, `topic`, `question`, `question_link`, 검수 상태 | 편집자(콘텐츠 파일) |
 | `progress` (학습 진도) | 학습 완료 체크(`user_progress`), 내 노트(`my_note`) | 학습자 본인 |
 | `quiz` (시험) | `quiz_session`, `quiz_item`, `quiz_question_stats`, 출제 알고리즘 | 학습자 + 시스템 |
@@ -106,12 +106,12 @@ DB `service_interview`, 서비스 전용 Postgres 역할(도로 DB 계정 분리
 - 인덱스: `(topic_slug, tier, sort)`. 검색은 `ILIKE` 부분 일치(제목·키워드·본문, 다중 단어 AND)로 하고 **pg_trgm 은 쓰지 않는다**: 159행, 합성 10,000행에서도 6ms 였다(M1-PLAN D1). 행이 수천을 넘거나 지연이 문제될 때 도입한다.
 
 **개인별 학습 상태**
-- `user_progress(user_id, question_id, learned_at, PK(user_id, question_id))` — **행이 있으면 "완전히 학습함", 없으면 미학습.** 체크하면 행 생성, 해제하면 행 삭제(PUT 으로 상태 지정, 멱등). 진도가 소유하는 사실은 이것뿐이다.
+- `user_progress(user_id, question_slug, learned_at, PK(user_id, question_slug))` — **행이 있으면 "완전히 학습함", 없으면 미학습.** 체크하면 행 생성, 해제하면 행 삭제(PUT 으로 상태 지정, 멱등). 진도가 소유하는 사실은 이것뿐이다.
 - `quiz_question_stats(user_id, question_id, ask_count, miss_count, last_asked_at, last_result[CORRECT|WRONG], PK(user_id, question_id))` — **시험이 소유하는 통계.** 가중 랜덤과 "다시 공부 후보" 표시의 원본이다.
 - `quiz_session(id, user_id, scope JSONB[categories,topics,tiers,pool], planned_count, started_at, finished_at)`
 - `quiz_item(session_id, seq, question_id, result[CORRECT|WRONG|SKIPPED], seconds, answer_text NULL)` — 세션 기록.
 - `user_pref(user_id PK, include_unlearned_default BOOL 기본 false)`
-- `my_note(user_id, question_id, body, updated_at)` — **일반 텍스트**로만 저장·표시(XSS 면적 제거). 길이 상한.
+- `my_note(user_id, question_slug, body, updated_at)` — **일반 텍스트**로만 저장·표시(XSS 면적 제거). 길이 상한.
 - 사용자 사본 `interview_user` 는 `account` 모듈 소유(§6.0). 위 모든 `user_id` 는 IAM 주체 id이며 외래키는 걸지 않는다.
 
 규칙
