@@ -83,6 +83,9 @@ class RealContentLoadTest {
     @Test
     void 코드_블록과_보충_표기가_DB에도_그대로_있다() {
         assertThat(count("select count(*) from question where answer_md like '%```%'")).isPositive();
-        assertThat(count("select count(*) from question where has_extra")).isEqualTo(count("select count(*) from question where answer_md like '%(보충)%'"));
+        // has_extra 의 정의: 코드 블록·인라인 코드 밖에 (보충) 이 있다(화면의 보충 배지와 같은 기준). 모든 질문이 이를 지킨다.
+        jdbc.queryForList("select slug, has_extra, answer_md from question").forEach(row ->
+                assertThat(row.get("has_extra")).as(String.valueOf(row.get("slug")))
+                        .isEqualTo(ExtraMark.present((String) row.get("answer_md"))));
     }
 }

@@ -152,6 +152,12 @@ class ConvertTest(unittest.TestCase):
         self.assertEqual(read_front(self.topic_dir() / "smp-01.md")[0]["has_extra"], "false")
         self.assertEqual(read_front(self.topic_dir() / "smp-02.md")[0]["has_extra"], "true")
 
+    def test_코드_안과_인라인_코드_안의_보충은_has_extra가_아니다(self):
+        self.assertFalse(cs.has_extra_mark("**모범 답변**\n답.\n\n```yaml\n# 설정 (보충): x\n```\n"))
+        self.assertFalse(cs.has_extra_mark("**모범 답변**\n답. `(보충)` 은 코드다.\n"))
+        self.assertTrue(cs.has_extra_mark("**모범 답변**\n답.\n\n```yaml\na: 1\n```\n(보충) 코드 밖.\n"))
+        self.assertTrue(cs.has_extra_mark("**모범 답변**\n답.\n\n- (보충) 글머리\n"))
+
     def test_난이도는_tier로_정해진다(self):
         self.run_convert()
         tiers = {read_front(p)[0]["tier"]: read_front(p)[0]["difficulty"] for p in self.topic_dir().glob("*.md")}

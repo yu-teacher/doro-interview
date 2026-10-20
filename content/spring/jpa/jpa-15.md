@@ -5,7 +5,7 @@ tier: DEEP
 difficulty: 2
 title: "N+1 문제란 무엇이고 어떻게 해결하나요?"
 keywords: ["N+1", "fetch join", "@EntityGraph", "batch size", "subselect", "EAGER는 해결책 아님"]
-has_extra: true
+has_extra: false
 status: DRAFT
 ---
 **모범 답변 (30~60초)**

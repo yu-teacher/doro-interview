@@ -96,8 +96,8 @@ public final class ContentValidator {
             }
             check(!com.doro.interview.catalog.AnswerSplitter.split(q.body()).spokenAnswer().isBlank(), problems, at,
                     "본문은 '**모범 답변' 줄 다음에 답변 문단이 있어야 한다");
-            check(q.hasExtra() == q.body().contains("(보충)"), problems, at,
-                    "has_extra(" + q.hasExtra() + ")가 본문의 (보충) 표기와 어긋난다");
+            check(q.hasExtra() == ExtraMark.present(q.body()), problems, at,
+                    "has_extra(" + q.hasExtra() + ")가 본문의 (보충) 표기(코드 블록·인라인 코드 밖)와 어긋난다");
         }
 
         checkCycles("FOLLOWUP", set.questions(), problems);

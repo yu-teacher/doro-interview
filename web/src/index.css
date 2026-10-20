@@ -57,3 +57,28 @@ a {
 code, pre {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
+
+/* 코드 하이라이트: 외부 테마 없이 토큰만 정의한다(라이트·다크 모두 대비 4.5:1 이상). */
+:root {
+  --hl-keyword: #7c2d12;
+  --hl-string: #166534;
+  --hl-comment: #475569;
+  --hl-number: #1e40af;
+  --hl-title: #6b21a8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hl-keyword: #fdba74;
+    --hl-string: #86efac;
+    --hl-comment: #94a3b8;
+    --hl-number: #93c5fd;
+    --hl-title: #d8b4fe;
+  }
+}
+
+.hljs-keyword, .hljs-selector-tag, .hljs-literal, .hljs-built_in { color: var(--hl-keyword); }
+.hljs-string, .hljs-regexp, .hljs-attr, .hljs-meta .hljs-string { color: var(--hl-string); }
+.hljs-comment, .hljs-quote { color: var(--hl-comment); font-style: italic; }
+.hljs-number, .hljs-symbol { color: var(--hl-number); }
+.hljs-title, .hljs-title.class_, .hljs-title.function_, .hljs-meta, .hljs-type, .hljs-variable { color: var(--hl-title); }

@@ -244,9 +244,22 @@ def assign_slugs(questions: list[Question], prefix: str, existing: dict[str, str
     return sorted(slug for title, slug in existing.items() if title not in set(titles))
 
 
+def has_extra_mark(body: str) -> bool:
+    """has_extra 의 정의: 코드 블록·인라인 코드 **밖**에 `(보충)` 표기가 있다(화면이 코드 안의 표기는 배지로 바꾸지 않는다)."""
+    prose: list[str] = []
+    fence = False
+    for line in body.replace("\r\n", "\n").split("\n"):
+        if line.lstrip().startswith("```"):
+            fence = not fence
+            continue
+        if not fence:
+            prose.append(line)
+    return "(보충)" in re.sub(r"`[^`\n]*`", "", "\n".join(prose))
+
+
 def render_question(item: Question, topic: TopicSpec) -> str:
     keywords = ", ".join(q(k) for k in item.keywords)
-    has_extra = "(보충)" in item.body
+    has_extra = has_extra_mark(item.body)
     return (
         "---\n"
         f"slug: {q(item.slug)}\n"
