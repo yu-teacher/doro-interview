@@ -26,11 +26,11 @@ function QuestionContent({ q }: { q: QuestionDetail }) {
   return (
     <article>
       <nav aria-label="경로" className="mb-3 text-sm">
-        <Link to="/" className="inline-flex min-h-11 items-center">
+        <Link to="/" className="inline-flex min-h-11 min-w-6 items-center">
           처음
         </Link>
         <span aria-hidden="true"> › </span>
-        <Link to={topicPath(q.topicSlug)} className="inline-flex min-h-11 items-center">
+        <Link to={topicPath(q.topicSlug)} className="inline-flex min-h-11 min-w-6 items-center">
           {q.topicName}
         </Link>
       </nav>

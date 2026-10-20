@@ -18,3 +18,9 @@ if (typeof HTMLDialogElement !== 'undefined') {
     };
   }
 }
+
+// 비동기 질의(findBy·waitFor)의 기본 제한 1초는 CI·병렬 실행에서 가끔 모자란다. 느린 환경의 오탐을 줄이려고 늘린다(통과하는 시험은 그대로 빠르다).
+if (typeof window !== 'undefined') {
+  const { configure } = await import('@testing-library/dom');
+  configure({ asyncUtilTimeout: 5000 });
+}

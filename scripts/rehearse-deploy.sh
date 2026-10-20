@@ -97,7 +97,8 @@ assert_eq "$(docker exec "$PG" psql -U "$PG_USER" -d postgres -tAc "select count
 out="$(setup --apply)"
 assert_eq "$(docker exec "$PG" psql -U "$PG_USER" -d postgres -tAc "select count(*) from pg_database where datname='service_interview'")" 1 "apply 가 DB 를 만들었다"
 assert_not_contains "$out" "$PG_PASS" "apply 출력에 비밀번호가 없다"
-assert_eq "$(stat -f '%Lp' "$SETUP_DIR/.env" 2>/dev/null || stat -c '%a' "$SETUP_DIR/.env")" 600 ".env 권한은 600 이다"
+# GNU stat(-c)를 먼저 쓴다: 리눅스에서 `stat -f` 는 파일시스템 정보를 여러 줄 출력하고도 성공으로 끝나서 맥용 형식을 먼저 두면 값이 틀어진다
+assert_eq "$(stat -c '%a' "$SETUP_DIR/.env" 2>/dev/null || stat -f '%Lp' "$SETUP_DIR/.env")" 600 ".env 권한은 600 이다"
 grep -q "^DB_USER=$PG_USER$" "$SETUP_DIR/.env" || die ".env 에 DB_USER 가 없다"
 grep -q "^DB_PASSWORD=$PG_PASS$" "$SETUP_DIR/.env" || die ".env 에 DB_PASSWORD 가 없다"
 before="$(shasum "$SETUP_DIR/.env" | cut -d' ' -f1)"
