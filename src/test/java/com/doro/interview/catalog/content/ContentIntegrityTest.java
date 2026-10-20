@@ -20,11 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ContentIntegrityTest {
 
-    private static final int QUESTIONS = 556;
-    private static final int TOPICS = 26;
-    private static final int TRICKY = 136;
+    private static final int QUESTIONS = 746;
+    private static final int TOPICS = 35;
+    private static final int TRICKY = 183;
     /** 검수 배치를 커밋할 때마다 올린다(B4: tx-01~25). */
-    private static final int REVIEWED = 556;
+    private static final int REVIEWED = 746;
 
     private static ContentSet content;
 
@@ -40,7 +40,7 @@ class ContentIntegrityTest {
 
     @Test
     void 질문_주제_꼬리_질문_수가_기대와_같다() {
-        assertThat(content.categories()).hasSize(4);
+        assertThat(content.categories()).hasSize(6);
         assertThat(content.topics()).hasSize(TOPICS);
         assertThat(content.questions()).hasSize(QUESTIONS);
         assertThat(content.questions().stream().filter(q -> q.tier().equals("TRICKY")).count()).isEqualTo(TRICKY);
@@ -51,15 +51,18 @@ class ContentIntegrityTest {
         Map<String, Long> perTopic = content.questions().stream()
                 .collect(Collectors.groupingBy(QuestionDoc::topic, Collectors.counting()));
         assertThat(perTopic).containsExactlyInAnyOrderEntriesOf(Map.ofEntries(
-                Map.entry("ioc-di", 27L), Map.entry("aop-proxy", 20L), Map.entry("transaction", 25L),
-                Map.entry("spring-mvc", 23L), Map.entry("jpa", 37L), Map.entry("spring-boot", 21L),
-                Map.entry("spring-misc", 17L), Map.entry("spring-security", 18L),
-                Map.entry("java-lang", 21L), Map.entry("java-oop", 20L), Map.entry("java-collections", 20L),
-                Map.entry("java-stream", 21L), Map.entry("java-concurrency", 21L), Map.entry("java-jvm", 20L),
-                Map.entry("db-basics", 21L), Map.entry("db-index", 20L), Map.entry("db-transaction", 20L),
-                Map.entry("db-lock", 20L), Map.entry("db-tuning", 21L), Map.entry("db-design", 22L),
-                Map.entry("cs-datastructure", 20L), Map.entry("cs-algorithm", 20L), Map.entry("cs-network", 20L),
-                Map.entry("cs-web", 21L), Map.entry("cs-os-process", 20L), Map.entry("cs-os-memory", 20L)));
+                Map.entry("cs-algorithm", 20L), Map.entry("cs-datastructure", 20L), Map.entry("cs-network", 20L),
+                Map.entry("cs-os-memory", 20L), Map.entry("cs-os-process", 20L), Map.entry("cs-web", 21L),
+                Map.entry("db-basics", 21L), Map.entry("db-cache", 22L), Map.entry("db-design", 22L),
+                Map.entry("db-index", 20L), Map.entry("db-lock", 20L), Map.entry("db-transaction", 20L),
+                Map.entry("db-tuning", 21L), Map.entry("design-distributed", 24L), Map.entry("design-pattern", 25L),
+                Map.entry("design-principles", 16L), Map.entry("dev-build", 21L), Map.entry("dev-cicd", 20L),
+                Map.entry("dev-docker", 20L), Map.entry("dev-git", 22L), Map.entry("dev-test", 20L),
+                Map.entry("java-collections", 20L), Map.entry("java-concurrency", 21L), Map.entry("java-jvm", 20L),
+                Map.entry("java-lang", 21L), Map.entry("java-oop", 20L), Map.entry("java-stream", 21L),
+                Map.entry("aop-proxy", 20L), Map.entry("ioc-di", 27L), Map.entry("jpa", 37L),
+                Map.entry("spring-boot", 21L), Map.entry("spring-misc", 17L), Map.entry("spring-mvc", 23L),
+                Map.entry("spring-security", 18L), Map.entry("transaction", 25L)));
     }
 
     @Test
@@ -97,7 +100,7 @@ class ContentIntegrityTest {
             else assertThat(q.reviewedAt()).as(q.slug()).isNull();
         });
         assertThat(content.questions().stream().filter(q -> q.status().equals("REVIEWED")).count()).isEqualTo(REVIEWED);
-        // 공개 주제는 모든 질문이 REVIEWED 여야 한다(로더 검증기가 강제). 1차 콘텐츠는 26개 주제 전부 공개다.
+        // 공개 주제는 모든 질문이 REVIEWED 여야 한다(로더 검증기가 강제). 콘텐츠는 모든 주제가 공개다.
         assertThat(content.topics()).allMatch(TopicDoc::published);
         assertThat(content.questions()).allMatch(q -> q.status().equals("REVIEWED"));
     }
