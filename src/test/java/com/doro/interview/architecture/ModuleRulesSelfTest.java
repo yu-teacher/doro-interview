@@ -26,13 +26,25 @@ class ModuleRulesSelfTest {
     }
 
     @Test
+    void common이_catalog를_쓰는_위반을_잡는다() {
+        assertThatThrownBy(() -> ruleFor("common 모듈은").check(classes))
+                .isInstanceOf(AssertionError.class)
+                .hasMessageContaining("common");
+    }
+
+    @Test
     void 위반_예시가_실제로_존재한다() {
         assertThat(classes.contain("com.doro.interview.architecture.fixture.catalog.BadCatalog")).isTrue();
+        assertThat(classes.contain("com.doro.interview.architecture.fixture.common.BadCommon")).isTrue();
     }
 
     private ArchRule catalogRule() {
+        return ruleFor("catalog 모듈은");
+    }
+
+    private ArchRule ruleFor(String descriptionPrefix) {
         return ModuleRules.all(FIXTURE).stream()
-                .filter(r -> r.getDescription().startsWith("catalog 모듈은"))
+                .filter(r -> r.getDescription().startsWith(descriptionPrefix))
                 .findFirst().orElseThrow();
     }
 }

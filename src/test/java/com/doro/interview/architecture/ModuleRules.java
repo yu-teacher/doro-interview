@@ -11,6 +11,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
  * 규칙이 정말 위반을 잡는지 확인한다(ModuleRulesSelfTest).
  *
  * <pre>
+ * common   -> (없음)   모든 모듈이 common 에 의존할 수 있다(응답 규격·예외)
  * account  -> (없음)
  * catalog  -> (없음)
  * progress -> catalog, account
@@ -20,13 +21,14 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
  */
 final class ModuleRules {
 
-    private static final List<String> MODULES = List.of("account", "catalog", "progress", "quiz", "api");
+    private static final List<String> MODULES = List.of("common", "account", "catalog", "progress", "quiz", "api");
 
     private ModuleRules() {
     }
 
     static List<ArchRule> all(String base) {
         return List.of(
+                forbid(base, "common", "account", "catalog", "progress", "quiz", "api"),
                 forbid(base, "account", "catalog", "progress", "quiz", "api"),
                 forbid(base, "catalog", "account", "progress", "quiz", "api"),
                 forbid(base, "progress", "quiz", "api"),
