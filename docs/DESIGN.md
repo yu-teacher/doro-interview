@@ -82,6 +82,7 @@
 | `account` (사용자) | 이 서비스 안의 **사용자 사본** `interview_user(user_id, created_at, deleted_at)`(닉네임·이메일 없음), 현재 사용자 확인(`GET /api/v1/bff/session`), 탈퇴 동기화(`iam_sync_state`, `AccountDeleted` 이벤트). **Doro SDK 를 아는 유일한 모듈**(`config` 제외, ArchUnit R1) | 시스템(첫 쓰기·session 조회, 탈퇴 동기화) |
 | `catalog` (사전) | `category`, `topic`, `question`, `question_link`, 검수 상태 | 편집자(콘텐츠 파일) |
 | `progress` (학습 진도) | 학습 완료 체크(`user_progress`), 내 노트(`my_note`) | 학습자 본인 |
+| `mine` (내 질문) | `my_question`, 내 질문 읽기 창구 `mine.read`(`MyQuestionReader`, 삭제 이벤트 `MyQuestionDeleted`) | 학습자 본인 |
 | `quiz` (시험) | `quiz_session`, `quiz_item`, `quiz_question_stats`, 출제 알고리즘 | 학습자 + 시스템 |
 
 사용자의 **원본은 Doro IAM**이다. `account`는 로그인 후 첫 `GET /api/v1/bff/session`에서 IAM 주체 id로 사본 행을 만들고(games의 `game_users`와 같은 방식), 영구 탈퇴 시 익명화·삭제 동기화를 맡는다(§10). 비밀번호·이메일·역할 같은 신원 정보는 갖지 않는다. 다른 모듈은 **`user_id`(UUID)** 만 참조하고 `account`의 엔티티를 쓰지 않는다. 학습·시험은 "사람"을 모델링하는 게 아니라 `user_id`에 붙은 기록이다.
@@ -113,6 +114,7 @@ DB `service_interview`, 서비스 전용 Postgres 역할(도로 DB 계정 분리
 - `quiz_item(session_id, seq, question_slug, result NULL|CORRECT|WRONG|SKIPPED, seconds, answer_text NULL ≤2,000자, answered_at, PK(session_id, seq), UNIQUE(session_id, question_slug))` — 세션 기록. **결과는 한 번 정하면 고정**이다(같은 결과를 다시 보내면 변화 없음, 다른 결과는 409).
 - `user_pref(user_id PK, include_unlearned_default BOOL 기본 false)`
 - `my_note(user_id, question_slug, body, updated_at)` — **일반 텍스트**로만 저장·표시(XSS 면적 제거). 길이 상한.
+- `my_question(id UUID — 클라이언트가 만든다, user_id, title ≤200, answer_text ≤4000, keywords TEXT[] ≤10개·각 ≤40, tier, source_label ≤40 NULL, created_at, updated_at)` — **내 질문**(M4): 사용자 한 명만 보는 질문. slug 는 `my-<id>`, 체크(`user_progress`)·시험(`quiz_*`)은 이 slug 로 가리킨다. 사용자당 300개, 전부 일반 텍스트. 공용 응답·검색·진도 분모에는 절대 섞지 않는다.
 - 사용자 사본 `interview_user` 는 `account` 모듈 소유(§6.0). 위 모든 `user_id` 는 IAM 주체 id이며 외래키는 걸지 않는다.
 
 규칙
@@ -151,7 +153,7 @@ DB `service_interview`, 서비스 전용 Postgres 역할(도로 DB 계정 분리
 - 공개(published 주제·닫히지 않은 질문만, 그 외는 404): `GET /api/v1/categories`(주제 포함), `GET /api/v1/topics/{slug}`(질문 요약 목록), `GET /api/v1/questions/{slug}`, `GET /api/v1/search?q&limit`(페이지네이션 없음, limit 기본 30·최대 100, M1-PLAN D2)
 - 로그인 필요(없으면 401), M2 구현: `PUT /api/v1/progress/{slug} {learned}`(멱등), `PUT /api/v1/progress {topic, learned, expectedCount}`(주제 일괄; 확인창에 보여 준 개수와 실제가 다르면 **409**), `GET /api/v1/progress/summary`, `GET/PUT /api/v1/notes/{slug}`(일반 텍스트, 2,000자, 공백뿐이면 삭제). 본문은 정해진 필드만 정확한 JSON 타입으로 받는다(모르는 필드·`"false"` 문자열은 400). 사용자 id 는 토큰에서만 얻고 경로·본문·쿼리에 받지 않는다. 게이트웨이는 쓰기를 `PUT` 만 통과시킨다. 로그인 상태 조회는 `GET /api/v1/bff/session`(로그인 필요 없음, 항상 200).
 - 로그인 필요, M3 구현: **쓰기는 전부 PUT, 세션 id 는 클라이언트가 만든 UUID**(게이트웨이가 쓰기를 PUT 만 통과시키고, 같은 id 로 다시 보내면 같은 세션이라 멱등이다): `PUT /api/v1/quiz/{sessionId} {count, includeUnlearned, categories?, topics?, tiers?, mode?}`(풀이 비면 400 `QUIZ-400-01`), `GET /api/v1/quiz/{sessionId}`, `PUT /api/v1/quiz/{sessionId}/items/{seq} {result, seconds, answerText?}`, `PUT /api/v1/quiz/{sessionId}/finish`, `GET /api/v1/me/stats`(최근 30일), `GET/PUT /api/v1/me/prefs`, `GET /api/v1/review-candidates`. 남의 세션은 404(존재를 알리지 않는다). 질문·주제 응답에는 로그인한 사용자에게만 `reviewCandidate` 가 `learned` 와 같은 방식으로 합쳐진다.
-- 내 질문(M4 계획): `GET /api/v1/mine`, `GET /api/v1/mine/{id}`, `PUT /api/v1/mine/{id}`, `PUT /api/v1/mine/{id}/deleted`, `PUT /api/v1/mine`(일괄). 응답은 `no-store`, 공용 응답에 섞이지 않는다. (편집자 API 는 만들지 않는다.)
+- 내 질문(M4 구현): `GET /api/v1/mine`, `GET /api/v1/mine/{id}`, `PUT /api/v1/mine/{id}`, `PUT /api/v1/mine/{id}/deleted`, `PUT /api/v1/mine`(일괄). 응답은 `no-store`, 공용 응답에 섞이지 않는다. (편집자 API 는 만들지 않는다.)
 - 오류 규격·페이지네이션·레이트 리밋은 games와 같은 규약을 쓴다. 주제의 질문 목록·질문 상세·검색 결과·개념 상세 응답에는 **로그인한 사용자에게만** `learned` 가 합쳐진다(비로그인 응답은 `learned` 키 자체가 없어 M1 과 바이트가 같다). 응답 본문이 곧 사용자별 ETag 이고, 로그인 응답은 `Cache-Control: private, no-cache` 다.
 
 ## 10. 인증·권한·개인정보
