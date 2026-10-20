@@ -103,6 +103,20 @@ describe('질문 화면', () => {
     expect(topic.textContent).toContain('앞부분만 읽음');
   });
 
+  it('책 근거(refs)는 쪽수까지 일반 텍스트로 보여 주고 링크로 만들지 않는다', async () => {
+    await open(detail({ refs: ['Design Patterns, 1장, p.293 <b>x</b>', 'Clean Architecture, 5장, p.45'] }));
+    const region = screen.getByRole('region', { name: '이 질문의 책 근거' });
+    const items = within(region).getAllByRole('listitem').map((li) => li.textContent);
+    expect(items).toEqual(['Design Patterns, 1장, p.293 <b>x</b>', 'Clean Architecture, 5장, p.45']);
+    expect(region.querySelector('b')).toBeNull();
+    expect(within(region).queryByRole('link')).toBeNull();
+  });
+
+  it('책 근거가 없으면 그 구역을 그리지 않는다', async () => {
+    await open(detail({ refs: [] }));
+    expect(screen.queryByRole('region', { name: '이 질문의 책 근거' })).toBeNull();
+  });
+
   it('먼저 볼 질문 · 이어 볼 질문 · 관련 질문을 이 순서로 링크한다', async () => {
     await open();
     const main = screen.getByRole('main');
@@ -115,8 +129,8 @@ describe('질문 화면', () => {
   });
 
   it('연결이 없으면 해당 구역을 그리지 않는다', async () => {
-    await open(detail({ prerequisites: [], followups: [], related: [], concepts: [], keywords: [], sources: [], topicSources: [] }));
-    for (const name of ['먼저 볼 질문', '이어 볼 질문', '관련 질문', '이 질문의 근거 문서']) {
+    await open(detail({ prerequisites: [], followups: [], related: [], concepts: [], keywords: [], sources: [], refs: [], topicSources: [] }));
+    for (const name of ['먼저 볼 질문', '이어 볼 질문', '관련 질문', '이 질문의 근거 문서', '이 질문의 책 근거']) {
       expect(screen.queryByRole('region', { name })).toBeNull();
     }
     expect(screen.queryByRole('list', { name: '개념' })).toBeNull();

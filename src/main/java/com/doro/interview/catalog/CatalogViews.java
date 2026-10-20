@@ -73,14 +73,14 @@ public final class CatalogViews {
 
     /**
      * 질문 상세. {@code spokenAnswer}(말로 하는 모범 답변)와 {@code detailMd}(근거·코드·실험 설명, 마크다운)로 나뉜다.
-     * {@code sources} 는 이 질문을 검수하며 대조한 출처, {@code topicSources} 는 주제(문서) 전체 출처다.
+     * {@code sources} 는 이 질문을 검수하며 대조한 출처, {@code refs} 는 책 근거("책 제목, 3장, p.45"), {@code topicSources} 는 주제(문서) 전체 출처다.
      * {@code followups}/{@code prerequisites}/{@code related} 는 보이는 질문만 담는다(RELATED 는 양쪽 방향).
      * {@code contentHash} 는 ETag 용이며 응답 본문에는 싣지 않는다.
      */
     public record QuestionView(String slug, String topicSlug, String topicName, String categorySlug, String tier, int difficulty,
                                String title, List<String> keywords, boolean hasExtra, String spokenAnswer, String detailMd,
                                String status, Instant reviewedAt, boolean needsReview, String baseVersion,
-                               List<String> sources, List<SourceView> topicSources, String prevSlug, String nextSlug,
+                               List<String> sources, List<String> refs, List<SourceView> topicSources, String prevSlug, String nextSlug,
                                String contentHash, Integer importance, List<ConceptRef> concepts, List<QuestionRef> followups,
                                List<QuestionRef> prerequisites, List<QuestionRef> related) {
     }

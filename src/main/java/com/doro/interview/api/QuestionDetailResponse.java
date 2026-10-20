@@ -18,7 +18,7 @@ import java.util.List;
 public record QuestionDetailResponse(String slug, String topicSlug, String topicName, String categorySlug, String tier,
                                      int difficulty, String title, List<String> keywords, boolean hasExtra,
                                      String spokenAnswer, String detailMd, String status, Instant reviewedAt,
-                                     boolean needsReview, String baseVersion, List<String> sources,
+                                     boolean needsReview, String baseVersion, List<String> sources, List<String> refs,
                                      List<SourceView> topicSources, String prevSlug, String nextSlug, Integer importance,
                                      List<ConceptRef> concepts, List<QuestionRef> followups, List<QuestionRef> prerequisites,
                                      List<QuestionRef> related, @JsonInclude(JsonInclude.Include.NON_NULL) Boolean learned,
@@ -27,7 +27,7 @@ public record QuestionDetailResponse(String slug, String topicSlug, String topic
     static QuestionDetailResponse from(QuestionView q, Boolean learned, Boolean reviewCandidate) {
         return new QuestionDetailResponse(q.slug(), q.topicSlug(), q.topicName(), q.categorySlug(), q.tier(), q.difficulty(),
                 q.title(), q.keywords(), q.hasExtra(), q.spokenAnswer(), q.detailMd(), q.status(), q.reviewedAt(),
-                q.needsReview(), q.baseVersion(), q.sources(), q.topicSources(), q.prevSlug(), q.nextSlug(), q.importance(),
+                q.needsReview(), q.baseVersion(), q.sources(), q.refs(), q.topicSources(), q.prevSlug(), q.nextSlug(), q.importance(),
                 q.concepts(), q.followups(), q.prerequisites(), q.related(), learned, reviewCandidate);
     }
 }

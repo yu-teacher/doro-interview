@@ -177,6 +177,18 @@ public class ContentParser {
         } else if (rawSources != null) {
             throw new ContentException(path + ": sources 는 URL 문자열 목록이어야 한다");
         }
+        List<String> refs = new ArrayList<>();
+        Object rawRefs = map.get("refs");
+        if (rawRefs instanceof List<?> refList) {
+            for (Object r : refList) {
+                if (!(r instanceof String ref)) {
+                    throw new ContentException(path + ": refs 에 문자열이 아닌 값이 있다");
+                }
+                refs.add(ref);
+            }
+        } else if (rawRefs != null) {
+            throw new ContentException(path + ": refs 는 문자열 목록이어야 한다(예: \"책 제목, 3장, p.45\")");
+        }
         List<String> concepts = new ArrayList<>();
         Object rawConcepts = map.get("concepts");
         if (rawConcepts instanceof List<?> conceptList) {
@@ -208,7 +220,7 @@ public class ContentParser {
         return new QuestionDoc(str(map, "slug", path), topic, str(map, "tier", path), intOr(map, "difficulty", -1, path),
                 str(map, "title", path), List.copyOf(keywords), bool(map, "has_extra", false, path),
                 strOr(map, "status", "DRAFT", path), instantOrNull(map.get("reviewed_at"), path), body, List.copyOf(sources),
-                List.copyOf(concepts), (Integer) rawImportance, List.copyOf(links), path);
+                List.copyOf(concepts), (Integer) rawImportance, List.copyOf(links), List.copyOf(refs), path);
     }
 
     // ------------------------------------------------------------------ 도우미

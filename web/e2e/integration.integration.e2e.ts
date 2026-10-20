@@ -18,7 +18,7 @@ const KEYS = {
   topicView: ['categoryName', 'categorySlug', 'questions', 'sources', 'summary'],
   questionDetail: [
     'baseVersion', 'categorySlug', 'concepts', 'detailMd', 'difficulty', 'followups', 'hasExtra', 'importance', 'keywords', 'needsReview',
-    'nextSlug', 'prevSlug', 'prerequisites', 'related', 'reviewedAt', 'slug', 'sources', 'spokenAnswer', 'status', 'tier', 'title',
+    'nextSlug', 'prevSlug', 'prerequisites', 'refs', 'related', 'reviewedAt', 'slug', 'sources', 'spokenAnswer', 'status', 'tier', 'title',
     'topicName', 'topicSlug', 'topicSources',
   ],
   conceptView: ['description', 'name', 'questionCount', 'slug'],

@@ -35,6 +35,7 @@ const detail = {
   detailMd: `(공식 문서) \`@Transactional\` 은 thread-bound 트랜잭션을 쓴다.\n(보충) 스레드 바인딩의 실체는 ThreadLocal 이다.\n\n- 공식 문서: 새로 시작한 스레드로 전파되지 않는다.\n- (실험 확인) 테스트로 확인했다.\n\n\`\`\`java\n@Transactional\npublic void place(Order order) {\n${LONG_CODE_LINE}\n    orderRepository.save(order);\n}\n\`\`\``,
   status: 'REVIEWED', reviewedAt: '2026-10-20T00:00:00Z', needsReview: false, baseVersion: 'Spring Framework 7 / Boot 4',
   sources: ['https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html'],
+  refs: ['Design Patterns: Elements of Reusable Object-Oriented Software, 1장 "Observer", p.293', `${LONG_TOKEN} 를 설명한 장의 긴 근거 표기 — Clean Architecture, 5장, p.45~51`],
   topicSources: [{ url: 'https://docs.spring.io/spring-framework/reference/data-access/transaction.html', note: '앞부분만 읽음' }],
   prevSlug: 'tx-03', nextSlug: 'tx-05', importance: 3, concepts,
   followups: [{ slug: 'tx-15', title: LONG_TITLE, tier: 'TRICKY', topicSlug: 'transaction' }],

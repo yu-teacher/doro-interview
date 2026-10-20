@@ -115,6 +115,7 @@ public class JdbcCatalogReader implements CatalogReader {
                 SELECT q.slug, q.topic_slug, t.name AS topic_name, t.category_slug, t.base_version, q.tier, q.difficulty, q.title,
                        q.keywords, q.has_extra, q.answer_md, q.status, q.reviewed_at, q.needs_review, q.content_hash, q.importance,
                        ARRAY(SELECT s FROM jsonb_array_elements_text(q.sources) WITH ORDINALITY x(s, i) ORDER BY i) AS own_sources,
+                       ARRAY(SELECT s FROM jsonb_array_elements_text(q.refs) WITH ORDINALITY x(s, i) ORDER BY i) AS own_refs,
                        ARRAY(SELECT c.slug FROM question_concept qc JOIN concept c ON c.slug = qc.concept_slug
                              WHERE qc.question_id = q.id ORDER BY c.sort, c.slug) AS concept_slugs,
                        ARRAY(SELECT c.name FROM question_concept qc JOIN concept c ON c.slug = qc.concept_slug
@@ -137,7 +138,7 @@ public class JdbcCatalogReader implements CatalogReader {
                     rs.getString("category_slug"), rs.getString("tier"), rs.getInt("difficulty"), rs.getString("title"),
                     textArray(rs.getArray("keywords")), rs.getBoolean("has_extra"), split.spokenAnswer(), split.detailMd(),
                     rs.getString("status"), reviewed == null ? null : reviewed.toInstant(), rs.getBoolean("needs_review"),
-                    rs.getString("base_version"), textArray(rs.getArray("own_sources")), sources(rs), null, null,
+                    rs.getString("base_version"), textArray(rs.getArray("own_sources")), textArray(rs.getArray("own_refs")), sources(rs), null, null,
                     rs.getString("content_hash"), importance, List.copyOf(concepts), List.of(), List.of(), List.of());
         }, slug);
         if (found.isEmpty()) {
@@ -156,7 +157,7 @@ public class JdbcCatalogReader implements CatalogReader {
         Map<String, List<QuestionRef>> byKind = links(q.slug());
         return Optional.of(new QuestionView(q.slug(), q.topicSlug(), q.topicName(), q.categorySlug(), q.tier(), q.difficulty(),
                 q.title(), q.keywords(), q.hasExtra(), q.spokenAnswer(), q.detailMd(), q.status(), q.reviewedAt(),
-                q.needsReview(), q.baseVersion(), q.sources(), q.topicSources(), prev, next, q.contentHash(), q.importance(),
+                q.needsReview(), q.baseVersion(), q.sources(), q.refs(), q.topicSources(), prev, next, q.contentHash(), q.importance(),
                 q.concepts(), byKind.getOrDefault("FOLLOWUP", List.of()), byKind.getOrDefault("PREREQ", List.of()),
                 byKind.getOrDefault("RELATED", List.of())));
     }

@@ -7,7 +7,7 @@ import { ConceptList, ExtraFlag, ImportanceBadge, KeywordList, ReviewBadge, Tier
 import { LearnedCheckbox } from '../components/LearnedCheckbox';
 import { NoteEditor } from '../components/NoteEditor';
 import { RefList } from '../components/RefList';
-import { QuestionSources, TopicSources } from '../components/Sources';
+import { QuestionRefs, QuestionSources, TopicSources } from '../components/Sources';
 import { useApi } from '../hooks/useApi';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useLearned } from '../hooks/useLearned';
@@ -103,6 +103,7 @@ function QuestionContent({ q }: { q: QuestionDetail }) {
       {session.authenticated && <NoteEditor slug={q.slug} />}
 
       <QuestionSources urls={q.sources} />
+      <QuestionRefs refs={q.refs} />
       <TopicSources sources={q.topicSources} label="이 주제 전체의 출처" />
 
       <p className="mt-6 text-sm text-[var(--color-muted)]">

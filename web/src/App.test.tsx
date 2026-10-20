@@ -29,7 +29,7 @@ const topic: TopicView = {
 const question = {
   slug: 'tx-01', topicSlug: 'transaction', topicName: '트랜잭션', categorySlug: 'spring', tier: 'BASIC', difficulty: 1, title: 'ACID 란?',
   keywords: ['원자성'], hasExtra: false, spokenAnswer: '원자성, 일관성, 격리성, 지속성입니다.', detailMd: '', status: 'REVIEWED', reviewedAt: null,
-  needsReview: false, baseVersion: 'v7', sources: [], topicSources: [], prevSlug: null, nextSlug: null, importance: null, concepts: [],
+  needsReview: false, baseVersion: 'v7', sources: [], refs: [], topicSources: [], prevSlug: null, nextSlug: null, importance: null, concepts: [],
   followups: [], prerequisites: [], related: [],
 } satisfies QuestionDetail;
 

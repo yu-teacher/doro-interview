@@ -94,6 +94,11 @@ public final class ContentValidator {
             for (String url : q.sources()) {
                 check(url.startsWith("https://") || url.startsWith("http://"), problems, at, "질문 출처 URL 형식이 틀렸다: " + url);
             }
+            check(q.refs().size() <= 10, problems, at, "refs 는 10개 이하여야 한다");
+            for (String ref : q.refs()) {
+                check(!ref.isBlank() && ref.strip().length() <= 200 && ref.indexOf('\u0000') < 0, problems, at,
+                        "refs 항목은 1~200자의 글이어야 한다(예: \"책 제목, 3장, p.45\"): " + ref);
+            }
             check(!com.doro.interview.catalog.AnswerSplitter.split(q.body()).spokenAnswer().isBlank(), problems, at,
                     "본문은 '**모범 답변' 줄 다음에 답변 문단이 있어야 한다");
             check(q.hasExtra() == ExtraMark.present(q.body()), problems, at,

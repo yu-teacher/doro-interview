@@ -29,18 +29,25 @@ public final class ContentModels {
 
     public record QuestionDoc(String slug, String topic, String tier, int difficulty, String title, List<String> keywords,
                               boolean hasExtra, String status, Instant reviewedAt, String body, List<String> sources,
-                              List<String> concepts, Integer importance, List<LinkDoc> links, String path) {
+                              List<String> concepts, Integer importance, List<LinkDoc> links, List<String> refs, String path) {
+
+        /** refs(책 근거)가 없는 질문. */
+        public QuestionDoc(String slug, String topic, String tier, int difficulty, String title, List<String> keywords,
+                           boolean hasExtra, String status, Instant reviewedAt, String body, List<String> sources,
+                           List<String> concepts, Integer importance, List<LinkDoc> links, String path) {
+            this(slug, topic, tier, difficulty, title, keywords, hasExtra, status, reviewedAt, body, sources, concepts, importance, links, List.of(), path);
+        }
 
         /** 메타데이터(출처·개념·필수도·연결)가 전혀 없는 질문. */
         public QuestionDoc(String slug, String topic, String tier, int difficulty, String title, List<String> keywords,
                            boolean hasExtra, String status, Instant reviewedAt, String body, String path) {
-            this(slug, topic, tier, difficulty, title, keywords, hasExtra, status, reviewedAt, body, List.of(), List.of(), null, List.of(), path);
+            this(slug, topic, tier, difficulty, title, keywords, hasExtra, status, reviewedAt, body, List.of(), List.of(), null, List.of(), List.of(), path);
         }
 
         /** 출처만 있는 질문. */
         public QuestionDoc(String slug, String topic, String tier, int difficulty, String title, List<String> keywords,
                            boolean hasExtra, String status, Instant reviewedAt, String body, List<String> sources, String path) {
-            this(slug, topic, tier, difficulty, title, keywords, hasExtra, status, reviewedAt, body, sources, List.of(), null, List.of(), path);
+            this(slug, topic, tier, difficulty, title, keywords, hasExtra, status, reviewedAt, body, sources, List.of(), null, List.of(), List.of(), path);
         }
 
         /** 정렬 순서: 슬러그 끝의 번호(tx-07 → 7). 번호가 없으면 0. */

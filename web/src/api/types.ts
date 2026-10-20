@@ -94,6 +94,8 @@ export interface QuestionDetail {
   baseVersion: string | null;
   /** 이 질문을 검수하며 대조한 출처 */
   sources: string[];
+  /** 책·원저자 자료 근거("책 제목, 3장, p.45"). 설계 패턴·아키텍처 주제의 예외 */
+  refs: string[];
   /** 주제(문서) 전체 출처 */
   topicSources: SourceView[];
   prevSlug: string | null;

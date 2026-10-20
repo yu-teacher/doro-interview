@@ -167,14 +167,14 @@ public class ContentLoader implements ApplicationRunner {
         jdbc.update(con -> {
             var ps = con.prepareStatement("""
                     INSERT INTO question (slug, topic_slug, sort, tier, difficulty, title, answer_md, keywords, has_extra,
-                                          content_hash, status, reviewed_at, sources, importance, needs_review)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::jsonb, ?, FALSE)
+                                          content_hash, status, reviewed_at, sources, importance, refs, needs_review)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::jsonb, ?, ?::jsonb, FALSE)
                     ON CONFLICT (slug) DO UPDATE SET
                         topic_slug = EXCLUDED.topic_slug, sort = EXCLUDED.sort, tier = EXCLUDED.tier,
                         difficulty = EXCLUDED.difficulty, title = EXCLUDED.title, answer_md = EXCLUDED.answer_md,
                         keywords = EXCLUDED.keywords, has_extra = EXCLUDED.has_extra,
                         status = EXCLUDED.status, reviewed_at = EXCLUDED.reviewed_at,
-                        sources = EXCLUDED.sources, importance = EXCLUDED.importance,
+                        sources = EXCLUDED.sources, importance = EXCLUDED.importance, refs = EXCLUDED.refs,
                         needs_review = CASE
                             WHEN EXCLUDED.status <> 'REVIEWED' THEN FALSE
                             WHEN EXCLUDED.reviewed_at IS DISTINCT FROM question.reviewed_at THEN FALSE
@@ -207,6 +207,7 @@ public class ContentLoader implements ApplicationRunner {
             } else {
                 ps.setInt(14, q.importance());
             }
+            ps.setString(15, jsonStringArray(q.refs().stream().map(String::strip).toList()));
             return ps;
         });
     }

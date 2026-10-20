@@ -13,7 +13,7 @@ export function detail(over: Partial<QuestionDetail> = {}): QuestionDetail {
     title: '@Transactional 은 어떻게 동작하나요?', keywords: ['AOP 프록시', 'ThreadLocal'], hasExtra: true,
     spokenAnswer: '프록시가 메서드 호출 앞뒤로 트랜잭션을 엽니다.', detailMd: '(공식 문서) 근거 줄.\n(보충) 덧붙임.\n\n```java\nclass A {}\n```',
     status: 'REVIEWED', reviewedAt: '2026-10-20T00:00:00Z', needsReview: false, baseVersion: 'Spring Framework 7 / Boot 4',
-    sources: ['https://docs.spring.io/a'], topicSources: [{ url: 'https://docs.spring.io/b', note: '앞부분만 읽음' }],
+    sources: ['https://docs.spring.io/a'], refs: [], topicSources: [{ url: 'https://docs.spring.io/b', note: '앞부분만 읽음' }],
     prevSlug: 'tx-03', nextSlug: 'tx-05', importance: 3,
     concepts: [{ slug: 'proxy', name: '프록시' }, { slug: 'tx-boundary', name: '트랜잭션 경계' }],
     followups: [{ slug: 'tx-15', title: '같은 클래스 안 호출은?', tier: 'TRICKY', topicSlug: 'transaction' }],
