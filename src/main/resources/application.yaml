@@ -29,6 +29,9 @@ doro:
     oauth-client-ids: ${INTERVIEW_OAUTH_CLIENT_ID:doro-interview}
     # 다른 곳에서 로그아웃하면 이 서비스의 세션도 바로 끝난다(IAM 에 닿지 못하면 통과 = fail-open, doro-games 와 같은 값)
     revocation-check: ${DORO_IAM_REVOCATION_CHECK:ENFORCE}
+    # 탈퇴 사용자 목록 조회용 서버 간 호출(게이트웨이를 거치지 않는 Docker 내부 주소)과 호출자 토큰
+    internal-url: http://${IAM_HOST:localhost}:${IAM_PORT:28080}
+    internal-token: ${DORO_IAM_INTERNAL_TOKEN:}
   guard:
     # M2 에는 Guard 로 판정할 것이 없다(권한은 "본인 것만" 이고 사용자 id 는 토큰에서만 얻는다). 편집자 권한이 생기는 M4 에서 켠다(docs/M2-PLAN.md D3).
     enabled: false
@@ -57,3 +60,8 @@ interview:
     location: classpath:content/
     # true: 콘텐츠 파일이 깨져 있으면 기동을 막는다(반쯤 반영된 콘텐츠로 뜨지 않게). 급할 때만 false.
     fail-fast: ${INTERVIEW_CONTENT_FAIL_FAST:true}
+  # Doro 에서 영구 탈퇴한 사용자의 학습 기록(체크·노트)을 주기적으로 지운다. IAM 내부 API 를 조회하므로 서비스 토큰이 필요하다
+  # (DORO_IAM_INTERNAL_TOKEN, IAM 의 DORO_IAM_INTERNAL_TOKENS 에 'interview:<토큰>' 으로 등록). 토큰이 없으면 호출이 거절되어 경고가 남는다.
+  deleted-sync:
+    enabled: ${INTERVIEW_DELETED_SYNC_ENABLED:true}
+    interval: ${INTERVIEW_DELETED_SYNC_INTERVAL:PT1H}

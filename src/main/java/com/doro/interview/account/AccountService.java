@@ -30,4 +30,16 @@ public class AccountService {
         List<Boolean> rows = jdbc.queryForList("SELECT deleted_at IS NULL FROM interview_user WHERE user_id = ?", Boolean.class, userId);
         return rows.isEmpty() || rows.get(0);
     }
+
+    /**
+     * 탈퇴 표식(무덤)을 남긴다. 방문한 적 없는 사용자도 행을 새로 만들어 표식을 둔다: 탈퇴 직후 아직 유효한 토큰의 첫 요청이
+     * 행을 새로 만들어 되살아나는 경주를 막는다. 이미 표식이 있으면 아무것도 바꾸지 않고 false.
+     *
+     * @return 이번 호출이 표식을 처음 남겼으면 true
+     */
+    public boolean markDeleted(UUID userId) {
+        return jdbc.update("""
+                INSERT INTO interview_user (user_id, deleted_at) VALUES (?, now())
+                ON CONFLICT (user_id) DO UPDATE SET deleted_at = now() WHERE interview_user.deleted_at IS NULL""", userId) > 0;
+    }
 }
