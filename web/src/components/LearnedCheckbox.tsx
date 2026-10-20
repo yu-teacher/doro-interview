@@ -12,11 +12,12 @@ interface Props {
  * 터치 영역은 44px 이상이다.
  */
 export function LearnedCheckbox({ checked, onChange, title, compact = false }: Props) {
+  const visible = compact ? '학습함' : '완전히 학습함';
   return (
     <label className={`flex min-h-11 min-w-11 cursor-pointer items-center gap-2 ${compact ? 'flex-col justify-center px-2 text-xs' : ''}`}>
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="size-6 shrink-0" />
-      <span>{compact ? '학습함' : '완전히 학습함'}</span>
-      <span className="sr-only">: {title}</span>
+      {/* 이름을 aria-label 로 못 박는다: 숨은 글자를 라벨에 이어 붙이면 브라우저마다 공백이 달라진다(실제 Chromium 은 "학습함 : 제목") */}
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} aria-label={`${visible}: ${title}`} className="size-6 shrink-0" />
+      <span aria-hidden="true">{visible}</span>
     </label>
   );
 }

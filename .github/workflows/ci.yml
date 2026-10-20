@@ -88,9 +88,12 @@ jobs:
         working-directory: doro-interview/web
       - run: npx playwright install --with-deps chromium
         working-directory: doro-interview/web
-      # 격리 Postgres → bootJar 기동(개발용 노출 스위치 켬) → 웹 빌드·미리보기 → Playwright → 정리
+      # 격리 Postgres → 가짜 Doro → bootJar 기동(개발용 노출 스위치 켬) → 웹 빌드·미리보기 → 게이트웨이(nginx 컨테이너) → Playwright → 정리
+      # 게이트웨이 컨테이너가 러너의 서버들에 닿도록 0.0.0.0 에 바인딩한다(일회용 러너라 노출 위험이 없다).
       - run: scripts/e2e-test.sh
         working-directory: doro-interview
+        env:
+          E2E_BIND_HOST: 0.0.0.0
 
   rehearse:
     name: Deploy rehearsal (real images, deploy scripts, gateway with CSP, rollback)

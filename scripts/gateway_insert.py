@@ -7,6 +7,7 @@
 - 조각의 주석 줄은 넣지 않는다. `--report-only` 는 CSP 헤더를 Content-Security-Policy-Report-Only 로 바꿔 넣는다.
 - 삽입 위치: upstream 은 `menu_upstream` 블록 바로 아래, location 은 `# 8. DORO Menu Frontend` 주석(없으면 `location /menu/`) 바로 위.
 - 기준점을 정확히 하나 찾지 못하거나 조각 구조가 예상과 다르면 실패한다(엉뚱한 곳에 넣지 않는다).
+- 조각은 게이트웨이 기본 설정의 BFF 공용 정의(bff_upstream·$bff_authorization·@bff_forbidden·@bff_unavailable)에 의존한다. 없으면 반영하지 않는다.
 출력(stdout): 반영했으면 `changed`, 이미 있으면 `already`.
 """
 from __future__ import annotations
@@ -17,11 +18,26 @@ import sys
 UPSTREAM_MARK = "interview_web_upstream"
 BLOCK_COMMENT = "# 도로 면접 (/interview/): deploy/gateway-interview.conf 에서 옴"
 EXPECTED_UPSTREAMS = 2
-EXPECTED_LOCATIONS = 3
+EXPECTED_LOCATIONS = 7
+
+
+# 조각이 기대는 게이트웨이 기본 설정의 BFF 공용 정의(없으면 반영 후 nginx 가 뜨지 않거나, 인증이 조용히 빠진 채로 열린다)
+BFF_PREREQUISITES = [
+    (r"upstream\s+bff_upstream\s*\{", "upstream bff_upstream"),
+    (r"map\s+\$bff_token\s+\$bff_authorization\s*\{", "map $bff_token $bff_authorization"),
+    (r"location\s+@bff_forbidden\s*\{", "location @bff_forbidden"),
+    (r"location\s+@bff_unavailable\s*\{", "location @bff_unavailable"),
+]
 
 
 class GatewayInsertError(Exception):
     """기준점·조각 구조가 예상과 다를 때."""
+
+
+def check_bff_prerequisites(conf: str) -> None:
+    missing = [name for pattern, name in BFF_PREREQUISITES if not re.search(pattern, conf)]
+    if missing:
+        raise GatewayInsertError("게이트웨이 기본 설정에 BFF 공용 정의가 없다(" + ", ".join(missing) + "). 인증 없이 열리지 않도록 반영하지 않는다")
 
 
 def top_level_locations(text: str) -> list[str]:
@@ -62,6 +78,7 @@ def insert_piece(conf: str, piece: str, report_only: bool = False, refresh: bool
             raise GatewayInsertError(f"기존 도로 면접 블록을 정확히 걷어내지 못했다(upstream {n1}, location 블록 {n2}). 수동 확인 필요")
     if UPSTREAM_MARK in conf:
         return "already", conf
+    check_bff_prerequisites(conf)
 
     if report_only:
         locations = [loc.replace("add_header Content-Security-Policy ", "add_header Content-Security-Policy-Report-Only ") for loc in locations]

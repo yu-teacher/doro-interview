@@ -54,6 +54,8 @@ run_backend() {
   need_doro
   log "== 스크립트 단위 테스트(변환기·게이트웨이 삽입) =="
   if ls scripts/test_*.py >/dev/null 2>&1; then python3 -I -m unittest discover -s scripts -p 'test_*.py'; else log "파이썬 테스트 없음 — 건너뜀"; fi
+  log "== 가짜 Doro 스텁 규격 시험(node --test) =="
+  node --test scripts/rehearse/fake-doro.test.mjs
   log "== 배포 스크립트 시나리오 시험(가짜 docker·curl) =="
   scripts/test-deploy-on-server.sh
   log "== 백엔드: 격리 Postgres(포트 $CI_DB_PORT) =="
