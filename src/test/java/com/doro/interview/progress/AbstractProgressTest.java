@@ -57,7 +57,7 @@ abstract class AbstractProgressTest {
 
     @BeforeEach
     void seed() {
-        jdbc.execute("TRUNCATE user_progress, question_link, question, topic, category CASCADE");
+        jdbc.execute("TRUNCATE user_progress, my_note, question_link, question, topic, category CASCADE");
         fx = new ContentFixture(tmp).category("c1").category("c2")
                 .topic("c1", "t1", "aa", true).topic("c1", "t2", "bb", false).topic("c2", "t4", "dd", true)
                 .question("c1", "t1", "aa-01", "질문 1", HEADER + "답 1.\n", "2026-10-20")

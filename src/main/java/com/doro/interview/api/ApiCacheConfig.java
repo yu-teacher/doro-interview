@@ -27,6 +27,17 @@ public class ApiCacheConfig {
         return bean;
     }
 
+    /** 쓰기 본문 상한(바이트). 가장 큰 본문은 2,000자 노트이며 최악의 JSON 이스케이프(제어 문자 6바이트)로도 12KB 를 넘지 않는다. */
+    @Bean
+    FilterRegistrationBean<OncePerRequestFilter> apiRequestSizeFilter(
+            @org.springframework.beans.factory.annotation.Value("${interview.api.max-body-bytes:32768}") long maxBytes,
+            tools.jackson.databind.ObjectMapper json) {
+        FilterRegistrationBean<OncePerRequestFilter> bean = new FilterRegistrationBean<>(new RequestSizeLimitFilter(maxBytes, json));
+        bean.addUrlPatterns("/api/*");
+        bean.setOrder(1);
+        return bean;
+    }
+
     @Bean
     FilterRegistrationBean<OncePerRequestFilter> apiCacheControlFilter() {
         FilterRegistrationBean<OncePerRequestFilter> bean = new FilterRegistrationBean<>(new OncePerRequestFilter() {
