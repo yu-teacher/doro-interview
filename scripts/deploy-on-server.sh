@@ -11,7 +11,7 @@
 #   2) 빌드 → 컨테이너 재생성 → healthy 대기.
 #   3) 게이트웨이 nginx -t + reload (nginx 는 upstream IP 를 시작·reload 때만 찾으므로 컨테이너가 새로 만들어지면 502 가 날 수 있다).
 #   4) 게이트웨이 경유 확인(짧게 재시도: 재생성 직후 잠깐 연결이 거부될 수 있다). 실패하면 롤백 태그를 되살려 다시 만들고 reload.
-# 환경변수(리허설·점검용, 기본값은 운영): INTERVIEW_PROJECT, INTERVIEW_COMPOSE_FILES, INTERVIEW_ENV_FILE, INTERVIEW_HEALTH_TIMEOUT(초, 기본 180), GATEWAY_CONTAINER, CHECK_BASE, CHECK_CURL_ARGS
+# 환경변수: DORO_DIR(Doro 체크아웃, 기본 ../Doro). 리허설·점검용(기본값은 운영): INTERVIEW_PROJECT, INTERVIEW_COMPOSE_FILES, INTERVIEW_ENV_FILE, INTERVIEW_HEALTH_TIMEOUT(초, 기본 180), GATEWAY_CONTAINER, CHECK_BASE, CHECK_CURL_ARGS
 set -Eeuo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -51,6 +51,10 @@ docker info >/dev/null 2>&1 || die "docker 를 사용할 수 없다"
 ENV_PATH="${INTERVIEW_ENV_FILE:-.env}"
 [ -f "$ENV_PATH" ] || die "$ENV_PATH 가 없다. 먼저 scripts/setup-interview-server.sh --apply"
 env_has "$ENV_PATH" DB_USER && env_has "$ENV_PATH" DB_PASSWORD || die "$ENV_PATH 에 DB_USER/DB_PASSWORD 가 비어 있다"
+# 이미지 빌드가 Doro SDK 소스를 쓴다(settings.gradle 의 includeBuild, compose 의 additional_contexts). 기본은 저장소의 형제 디렉터리 Doro.
+DORO_DIR="${DORO_DIR:-$(cd .. && pwd)/Doro}"
+[ -d "$DORO_DIR/sdk" ] || die "Doro 체크아웃(sdk 디렉터리)이 없다: $DORO_DIR — DORO_DIR=<Doro 체크아웃 경로> 로 지정한다(서버에서는 CI 러너의 Doro 체크아웃을 쓸 수 있다)"
+export DORO_DIR
 compose config -q || die "compose 설정이 올바르지 않다"
 log "계획: 프로젝트=$PROJECT, compose=$COMPOSE_FILES, 게이트웨이 reload·확인=$USE_GATEWAY"
 if [ "$APPLY" != true ]; then log "--dry-run: 여기서 종료 (--apply 로 반영)"; exit 0; fi

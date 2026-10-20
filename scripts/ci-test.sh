@@ -22,6 +22,9 @@ STACK_TIMEOUT_SEC="${CI_STACK_TIMEOUT_SEC:-120}"
 CI_PROJECT="${CI_PROJECT:-interview-ci}"
 COMPOSE=(docker compose -p "$CI_PROJECT" -f docker-compose.ci.yml)
 
+# 백엔드 빌드는 형제 디렉터리 ../Doro 의 SDK 를 쓴다(settings.gradle 의 includeBuild). 없으면 친절하게 알린다.
+need_doro() { [ -d "${DORO_DIR:-../Doro}/sdk" ] || { echo "Doro 체크아웃(../Doro/sdk)이 없다. 형제 디렉터리에 Doro 레포를 두거나 DORO_DIR 을 지정한다" >&2; exit 2; }; }
+
 log() { printf '[%s] %s\n' "$(date +%H:%M:%S)" "$*"; }
 die() { log "ERROR: $*"; exit 1; }
 
@@ -48,6 +51,7 @@ run_rehearse() {
 }
 
 run_backend() {
+  need_doro
   log "== 스크립트 단위 테스트(변환기·게이트웨이 삽입) =="
   if ls scripts/test_*.py >/dev/null 2>&1; then python3 -I -m unittest discover -s scripts -p 'test_*.py'; else log "파이썬 테스트 없음 — 건너뜀"; fi
   log "== 배포 스크립트 시나리오 시험(가짜 docker·curl) =="

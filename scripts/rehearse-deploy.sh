@@ -51,6 +51,8 @@ cleanup() {
 trap cleanup EXIT
 
 # 리허설이 건드릴 이름이 이미 있으면 멈춘다(내 로컬 환경의 다른 것을 지우지 않기 위해)
+[ -d "${DORO_DIR:-$REPO/../Doro}/sdk" ] || die "Doro 체크아웃(../Doro/sdk)이 없다. 형제 디렉터리에 두거나 DORO_DIR 을 지정한다"
+export DORO_DIR="${DORO_DIR:-$REPO/../Doro}"
 for n in "$GW" "$MENU" "$PG" doro-interview-api doro-interview-web; do docker inspect "$n" >/dev/null 2>&1 && die "컨테이너 $n 가 이미 있다. 지우고 다시 실행한다"; done
 docker network inspect "$NET" >/dev/null 2>&1 && die "네트워크 $NET 가 이미 있다. 지우고 다시 실행한다"
 if [ "$MODE" = full ]; then

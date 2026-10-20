@@ -33,7 +33,15 @@ class ModuleRulesSelfTest {
     }
 
     @Test
+    void SDK를_api가_직접_쓰는_위반을_잡는다() {
+        assertThatThrownBy(() -> ruleFor("Doro SDK").check(classes))
+                .isInstanceOf(AssertionError.class)
+                .hasMessageContaining("Doro SDK");
+    }
+
+    @Test
     void 위반_예시가_실제로_존재한다() {
+        assertThat(classes.contain("com.doro.interview.architecture.fixture.api.BadSdkUser")).isTrue();
         assertThat(classes.contain("com.doro.interview.architecture.fixture.catalog.BadCatalog")).isTrue();
         assertThat(classes.contain("com.doro.interview.architecture.fixture.common.BadCommon")).isTrue();
     }

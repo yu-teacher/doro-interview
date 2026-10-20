@@ -18,6 +18,8 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
  * quiz     -> catalog, account, progress(읽기 전용 인터페이스)
  * api      -> 전부 (아무도 api 에 의존하지 않는다)
  * </pre>
+ *
+ * 추가 규칙 R1: Doro SDK(com.hunnit_beasts.doro.sdk)는 account·config 패키지만 안다. 다른 모듈이 SDK 타입을 쓰면 SDK 변경이 곳곳을 흔든다.
  */
 final class ModuleRules {
 
@@ -33,7 +35,8 @@ final class ModuleRules {
                 forbid(base, "catalog", "account", "progress", "quiz", "api"),
                 forbid(base, "progress", "quiz", "api"),
                 forbid(base, "quiz", "api"),
-                quizDoesNotWriteProgress(base));
+                quizDoesNotWriteProgress(base),
+                sdkOnlyInAccountAndConfig(base));
     }
 
     private static ArchRule forbid(String base, String from, String... to) {
@@ -53,6 +56,14 @@ final class ModuleRules {
                                 c -> c.getPackageName().startsWith(base + ".progress")
                                         && !c.getSimpleName().endsWith("Reader")))
                 .as("quiz 모듈은 progress 의 읽기 인터페이스(...Reader)만 쓴다. progress 에 쓰지 않는다")
+                .allowEmptyShould(true);
+    }
+
+    /** R1: Doro SDK 를 import 하는 곳은 account 와 config 뿐이다. */
+    private static ArchRule sdkOnlyInAccountAndConfig(String base) {
+        return noClasses().that().resideOutsideOfPackages(base + ".account..", base + ".config..")
+                .should().dependOnClassesThat().resideInAnyPackage("com.hunnit_beasts.doro.sdk..")
+                .as("Doro SDK 는 account·config 만 안다(다른 모듈은 account.CurrentUser 같은 우리 인터페이스를 쓴다)")
                 .allowEmptyShould(true);
     }
 

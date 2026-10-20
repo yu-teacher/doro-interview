@@ -21,6 +21,21 @@ spring:
     table: interview_schema_history
     locations: classpath:db/migration
 
+doro:
+  iam:
+    # 게이트웨이(BFF)가 붙여 준 Authorization: Bearer 를 이 서비스가 JWKS 로 검증한다. 잘못된·만료된 토큰은 익명으로 취급된다(SDK 규칙).
+    jwks-uri: http://${IAM_HOST:localhost}:${IAM_PORT:28080}/.well-known/jwks.json
+    # 이 서비스의 BFF 클라이언트가 받은 토큰(cid)만 받아 준다. 다른 클라이언트의 토큰은 거부한다.
+    oauth-client-ids: ${INTERVIEW_OAUTH_CLIENT_ID:doro-interview}
+    # 다른 곳에서 로그아웃하면 이 서비스의 세션도 바로 끝난다(IAM 에 닿지 못하면 통과 = fail-open, doro-games 와 같은 값)
+    revocation-check: ${DORO_IAM_REVOCATION_CHECK:ENFORCE}
+  guard:
+    # M2 에는 Guard 로 판정할 것이 없다(권한은 "본인 것만" 이고 사용자 id 는 토큰에서만 얻는다). 편집자 권한이 생기는 M4 에서 켠다(docs/M2-PLAN.md D3).
+    enabled: false
+  web:
+    # SDK 의 예외 핸들러는 Guard 예외만 다룬다. 우리 GlobalExceptionHandler 가 오류 규격을 한 곳에서 맡는다.
+    exception-handler: false
+
 management:
   endpoints:
     web:

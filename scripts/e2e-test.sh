@@ -19,6 +19,8 @@ COMPOSE=(docker compose -p "$PROJECT" -f docker-compose.ci.yml)
 LOG_DIR="$(mktemp -d)"
 JAR_PID=""; WEB_PID=""
 
+[ -d "${DORO_DIR:-../Doro}/sdk" ] || { echo "Doro 체크아웃(../Doro/sdk)이 없다. 형제 디렉터리에 Doro 레포를 두거나 DORO_DIR 을 지정한다" >&2; exit 2; }
+
 log() { printf '[%s] %s\n' "$(date +%H:%M:%S)" "$*"; }
 die() { log "ERROR: $*"; exit 1; }
 

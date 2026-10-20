@@ -44,7 +44,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      # settings.gradle 의 includeBuild('../Doro') 때문에 Doro 레포가 형제 디렉터리로 필요하다(doro-games 와 같은 모양)
       - uses: actions/checkout@v4
+        with:
+          path: doro-interview
+      - uses: actions/checkout@v4
+        with:
+          repository: yu-teacher/doro
+          path: Doro
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -52,13 +59,21 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       # 변환기 단위 테스트 → 격리 Postgres 기동 → gradle test(마이그레이션·로더·콘텐츠 정합성·모듈 의존 규칙) → 정리
       - run: scripts/ci-test.sh backend
+        working-directory: doro-interview
 
   e2e:
     name: Integration e2e (isolated Postgres, backend jar, built web, real Chromium)
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      # settings.gradle 의 includeBuild('../Doro') 때문에 Doro 레포가 형제 디렉터리로 필요하다(doro-games 와 같은 모양)
       - uses: actions/checkout@v4
+        with:
+          path: doro-interview
+      - uses: actions/checkout@v4
+        with:
+          repository: yu-teacher/doro
+          path: Doro
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -68,28 +83,37 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: web/package-lock.json
+          cache-dependency-path: doro-interview/web/package-lock.json
       - run: npm ci --no-audit --no-fund
-        working-directory: web
+        working-directory: doro-interview/web
       - run: npx playwright install --with-deps chromium
-        working-directory: web
+        working-directory: doro-interview/web
       # 격리 Postgres → bootJar 기동(개발용 노출 스위치 켬) → 웹 빌드·미리보기 → Playwright → 정리
       - run: scripts/e2e-test.sh
+        working-directory: doro-interview
 
   rehearse:
     name: Deploy rehearsal (real images, deploy scripts, gateway with CSP, rollback)
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
+      # settings.gradle 의 includeBuild('../Doro') 때문에 Doro 레포가 형제 디렉터리로 필요하다(doro-games 와 같은 모양)
       - uses: actions/checkout@v4
+        with:
+          path: doro-interview
+      - uses: actions/checkout@v4
+        with:
+          repository: yu-teacher/doro
+          path: Doro
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: web/package-lock.json
+          cache-dependency-path: doro-interview/web/package-lock.json
       - run: npm ci --no-audit --no-fund
-        working-directory: web
+        working-directory: doro-interview/web
       - run: npx playwright install --with-deps chromium
-        working-directory: web
+        working-directory: doro-interview/web
       # 서버에서 쓸 Dockerfile·compose·setup/deploy/게이트웨이 스크립트를 격리 환경에서 그대로 실행한다(서버·운영 DB 를 건드리지 않는다)
       - run: REHEARSE_MODE=full scripts/rehearse-deploy.sh
+        working-directory: doro-interview

@@ -51,6 +51,7 @@ SHIM
 printf '#!/usr/bin/env bash\nexit 0\n' > "$BIN/sleep"
 chmod +x "$BIN/docker" "$BIN/curl" "$BIN/sleep"
 
+mkdir -p "$WORK/Doro/sdk"   # 가짜 Doro 체크아웃(sdk 디렉터리만 있으면 된다)
 ENV_OK="$WORK/ok.env"; printf 'DB_USER=u\nDB_PASSWORD=p\n' > "$ENV_OK"
 ENV_NOPASS="$WORK/nopass.env"; printf 'DB_USER=u\nDB_PASSWORD=\n' > "$ENV_NOPASS"
 
@@ -62,7 +63,7 @@ run() {
   shift
   : > "$LOG"
   set +e
-  OUT="$(env PATH="$BIN:$PATH" FAKE_LOG="$LOG" INTERVIEW_ENV_FILE="$envfile" INTERVIEW_HEALTH_TIMEOUT=2 ${vars[@]+"${vars[@]}"} "$REPO/scripts/deploy-on-server.sh" "$@" 2>&1)"
+  OUT="$(env PATH="$BIN:$PATH" FAKE_LOG="$LOG" INTERVIEW_ENV_FILE="$envfile" INTERVIEW_HEALTH_TIMEOUT=2 DORO_DIR="$WORK/Doro" ${vars[@]+"${vars[@]}"} "$REPO/scripts/deploy-on-server.sh" "$@" 2>&1)"
   RC=$?
   set -e
   CALLS="$(cat "$LOG")"
@@ -93,6 +94,11 @@ check "비밀번호 값은 출력하지 않는다(키 이름만)" "$(lacks 'DB_P
 
 run badopt "$ENV_OK" -- --nope
 check "알 수 없는 옵션은 2 로 끝난다" "$([ $RC = 2 ]; echo $?)"
+
+run nodoro "$ENV_OK" DORO_DIR="$WORK/none" -- --apply
+check "Doro 체크아웃이 없으면 실패한다" "$([ $RC != 0 ]; echo $?)"
+check "Doro 경로 안내를 한다" "$(has 'DORO_DIR=<Doro 체크아웃 경로>' "$OUT")"
+check "Doro 가 없으면 아무것도 건드리지 않는다" "$(lacks 'docker tag' "$CALLS")"
 
 echo "== 성공(게이트웨이 경유) =="
 run good "$ENV_OK" -- --apply
