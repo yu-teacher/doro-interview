@@ -7,6 +7,7 @@ import { fetchPrefs, fetchStats, putPrefs } from '../api/quiz';
 import type { CategoryView, ProgressSummary, QuizStats } from '../api/types';
 import { AsyncView } from '../components/AsyncView';
 import { TierBadge } from '../components/Chips';
+import { TitleText } from '../components/TitleText';
 import { ProgressBar } from '../components/ProgressBar';
 import { ReviewList } from '../components/ReviewList';
 import { useApi } from '../hooks/useApi';
@@ -60,7 +61,7 @@ function MostMissed({ stats }: { stats: QuizStats }) {
         {stats.mostMissed.map((m) => (
           <li key={m.questionSlug} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
             <Link to={questionLink(m.questionSlug)} className="inline-flex min-h-11 items-center font-semibold no-underline">
-              {m.title}
+              <TitleText text={m.title} />
             </Link>
             <div className="flex flex-wrap items-center gap-1.5 text-sm text-[var(--color-muted)]">
               <TierBadge tier={m.tier} />

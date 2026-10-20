@@ -31,13 +31,13 @@ afterEach(() => {
 
 describe('레이아웃', () => {
   it('첫 화면에서는 맨 위로 올리거나 포커스를 옮기지 않는다', async () => {
-    await screen.findByRole('heading', { level: 2, name: '스프링' });
+    await screen.findByRole('heading', { level: 3, name: '스프링' });
     expect(scrollTo).not.toHaveBeenCalled();
     expect(document.activeElement).not.toBe(screen.getByRole('main'));
   });
 
   it('건너뛰기 링크가 첫 번째 포커스 대상이고 본문을 가리킨다', async () => {
-    await screen.findByRole('heading', { level: 2, name: '스프링' });
+    await screen.findByRole('heading', { level: 3, name: '스프링' });
     const skip = screen.getByRole('link', { name: '본문으로 건너뛰기' });
     expect(skip.getAttribute('href')).toBe('#main');
     expect(document.getElementById('main')).toBe(screen.getByRole('main'));
@@ -46,7 +46,7 @@ describe('레이아웃', () => {
   });
 
   it('랜드마크가 있다(banner·navigation·search·main·contentinfo)', async () => {
-    await screen.findByRole('heading', { level: 2, name: '스프링' });
+    await screen.findByRole('heading', { level: 3, name: '스프링' });
     for (const role of ['banner', 'navigation', 'search', 'main', 'contentinfo']) {
       expect(screen.getAllByRole(role).length, role).toBeGreaterThan(0);
     }

@@ -8,6 +8,7 @@ import { useApi } from '../hooks/useApi';
 import { questionLink } from '../routes';
 import { useSession, useSessionKey } from '../session/SessionProvider';
 import { TierBadge } from './Chips';
+import { TitleText } from './TitleText';
 
 /**
  * 다시 공부 후보(체크했는데 마지막 시험에서 틀린 질문) 목록. 후보는 틀려도 **자동으로 체크가 풀리지 않고**, 여기서 사용자가 직접 해제한다
@@ -63,7 +64,7 @@ export function ReviewList({ limit, heading = '다시 공부 후보', onReleased
           <li key={c.slug} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
             <div className="min-w-0">
               <Link to={questionLink(c.slug)} className="inline-flex min-h-11 items-center font-semibold no-underline">
-                {c.title}
+                <TitleText text={c.title} />
               </Link>
               <div className="flex flex-wrap items-center gap-1.5 text-sm text-[var(--color-muted)]">
                 <TierBadge tier={c.tier} />

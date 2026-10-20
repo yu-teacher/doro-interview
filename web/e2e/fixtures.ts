@@ -156,6 +156,8 @@ export async function installApi(page: Page, session: SessionMode = 'anonymous')
         return route.fulfill(ok({ summary: topicSummary, categorySlug: 'spring', categoryName: '스프링', sources: [{ url: 'https://docs.spring.io/spring-framework/reference/data-access/transaction.html', note: null }], questions: authenticated ? questionsLearned : questions }));
       case path === '/v1/topics/boom':
         return route.fulfill({ status: 502, contentType: 'text/html', body: '<html>502 Bad Gateway</html>' });
+      case path === '/v1/questions/featured':
+        return route.fulfill(ok([1, 2, 3, 4, 5, 6].map((i) => ({ slug: `tx-0${i}`, title: i % 2 === 0 ? LONG_TITLE : `질문 ${i}: 트랜잭션 전파`, tier: tiers[i % 3], topicSlug: 'transaction', topicName: topicSummary.name }))));
       case path === '/v1/questions/tx-04':
         return route.fulfill(ok(authenticated ? { ...detail, learned: false } : detail));
       case /^\/v1\/questions\/tx-0[1-9]$/.test(path):

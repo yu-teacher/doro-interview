@@ -32,23 +32,22 @@ const categories: CategoryView[] = [
 ];
 
 describe('홈', () => {
-  it('주제 카드에 질문 수와 tier 분포, 기준 버전이 있다', async () => {
+  it('주제 카드에 이름과 질문 수가 있다', async () => {
     mockApi({ '/interview/api/v1/categories': categories });
     go('/');
     const card = (await screen.findByRole('link', { name: /트랜잭션/ })) as HTMLAnchorElement;
     expect(card.getAttribute('href')).toBe('/t/transaction');
-    expect(card.textContent).toContain('질문 25개 · 기본 8 · 심화 11 · 함정 6');
-    expect(card.textContent).toContain('기준 버전: Spring Framework 7 / Boot 4');
-    const jpa = screen.getByRole('link', { name: /JPA/ });
-    expect(jpa.textContent).not.toContain('기준 버전');
-    expect(screen.getByRole('heading', { level: 2, name: '스프링' })).toBeTruthy();
+    // 홈의 주제 카드는 가볍게: 이름·질문 수·한 줄 설명만(난이도 분포와 기준 버전은 주제 화면에서 본다)
+    expect(card.textContent).toContain('질문 25개');
+    expect(card.textContent).not.toContain('기준 버전');
+    expect(screen.getByRole('heading', { level: 3, name: '스프링' })).toBeTruthy();
     expect(document.title).toBe('도로 면접');
   });
 
   it('공개 주제가 없으면 오류가 아니라 안내다', async () => {
     mockApi({ '/interview/api/v1/categories': [] });
     go('/');
-    expect(await screen.findByRole('heading', { level: 1, name: '검수 중인 주제입니다' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: '검수 중인 주제입니다' })).toBeTruthy();
     expect(screen.queryByRole('alert')).toBeNull();
     expect(await a11yViolations()).toEqual([]);
   });

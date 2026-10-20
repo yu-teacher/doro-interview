@@ -48,6 +48,12 @@ public interface CatalogReader {
     /** 보이는 모든 질문의 (slug, 주제, 카테고리, tier) — 카테고리·주제·tier·질문 순서. 시험이 "보이는 질문 ∩ 내 체크" 풀을 만들 때 쓴다. */
     List<QuestionIndexEntry> visibleQuestionIndex();
 
+    /**
+     * 처음 온 사람에게 보여 줄 "자주 나오는 질문"(필수도 3, 보이는 질문만). 한쪽 주제에 쏠리지 않게 **주제마다 하나씩 돌려 가며**
+     * (카테고리·주제 정렬 순서, 주제 안에서는 표시 순서) 최대 {@code limit} 개를 고른다. 없으면 빈 목록.
+     */
+    List<QuestionHeading> featuredQuestions(int limit);
+
     /** 주어진 slug 중 **보이는** 질문의 제목·tier·주제(모범 답변 없음). 보이지 않는 질문은 결과에 없다. */
     Map<String, QuestionHeading> visibleQuestionHeadings(Collection<String> slugs);
 }

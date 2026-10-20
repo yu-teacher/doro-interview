@@ -273,3 +273,12 @@ export interface AiFeedback {
   cached: boolean;
   remainingToday: number;
 }
+
+/** 제목·난이도·주제만 있는 질문 한 줄(자주 나오는 질문, 시험·후보 목록과 같은 모양). */
+export interface FeaturedQuestion {
+  slug: string;
+  title: string;
+  tier: Tier;
+  topicSlug: string;
+  topicName: string;
+}

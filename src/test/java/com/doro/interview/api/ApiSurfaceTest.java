@@ -30,7 +30,7 @@ class ApiSurfaceTest extends AbstractProgressApiTest {
 
     /** 로그인 없이 열려 있는 엔드포인트(읽기 전용 사전과 세션 조회). 새로 열려면 여기에 적어야 한다. */
     private static final Set<String> PUBLIC_GET = Set.of(
-            "/api/v1/categories", "/api/v1/topics/{slug}", "/api/v1/questions/{slug}", "/api/v1/concepts", "/api/v1/concepts/{slug}",
+            "/api/v1/categories", "/api/v1/topics/{slug}", "/api/v1/questions/{slug}", "/api/v1/questions/featured", "/api/v1/concepts", "/api/v1/concepts/{slug}",
             "/api/v1/search", "/api/v1/bff/session");
 
     private static final Pattern USER_ID_NAME = Pattern.compile("(?i)user[-_]?id");

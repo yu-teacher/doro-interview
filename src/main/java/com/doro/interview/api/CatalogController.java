@@ -71,6 +71,18 @@ public class CatalogController {
                 flags == null ? null : flags.review(question.slug())));
     }
 
+    /** 처음 온 사람에게 보여 줄 "자주 나오는 질문" 6개(필수도 3, 주제마다 하나씩 돌려 가며). 공개·캐시 대상이고 사용자 상태가 없다. */
+    @GetMapping("/questions/featured")
+    public ApiResponse<List<QuestionHeadingResponse>> featured() {
+        return ApiResponse.cacheable(reader.featuredQuestions(FEATURED_LIMIT).stream()
+                .map(h -> new QuestionHeadingResponse(h.slug(), h.title(), h.tier(), h.topicSlug(), h.topicName())).toList());
+    }
+
+    public record QuestionHeadingResponse(String slug, String title, String tier, String topicSlug, String topicName) {
+    }
+
+    private static final int FEATURED_LIMIT = 6;
+
     @GetMapping("/concepts")
     public ApiResponse<List<ConceptView>> concepts() {
         return ApiResponse.cacheable(reader.concepts());

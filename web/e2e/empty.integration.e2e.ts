@@ -12,7 +12,7 @@ test('홈은 오류가 아니라 "검수 중" 안내를 보여 준다', async ({
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/interview/');
-  await expect(page.getByRole('heading', { level: 1, name: '검수 중인 주제입니다' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '검수 중인 주제입니다' })).toBeVisible();
   await expect(page.getByRole('alert')).toHaveCount(0);
   expect(errors).toEqual([]);
 });

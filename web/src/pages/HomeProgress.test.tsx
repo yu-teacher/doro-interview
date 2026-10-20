@@ -39,9 +39,12 @@ describe('홈: 진도', () => {
   it('비로그인에는 막대 없이 소개와 로그인 링크만 있다(오류처럼 보이지 않는다)', async () => {
     const { calls } = mockApi({ [SESSION_URL]: anonymous(), '/interview/api/v1/categories': categories });
     renderApp('/');
-    await screen.findByRole('heading', { level: 2, name: '스프링' });
+    await screen.findByRole('heading', { level: 3, name: '스프링' });
     expect(screen.queryByRole('progressbar')).toBeNull();
-    expect(screen.getByText(/로그인하면 완전히 학습한 질문을 체크하고 진도를 볼 수 있습니다/)).toBeTruthy();
+    // 처음 온 사람에게는 소개와 두 시작 버튼이 있고, 오류처럼 보이지 않는다
+    expect(screen.getByRole('heading', { level: 1, name: /공식 문서로 정리했습니다/ })).toBeTruthy();
+    expect(screen.getByRole('link', { name: '질문 둘러보기' }).getAttribute('href')).toBe('/explore');
+    expect(screen.getByRole('link', { name: '로그인하고 시작' }).getAttribute('href')).toBe('/interview/api/v1/bff/login?return=%2F');
     expect(screen.queryByRole('alert')).toBeNull();
     expect(calls.some((c) => c.includes('/progress/'))).toBe(false);
   });
@@ -49,7 +52,7 @@ describe('홈: 진도', () => {
   it('진도 요약을 못 받아도 사전은 그대로 보이고 오류 알림이 없다', async () => {
     mockApi({ [SESSION_URL]: authed(), '/interview/api/v1/categories': categories, [SUMMARY]: respond(() => errorResponse(500, 'X', 'x')) });
     renderApp('/');
-    expect(await screen.findByRole('heading', { level: 2, name: '스프링' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { level: 3, name: '스프링' })).toBeTruthy();
     expect(screen.getByRole('link', { name: /트랜잭션/ })).toBeTruthy();
     await waitFor(() => expect(screen.queryByRole('progressbar')).toBeNull());
     expect(screen.queryByRole('alert')).toBeNull();
@@ -63,7 +66,7 @@ describe('홈: 진도', () => {
     cleanup();
     mockApi({ [SESSION_URL]: anonymous(), '/interview/api/v1/categories': categories });
     renderApp('/');
-    await screen.findByRole('heading', { level: 2, name: '스프링' });
+    await screen.findByRole('heading', { level: 3, name: '스프링' });
     expect(await a11yViolations()).toEqual([]);
   });
 });
@@ -72,7 +75,7 @@ describe('헤더: 세션', () => {
   it('비로그인에는 로그인 링크, 로그인하면 로그아웃 버튼', async () => {
     mockApi({ [SESSION_URL]: anonymous(), '/interview/api/v1/categories': categories });
     renderApp('/');
-    await screen.findByRole('heading', { level: 2, name: '스프링' });
+    await screen.findByRole('heading', { level: 3, name: '스프링' });
     const links = screen.getAllByRole('link', { name: '로그인' }); // 헤더와 홈 소개에 하나씩
     expect(links.length).toBeGreaterThanOrEqual(1);
     for (const link of links) {

@@ -1,7 +1,8 @@
 import { apiGet } from './client';
-import type { CategoryView, ConceptDetail, ConceptView, QuestionDetail, SearchResult, TopicView } from './types';
+import type { CategoryView, ConceptDetail, ConceptView, FeaturedQuestion, QuestionDetail, SearchResult, TopicView } from './types';
 
 export const fetchCategories = (signal?: AbortSignal) => apiGet<CategoryView[]>('v1/categories', undefined, signal);
+export const fetchFeatured = (signal?: AbortSignal) => apiGet<FeaturedQuestion[]>('v1/questions/featured', undefined, signal);
 export const fetchTopic = (slug: string, signal?: AbortSignal) => apiGet<TopicView>(`v1/topics/${encodeURIComponent(slug)}`, undefined, signal);
 export const fetchQuestion = (slug: string, signal?: AbortSignal) =>
   apiGet<QuestionDetail>(`v1/questions/${encodeURIComponent(slug)}`, undefined, signal);

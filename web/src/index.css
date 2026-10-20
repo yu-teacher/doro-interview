@@ -65,8 +65,11 @@ body {
   color: var(--color-text);
 }
 
-a {
-  color: var(--color-accent);
+/* 링크 기본색. 레이어 안에 두어 유틸리티 클래스(text-…)가 이긴다: 레이어 밖에 두면 버튼 모양 링크의 글자색이 배경과 같아졌다. */
+@layer base {
+  a {
+    color: var(--color-accent);
+  }
 }
 
 :focus-visible {

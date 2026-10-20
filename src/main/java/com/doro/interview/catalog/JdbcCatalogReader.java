@@ -240,6 +240,23 @@ public class JdbcCatalogReader implements CatalogReader {
     }
 
     @Override
+    public List<QuestionHeading> featuredQuestions(int limit) {
+        if (limit <= 0) {
+            return List.of();
+        }
+        // 주제마다 필수도 3 인 질문에 순번(rn)을 매기고, 1번들을 먼저, 그다음 2번들을… 카테고리·주제 순서로 모은다
+        return jdbc.query("""
+                SELECT s.slug, s.title, s.tier, s.topic_slug, s.topic_name FROM (
+                    SELECT q.slug, q.title, q.tier, q.topic_slug, t.name AS topic_name, c.sort AS c_sort, t.sort AS t_sort,
+                           row_number() OVER (PARTITION BY q.topic_slug ORDER BY %s) AS rn
+                    FROM question q JOIN topic t ON t.slug = q.topic_slug JOIN category c ON c.slug = t.category_slug
+                    WHERE q.importance = 3 AND %s) s
+                ORDER BY s.rn, s.c_sort, s.t_sort, s.topic_slug, s.slug LIMIT ?""".formatted(QUESTION_ORDER, visibility.questionVisible("q", "t")),
+                (rs, n) -> new QuestionHeading(rs.getString("slug"), rs.getString("title"), rs.getString("tier"),
+                        rs.getString("topic_slug"), rs.getString("topic_name")), limit);
+    }
+
+    @Override
     public Map<String, QuestionHeading> visibleQuestionHeadings(java.util.Collection<String> slugs) {
         if (slugs.isEmpty()) {
             return Map.of();

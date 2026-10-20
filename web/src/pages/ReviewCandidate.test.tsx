@@ -55,7 +55,7 @@ describe('다시 공부 후보 표시', () => {
     expect(screen.queryByText(/최근 시험에서 이 질문을 틀렸습니다/)).toBeNull();
   });
 
-  it('홈에는 후보를 5개까지만 보이고 전체 보기 링크를 준다', async () => {
+  it('홈에는 후보를 3개까지만 보이고 전체 보기 링크를 준다', async () => {
     const many = Array.from({ length: 7 }, (_, i) => ({ ...candidate, slug: `tx-${i}`, title: `후보 ${i}` }));
     mockApi({
       [SESSION_URL]: authed(), [REVIEW]: many, '/interview/api/v1/categories': [{ slug: 'spring', name: '스프링', topics: [{ slug: 'transaction', name: '트랜잭션', description: '', baseVersion: null, counts: { basic: 1, deep: 0, tricky: 0 } }] }],
@@ -63,7 +63,7 @@ describe('다시 공부 후보 표시', () => {
     });
     renderApp('/');
     expect(await screen.findByRole('heading', { name: '다시 공부 후보 (7)' })).toBeTruthy();
-    expect(screen.getAllByRole('button', { name: /^체크 해제/ })).toHaveLength(5);
+    expect(screen.getAllByRole('button', { name: /^체크 해제/ })).toHaveLength(3);
     expect(screen.getByRole('link', { name: '전체 7개 보기' })).toBeTruthy();
   });
 });

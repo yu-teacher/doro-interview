@@ -14,7 +14,7 @@ interface Case {
 }
 
 const PAGES: Case[] = [
-  { name: '홈', path: '/', ready: (p) => p.getByRole('heading', { level: 2, name: '스프링' }).waitFor() },
+  { name: '홈', path: '/', ready: (p) => p.getByRole('heading', { level: 3, name: '스프링' }).waitFor() },
   { name: '주제(필터 포함)', path: '/t/transaction', ready: (p) => p.getByRole('heading', { level: 1 }).waitFor() },
   { name: '주제(필터 적용)', path: '/t/transaction?tier=DEEP&imp=ge2&extra=1&concept=proxy', ready: (p) => p.getByRole('heading', { level: 1 }).waitFor() },
   { name: '질문 상세', path: '/q/tx-04', ready: (p) => p.locator('[data-badge]').first().waitFor({ state: 'attached' }) },
@@ -26,6 +26,7 @@ const PAGES: Case[] = [
   { name: '서버 오류', path: '/t/boom', ready: (p) => p.getByRole('alert').waitFor() },
   // M2: 로그인 상태의 화면(체크박스·진도 막대·노트)과 세션을 알 수 없는 상태
   { name: '홈(로그인·진도)', path: '/', session: 'authenticated', ready: (p) => p.getByRole('progressbar').first().waitFor() },
+  { name: '홈(비로그인·소개와 자주 나오는 질문)', path: '/', ready: (p) => p.getByRole('region', { name: '자주 나오는 질문' }).waitFor() },
   { name: '홈(세션 오류)', path: '/', session: 'error', ready: (p) => p.getByRole('button', { name: '다시 시도' }).waitFor() },
   { name: '주제(로그인·체크박스)', path: '/t/transaction', session: 'authenticated', ready: (p) => p.getByRole('checkbox', { name: /학습함/ }).first().waitFor() },
   { name: '주제(내 체크 필터)', path: '/t/transaction?ls=no', session: 'authenticated', ready: (p) => p.getByRole('checkbox', { name: /학습함/ }).first().waitFor() },
@@ -200,7 +201,7 @@ test.describe('아래 탭 바', () => {
     test.skip(info.project.name === 'phone-landscape', '가로 폰은 데스크톱 상단 메뉴를 쓴다');
     await installApi(page, 'anonymous');
     await page.goto('/interview/');
-    await page.getByRole('heading', { level: 2, name: '스프링' }).first().waitFor();
+    await page.getByRole('heading', { level: 3, name: '스프링' }).first().waitFor();
     await page.getByRole('navigation', { name: '하단 메뉴' }).getByRole('link', { name: '탐색' }).click();
     await expect(page).toHaveURL(/\/interview\/explore$/);
     await expect(page.getByRole('navigation', { name: '하단 메뉴' }).getByRole('link', { name: '탐색' })).toHaveAttribute('aria-current', 'page');
