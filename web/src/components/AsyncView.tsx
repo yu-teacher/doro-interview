@@ -23,7 +23,7 @@ export function AsyncView<T>({ state, reload, notFoundMessage = '찾을 수 없�
     if (state.error.isNotFound) {
       return (
         <div role="alert" className="py-8 text-center">
-          <p className="font-semibold">{notFoundMessage}</p>
+          <h1 className="text-xl font-bold">{notFoundMessage}</h1>
           <Link to="/" className="mt-3 inline-flex min-h-11 items-center underline">
             처음으로
           </Link>
@@ -35,13 +35,15 @@ export function AsyncView<T>({ state, reload, notFoundMessage = '찾을 수 없�
     if (!retryable) {
       return (
         <div role="alert" className="py-8 text-center">
-          <p className="font-semibold">{state.error.message}</p>
+          <h1 className="text-xl font-bold">요청을 처리하지 못했습니다</h1>
+          <p className="mt-2">{state.error.message}</p>
         </div>
       );
     }
     return (
       <div role="alert" className="py-8 text-center">
-        <p className="font-semibold">{state.error.message}</p>
+        <h1 className="text-xl font-bold">불러오지 못했습니다</h1>
+        <p className="mt-2">{state.error.message}</p>
         <button
           type="button"
           onClick={reload}

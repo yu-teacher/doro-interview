@@ -14,9 +14,11 @@
 ## 로컬 검증
 ```bash
 scripts/ci-test.sh backend   # 격리 Postgres 를 올려 백엔드 테스트 후 내린다
-scripts/ci-test.sh web       # 프런트 린트·타입·테스트
+scripts/ci-test.sh web       # 프런트 린트·타입·단위 테스트·빌드·번들 예산
+scripts/ci-test.sh mobile    # 모바일 레이아웃·접근성(실제 Chromium 헤드리스)
+scripts/ci-test.sh e2e       # 통합 e2e(격리 DB + 백엔드 jar + 웹 + 실제 Chromium)
 ```
-필요: Docker, Java 25, Node 24, Python 3.
+필요: Docker, Java 25, Node 24, Python 3, Playwright 내장 Chromium(없으면 `web/` 에서 `npx playwright install chromium`; 시스템 Chrome 은 쓰지 않는다).
 
 ## 콘텐츠 추가·수정 방법
 질문 원본은 `content/` 의 마크다운이다. DB 는 앱이 시작할 때 이 파일을 반영한 사본이라 DB 에 직접 쓰지 않는다.

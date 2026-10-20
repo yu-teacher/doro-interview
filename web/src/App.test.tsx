@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AppRoutes } from './App';
 import type { CategoryView, ConceptView, QuestionDetail, SearchResult, TopicView } from './api/types';
+import { a11yViolations } from './testing/axe';
 import { mockApi, respond } from './testing/mockFetch';
 
 afterEach(() => {
@@ -77,6 +78,21 @@ describe('화면 경로', () => {
     mockApi({});
     go('/whatever/else');
     expect((await screen.findByRole('alert')).textContent).toContain('찾을 수 없는 페이지');
+  });
+
+  it('오류·찾을 수 없음 화면에도 제목(h1)이 있고 접근성 구조 위반이 없다', async () => {
+    mockApi({ '/interview/api/v1/categories': respond(() => new Response('<html>502</html>', { status: 502 })) });
+    go('/');
+    expect(await screen.findByRole('heading', { level: 1, name: '불러오지 못했습니다' })).toBeTruthy();
+    expect(await a11yViolations()).toEqual([]);
+    cleanup();
+    go('/q/nope');
+    expect(await screen.findByRole('heading', { level: 1, name: '찾을 수 없는 질문입니다.' })).toBeTruthy();
+    expect(await a11yViolations()).toEqual([]);
+    cleanup();
+    go('/whatever');
+    expect(await screen.findByRole('heading', { level: 1, name: '찾을 수 없는 페이지입니다.' })).toBeTruthy();
+    expect(await a11yViolations()).toEqual([]);
   });
 
   it('개념 목록과 개념 상세', async () => {
