@@ -19,6 +19,7 @@ public enum ErrorCode {
     PROGRESS_COUNT_MISMATCH(HttpStatus.CONFLICT, "PROGRESS-409-01", "질문 수가 바뀌었습니다. 다시 확인해 주세요."),
     QUIZ_RESULT_CONFLICT(HttpStatus.CONFLICT, "QUIZ-409-01", "이미 기록된 결과와 다릅니다. 한 번 기록한 결과는 바꿀 수 없습니다."),
     QUIZ_FINISHED(HttpStatus.CONFLICT, "QUIZ-409-02", "이미 끝난 시험입니다."),
+    MINE_LIMIT(HttpStatus.CONFLICT, "MINE-409-01", "내 질문은 300개까지 만들 수 있습니다."),
 
     // 405
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "COMMON-405-01", "지원하지 않는 HTTP 메서드입니다."),
