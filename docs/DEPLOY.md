@@ -105,7 +105,6 @@ Doro 레포에서 같이 할 일: `scripts/split-db-accounts.sh`(5단계), `scri
 ## 4. 이후 서비스 설정 메모
 
 - 환경변수(compose): `IAM_HOST`·`IAM_PORT`(JWKS·내부 API 주소), `INTERVIEW_OAUTH_CLIENT_ID`(허용하는 토큰의 클라이언트), `DORO_IAM_INTERNAL_TOKEN`. 모두 서버의 `.env`/compose 가 기준이다.
-- 기동 시 경고 `issuer-validation=OFF`(SDK 기본값): doro-games 와 같은 기본값이라 그대로 두었다. 강화할지는 **사용자 결정 대기**다(`docs/M2-PLAN.md` 결과 절).
 - 서비스 워커·`manifest.webmanifest` 는 웹 nginx 가 `no-cache` 로 내보낸다(`web/nginx.conf`). 새 배포 직후 `scripts/check-sw-precache.sh` 가 **배포 전·후**에 이미지 안의 dist 기준으로 미리 캐시 목록 전체를 게이트웨이 경유로 점검하고(이동 0·정적 파일이 HTML 로 오는 것 0), 실패하면 롤백한다.
 
 ## 5. 서비스 전용 DB 계정 (★ 사용자, 권장)

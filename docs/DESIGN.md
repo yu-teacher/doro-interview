@@ -75,11 +75,11 @@
 ## 6. 데이터 모델
 
 ### 6.0 도메인 경계와 모듈
-한 서비스, 한 DB, 한 배포 단위. 코드는 모듈(패키지) 넷으로 나눈다: 도메인 셋(`catalog`, `progress`, `quiz`)과 신원 모듈 하나(`account`).
+한 서비스, 한 DB, 한 배포 단위. 코드는 모듈(패키지)로 나눈다: 도메인 셋(`catalog`, `progress`, `quiz`), 신원 모듈 하나(`account`), 합성 계층(`api`), 공통(`common`)과 설정(`config`).
 
 | 모듈 | 소유 | 쓰는 주체 |
 |---|---|---|
-| `account` (사용자) | 이 서비스 안의 **사용자 사본** `interview_user(user_id, created_at, deleted_at)`, 현재 사용자 확인(`GET /api/v1/bff/session`), 탈퇴 동기화 | 시스템(첫 session 조회, 탈퇴 동기화) |
+| `account` (사용자) | 이 서비스 안의 **사용자 사본** `interview_user(user_id, created_at, deleted_at)`(닉네임·이메일 없음), 현재 사용자 확인(`GET /api/v1/bff/session`), 탈퇴 동기화(`iam_sync_state`, `AccountDeleted` 이벤트). **Doro SDK 를 아는 유일한 모듈**(`config` 제외, ArchUnit R1) | 시스템(첫 쓰기·session 조회, 탈퇴 동기화) |
 | `catalog` (사전) | `category`, `topic`, `question`, `question_link`, 검수 상태 | 편집자(콘텐츠 파일) |
 | `progress` (학습 진도) | 학습 완료 체크(`user_progress`), 내 노트(`my_note`) | 학습자 본인 |
 | `quiz` (시험) | `quiz_session`, `quiz_item`, `quiz_question_stats`, 출제 알고리즘 | 학습자 + 시스템 |
@@ -87,10 +87,10 @@
 사용자의 **원본은 Doro IAM**이다. `account`는 로그인 후 첫 `GET /api/v1/bff/session`에서 IAM 주체 id로 사본 행을 만들고(games의 `game_users`와 같은 방식), 영구 탈퇴 시 익명화·삭제 동기화를 맡는다(§10). 비밀번호·이메일·역할 같은 신원 정보는 갖지 않는다. 다른 모듈은 **`user_id`(UUID)** 만 참조하고 `account`의 엔티티를 쓰지 않는다. 학습·시험은 "사람"을 모델링하는 게 아니라 `user_id`에 붙은 기록이다.
 
 의존 방향(**한 방향만 허용**, 순환 금지):
-- `account` → 없음. 현재 사용자 해석(`CurrentUser`)을 인터페이스로 제공하고, `progress`·`quiz`·`api`가 그 인터페이스만 쓴다.
+- `account` → 없음. 현재 사용자 해석(`CurrentUser`)을 인터페이스로 제공하고 **`api` 컨트롤러만** 쓴다. 서비스 계층(`ProgressService` 등)은 사용자 id 를 **인자로 받는다**(M2-PLAN D5): 남의 id 를 읽을 길이 시그니처에 드러나고, 사용자 id 를 입력으로 받는 엔드포인트가 없음을 구조 시험이 고정한다.
 - `catalog` → 없음. 사용자 상태가 전혀 없는 읽기 전용 콘텐츠.
-- `progress` → `catalog` (질문 존재 검증, 질문 ID), `account` (`CurrentUser` 인터페이스).
-- `quiz` → `catalog` (질문 읽기), `account` (`CurrentUser`), `progress` (**읽기 전용**: "내가 체크한 질문" 풀 구성). **`quiz`는 `progress`에 쓰지 않는다.**
+- `progress` → `catalog` (질문·주제 가시성 판정과 질문 slug 목록: `isVisibleQuestion`·`visibleQuestionSlugs`), `account` (`AccountDeleted` 이벤트 구독).
+- `quiz` → `catalog` (질문 읽기), `account` (`AccountDeleted` 구독), `progress` (**`progress.read` 패키지만**: `ProgressReader` 로 "내가 체크한 질문" 풀 구성, JDK 타입만 반환). **`quiz`는 `progress`에 쓰지 않는다**(`progress.read` 밖의 클래스를 쓰면 ArchUnit 이 빌드를 깨뜨린다).
 - 합성 계층(`api`)은 세 모듈을 읽어 화면용 응답을 조립한다. 예: 질문 목록에 `learned`(progress)와 `recentWrong`(quiz 통계)을 붙인다. 모듈 간 호출은 인터페이스(`ProgressReader`, `QuizStatsReader`)로 하고 서로의 엔티티·리포지토리를 직접 쓰지 않는다.
 - 모듈 사이에는 **DB 외래키를 걸지 않는다**(질문 ID/slug만 참조, 존재 검증은 서비스 계층). 나중에 `catalog`를 따로 떼어낼 수 있게 하기 위함이지, 지금 서비스를 쪼개자는 뜻은 아니다. 풀 구성이 "카탈로그 ∩ 내 체크" 조인이라 지금 쪼개면 서비스 간 호출만 늘어난다.
 - 경계는 아키텍처 테스트로 고정한다(패키지 의존 규칙 위반 시 빌드 실패, 예: ArchUnit).
@@ -144,26 +144,27 @@ DB `service_interview`, 서비스 전용 Postgres 역할(도로 DB 계정 분리
 - **내 현황**: 카테고리·주제별 진도 바, 30일 출제량·정답률, 자주 틀린 질문 TOP.
 - **관리(편집자)**: 검수 상태 변경, `needs_review` 목록, 주제 공개 스위치.
 - 비로그인 사용자는 질문 은행만 읽을 수 있고, 체크·랜덤 면접·노트는 로그인 유도.
-- 접근성·가독성: 코드 블록 가로 스크롤, 큰 터치 영역, 다크 모드. 서비스 워커(PWA)는 M2 에서 게이트웨이·실제 브라우저 검증과 함께 도입한다(M1-PLAN D9).
+- 접근성·가독성: 코드 블록 가로 스크롤, 큰 터치 영역, 다크 모드. 서비스 워커(PWA)는 M2 에서 구현했다: 네트워크 우선 내비게이션·API 비캐시·안전한 순간 업데이트(M2-PLAN §6, 결과는 §13).
 
 ## 9. API (`/interview/api/`, 게이트웨이가 `/interview` 를 떼고 전달)
 - 공개(published 주제·닫히지 않은 질문만, 그 외는 404): `GET /api/v1/categories`(주제 포함), `GET /api/v1/topics/{slug}`(질문 요약 목록), `GET /api/v1/questions/{slug}`, `GET /api/v1/search?q&limit`(페이지네이션 없음, limit 기본 30·최대 100, M1-PLAN D2)
-- 로그인: `PUT /v1/progress/{slug} {learned}`, `PUT /v1/progress {topic, learned}`(주제 일괄), `GET /v1/progress/summary`, `POST /v1/quiz`(범위 → 세션과 첫 문제), `POST /v1/quiz/{id}/items/{seq} {result, answerText?}`, `POST /v1/quiz/{id}/finish`, `GET/PUT /v1/notes/{slug}`, `GET /v1/me/stats`, `GET/PUT /v1/me/prefs`, `GET /v1/review-candidates`(다시 공부 후보)
-- 편집자: `PATCH /v1/admin/questions/{slug}`, `PUT /v1/admin/topics/{slug}/published`
-- 오류 규격·페이지네이션·레이트 리밋은 games와 같은 규약을 쓴다. 질문 목록 응답에 로그인 사용자는 `learned` 가 함께 온다.
+- 로그인 필요(없으면 401), M2 구현: `PUT /api/v1/progress/{slug} {learned}`(멱등), `PUT /api/v1/progress {topic, learned, expectedCount}`(주제 일괄; 확인창에 보여 준 개수와 실제가 다르면 **409**), `GET /api/v1/progress/summary`, `GET/PUT /api/v1/notes/{slug}`(일반 텍스트, 2,000자, 공백뿐이면 삭제). 본문은 정해진 필드만 정확한 JSON 타입으로 받는다(모르는 필드·`"false"` 문자열은 400). 사용자 id 는 토큰에서만 얻고 경로·본문·쿼리에 받지 않는다. 게이트웨이는 쓰기를 `PUT` 만 통과시킨다. 로그인 상태 조회는 `GET /api/v1/bff/session`(로그인 필요 없음, 항상 200).
+- 로그인 필요, M3: `POST /api/v1/quiz`(범위 → 세션과 첫 문제), `POST /api/v1/quiz/{id}/items/{seq} {result, answerText?}`, `POST /api/v1/quiz/{id}/finish`, `GET /api/v1/me/stats`, `GET/PUT /api/v1/me/prefs`, `GET /api/v1/review-candidates`(다시 공부 후보)
+- 편집자(M4): `PATCH /api/v1/admin/questions/{slug}`, `PUT /api/v1/admin/topics/{slug}/published`
+- 오류 규격·페이지네이션·레이트 리밋은 games와 같은 규약을 쓴다. 주제의 질문 목록·질문 상세·검색 결과·개념 상세 응답에는 **로그인한 사용자에게만** `learned` 가 합쳐진다(비로그인 응답은 `learned` 키 자체가 없어 M1 과 바이트가 같다). 응답 본문이 곧 사용자별 ETag 이고, 로그인 응답은 `Cache-Control: private, no-cache` 다.
 
 ## 10. 인증·권한·개인정보
 - **로그인은 처음부터 게이트웨이 모드**(별도 BFF `doro-bff`가 로그인·세션을 맡고 게이트웨이가 Bearer를 붙임). games가 가진 `embedded` 모드(자체 세션·OAuth 클라이언트)는 만들지 않는다. 서비스가 제공할 것은 **Bearer 검증**과 `GET /api/v1/bff/session`(서비스 프로필 모양) 뿐이고, 사용자 행은 로그인 후 첫 session 조회에서 만든다. 붙이는 순서(`Doro/docs/BFF.md`): ① Doro 관리자 API로 OAuth 클라이언트 `doro-interview` 등록(`first_party=true`, 콜백 `/interview/api/v1/bff/callback`) ② **Doro 레포**의 `doro.bff.services.interview.*`(클라이언트·쿠키 이름·경로·CSRF 헤더)와 `doro.iam.oauth-client-ids` 에 추가 ③ **Doro 레포**의 게이트웨이 `nginx.conf` 에 BFF 라우트·`auth_request` 내부 location·API location 설정과 라우팅 시험 기대값 추가. ②③은 Doro 레포 변경이라 Doro 레포 PR이 별도로 필요하다(푸시는 사용자).
-- 권한은 코드 분기가 아니라 Guard. 스키마 `interview_question { relation editor: user }`, `@DoroGuard` 로 편집 API 보호. 서비스 토큰은 호출자별(`schema-write`).
+- 권한은 코드 분기가 아니라 Guard. 스키마 `interview_question { relation editor: user }`, `@DoroGuard` 로 편집 API 보호. 서비스 토큰은 호출자별(`schema-write`). **M4 에서 편집자 권한과 함께 붙인다**(M2 의 권한은 "본인 것만" 이라 `user_id` 를 토큰에서만 얻는 구조로 보장하고 `doro.guard.enabled=false`, M2-PLAN D3).
 - 열람은 공개, 학습·노트·모의는 본인만(소유 검증을 서비스 계층에서, 테스트로 타인 접근 거절 확인).
-- **탈퇴 동기화**: games의 `iam_sync_state` + 주기 조회 패턴을 복제한다. 정책(영구 탈퇴 시): `my_note`, `quiz_item.answer_text`는 **삭제**(사용자가 쓴 글), `user_progress`/`quiz_question_stats`/`quiz_session`/`quiz_item`은 **행 삭제**(통계 가치가 낮다). 30일 유예 정책과 맞춘다.
+- **탈퇴 동기화**(M2 구현): SDK 의 주기 조회(`DeletedUsersSync`)가 `DeletedUserHandler` 를 부르고, `account` 가 `interview_user` 에 **무덤 표식을 upsert**(방문한 적 없는 사용자도: 탈퇴 직후 아직 유효한 토큰이 행을 되살리는 경주를 막는다)한 뒤 `AccountDeleted` 이벤트를 발행한다. `progress`(M2)·`quiz`(M3)의 리스너가 **같은 트랜잭션**에서 자기 데이터를 지우고, 하나라도 실패하면 표식까지 롤백되어 다음 주기에 같은 사용자부터 재시도한다. 진행 위치는 `iam_sync_state`. 정책(영구 탈퇴 시): `my_note`, `quiz_item.answer_text`는 **삭제**(사용자가 쓴 글), `user_progress`/`quiz_question_stats`/`quiz_session`/`quiz_item`은 **행 삭제**(통계 가치가 낮다). 30일 유예 정책과 맞춘다.
 - 노트·모의 답은 일반 텍스트. 질문 본문 마크다운은 **렌더 시 구조적으로 안전하게** 그린다: 원시 HTML 을 해석하지 않는 렌더러(react-markdown, `rehype-raw` 미사용), `dangerouslySetInnerHTML` 사용 금지(린트). 본문은 저장소 파일(작성자 신뢰)이고, 사용자 입력(노트·답)은 일반 텍스트다. 화면에서는 `script-src 'self'` CSP.
 
 ## 11. 구조와 배포
 - 구조는 `doro-games` 복제: `src/`(Spring Boot, Flyway, Guard·IAM 연동), `web/`(React+Vite PWA), `docs/`, `scripts/`, `deploy/`, `content/`.
 - **포트**: API 8088, 웹 3007. 현재 compose에 쓰이는 포트(3002/3005/3006, 8082/8086/8087, 9000/9001)와 충돌 없음을 확인했다. 배포 전 서버에서 한 번 더 확인한다.
 - 배포 체크리스트(사용자가 서버에서 직접 실행하는 단계 표시 ★):
-  1. ★ `setup-interview-server.sh`: DB `service_interview`와 전용 역할, `.env`(세션 키 불필요: BFF 모드), Guard 서비스 토큰(`schema-write`)과 스키마, BFF 클라이언트 등록. 멱등, `--dry-run` 기본.
+  1. ★ `setup-interview-server.sh`: DB `service_interview`와 전용 역할, `.env`(세션 키 불필요: BFF 모드; 탈퇴 동기화 토큰 `DORO_IAM_INTERNAL_TOKEN` 은 Doro 쪽 `enable-deleted-sync.sh` 가 발급하고 이 스크립트는 있는지만 점검). Guard 서비스 토큰·스키마는 M4. BFF 클라이언트 등록·Doro 설정은 docs/DEPLOY.md 의 "로그인 연결" 순서. 멱등, `--dry-run` 기본.
   2. CI: 백엔드 테스트(실제 Postgres, 격리 포트), 웹 테스트, 변환기 골든 테스트, 병렬 잡. 배포는 main의 CI 성공 후.
   3. ★ 게이트웨이 `/interview/` 반영(백업 → `nginx -t` → reload). CSP는 먼저 Report-Only로 위반 확인 후 강제. 서버 수준 헤더는 location에서 상속되지 않으므로 공통 헤더를 다시 적는다.
   4. PWA: 서비스 워커 precache의 모든 URL이 게이트웨이를 거쳐 **리다이렉트 없이 200**이어야 한다(허브 빈 화면 사고). `navigateFallback`은 허용 목록으로.
@@ -176,7 +177,7 @@ DB `service_interview`, 서비스 전용 Postgres 역할(도로 DB 계정 분리
 |---|---|---|
 | M0 | 레포(games 복제, `catalog`/`progress`/`quiz` 패키지 틀과 의존 규칙 테스트), 변환기, 콘텐츠 반영(upsert), 스키마 | 골든 테스트 통과: 7편·159개·꼬리 39개, 멱등, 불일치 입력 시 실패 |
 | M1 | **기능 완료(2026-10-20, docs/M1-PLAN.md §11)**: 질문 은행(주제·검색·필터·근거 배지·개념·연결·필수도), 공개는 **트랜잭션 편 검수 완료 후** | 로그인 없이 열람, 검색이 한국어 부분 일치, 비공개 주제는 API에서도 404 |
-| M2 | **계획: [M2-PLAN.md](M2-PLAN.md)**. 로그인(BFF 게이트웨이 모드) + **학습 완료 체크** + 진도(홈·카테고리별) + **내 노트**(M4 에서 앞당김) + **서비스 워커(PWA)** + **탈퇴 동기화**(M4 에서 앞당김) | 체크·해제가 멱등(PUT), 주제 일괄 체크(확인창), 다른 사용자 진도·노트 접근 수단이 구조적으로 없음, 진도 수치가 테스트 데이터와 일치, 탈퇴 사용자 노트·진도 삭제, 서비스 워커 precache 전부 게이트웨이 경유 200 + 업데이트 시나리오 통과 |
+| M2 | **구현 완료(로컬 커밋, 푸시·서버 반영 전) — 계획: [M2-PLAN.md](M2-PLAN.md), 결과·미확인 항목: [M2-PLAN §13](M2-PLAN.md)**. 로그인(BFF 게이트웨이 모드) + **학습 완료 체크** + 진도(홈·카테고리별) + **내 노트**(M4 에서 앞당김) + **서비스 워커(PWA)** + **탈퇴 동기화**(M4 에서 앞당김) | 체크·해제가 멱등(PUT), 주제 일괄 체크(확인창), 다른 사용자 진도·노트 접근 수단이 구조적으로 없음, 진도 수치가 테스트 데이터와 일치, 탈퇴 사용자 노트·진도 삭제, 서비스 워커 precache 전부 게이트웨이 경유 200 + 업데이트 시나리오 통과 |
 | M3 | **랜덤 면접**(체크한 질문 풀) + 오답 후보 표시 + 현황 + 퀴즈 | §7 테스트 전부 통과(풀 구성·부족·0, 세션 내 중복 없음, 가중치, 오답 후보), 시험이 진도에 쓰지 않음, 한 세션 완주 |
 | M4 | 편집자 화면 + Guard 연동(M2 에서 미룸, M2-PLAN D3). 탈퇴 동기화는 M2 에서 구현하고 M3 가 `quiz` 이벤트 리스너만 더한다 | 검수 토글이 노출에 반영, 편집 API 가 Guard 로 보호 |
 | M5 | 콘텐츠 확장: **자바 → DB → 네트워크 → OS·자료구조 → 시스템 설계** 등 카테고리 추가 + 검수 | 카테고리·주제 추가가 코드 변경 없이 데이터만으로 가능, 주제당 20문항 이상, 모두 `REVIEWED` |

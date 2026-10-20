@@ -283,4 +283,82 @@ M1-PLAN §11 과 같은 틀의 "결과" 절을 이 문서 끝에 추가한다: �
 
 즉시 반영(이 계획 커밋에 포함): §12 의 **M2 행**(범위·완료 기준 확장: 노트·서비스 워커·탈퇴 동기화 포함)과 **M4 행**(노트·탈퇴 동기화가 M2 로 이동, M4 = 편집자 화면 + Guard).
 
-사용자가 Q3~Q5 를 확정했으므로 다음 구현 단계(S2·S3)에서 함께 반영: §6.0·§6 의 `interview_user.nickname` 삭제, `user_progress`·`my_note` 의 `question_id` → `question_slug`, §6.0 의 의존 규칙 문구(SDK 는 `account` 만, `quiz → progress.read` 만), §9 의 경로 표기(`/api/v1/…`, `PUT /progress` 의 `expectedCount`), §10 의 Guard 시점(M4)·탈퇴 이벤트 구조, §11 의 PWA 항목(§6 참조).
+사용자가 Q3~Q5 를 확정했으므로 구현하며 함께 반영했다(S11 에서 DESIGN.md 에 반영 완료): §6.0·§6 의 `interview_user.nickname` 삭제, `user_progress`·`my_note` 의 `question_id` → `question_slug`, §6.0 의 의존 규칙 문구(SDK 는 `account` 만, `quiz → progress.read` 만), §9 의 경로 표기(`/api/v1/…`, `PUT /progress` 의 `expectedCount`), §10 의 Guard 시점(M4)·탈퇴 이벤트 구조, §11 의 PWA 항목(§6 참조).
+
+## 13. 결과 (2026-10-20)
+
+로컬 커밋 S1~S10(`git log` 의 `feat(M2 S…)`), 푸시·서버 반영 전. 검증은 다른 세션의 미커밋 콘텐츠가 섞이지 않도록 HEAD 기준 깨끗한 체크아웃에 내 파일만 덮어서 돌렸다.
+
+### 완료 기준: 충족 (진짜 IAM 연동 제외)
+| 기준 | 확인 |
+|---|---|
+| 로그인 상태 조회 | `SessionApiTest`: 비로그인·위조·만료·다른 클라이언트·탈퇴 사용자는 200 `authenticated:false`, 유효 토큰은 true + 행 하나(동시 10 요청에도), PII 없음, `no-store` |
+| 체크·해제 멱등, 병렬 안전 | `ProgressServiceTest`(20 스레드 체크 → 행 1, `learned_at` 불변), `ProgressApiTest` |
+| 주제 일괄 + 경쟁 방지 | `expectedCount` 불일치 409(서비스·API·웹 확인창 재개방) |
+| **사용자 id 를 입력으로 받는 엔드포인트 없음** | `ApiSurfaceTest`: 핸들러를 열거해 경로·쿼리·본문 어디에도 `userId` 가 없고, 공개 목록 밖의 모든 엔드포인트는 비로그인 401(새 엔드포인트는 자동으로 대상) |
+| 진도 수치가 손계산과 일치 | `ProgressServiceTest`(공개 2주제·닫힌 질문·부분 체크, 닫힌 질문의 옛 기록은 분모·분자에서 제외) |
+| `learned` 합성은 로그인 응답에만 | `LearnedMergeTest`: 비로그인 본문은 읽기 모델 직렬화와 바이트 동일, 로그인 응답에서 `learned` 만 빼면 비로그인과 같음, **체크 전후 ETag 가 다르고 옛 ETag 는 304 가 아니라 200**, 사용자별 ETag |
+| 내 노트 | 2,000자(코드포인트), NUL 400(PostgreSQL TEXT 는 NUL 을 못 담는다), 공백은 삭제, `<script>` 그대로, 본문 크기 상한 413, DB `CHECK` 와 서비스 검사 이중 |
+| 탈퇴 동기화 | SDK 가 가짜 IAM 내부 API 를 실제로 호출해 우리 핸들러까지 간다. 멱등, 방문한 적 없는 사용자도 무덤 표식, 리스너 실패 시 전체 롤백, 진행 위치는 앞으로만, 토큰 틀림은 예외로 드러남 |
+| 서비스 워커 | 실제 Chromium·게이트웨이(CSP 강제)·웹 nginx: 설치(미리 캐시 전부 200)·업데이트 감지·**안전한 순간 적용(노트 초안이 있으면 미룸)**·지연 조각 실패 안내·내비게이션 허용 목록(오프라인 포함)·API 비캐시·CSP 전환 |
+| 모바일 감사 | 실제 Chromium 264개(M1 168 + 로그인 상태 화면 6종 × 폭 4 × 라이트·다크 + 비텍스트 대비 검사) |
+
+| 시험 | 수 | 위치 |
+|---|---|---|
+| 백엔드 JUnit(실제 Postgres, 깨끗한 체크아웃) | 346 (M1 228 → +118) | `scripts/ci-test.sh backend` |
+| 파이썬(변환기·게이트웨이 삽입·워크플로 정책) | 62 | 〃 |
+| 가짜 Doro 스텁 규격(node --test) | 13 | 〃 |
+| 서비스 워커 미리 캐시 점검 스크립트 | 14 | 〃 |
+| 배포 스크립트 시나리오(가짜 docker·curl) | 58 | 〃 |
+| 웹 단위(vitest, jsdom, axe 구조) | 247 중 246 통과 — 1건은 아래 "다른 세션의 콘텐츠" | `scripts/ci-test.sh web` |
+| 모바일 레이아웃·접근성(실제 Chromium) | 264 | `scripts/ci-test.sh mobile` |
+| 통합 e2e(실제 jar·DB·가짜 Doro·게이트웨이·Chromium) | 44 통과(+24 건너뜀: 휴대폰 프로젝트·empty 단계) — BFF 9 + 서비스 워커 8 + M1 읽기 흐름 | `scripts/ci-test.sh e2e` |
+| 배포 리허설 프리빌트(게이트웨이·CSP 강제·실제 브라우저) | 통과 | `REHEARSE_MODE=prebuilt scripts/rehearse-deploy.sh` |
+| 워크플로 문법 | `actionlint` 통과 | |
+
+번들: 첫 화면 JS gzip 93.5KB(예산 150), 마크다운 지연 조각 93.5KB(예산 120). 미리 캐시 15개 637.9KiB.
+
+**테스트가 실제로 잡는지 확인했다**: 핵심 보장마다 일부러 망가뜨려(변이 ◆) 약 30건. 가시성 조건, 무덤 검사, `cid` 허용 목록(비우면 전부 거부·다른 클라이언트 추가하면 통과해 버림), `ON CONFLICT DO NOTHING` → `DO UPDATE`, 노트 길이·NUL 검사(서비스·DB 각각), 비로그인에도 `learned` 합성, 질문 상세의 `learned` 누락(ETag 가 안 바뀜), 확인창 건너뛰기, 낙관 갱신 롤백·직렬화, 진도 막대 대비(실제 브라우저 비텍스트 대비 1.48:1 → 감사 실패), 리스너 제거, 무덤 upsert → "있을 때만 갱신", 게이트웨이 `auth_request`·`Authorization` 덮어쓰기·`limit_except` 완화, 서비스 워커 6종(skipWaiting 메시지 처리, 허용 목록 확대, 이동 주소 미리 캐시, `vite:preloadError`, API 런타임 캐시, 내비게이션 캐시 우선), `pull_request` 트리거 추가까지.
+
+### 시험이 찾아낸 결함 (고쳤다)
+- **체크박스의 접근 가능한 이름**: 라벨 뒤에 숨은 글자를 붙이니 jsdom 은 "학습함: 제목" 인데 **실제 Chromium 은 "학습함 : 제목"** 이었다(브라우저마다 공백이 다르다) → `aria-label` 로 못 박음. 단위 시험만 봤다면 놓쳤다.
+- **320px 헤더**: 세션 오류 안내가 붙으면 "개념" 링크가 20px 로 눌렸다(실제 브라우저 레이아웃 감사가 발견) → 메뉴 줄바꿈 허용·`shrink-0`.
+- **서비스 워커가 `/interview/` 를 캐시 우선으로 응답**: workbox 기본 `precacheAndRoute` 는 `directoryIndex` 로 `/interview/` 를 미리 캐시된 `index.html` 에 맞춘다 → 앱의 첫 주소가 옛 셸(옛 CSP 헤더 포함)에 고착된다(M1 F13 의 바로 그 위험). 시나리오 "옛 CSP 고착" 이 잡았고, 내비게이션을 미리 캐시 라우트에서 빼고 자산만 캐시 우선으로 바꿨다.
+- **JSON 본문 검증**: Jackson 의 `@JsonIgnoreProperties(ignoreUnknown=false)` 는 "미지정" 이라 모르는 필드를 거부하지 않았다(`{"learned":true,"userId":…}` 가 통과) → 본문을 맵으로 받아 필드 집합을 정확히 검사. 또 읽을 수 없는 본문이 **500** 이 되던 것을 400·415 로 바로잡았다.
+- **게이트웨이 BFF 공용 정의 누락**: 리허설용 기준 설정에는 `$bff_token` 을 만드는 `auth_request_set` 이 없어 nginx 가 뜨지 않았다(실제 게이트웨이는 다른 서비스가 정의). 기준 설정을 고치고, 실제 삽입 스크립트가 **공용 정의가 없으면 반영 전에 거부**하게 했다(없는 채 열리면 인증이 빠질 수 있다).
+- **통합 e2e 도구의 함정 세 가지**: ① nginx 의 ETag 는 수정 시각(초)+크기라서, 해시 길이가 같은 두 빌드를 같은 초에 연달아 바꿔치면 내용이 달라도 검증값이 같아 브라우저가 304 로 옛 `sw.js` 를 썼다(실제 배포는 분 단위라 해당 없음, 시험 쪽에서 수정 시각을 달리함) ② 바인드 마운트 변경이 컨테이너에 보이기까지 시간이 걸려 **내용 전체**가 보일 때까지 기다림 ③ 게이트웨이 설정 파일 덮어쓰기도 전파 대기.
+- `check-sw-precache.sh`(Doro 에서 복사)가 **injectManifest 출력(JSON 모양 목록)을 읽지 못했고** 번들된 workbox 를 별도 파일로 착각했다 → 복사본을 보강하고 "목록을 못 읽으면 실패" 로 바꿨다. **Doro 원본에도 같은 한계**(generateSW 만 가정)가 있어 알려 둔다.
+
+### 관찰한 것 (결함은 아님, 기록)
+- **A6**: 허용하지 않는 메서드(`DELETE`)는 게이트웨이 `limit_except` 가 만든 403 이 `error_page` 로 **CSRF 문구 JSON**(`AUTH-403-03`)이 된다. 안전하지만 메시지가 부정확하다.
+- 브라우저 HTTP 캐시는 304 응답을 합칠 때 옛 응답에만 있던 헤더를 남긴다: 게이트웨이를 Report-Only → 강제로 바꾸면 한동안 두 헤더가 같이 보일 수 있다(강제 정책은 적용된다). **강제 → Report-Only 방향이면 옛 강제 헤더가 남을 수 있다.** 서비스 워커와 무관한 브라우저 동작이다.
+- A5: `DORO_IAM_INTERNAL_TOKEN` 이 비면 SDK 클라이언트가 기동 때 경고하고, 동기화는 401 로 실패하며 주기 실행은 경고만 남기고 이어간다(조용히 실패하지 않는다). 시험으로 확인.
+- A2·A3(SDK 와 오류 규격 충돌 없음·이미지 빌드의 Doro 부분 복사)는 S1 에서 확인했다.
+
+### 계획과 달라진 점
+- **서비스 워커 도구**: `generateSW` 대신 **`injectManifest`**(`sw/sw.ts`). generateSW 는 `NavigationRoute`(미리 캐시 폴백)를 런타임 캐시보다 먼저 등록해서 "네트워크 우선 → 앱 셸 폴백"(Q2 확정안)을 만들 수 없다. 허용 목록은 `routes.ts` 의 `APP_ROUTE_PATHS` 한 곳에서 만들고 `App.tsx` 의 라우트도 같은 목록에서 만든다(새 화면이 목록에서 빠질 수 없다).
+- `GET /progress/summary` 는 로그인 필수(401), 로그인 응답의 사전 GET 은 `Cache-Control: private, no-cache`(계획에 없던 보강).
+- 오류 코드 409·413·415 추가, 본문 크기 상한 필터(32KiB) 추가.
+- 통합 e2e 의 웹은 `vite preview` 가 아니라 **운영과 같은 `web/nginx.conf` 의 nginx 컨테이너**(dist 바인드 마운트)로 바꿨다(`sw.js` 헤더 규칙·두 빌드 바꿔치기를 실제로 시험하려고). 가짜 Doro 에는 장애 흉내(`/dev/outage`)를 더했다(프로세스를 죽이지 않고 복구 가능).
+- 화면의 빌드 표식(`VITE_BUILD_MARK`, 운영 빌드에는 없음)을 추가했다.
+- 아이콘은 **임시**(말풍선+체크, 순수 파이썬으로 생성). 캐릭터가 정해지면 교체(Q9).
+
+### 이 환경에서 **확인하지 못한 것** (정직하게)
+1. **진짜 IAM·BFF 와의 로그인**(PKCE·`redirect_uri` 정확 일치·`cid`·IAM 화면): 가짜 Doro 는 **우리가 읽은 규격대로 흉내 낸 것**이라 규격을 잘못 읽었으면 스텁도 같이 틀린다. DEPLOY.md "마지막 확인" 1회가 필요하다(A1).
+2. **리허설 전체 모드·실제 이미지 롤백**: `docker pull` 이 이 환경에서 멈춰 프리빌트까지만 돌렸다(M1 과 같다). 이번에 늘어난 **이미지 안 dist 의 `check-sw-precache.sh` 호출(`image:` 경로)** 도 가짜 docker 로만 시험했다.
+3. **GitHub Actions**: `ci.yml`(backend 에 node·pyyaml 추가, e2e 에 `E2E_BIND_HOST=0.0.0.0`)·`deploy.yml` 은 한 번도 실행되지 않았다(`actionlint`·정책 시험만). 특히 **리눅스 러너에서 게이트웨이 컨테이너가 호스트의 jar·스텁에 닿는 경로(`host-gateway`)** 는 이 환경(Docker Desktop)에서 확인하지 못했다.
+4. 서버 작업(★)·Doro 레포 변경(PR-1 BFF 설정, PR-2 게이트웨이 사본·기대 파일, `enable-deleted-sync.sh`, `split-db-accounts.sh`, 스모크, 허브 카드, A7 의 `enable-bff.sh`·`set-bff-mode.sh` 하드코딩 점검)은 하지 않았다.
+5. **iOS 홈 화면 앱의 서비스 워커 수명주기**, 설치 가능성(Chrome 설치 프롬프트)은 확인하지 못했다(데스크톱 Chromium 의 등록·업데이트만).
+6. CD: 러너 등록과 `CD_ENABLED` 는 ★.
+
+### 다른 세션의 콘텐츠에서 발견한 것 (내 변경 아님)
+- 웹 코퍼스 시험 `본문의 글(단어)이 하나도 사라지지 않는다` 가 새 콘텐츠 `dbp-13` 의 **"`count()가`"** 에서 실패한다(렌더링된 본문에 그 글자가 없다). M1 의 코퍼스 골든이 새 질문에서 마크다운 렌더링 결함(또는 원문 표기 문제)을 잡은 것으로 보인다. 검수 세션이 확인해야 한다.
+- 한때 `content/database/` 가 `_topic.yml` 없이 커밋 전 상태라 jar 의 콘텐츠 로더가 기동을 거부했다(fail-fast 가 의도대로 동작). 통합 e2e 를 HEAD 기준 체크아웃으로 돌린 이유다.
+
+### 사용자가 할 일 (★)
+1. **A4 결정**: SDK 기동 로그의 경고 1건(발급자 검증 기본값)을 어떻게 할지 — 내용과 선택지는 비공개 메모(`.private/M2-FOLLOWUPS.md`, 저장소에는 올라가지 않는다)에 있다.
+2. 푸시(저장소 첫 푸시라면 CI 5잡 확인) — 특히 e2e·rehearse 잡이 리눅스에서 도는지.
+3. Doro 레포 PR 둘(BFF 설정 / 게이트웨이 사본·기대 파일) + `enable-deleted-sync.sh`·`split-db-accounts.sh` 에 `interview` 추가 — 내용은 DEPLOY.md 에 있다.
+4. 서버: DEPLOY.md 1→2→3 순서, IAM 에 OAuth 클라이언트 등록, 게이트웨이 반영, 진짜 로그인 1회 확인.
+5. (선택) 러너 등록·`CD_ENABLED=true`. 레지스트리가 되는 곳에서 `scripts/rehearse-deploy.sh`(전체 모드).
+
