@@ -33,3 +33,17 @@ export function topicView(questions: QuestionSummary[], over: Partial<TopicView>
 export const SESSION_URL = '/interview/api/v1/bff/session';
 export const authed = (userId = 'u-1') => ({ authenticated: true, user: { userId } });
 export const anonymous = () => ({ authenticated: false });
+
+export function quizItem(seq: number, over: Partial<import('../api/types').QuizItem> = {}): import('../api/types').QuizItem {
+  return {
+    seq, questionSlug: `tx-0${seq}`, title: `질문 ${seq}`, tier: 'BASIC', topicSlug: 'transaction', topicName: '트랜잭션',
+    result: null, seconds: null, answerText: null, answeredAt: null, ...over,
+  };
+}
+
+export function quizSession(items: import('../api/types').QuizItem[], over: Partial<import('../api/types').QuizSession> = {}): import('../api/types').QuizSession {
+  return {
+    sessionId: '11111111-1111-1111-1111-111111111111', plannedCount: items.length, includeUnlearned: false, mode: 'WEIGHTED',
+    startedAt: '2026-10-20T00:00:00Z', finishedAt: null, items, ...over,
+  };
+}

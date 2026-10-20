@@ -45,6 +45,8 @@ export interface QuestionSummary {
   concepts: string[];
   /** 로그인했을 때만 있다(체크했는지). 비로그인 응답에는 키가 없다. */
   learned?: boolean;
+  /** 로그인했을 때만 있다: 체크했고 마지막 시험 결과가 틀림("다시 공부 후보"). */
+  reviewCandidate?: boolean;
 }
 
 export interface SourceView {
@@ -103,6 +105,7 @@ export interface QuestionDetail {
   related: QuestionRef[];
   /** 로그인했을 때만 있다 */
   learned?: boolean;
+  reviewCandidate?: boolean;
 }
 
 export interface ConceptView {
@@ -162,4 +165,71 @@ export interface NoteInfo {
   slug: string;
   body: string | null;
   updatedAt: string | null;
+}
+
+export type QuizResult = 'CORRECT' | 'WRONG' | 'SKIPPED';
+export type QuizMode = 'WEIGHTED' | 'RANDOM';
+
+/** 시험 문항. 제목·tier·주제는 질문이 그 사이 닫혔으면 null 이다. 모범 답변은 없다(질문 API 로 따로 받는다). */
+export interface QuizItem {
+  seq: number;
+  questionSlug: string;
+  title: string | null;
+  tier: Tier | null;
+  topicSlug: string | null;
+  topicName: string | null;
+  result: QuizResult | null;
+  seconds: number | null;
+  answerText: string | null;
+  answeredAt: string | null;
+}
+
+export interface QuizSession {
+  sessionId: string;
+  plannedCount: number;
+  includeUnlearned: boolean;
+  mode: QuizMode;
+  startedAt: string;
+  finishedAt: string | null;
+  items: QuizItem[];
+}
+
+export interface QuizStartRequest {
+  count: number;
+  includeUnlearned: boolean;
+  categories?: string[];
+  topics?: string[];
+  tiers?: Tier[];
+  mode?: QuizMode;
+}
+
+export interface MissedQuestion {
+  questionSlug: string;
+  title: string;
+  tier: Tier;
+  topicSlug: string;
+  topicName: string;
+  missCount: number;
+  askCount: number;
+}
+
+export interface QuizStats {
+  askedLast30Days: number;
+  correctLast30Days: number;
+  wrongLast30Days: number;
+  skippedLast30Days: number;
+  sessionsLast30Days: number;
+  mostMissed: MissedQuestion[];
+}
+
+export interface ReviewCandidate {
+  slug: string;
+  title: string;
+  tier: Tier;
+  topicSlug: string;
+  topicName: string;
+}
+
+export interface Prefs {
+  includeUnlearnedDefault: boolean;
 }

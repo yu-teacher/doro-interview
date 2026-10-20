@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { SERVICE_NAME } from '../config';
-import { conceptsPath, searchPath } from '../routes';
+import { conceptsPath, quizStartPath, searchPath } from '../routes';
 import { loginUrl, useSession } from '../session/SessionProvider';
 
 function SearchForm() {
@@ -111,6 +111,9 @@ export function Layout() {
           </Link>
           <Link to={conceptsPath()} className="inline-flex min-h-11 shrink-0 items-center">
             개념
+          </Link>
+          <Link to={quizStartPath()} className="inline-flex min-h-11 shrink-0 items-center">
+            시험
           </Link>
           <SessionNav />
         </nav>
