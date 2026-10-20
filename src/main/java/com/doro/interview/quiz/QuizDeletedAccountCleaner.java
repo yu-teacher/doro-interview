@@ -20,6 +20,7 @@ class QuizDeletedAccountCleaner {
 
     @EventListener
     void on(AccountDeleted event) {
+        jdbc.update("DELETE FROM quiz_feedback WHERE user_id = ?", event.userId());
         jdbc.update("DELETE FROM quiz_item WHERE session_id IN (SELECT id FROM quiz_session WHERE user_id = ?)", event.userId());
         jdbc.update("DELETE FROM quiz_session WHERE user_id = ?", event.userId());
         jdbc.update("DELETE FROM quiz_question_stats WHERE user_id = ?", event.userId());

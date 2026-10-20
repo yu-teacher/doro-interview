@@ -7,6 +7,7 @@ import com.doro.interview.mine.read.MyQuestionReader;
 import com.doro.interview.common.exception.InterviewException;
 import com.doro.interview.common.response.ApiResponse;
 import com.doro.interview.quiz.QuizPicker.Mode;
+import com.doro.interview.quiz.QuizFeedbackService;
 import com.doro.interview.quiz.QuizService;
 import com.doro.interview.quiz.QuizService.ItemView;
 import com.doro.interview.quiz.QuizService.Result;
@@ -46,15 +47,21 @@ public class QuizController {
     private final CurrentUser currentUser;
     private final QuizService quiz;
     private final QuestionHeadings headings;
+    private final QuizFeedbackService feedback;
 
-    public QuizController(CurrentUser currentUser, QuizService quiz, QuestionHeadings headings) {
+    public QuizController(CurrentUser currentUser, QuizService quiz, QuestionHeadings headings, QuizFeedbackService feedback) {
         this.currentUser = currentUser;
         this.quiz = quiz;
         this.headings = headings;
+        this.feedback = feedback;
     }
 
     public record ItemResponse(int seq, String questionSlug, String title, String tier, String topicSlug, String topicName, Result result,
-                               Integer seconds, String answerText, Instant answeredAt) {
+                               Integer seconds, String answerText, Instant answeredAt,
+                               @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL) String feedback) {
+    }
+
+    public record FeedbackResponse(String feedback, boolean cached, int remainingToday) {
     }
 
     public record SessionResponse(UUID sessionId, int plannedCount, boolean includeUnlearned, Mode mode, Instant startedAt, Instant finishedAt,
@@ -103,6 +110,22 @@ public class QuizController {
         return noStore(ApiResponse.success(respond(user, quiz.get(user, id))));
     }
 
+    /**
+     * AI 피드백(docs/M6-PLAN.md D1): 내 답을 모범 답변과 비교한 짧은 평문. 문항마다 한 번만 만들고 다시 부르면 저장본을 준다.
+     * 꺼져 있거나 공급자가 실패하면 503, 한도를 넘으면 429 — 어느 쪽이든 시험은 그대로 계속할 수 있다.
+     */
+    @PutMapping("/{sessionId}/items/{seq}/feedback")
+    public ResponseEntity<ApiResponse<FeedbackResponse>> feedback(@PathVariable String sessionId, @PathVariable String seq,
+                                                                 @RequestBody Map<String, Object> request) {
+        UUID user = currentUser.require();
+        requireKeys(request, Set.of("answerText"), Set.of());
+        if (!(request.get("answerText") instanceof String answer)) {
+            throw invalid();
+        }
+        var result = feedback.feedback(user, sessionUuid(sessionId), seqNumber(seq), answer);
+        return noStore(ApiResponse.success(new FeedbackResponse(result.text(), result.cached(), result.remainingToday())));
+    }
+
     @PutMapping("/{sessionId}/finish")
     public ResponseEntity<ApiResponse<SessionResponse>> finish(@PathVariable String sessionId,
                                                               @RequestBody(required = false) Map<String, Object> request) {
@@ -120,11 +143,13 @@ public class QuizController {
     /** 문항에 제목·tier·주제를 붙인다(모범 답변은 없다). 그 사이 닫혔거나 비공개가 된 질문은 제목 없이 slug 만 나간다. */
     private SessionResponse respond(UUID user, SessionView view) {
         Map<String, QuestionHeading> headings = this.headings.of(user, view.items().stream().map(ItemView::questionSlug).toList());
+        Map<Integer, String> saved = feedback.forSession(view.sessionId());
         List<ItemResponse> items = new ArrayList<>();
         for (ItemView i : view.items()) {
             QuestionHeading h = headings.get(i.questionSlug());
             items.add(new ItemResponse(i.seq(), i.questionSlug(), h == null ? null : h.title(), h == null ? null : h.tier(),
-                    h == null ? null : h.topicSlug(), h == null ? null : h.topicName(), i.result(), i.seconds(), i.answerText(), i.answeredAt()));
+                    h == null ? null : h.topicSlug(), h == null ? null : h.topicName(), i.result(), i.seconds(), i.answerText(), i.answeredAt(),
+                    saved.get(i.seq())));
         }
         return new SessionResponse(view.sessionId(), view.plannedCount(), view.includeUnlearned(), view.mode(), view.startedAt(), view.finishedAt(),
                 List.copyOf(items));

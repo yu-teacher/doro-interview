@@ -6,6 +6,7 @@ import com.doro.interview.common.exception.ErrorCode;
 import com.doro.interview.common.exception.InterviewException;
 import com.doro.interview.common.response.ApiResponse;
 import com.doro.interview.progress.read.ProgressReader;
+import com.doro.interview.quiz.QuizFeedbackService;
 import com.doro.interview.quiz.QuizService;
 import com.doro.interview.quiz.QuizService.MissedQuestion;
 import com.doro.interview.quiz.read.QuizStatsReader;
@@ -36,13 +37,15 @@ public class MeController {
     private final QuizStatsReader quizStats;
     private final ProgressReader progress;
     private final QuestionHeadings headings;
+    private final QuizFeedbackService feedback;
 
-    public MeController(CurrentUser currentUser, QuizService quiz, QuizStatsReader quizStats, ProgressReader progress, QuestionHeadings headings) {
+    public MeController(CurrentUser currentUser, QuizService quiz, QuizStatsReader quizStats, ProgressReader progress, QuestionHeadings headings, QuizFeedbackService feedback) {
         this.currentUser = currentUser;
         this.quiz = quiz;
         this.quizStats = quizStats;
         this.progress = progress;
         this.headings = headings;
+        this.feedback = feedback;
     }
 
     public record MissedResponse(String questionSlug, String title, String tier, String topicSlug, String topicName, int missCount, int askCount) {
@@ -85,6 +88,16 @@ public class MeController {
                 .map(h -> new CandidateResponse(h.slug(), h.title(), h.tier(), h.topicSlug(), h.topicName()))
                 .toList();
         return noStore(list);
+    }
+
+    public record AiResponse(boolean enabled, int perUserPerDay, int remainingToday) {
+    }
+
+    /** AI 피드백을 쓸 수 있는지와 오늘 남은 횟수. 꺼져 있으면 웹은 버튼을 보이지 않는다. */
+    @GetMapping("/me/ai")
+    public ResponseEntity<ApiResponse<AiResponse>> ai() {
+        var status = feedback.status(currentUser.require());
+        return noStore(new AiResponse(status.enabled(), status.perUserPerDay(), status.remainingToday()));
     }
 
     @GetMapping("/me/prefs")

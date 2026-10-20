@@ -48,7 +48,7 @@ abstract class AbstractProgressApiTest extends AbstractAuthTest {
 
     @BeforeEach
     void seedContent() {
-        jdbc.execute("TRUNCATE my_question, quiz_item, quiz_session, quiz_question_stats, user_pref, user_progress, my_note, question_link, question_concept, question, concept, topic, category CASCADE");
+        jdbc.execute("TRUNCATE quiz_feedback, my_question, quiz_item, quiz_session, quiz_question_stats, user_pref, user_progress, my_note, question_link, question_concept, question, concept, topic, category CASCADE");
         fx = new ContentFixture(tmp).category("c1").concepts("proxy=프록시")
                 .topic("c1", "t1", "aa", true).topic("c1", "t2", "bb", false)
                 .questionWith("c1", "t1", "aa-01", "DEEP", "심화 질문", List.of("심화키워드"), HEADER + "심화 답변.\n", "2026-10-20", List.of(), List.of())
