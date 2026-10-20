@@ -37,4 +37,27 @@ class CatalogVisibleSlugsTest extends AbstractCatalogReaderTest {
         retireAa04();
         assertThat(reader.visibleQuestionSlugsByTopic().get("t1")).containsExactly("aa-02", "aa-01", "aa-03");
     }
+
+    @Test
+    void 위치_색인은_보이는_질문만_카테고리_주제_tier_순서로_준다() {
+        var index = reader.visibleQuestionIndex();
+        assertThat(index).extracting(e -> e.slug()).containsExactly("aa-02", "aa-04", "aa-01", "aa-03");
+        assertThat(index).allSatisfy(e -> {
+            assertThat(e.topicSlug()).isEqualTo("t1");
+            assertThat(e.categorySlug()).isEqualTo("c1");
+        });
+        assertThat(index).extracting(e -> e.tier()).containsExactly("BASIC", "BASIC", "DEEP", "TRICKY");
+    }
+
+    @Test
+    void 위치_색인에서_닫힌_질문이_빠진다() {
+        retireAa04();
+        assertThat(reader.visibleQuestionIndex()).extracting(e -> e.slug()).containsExactly("aa-02", "aa-01", "aa-03");
+    }
+
+    @Test
+    void 위치_색인은_보이는_질문_목록과_같다() {
+        var fromIndex = reader.visibleQuestionIndex().stream().map(e -> e.slug()).toList();
+        assertThat(fromIndex).isEqualTo(reader.visibleQuestionSlugsByTopic().values().stream().flatMap(List::stream).toList());
+    }
 }

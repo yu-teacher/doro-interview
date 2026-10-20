@@ -4,6 +4,7 @@ import com.doro.interview.catalog.CatalogViews.CategoryView;
 import com.doro.interview.catalog.CatalogViews.ConceptDetail;
 import com.doro.interview.catalog.CatalogViews.ConceptRef;
 import com.doro.interview.catalog.CatalogViews.ConceptView;
+import com.doro.interview.catalog.CatalogViews.QuestionIndexEntry;
 import com.doro.interview.catalog.CatalogViews.QuestionRef;
 import com.doro.interview.catalog.CatalogViews.QuestionSummary;
 import com.doro.interview.catalog.CatalogViews.QuestionView;
@@ -225,6 +226,15 @@ public class JdbcCatalogReader implements CatalogReader {
         });
         byTopic.replaceAll((k, v) -> List.copyOf(v));
         return byTopic;
+    }
+
+    @Override
+    public List<QuestionIndexEntry> visibleQuestionIndex() {
+        return jdbc.query("""
+                SELECT q.slug, q.topic_slug, t.category_slug, q.tier
+                FROM question q JOIN topic t ON t.slug = q.topic_slug JOIN category c ON c.slug = t.category_slug
+                WHERE %s ORDER BY c.sort, c.slug, t.sort, t.slug, %s""".formatted(visibility.questionVisible("q", "t"), QUESTION_ORDER),
+                (rs, n) -> new QuestionIndexEntry(rs.getString("slug"), rs.getString("topic_slug"), rs.getString("category_slug"), rs.getString("tier")));
     }
 
     // ------------------------------------------------------------------ 검색

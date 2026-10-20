@@ -40,6 +40,10 @@ public final class CatalogViews {
                                   boolean hasExtra, Integer importance, List<String> concepts) {
     }
 
+    /** 보이는 질문의 위치 색인(시험의 풀 구성용): 어느 카테고리·주제·tier 에 속하는가. */
+    public record QuestionIndexEntry(String slug, String topicSlug, String categorySlug, String tier) {
+    }
+
     /** 개념 목록의 한 줄. {@code questionCount} 는 보이는 질문 수다. */
     public record ConceptView(String slug, String name, String description, int questionCount) {
     }

@@ -22,4 +22,11 @@ class CatalogVisibleSlugsExposeTest extends AbstractCatalogReaderTest {
         assertThat(reader.isVisibleQuestion("aa-04")).isFalse();
         assertThat(reader.visibleQuestionSlugsByTopic().get("t1")).doesNotContain("aa-04");
     }
+
+    @Test
+    void 위치_색인에도_비공개_주제의_질문이_들어오고_카테고리가_붙는다() {
+        var index = reader.visibleQuestionIndex();
+        assertThat(index).extracting(e -> e.slug()).contains("bb-01", "cc-01");
+        assertThat(index.stream().filter(e -> e.slug().equals("cc-01")).findFirst().orElseThrow().categorySlug()).isEqualTo("c2");
+    }
 }

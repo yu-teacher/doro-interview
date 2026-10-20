@@ -3,6 +3,7 @@ package com.doro.interview.catalog;
 import com.doro.interview.catalog.CatalogViews.CategoryView;
 import com.doro.interview.catalog.CatalogViews.ConceptDetail;
 import com.doro.interview.catalog.CatalogViews.ConceptView;
+import com.doro.interview.catalog.CatalogViews.QuestionIndexEntry;
 import com.doro.interview.catalog.CatalogViews.QuestionView;
 import com.doro.interview.catalog.CatalogViews.SearchResult;
 import com.doro.interview.catalog.CatalogViews.TopicView;
@@ -41,4 +42,7 @@ public interface CatalogReader {
 
     /** 보이는 모든 주제 → 보이는 질문 slug(주제 정렬 순서). 진도 요약의 분모다. */
     Map<String, List<String>> visibleQuestionSlugsByTopic();
+
+    /** 보이는 모든 질문의 (slug, 주제, 카테고리, tier) — 카테고리·주제·tier·질문 순서. 시험이 "보이는 질문 ∩ 내 체크" 풀을 만들 때 쓴다. */
+    List<QuestionIndexEntry> visibleQuestionIndex();
 }
