@@ -20,9 +20,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ContentIntegrityTest {
 
-    private static final int QUESTIONS = 159;
-    private static final int TOPICS = 7;
-    private static final int TRICKY = 39;
+    private static final int QUESTIONS = 188;
+    private static final int TOPICS = 8;
+    private static final int TRICKY = 44;
     /** 검수 배치를 커밋할 때마다 올린다(B1: tx-01~08). */
     private static final int REVIEWED = 8;
 
@@ -47,12 +47,12 @@ class ContentIntegrityTest {
     }
 
     @Test
-    void 주제별_질문_수가_시드_문서와_같다() {
+    void 주제별_질문_수가_기대와_같다() {
         Map<String, Long> perTopic = content.questions().stream()
                 .collect(Collectors.groupingBy(QuestionDoc::topic, Collectors.counting()));
         assertThat(perTopic).containsExactlyInAnyOrderEntriesOf(Map.of(
-                "ioc-di", 22L, "aop-proxy", 20L, "transaction", 25L, "spring-mvc", 23L,
-                "jpa", 31L, "spring-boot", 21L, "spring-misc", 17L));
+                "ioc-di", 27L, "aop-proxy", 20L, "transaction", 25L, "spring-mvc", 23L,
+                "jpa", 37L, "spring-boot", 21L, "spring-misc", 17L, "spring-security", 18L));
     }
 
     @Test

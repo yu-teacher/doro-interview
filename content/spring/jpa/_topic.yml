@@ -16,3 +16,6 @@ sources:
     note: "일부 구간만 읽음"
   - url: "https://docs.hibernate.org/orm/7.0/introduction/html_single/"
     note: "일부 구간만 읽음"
+  - url: "https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html"
+  - url: "https://docs.spring.io/spring-data/jpa/reference/repositories/projections.html"
+  - url: "https://docs.spring.io/spring-data/jpa/reference/auditing.html"

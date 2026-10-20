@@ -21,3 +21,7 @@ sources:
   - url: "https://docs.spring.io/spring-framework/reference/core/beans/java.html"
   - url: "https://docs.spring.io/spring-framework/reference/core/beans/java/basic-concepts.html"
   - url: "https://docs.spring.io/spring-framework/reference/core/beans/java/configuration-annotation.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/context-introduction.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/environment.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/java/composing-configuration-classes.html"

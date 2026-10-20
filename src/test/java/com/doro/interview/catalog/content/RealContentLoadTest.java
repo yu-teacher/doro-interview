@@ -20,9 +20,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class RealContentLoadTest {
 
-    private static final int QUESTIONS = 159;
-    private static final int TOPICS = 7;
-    private static final int TRICKY = 39;
+    private static final int QUESTIONS = 188;
+    private static final int TOPICS = 8;
+    private static final int TRICKY = 44;
     /** 검수 배치를 커밋할 때마다 올린다(B1: tx-01~08). */
     private static final int REVIEWED = 8;
 
