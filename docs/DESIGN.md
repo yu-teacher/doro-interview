@@ -102,7 +102,7 @@ DB `service_interview`, 서비스 전용 Postgres 역할(도로 DB 계정 분리
 - `topic(slug PK, category_slug FK, name, sort, description, sources JSONB[url,title], base_version, published BOOL)` — 시드 7편은 모두 카테고리 `spring`. `published`는 주제 단위 노출 스위치.
 - `question(id UUID, slug UNIQUE, topic_slug FK, tier[BASIC|DEEP|TRICKY], difficulty 1~3, title, answer_md, keywords TEXT[], has_extra BOOL, evidence_note, content_hash, status[DRAFT|REVIEWED], reviewed_at, needs_review BOOL, retired_at, updated_at)`
 - `question_link(from_id, to_id, kind[FOLLOWUP|RELATED])` — 사람이 지정. 없어도 동작해야 한다.
-- 인덱스: `(topic_slug, tier)`, 전문 검색용 `pg_trgm`(제목+키워드, 한국어 부분 일치).
+- 인덱스: `(topic_slug, tier, sort)`. 검색은 `ILIKE` 부분 일치(제목·키워드·본문, 다중 단어 AND)로 하고 **pg_trgm 은 쓰지 않는다**: 159행, 합성 10,000행에서도 6ms 였다(M1-PLAN D1). 행이 수천을 넘거나 지연이 문제될 때 도입한다.
 
 **개인별 학습 상태**
 - `user_progress(user_id, question_id, learned_at, PK(user_id, question_id))` — **행이 있으면 "완전히 학습함", 없으면 미학습.** 체크하면 행 생성, 해제하면 행 삭제(PUT 으로 상태 지정, 멱등). 진도가 소유하는 사실은 이것뿐이다.
@@ -136,17 +136,17 @@ DB `service_interview`, 서비스 전용 Postgres 역할(도로 DB 계정 분리
 
 ## 8. 모드와 화면 (모바일 우선 PWA)
 - **홈**: 카테고리별 진도(체크 수/전체), 다시 공부 후보(체크했지만 최근 틀린 질문), 랜덤 면접 시작 버튼, 학습 연속 일수.
-- **질문 은행**: 카테고리 → 주제 탭, 검색, 필터(난이도·tier·`보충 포함`·**내 체크 상태**). 질문 상세에 모범 답변, 핵심 키워드, **문장 단위 근거 배지**, 기준 버전, 주제 출처 링크, **"완전히 학습함" 체크 토글**, 내 노트.
+- **질문 은행**: 카테고리 → 주제 탭, 검색, 필터(난이도·tier·`보충 포함`·**내 체크 상태**). 질문 상세에 모범 답변, 핵심 키워드, **인라인 토큰 근거 배지**(`(공식 문서)`·`(보충)`·`(실험 확인)` 표기 위치에 그대로 배지, M1-PLAN D5), 기준 버전, 주제 출처 링크, **"완전히 학습함" 체크 토글**, 내 노트.
 - **빠른 체크**: 주제 목록에서 질문 옆 체크박스로 바로 체크·해제하고, 주제 전체 "모두 체크/해제"는 확인창을 거친다(실수 방지).
 - **시험 영역**(상단 탭 "시험") **랜덤 면접**: 범위 선택(카테고리·주제·tier·개수·미학습 포함 여부) → 한 문제씩 질문만 보이고 타이머 → 내 답 입력(선택) → 모범 답변과 나란히 비교 → 맞음/틀림 → 결과 화면(맞힌 비율, 틀린 질문 목록과 각 질문의 "사전에서 보기" 링크).
 - **퀴즈(훑기)**: 답변을 가리고 키워드로 자가 점검(시드 사이트의 기능). 평가 기록은 남기지 않는 가벼운 모드.
 - **내 현황**: 카테고리·주제별 진도 바, 30일 출제량·정답률, 자주 틀린 질문 TOP.
 - **관리(편집자)**: 검수 상태 변경, `needs_review` 목록, 주제 공개 스위치.
 - 비로그인 사용자는 질문 은행만 읽을 수 있고, 체크·랜덤 면접·노트는 로그인 유도.
-- 접근성·가독성: 코드 블록 가로 스크롤, 큰 터치 영역, 다크 모드.
+- 접근성·가독성: 코드 블록 가로 스크롤, 큰 터치 영역, 다크 모드. 서비스 워커(PWA)는 M2 에서 게이트웨이·실제 브라우저 검증과 함께 도입한다(M1-PLAN D9).
 
 ## 9. API (`/interview/api/`, 게이트웨이가 `/interview` 를 떼고 전달)
-- 공개(published 주제만): `GET /v1/categories`(주제 포함), `GET /v1/questions?category&topic&tier&q&cursor`, `GET /v1/questions/{slug}`
+- 공개(published 주제·닫히지 않은 질문만, 그 외는 404): `GET /api/v1/categories`(주제 포함), `GET /api/v1/topics/{slug}`(질문 요약 목록), `GET /api/v1/questions/{slug}`, `GET /api/v1/search?q&limit`(페이지네이션 없음, limit 기본 30·최대 100, M1-PLAN D2)
 - 로그인: `PUT /v1/progress/{slug} {learned}`, `PUT /v1/progress {topic, learned}`(주제 일괄), `GET /v1/progress/summary`, `POST /v1/quiz`(범위 → 세션과 첫 문제), `POST /v1/quiz/{id}/items/{seq} {result, answerText?}`, `POST /v1/quiz/{id}/finish`, `GET/PUT /v1/notes/{slug}`, `GET /v1/me/stats`, `GET/PUT /v1/me/prefs`, `GET /v1/review-candidates`(다시 공부 후보)
 - 편집자: `PATCH /v1/admin/questions/{slug}`, `PUT /v1/admin/topics/{slug}/published`
 - 오류 규격·페이지네이션·레이트 리밋은 games와 같은 규약을 쓴다. 질문 목록 응답에 로그인 사용자는 `learned` 가 함께 온다.
@@ -156,7 +156,7 @@ DB `service_interview`, 서비스 전용 Postgres 역할(도로 DB 계정 분리
 - 권한은 코드 분기가 아니라 Guard. 스키마 `interview_question { relation editor: user }`, `@DoroGuard` 로 편집 API 보호. 서비스 토큰은 호출자별(`schema-write`).
 - 열람은 공개, 학습·노트·모의는 본인만(소유 검증을 서비스 계층에서, 테스트로 타인 접근 거절 확인).
 - **탈퇴 동기화**: games의 `iam_sync_state` + 주기 조회 패턴을 복제한다. 정책(영구 탈퇴 시): `my_note`, `quiz_item.answer_text`는 **삭제**(사용자가 쓴 글), `user_progress`/`quiz_question_stats`/`quiz_session`/`quiz_item`은 **행 삭제**(통계 가치가 낮다). 30일 유예 정책과 맞춘다.
-- 노트·모의 답은 일반 텍스트. 질문 본문 마크다운은 **빌드 시 sanitize** 후 저장, 화면에서는 `script-src 'self'` CSP.
+- 노트·모의 답은 일반 텍스트. 질문 본문 마크다운은 **렌더 시 구조적으로 안전하게** 그린다: 원시 HTML 을 해석하지 않는 렌더러(react-markdown, `rehype-raw` 미사용), `dangerouslySetInnerHTML` 사용 금지(린트). 본문은 저장소 파일(작성자 신뢰)이고, 사용자 입력(노트·답)은 일반 텍스트다. 화면에서는 `script-src 'self'` CSP.
 
 ## 11. 구조와 배포
 - 구조는 `doro-games` 복제: `src/`(Spring Boot, Flyway, Guard·IAM 연동), `web/`(React+Vite PWA), `docs/`, `scripts/`, `deploy/`, `content/`.
