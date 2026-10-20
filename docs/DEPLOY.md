@@ -139,6 +139,9 @@ scripts/deploy-on-server.sh --apply
 수동 롤백: `docker tag doro-interview-api:rollback-<시각> doro-interview-api:latest` (웹도 같게) 후
 `docker compose -p interview -f docker-compose.prod.yml up -d --no-build --no-deps --force-recreate interview-api interview-web`, 이어서 `docker exec doro-gateway nginx -s reload`.
 
+### AI 피드백(M6, 선택 — 기본 꺼짐)
+코드는 배포돼 있지만 **서버에서 두 환경변수를 넣기 전까지는 아무 일도 일어나지 않는다**(화면에 버튼도 없다). 켜려면 `~/doro-interview/.env` 에 `INTERVIEW_AI_ENABLED=true` 와 `ANTHROPIC_API_KEY=<키>` 를 넣고, 서버 쪽 `docker-compose.prod.yml` 의 `interview-api` 환경에 두 변수를 전달하는 줄을 더한 뒤 api 컨테이너만 다시 만든다. 선택 변수: `INTERVIEW_AI_MODEL`(기본 `claude-haiku-5-5`), `INTERVIEW_AI_PER_USER_PER_DAY`(20), `INTERVIEW_AI_GLOBAL_PER_DAY`(200), `INTERVIEW_AI_TIMEOUT`(PT20S), `INTERVIEW_AI_MAX_OUTPUT_TOKENS`(500). 키는 읽거나 출력하지 않는다. 끄려면 `INTERVIEW_AI_ENABLED` 를 지우거나 false 로 하고 컨테이너를 다시 만든다(저장된 피드백은 남는다). 자세한 설계·한도는 [M6-PLAN.md](M6-PLAN.md).
+
 ### 자동 배포(CD, 선택)
 
 `.github/workflows/deploy.yml`: CI 가 **main 에서 push 로** 통과한 커밋만, 서버의 셀프호스티드 러너가 `scripts/deploy-on-server.sh --apply` 를 실행한다(`INTERVIEW_ENV_FILE=$HOME/doro-interview/.env`, `DORO_DIR` = 러너가 받은 Doro 체크아웃). `pull_request` 에는 절대 반응하지 않는다(공개 저장소: 외부 기여자의 코드가 서버 러너에서 돌면 안 된다 — `scripts/test_workflows.py` 가 고정한다). 저장소 변수 `CD_ENABLED=true` 가 아니면 건너뛴다.

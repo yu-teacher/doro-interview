@@ -1,5 +1,5 @@
 import { apiGet, apiSend } from './client';
-import type { Prefs, QuizResult, QuizSession, QuizStartRequest, QuizStats, ReviewCandidate } from './types';
+import type { Prefs, QuizResult, QuizSession, QuizStartRequest, QuizStats, ReviewCandidate, AiFeedback, AiStatus } from './types';
 
 const session = (id: string) => `v1/quiz/${encodeURIComponent(id)}`;
 
@@ -12,6 +12,10 @@ export const putQuizItem = (id: string, seq: number, body: { result: QuizResult;
   apiSend<QuizSession>('PUT', `${session(id)}/items/${seq}`, body);
 
 export const finishQuiz = (id: string) => apiSend<QuizSession>('PUT', `${session(id)}/finish`, {});
+
+export const fetchAiStatus = (signal?: AbortSignal) => apiGet<AiStatus>('v1/me/ai', undefined, signal);
+/** 같은 문항에 다시 보내면 저장된 피드백이 돌아온다(공급자를 다시 부르지 않는다). */
+export const putFeedback = (id: string, seq: number, answerText: string) => apiSend<AiFeedback>('PUT', `${session(id)}/items/${seq}/feedback`, { answerText });
 
 export const fetchPrefs = (signal?: AbortSignal) => apiGet<Prefs>('v1/me/prefs', undefined, signal);
 export const putPrefs = (body: Prefs) => apiSend<Prefs>('PUT', 'v1/me/prefs', body);

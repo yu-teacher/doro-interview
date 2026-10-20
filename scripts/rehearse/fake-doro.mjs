@@ -10,6 +10,8 @@
 //                                          쿠키가 있고 쓰기 요청인데 CSRF 헤더가 없으면 403
 //   GET  /internal/v1/deleted-users        IAM 내부 API(서비스 토큰 필요)
 //   POST /dev/deleted?user=<uuid>          탈퇴 목록에 사용자를 넣는다(시험 조작용)
+//   POST /v1/messages                      가짜 AI 공급자(Anthropic Messages API 모양, M6): 키가 AI_KEY 와 같아야 하고, 본문에 FAIL-ME 가 있으면 500
+//   GET  /dev/ai-last                      마지막으로 받은 AI 요청(키는 헤더 이름과 일치 여부만, 값은 돌려주지 않는다)
 //   POST /dev/outage?on=1|0                BFF 장애를 흉내 낸다(켜면 /internal/auth 가 500)
 //
 // 로그인할 사용자는 쿠키 fake_user=<uuid>(없으면 고정 사용자)로 고른다. 실제 서비스 이름·쿠키 이름은 이 서비스의 것이다.
@@ -23,6 +25,8 @@ export const CSRF_HEADER = 'x-interview-csrf';
 export const CLIENT_ID = 'doro-interview';
 export const KID = 'fake-doro-kid';
 export const INTERNAL_TOKEN = 'fake-internal-token';
+/** 가짜 AI 공급자가 받아들이는 키(통합 e2e 의 백엔드가 같은 값을 ANTHROPIC_API_KEY 로 받는다) */
+export const AI_KEY = 'fake-ai-key-for-e2e';
 export const DEFAULT_USER = '00000000-0000-0000-0000-000000000001';
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
@@ -42,6 +46,7 @@ export function createFakeDoro({ internalToken = INTERNAL_TOKEN } = {}) {
   const sessions = new Map(); // sid → userId
   const deleted = []; // {userId, deletedAt}
   let outage = false;
+  let aiLast = null; // {keyOk, body}
 
   function token(userId, { expiresInSec = 900, clientId = CLIENT_ID } = {}) {
     const now = Math.floor(Date.now() / 1000);
@@ -131,6 +136,33 @@ export function createFakeDoro({ internalToken = INTERNAL_TOKEN } = {}) {
       const items = deleted.filter((d) => new Date(d.deletedAt) >= since).sort((a, b) => a.deletedAt.localeCompare(b.deletedAt)).slice(0, limit);
       const nextSince = items.length ? items[items.length - 1].deletedAt : new Date().toISOString();
       return json(res, 200, { success: true, data: { items, nextSince } });
+    }
+    if (path === '/v1/messages' && req.method === 'POST') {
+      // 가짜 AI 공급자(M6). 실제 API 와 같은 경로·헤더·본문 모양만 흉내 낸다.
+      let raw = '';
+      req.on('data', (c) => { raw += c; });
+      req.on('end', () => {
+        const keyOk = req.headers['x-api-key'] === AI_KEY && req.headers['anthropic-version'] === '2023-06-01';
+        let parsed = null;
+        try { parsed = JSON.parse(raw); } catch { /* 아래에서 400 */ }
+        aiLast = { keyOk, body: parsed };
+        if (!keyOk) {
+          return json(res, 401, { type: 'error', error: { type: 'authentication_error', message: 'invalid x-api-key' } });
+        }
+        const content = parsed?.messages?.[0]?.content;
+        if (typeof content !== 'string') {
+          return json(res, 400, { type: 'error', error: { type: 'invalid_request_error', message: 'bad body' } });
+        }
+        if (content.includes('FAIL-ME')) {
+          return json(res, 500, { type: 'error', error: { type: 'api_error', message: 'boom' } });
+        }
+        const candidate = /<candidate>\n([\s\S]*?)\n<\/candidate>/.exec(content)?.[1] ?? '';
+        return json(res, 200, { id: 'msg_fake', type: 'message', role: 'assistant', content: [{ type: 'text', text: `[가짜 AI] ${candidate.slice(0, 40)} 에 대한 의견입니다.` }] });
+      });
+      return undefined;
+    }
+    if (path === '/dev/ai-last') {
+      return json(res, 200, aiLast ?? { keyOk: null, body: null });
     }
     if (path === '/dev/outage' && req.method === 'POST') {
       // BFF 장애 시나리오(게이트웨이가 503 을 내는지)용: 켜면 auth_request 대상(/internal/auth)이 500 을 준다. 끄면 복구된다.

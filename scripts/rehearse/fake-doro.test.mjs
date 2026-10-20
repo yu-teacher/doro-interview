@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { createPublicKey, verify } from 'node:crypto';
 import { after, before, describe, it } from 'node:test';
-import { COOKIE, CSRF_HEADER, createFakeDoro, DEFAULT_USER, INTERNAL_TOKEN, KID, safeReturnPath } from './fake-doro.mjs';
+import { AI_KEY, COOKIE, CSRF_HEADER, createFakeDoro, DEFAULT_USER, INTERNAL_TOKEN, KID, safeReturnPath } from './fake-doro.mjs';
 
 const OTHER = '11111111-1111-1111-1111-111111111111';
 let doro; let base;
@@ -144,6 +144,37 @@ describe('장애 흉내(/dev/outage)', () => {
     assert.equal((await get('/.well-known/jwks.json')).status, 200);
     await fetch(`${base}/dev/outage?on=0`, { method: 'POST' });
     assert.equal((await auth(cookie)).status, 204);
+  });
+});
+
+describe('가짜 AI 공급자(/v1/messages)', () => {
+  const post = (body, key = AI_KEY) => fetch(`${base}/v1/messages`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
+    body: JSON.stringify(body),
+  });
+  const msg = (answer) => ({ model: 'm', max_tokens: 10, system: 's', messages: [{ role: 'user', content: `<question>\nq\n</question>\n<reference>\nr\n</reference>\n<candidate>\n${answer}\n</candidate>` }] });
+
+  it('올바른 키면 메시지 응답 모양으로 답하고, 후보 글의 앞부분을 되돌려 준다', async () => {
+    const res = await post(msg('프록시는 대리자입니다'));
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.equal(body.content[0].type, 'text');
+    assert.match(body.content[0].text, /프록시는 대리자입니다/);
+  });
+
+  it('키가 틀리면 401, 본문이 이상하면 400, FAIL-ME 가 있으면 500', async () => {
+    assert.equal((await post(msg('x'), 'wrong-key')).status, 401);
+    assert.equal((await post({ nothing: true })).status, 400);
+    assert.equal((await post(msg('FAIL-ME please'))).status, 500);
+  });
+
+  it('마지막 요청을 기록하되 키 값은 돌려주지 않는다', async () => {
+    await post(msg('기록용'));
+    const last = await (await get('/dev/ai-last')).json();
+    assert.equal(last.keyOk, true);
+    assert.equal(last.body.messages[0].role, 'user');
+    assert.ok(!JSON.stringify(last).includes(AI_KEY));
   });
 });
 

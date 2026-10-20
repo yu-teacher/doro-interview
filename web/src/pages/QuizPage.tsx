@@ -5,6 +5,7 @@ import { fetchMineQuestion } from '../api/mine';
 import { ApiError, userMessage } from '../api/client';
 import { fetchQuiz, finishQuiz, putQuizItem } from '../api/quiz';
 import type { MineQuestion, QuestionDetail, QuizItem, QuizResult, QuizSession } from '../api/types';
+import { AiFeedbackBox } from '../components/AiFeedbackBox';
 import { AsyncView } from '../components/AsyncView';
 import { ImportanceBadge, KeywordList, TierBadge } from '../components/Chips';
 import { setDraftDirty } from '../drafts/draftRegistry';
@@ -208,6 +209,7 @@ function Ask({ sessionId, item, total, answered, onDone, onProblem }: AskProps) 
               <AsyncView state={answerState.state} reload={answerState.reload} notFoundMessage="이 질문은 더 이상 공개되지 않습니다.">
                 {(answer) => (answer === null ? null : 'mine' in answer ? <MineAnswerCard mine={answer.mine} /> : <CatalogAnswerCard q={answer.question} />)}
               </AsyncView>
+              <AiFeedbackBox sessionId={sessionId} seq={item.seq} answer={text} saved={item.feedback} tooLong={tooLong} />
               <p className="mt-4 font-bold">내가 말한 것은 어땠나요?</p>
               <div className="mt-2 flex flex-wrap gap-2">
                 <button type="button" disabled={busy || tooLong} onClick={() => void record('CORRECT')} className={PRIMARY}>
@@ -258,6 +260,14 @@ function Result({ session }: { session: QuizSession }) {
             {wrong.map((i) => (
               <li key={i.seq} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
                 <p className="font-semibold">{i.title ?? '(더 이상 공개되지 않는 질문)'}</p>
+                {i.feedback && (
+                  <details className="mt-1">
+                    <summary className="inline-flex min-h-11 cursor-pointer items-center">AI 피드백 보기</summary>
+                    <p data-testid="ai-feedback" className="whitespace-pre-wrap break-words rounded-md border border-[var(--color-border)] p-3">
+                      {i.feedback}
+                    </p>
+                  </details>
+                )}
                 {i.title !== null && (
                   <Link to={questionLink(i.questionSlug)} className="inline-flex min-h-11 items-center">
                     {mineIdOf(i.questionSlug) === null ? '사전에서 보기' : '내 질문에서 보기'}

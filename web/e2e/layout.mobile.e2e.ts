@@ -50,6 +50,24 @@ const PAGES: Case[] = [
       await p.getByRole('button', { name: '맞음' }).waitFor();
     },
   },
+  {
+    name: '시험 진행(AI 피드백 받은 뒤)', path: `/quiz/${QUIZ_ACTIVE_ID}`, session: 'authenticated',
+    ready: (p) => p.getByRole('textbox').waitFor(),
+    act: async (p) => {
+      await p.getByRole('textbox').fill('프록시가 호출을 대신 받아 처리합니다. '.repeat(10));
+      await p.getByRole('button', { name: '모범 답변 보기' }).click();
+      await p.getByRole('button', { name: 'AI 피드백 받기' }).click();
+      await p.getByTestId('ai-feedback').waitFor();
+    },
+  },
+  {
+    name: '시험 결과(AI 피드백 펼침)', path: `/quiz/${QUIZ_DONE_ID}`, session: 'authenticated',
+    ready: (p) => p.getByText('AI 피드백 보기').waitFor(),
+    act: async (p) => {
+      await p.getByText('AI 피드백 보기').click();
+      await p.getByTestId('ai-feedback').waitFor();
+    },
+  },
   { name: '시험 결과', path: `/quiz/${QUIZ_DONE_ID}`, session: 'authenticated', ready: (p) => p.getByRole('link', { name: /사전에서 보기/ }).first().waitFor() },
   { name: '내 현황', path: '/stats', session: 'authenticated', ready: (p) => p.getByRole('region', { name: '자주 틀린 질문' }).waitFor() },
   { name: '훑기 주제 선택', path: '/skim', ready: (p) => p.getByRole('link', { name: 'JPA' }).waitFor() },

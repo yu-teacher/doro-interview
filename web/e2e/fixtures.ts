@@ -62,6 +62,7 @@ export type SessionMode = 'anonymous' | 'authenticated' | 'error';
 
 const LONG_NOTE = `${LONG_TOKEN} 는 TransactionAttributeSource 를 보고 어드바이스를 적용할지 판단한다.\n${'헷갈린 점을 적어 둔 긴 메모입니다. '.repeat(12)}`;
 const LONG_NOTE_SHORT = `${LONG_TOKEN} 라고 답했다.`;
+const LONG_FEEDBACK = `${LONG_TOKEN} 를 언급한 점은 좋습니다. ${'모범 답변과 비교하면 프록시가 호출을 가로채는 시점 설명이 빠져 있습니다. '.repeat(6)}\n마지막으로 한 가지만 고치면 좋습니다.`;
 const progressSummary = {
   total: 19, learned: 7,
   topics: [{ topicSlug: 'transaction', total: 14, learned: 5 }, { topicSlug: 'jpa', total: 5, learned: 2 }],
@@ -82,7 +83,7 @@ const quizSession = (id: string, items: unknown[], finishedAt: string | null) =>
 const activeSession = quizSession(ACTIVE_ID, [quizItem(1, { result: 'CORRECT', seconds: 40 }), quizItem(2), quizItem(3)], null);
 const doneSession = quizSession(
   DONE_ID,
-  [quizItem(1, { result: 'CORRECT', seconds: 40 }), quizItem(2, { result: 'WRONG', seconds: 95, answerText: LONG_NOTE_SHORT }), quizItem(3, { result: 'SKIPPED', seconds: 3 })],
+  [quizItem(1, { result: 'CORRECT', seconds: 40 }), quizItem(2, { result: 'WRONG', seconds: 95, answerText: LONG_NOTE_SHORT, feedback: LONG_FEEDBACK }), quizItem(3, { result: 'SKIPPED', seconds: 3 })],
   '2026-10-20T00:10:00Z',
 );
 const mineItem = (i: number, over: Record<string, unknown> = {}) => ({
@@ -133,6 +134,10 @@ export async function installApi(page: Page, session: SessionMode = 'anonymous')
         return route.fulfill(authenticated ? ok(mineList[0]) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
       case path.startsWith('/v1/mine') && method === 'PUT':
         return route.fulfill(ok(mineList[0]));
+      case path === '/v1/me/ai':
+        return route.fulfill(authenticated ? ok({ enabled: true, perUserPerDay: 20, remainingToday: 7 }) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
+      case /^\/v1\/quiz\/[0-9a-f-]+\/items\/\d+\/feedback$/.test(path) && method === 'PUT':
+        return route.fulfill(ok({ feedback: LONG_FEEDBACK, cached: false, remainingToday: 6 }));
       case path === '/v1/me/prefs':
         return route.fulfill(authenticated ? ok({ includeUnlearnedDefault: false }) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
       case path === '/v1/me/stats':
@@ -153,6 +158,9 @@ export async function installApi(page: Page, session: SessionMode = 'anonymous')
         return route.fulfill({ status: 502, contentType: 'text/html', body: '<html>502 Bad Gateway</html>' });
       case path === '/v1/questions/tx-04':
         return route.fulfill(ok(authenticated ? { ...detail, learned: false } : detail));
+      case /^\/v1\/questions\/tx-0[1-9]$/.test(path):
+        // 시험 진행 화면이 모범 답변을 받는 질문들(질문 상세 시험의 tx-04 와 같은 내용에 slug 만 다르다)
+        return route.fulfill(ok({ ...detail, slug: path.split('/').pop(), learned: false }));
       case path === '/v1/concepts':
         return route.fulfill(ok(conceptViews));
       case path === '/v1/concepts/proxy':

@@ -184,6 +184,8 @@ export interface QuizItem {
   seconds: number | null;
   answerText: string | null;
   answeredAt: string | null;
+  /** AI 피드백(받았을 때만 있다) */
+  feedback?: string;
 }
 
 export interface QuizSession {
@@ -257,4 +259,17 @@ export interface MineDraft {
   keywords: string[];
   tier: Tier;
   sourceLabel: string | null;
+}
+
+/** AI 피드백 기능 상태. 꺼져 있으면 화면은 버튼을 그리지 않는다. */
+export interface AiStatus {
+  enabled: boolean;
+  perUserPerDay: number;
+  remainingToday: number;
+}
+
+export interface AiFeedback {
+  feedback: string;
+  cached: boolean;
+  remainingToday: number;
 }
