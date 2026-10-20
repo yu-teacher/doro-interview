@@ -13,6 +13,9 @@ public enum ErrorCode {
     // 404 Not Found: 비공개 주제·닫힌 질문·없는 주소는 모두 같은 응답이다(존재 여부를 드러내지 않는다)
     NOT_FOUND(HttpStatus.NOT_FOUND, "COMMON-404-01", "요청한 리소스를 찾을 수 없습니다."),
 
+    // 409 Conflict
+    PROGRESS_COUNT_MISMATCH(HttpStatus.CONFLICT, "PROGRESS-409-01", "질문 수가 바뀌었습니다. 다시 확인해 주세요."),
+
     // 405
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "COMMON-405-01", "지원하지 않는 HTTP 메서드입니다."),
 

@@ -15,7 +15,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
  * account  -> (없음)
  * catalog  -> (없음)
  * progress -> catalog, account
- * quiz     -> catalog, account, progress(읽기 전용 인터페이스)
+ * quiz     -> catalog, account, progress.read(읽기 전용 패키지)
  * api      -> 전부 (아무도 api 에 의존하지 않는다)
  * </pre>
  *
@@ -47,15 +47,16 @@ final class ModuleRules {
                 .allowEmptyShould(true);
     }
 
-    /** quiz 는 progress 의 쓰기 쪽(저장소·서비스 구현·엔티티)을 쓰지 않는다: 읽기 인터페이스 이름 규약(...Reader)만 허용한다. */
+    /** quiz 는 progress 의 쓰기 쪽(서비스·저장소 구현)을 쓰지 않는다: 읽기 전용 패키지(progress.read)만 허용한다(docs/M2-PLAN.md D10). */
     private static ArchRule quizDoesNotWriteProgress(String base) {
         return noClasses().that().resideInAPackage(base + ".quiz..")
                 .should().dependOnClassesThat(
                         com.tngtech.archunit.base.DescribedPredicate.describe(
-                                "progress 모듈의 Reader 가 아닌 클래스",
+                                "progress 모듈에서 progress.read 밖의 클래스",
                                 c -> c.getPackageName().startsWith(base + ".progress")
-                                        && !c.getSimpleName().endsWith("Reader")))
-                .as("quiz 모듈은 progress 의 읽기 인터페이스(...Reader)만 쓴다. progress 에 쓰지 않는다")
+                                        && !c.getPackageName().equals(base + ".progress.read")
+                                        && !c.getPackageName().startsWith(base + ".progress.read.")))
+                .as("quiz 모듈은 progress.read 패키지만 쓴다. progress 에 쓰지 않는다")
                 .allowEmptyShould(true);
     }
 

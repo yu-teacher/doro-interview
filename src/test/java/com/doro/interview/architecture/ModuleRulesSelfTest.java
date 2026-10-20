@@ -40,6 +40,14 @@ class ModuleRulesSelfTest {
     }
 
     @Test
+    void quiz가_progress의_read_밖을_쓰는_위반만_잡는다() {
+        assertThatThrownBy(() -> ruleFor("quiz 모듈은 progress.read").check(classes))
+                .isInstanceOf(AssertionError.class)
+                .hasMessageContaining("BadQuiz")
+                .hasMessageNotContaining("GoodQuiz");
+    }
+
+    @Test
     void 위반_예시가_실제로_존재한다() {
         assertThat(classes.contain("com.doro.interview.architecture.fixture.api.BadSdkUser")).isTrue();
         assertThat(classes.contain("com.doro.interview.architecture.fixture.catalog.BadCatalog")).isTrue();

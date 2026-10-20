@@ -186,6 +186,47 @@ public class JdbcCatalogReader implements CatalogReader {
         return byKind;
     }
 
+    // ------------------------------------------------------------------ 진도용 좁은 조회
+
+    @Override
+    public boolean isVisibleQuestion(String slug) {
+        Integer n = jdbc.queryForObject("""
+                SELECT count(*) FROM question q JOIN topic t ON t.slug = q.topic_slug
+                WHERE q.slug = ? AND %s""".formatted(visibility.questionVisible("q", "t")), Integer.class, slug);
+        return n != null && n > 0;
+    }
+
+    @Override
+    public Optional<List<String>> visibleQuestionSlugs(String topicSlug) {
+        Integer visibleTopic = jdbc.queryForObject("SELECT count(*) FROM topic t WHERE t.slug = ? AND " + visibility.topicVisible("t"),
+                Integer.class, topicSlug);
+        if (visibleTopic == null || visibleTopic == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(List.copyOf(jdbc.queryForList("""
+                SELECT q.slug FROM question q JOIN topic t ON t.slug = q.topic_slug
+                WHERE t.slug = ? AND %s ORDER BY %s""".formatted(visibility.questionVisible("q", "t"), QUESTION_ORDER),
+                String.class, topicSlug)));
+    }
+
+    @Override
+    public Map<String, List<String>> visibleQuestionSlugsByTopic() {
+        Map<String, List<String>> byTopic = new LinkedHashMap<>();
+        jdbc.query("""
+                SELECT t.slug AS topic_slug, q.slug FROM topic t LEFT JOIN question q
+                  ON q.topic_slug = t.slug AND q.retired_at IS NULL
+                JOIN category c ON c.slug = t.category_slug
+                WHERE %s ORDER BY c.sort, c.slug, t.sort, t.slug, %s""".formatted(visibility.topicVisible("t"), QUESTION_ORDER), rs -> {
+            List<String> list = byTopic.computeIfAbsent(rs.getString("topic_slug"), k -> new ArrayList<>());
+            String q = rs.getString("slug");
+            if (q != null) {
+                list.add(q);
+            }
+        });
+        byTopic.replaceAll((k, v) -> List.copyOf(v));
+        return byTopic;
+    }
+
     // ------------------------------------------------------------------ 검색
 
     private static final String TITLE_MATCH = "q.title ILIKE ?";

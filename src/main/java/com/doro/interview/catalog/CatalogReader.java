@@ -8,6 +8,7 @@ import com.doro.interview.catalog.CatalogViews.SearchResult;
 import com.doro.interview.catalog.CatalogViews.TopicView;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -31,4 +32,13 @@ public interface CatalogReader {
 
     /** 보이는 질문이 없는 개념은 없는 것과 같다. */
     Optional<ConceptDetail> concept(String slug);
+
+    /** 이 질문이 보이는가(보이는 주제의 닫히지 않은 질문). 진도·노트가 "없는 것과 같은" 404 를 판정하는 한 곳이다. */
+    boolean isVisibleQuestion(String slug);
+
+    /** 보이는 주제의 보이는 질문 slug(주제 안 표시 순서). 보이지 않는 주제는 {@link Optional#empty()}. */
+    Optional<List<String>> visibleQuestionSlugs(String topicSlug);
+
+    /** 보이는 모든 주제 → 보이는 질문 slug(주제 정렬 순서). 진도 요약의 분모다. */
+    Map<String, List<String>> visibleQuestionSlugsByTopic();
 }
