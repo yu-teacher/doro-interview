@@ -12,6 +12,8 @@ test.beforeEach(({ browserName: _b }, info) => {
 });
 test.describe.configure({ mode: 'serial' });
 
+/** 제목의 `백틱` 은 화면에서 코드 서식으로 그려져 글자로는 남지 않는다 */
+const plain = (title: string) => title.replaceAll('`', '');
 const DORO = process.env.E2E_DORO_URL ?? 'http://127.0.0.1:18085';
 const BASE = process.env.E2E_BASE_URL ?? 'http://127.0.0.1:18490';
 const CSRF = { 'X-Interview-Csrf': '1' };
@@ -113,13 +115,13 @@ test('체크한 질문이 없으면 안내하고, 체크하면 시험을 볼 수
 test('틀린 질문은 다시 공부 후보로 보이고, 현황에도 나온다(체크는 풀리지 않는다)', async () => {
   await alice.page.goto('/interview/');
   await expect(alice.page.getByRole('heading', { name: '다시 공부 후보 (1)' })).toBeVisible();
-  await expect(alice.page.getByRole('link', { name: target.title })).toBeVisible();
+  await expect(alice.page.getByRole('link', { name: plain(target.title) })).toBeVisible();
 
   await alice.page.goto(`/interview/q/${encodeURIComponent(target.slug)}`);
   await expect(alice.page.getByText(/최근 시험에서 이 질문을 틀렸습니다/)).toBeVisible();
 
   await alice.page.goto('/interview/stats');
-  await expect(alice.page.getByRole('region', { name: '자주 틀린 질문' })).toContainText(target.title);
+  await expect(alice.page.getByRole('region', { name: '자주 틀린 질문' })).toContainText(plain(target.title));
   await expect(alice.page.getByText('1회', { exact: true })).toBeVisible();
 
   const summary = ((await (await alice.context.request.get('/interview/api/v1/progress/summary')).json()) as { data: { learned: number } }).data;

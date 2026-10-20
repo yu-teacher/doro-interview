@@ -10,6 +10,8 @@ test.skip(process.env.E2E_PHASE === 'empty', 'E2E_PHASE=empty 에서는 건너�
  */
 
 // 백엔드 응답 모양(web/src/api/types.ts 와 같다). 어느 쪽이든 바뀌면 이 시험이 실패해 양쪽을 함께 고치게 한다.
+/** 제목의 `백틱` 은 화면에서 코드 서식으로 그려져 글자로는 남지 않는다 */
+const plain = (title: string) => title.replaceAll('`', '');
 const KEYS = {
   topicSummary: ['baseVersion', 'counts', 'description', 'name', 'slug'],
   counts: ['basic', 'deep', 'tricky'],
@@ -123,15 +125,16 @@ test.describe('API 계약', () => {
 });
 
 test.describe('읽기 흐름', () => {
-  test('홈 → 주제 → 질문: 모범 답변, 접힌 근거·코드, 배지, 하이라이트', async ({ page }) => {
+  test('탐색 → 주제 → 질문: 모범 답변, 접힌 근거·코드, 배지, 하이라이트', async ({ page }) => {
     const errors = watchErrors(page);
-    await page.goto('/interview/');
+    // 탐색 화면에는 모든 주제가 있다(홈은 카테고리 칩으로 하나씩 보여 준다)
+    await page.goto('/interview/explore');
     await page.locator(`a[href="/interview/t/${topicSlug}"]`).click();
     await expect(page).toHaveURL(new RegExp(`/interview/t/${topicSlug}$`));
     await expect(page.locator('main ul li a[href*="/q/"]')).toHaveCount(questions.length);
 
     await page.locator(`a[href="/interview/q/${sample.slug}"]`).click();
-    await expect(page.getByRole('heading', { level: 1, name: sample.title })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: plain(sample.title) })).toBeVisible();
     const answer = page.getByRole('region', { name: '모범 답변' });
     const head = sample.spokenAnswer.replace(/[`*]/g, '').slice(0, 14);
     await expect(answer).toContainText(head);
@@ -183,13 +186,13 @@ test.describe('읽기 흐름', () => {
     await expect(page.getByRole('heading', { level: 1 })).toContainText(`${expected.total}건`);
     const first = expected.hits[0].question;
     await page.locator(`a[href="/interview/q/${first.slug}"]`).first().click();
-    await expect(page.getByRole('heading', { level: 1, name: first.title })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: plain(first.title) })).toBeVisible();
     expect(errors).toEqual([]);
   });
 
   test('주소를 직접 열어도 된다(SPA 폴백)', async ({ page }) => {
     await page.goto(`/interview/q/${sample.slug}`);
-    await expect(page.getByRole('heading', { level: 1, name: sample.title })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: plain(sample.title) })).toBeVisible();
     await page.goto(`/interview/t/${topicSlug}`);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
@@ -229,7 +232,7 @@ test.describe('접근성·키보드', () => {
     test(`실제 데이터 질문 화면의 접근성(색 대비 포함) — ${scheme}`, async ({ page }) => {
       await page.emulateMedia({ colorScheme: scheme });
       await page.goto(`/interview/q/${sample.slug}`);
-      await page.getByRole('heading', { level: 1, name: sample.title }).waitFor();
+      await page.getByRole('heading', { level: 1, name: plain(sample.title) }).waitFor();
       await page.getByText('근거 · 코드 · 실험 설명 보기').click();
       await page.locator('pre code [class^="hljs-"]').first().waitFor();
       expect(await auditAxe(page)).toEqual([]);
@@ -248,7 +251,7 @@ test.describe('접근성·키보드', () => {
     await page.getByRole('heading', { level: 1 }).waitFor();
     expect(await auditLayout(page)).toEqual([]);
     await page.goto(`/interview/q/${sample.slug}`);
-    await page.getByRole('heading', { level: 1, name: sample.title }).waitFor();
+    await page.getByRole('heading', { level: 1, name: plain(sample.title) }).waitFor();
     await page.getByText('근거 · 코드 · 실험 설명 보기').click();
     await page.locator('pre code').first().waitFor();
     expect(await auditLayout(page)).toEqual([]);

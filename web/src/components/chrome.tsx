@@ -38,7 +38,7 @@ export function BottomBar({ label, children }: BottomBarProps) {
     return null;
   }
   return createPortal(
-    <div role="group" aria-label={label} className="border-t border-[var(--color-border)] bg-[var(--color-surface)] pb-[env(safe-area-inset-bottom)]">
+    <div role="region" aria-label={label} className="border-t border-[var(--color-border)] bg-[var(--color-surface)] pb-[env(safe-area-inset-bottom)]">
       <div className="mx-auto flex max-w-3xl items-center gap-2 px-4 py-2">{children}</div>
     </div>,
     slot,

@@ -25,7 +25,8 @@ async function open(q: QuestionDetail = detail()) {
       <AppRoutes />
     </MemoryRouter>,
   );
-  return screen.findByRole('heading', { level: 1, name: q.title });
+  // 제목의 `백틱` 은 코드 서식으로 그려져 글자로는 남지 않는다
+  return screen.findByRole('heading', { level: 1, name: q.title.replaceAll('`', '') });
 }
 
 describe('질문 화면', () => {
@@ -46,7 +47,7 @@ describe('질문 화면', () => {
     expect(within(keywords).getAllByRole('listitem').map((li) => li.textContent)).toEqual(['AOP 프록시', 'ThreadLocal']);
     const concepts = screen.getByRole('list', { name: '개념' });
     const links = within(concepts).getAllByRole('link');
-    expect(links.map((a) => a.textContent)).toEqual(['프록시', '트랜잭션 경계']);
+    expect(links.map((a) => a.textContent?.replace('›', ''))).toEqual(['프록시', '트랜잭션 경계']);
     expect(links.map((a) => a.getAttribute('href'))).toEqual(['/c/proxy', '/c/tx-boundary']);
   });
 
@@ -137,21 +138,40 @@ describe('질문 화면', () => {
     expect(screen.queryByRole('list', { name: '핵심 키워드' })).toBeNull();
   });
 
-  it('이전·다음 질문 링크를 보여 주고, 첫 질문에는 이전이 없다', async () => {
+  it('아래 동작 바에 이전·다음 질문이 있고, 첫 질문에는 이전이 없다', async () => {
     await open();
-    const nav = screen.getByRole('navigation', { name: '이전·다음 질문' });
-    expect(within(nav).getByRole('link', { name: '← 이전 질문' }).getAttribute('href')).toBe('/q/tx-03');
-    expect(within(nav).getByRole('link', { name: '다음 질문 →' }).getAttribute('href')).toBe('/q/tx-05');
+    const bar = within(screen.getByRole('region', { name: '이 질문의 동작' }));
+    expect(bar.getByRole('link', { name: '이전 질문' }).getAttribute('href')).toBe('/q/tx-03');
+    expect(bar.getByRole('link', { name: '다음 질문 →' }).getAttribute('href')).toBe('/q/tx-05');
     cleanup();
     await open(detail({ prevSlug: null }));
-    const nav2 = screen.getByRole('navigation', { name: '이전·다음 질문' });
-    expect(within(nav2).queryByRole('link', { name: '← 이전 질문' })).toBeNull();
-    expect(within(nav2).getByRole('link', { name: '다음 질문 →' })).toBeTruthy();
+    const bar2 = within(screen.getByRole('region', { name: '이 질문의 동작' }));
+    expect(bar2.queryByRole('link', { name: '이전 질문' })).toBeNull();
+    expect(bar2.getByRole('link', { name: '다음 질문 →' })).toBeTruthy();
   });
 
-  it('이전·다음이 모두 없으면 이전·다음 내비게이션을 그리지 않는다', async () => {
+  it('마지막 질문에는 다음 대신 주제로 돌아가는 링크가 있다', async () => {
     await open(detail({ prevSlug: null, nextSlug: null }));
-    expect(screen.queryByRole('navigation', { name: '이전·다음 질문' })).toBeNull();
+    const bar = within(screen.getByRole('region', { name: '이 질문의 동작' }));
+    expect(bar.queryByRole('link', { name: /다음 질문/ })).toBeNull();
+    expect(bar.getByRole('link', { name: '주제로' }).getAttribute('href')).toBe('/t/transaction');
+  });
+
+  it('핵심 키워드와 관련 개념은 모범 답변 아래에 있고, 눌리는 것(개념)과 정보(키워드)의 모양이 다르다', async () => {
+    await open();
+    const headings = within(screen.getByRole('main')).getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
+    expect(headings.indexOf('모범 답변')).toBeLessThan(headings.indexOf('핵심 키워드'));
+    expect(headings.indexOf('핵심 키워드')).toBeLessThan(headings.indexOf('관련 개념'));
+    const keyword = within(screen.getByRole('list', { name: '핵심 키워드' })).getAllByRole('listitem')[0].firstElementChild as HTMLElement;
+    expect(keyword.tagName).toBe('SPAN'); // 키워드는 링크가 아니다
+    expect(within(screen.getByRole('list', { name: '개념' })).getAllByRole('link')).toHaveLength(2);
+  });
+
+  it('제목의 `백틱` 은 코드 서식이고 글자로는 남지 않는다', async () => {
+    await open(detail({ title: '`@Transactional` 은 어떻게 동작하나요?' }));
+    const h1 = screen.getByRole('heading', { level: 1 });
+    expect(h1.querySelector('code')?.textContent).toBe('@Transactional');
+    expect(h1.textContent).toBe('@Transactional 은 어떻게 동작하나요?');
   });
 
   it('원시 HTML 이 들어 있는 답변도 글자로만 보인다', async () => {

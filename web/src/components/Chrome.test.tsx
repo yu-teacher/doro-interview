@@ -83,15 +83,15 @@ describe('아래 동작 바', () => {
     shell('/', true);
     expect(screen.getByRole('navigation', { name: '하단 메뉴' })).toBeTruthy();
     fireEvent.click(screen.getByRole('link', { name: '동작 바 화면으로' }));
-    expect(await screen.findByRole('group', { name: '이 질문의 동작' })).toBeTruthy();
+    expect(await screen.findByRole('region', { name: '이 질문의 동작' })).toBeTruthy();
     expect(screen.queryByRole('navigation', { name: '하단 메뉴' })).toBeNull();
-    expect(within(screen.getByRole('group', { name: '이 질문의 동작' })).getAllByRole('button').map((b) => b.textContent)).toEqual(['학습함', '다음']);
+    expect(within(screen.getByRole('region', { name: '이 질문의 동작' })).getAllByRole('button').map((b) => b.textContent)).toEqual(['학습함', '다음']);
   });
 
   it('동작 바가 없는 화면은 탭 바를 그대로 둔다', () => {
     shell('/bar', false);
     expect(screen.getByRole('navigation', { name: '하단 메뉴' })).toBeTruthy();
-    expect(screen.queryByRole('group', { name: '이 질문의 동작' })).toBeNull();
+    expect(screen.queryByRole('region', { name: '이 질문의 동작' })).toBeNull();
   });
 });
 

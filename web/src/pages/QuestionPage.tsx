@@ -4,10 +4,12 @@ import { fetchQuestion } from '../api/catalog';
 import type { QuestionDetail } from '../api/types';
 import { AsyncView } from '../components/AsyncView';
 import { ConceptList, ExtraFlag, ImportanceBadge, KeywordList, ReviewBadge, TierBadge } from '../components/Chips';
+import { BottomBar } from '../components/chrome';
 import { LearnedCheckbox } from '../components/LearnedCheckbox';
 import { NoteEditor } from '../components/NoteEditor';
 import { RefList } from '../components/RefList';
 import { QuestionRefs, QuestionSources, TopicSources } from '../components/Sources';
+import { TitleText } from '../components/TitleText';
 import { useApi } from '../hooks/useApi';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useLearned } from '../hooks/useLearned';
@@ -35,7 +37,9 @@ function QuestionContent({ q }: { q: QuestionDetail }) {
         </Link>
       </nav>
 
-      <h1 className="text-2xl font-bold">{q.title}</h1>
+      <h1 className="text-2xl font-bold leading-snug">
+        <TitleText text={q.title} />
+      </h1>
       <div className="mt-3 flex flex-wrap gap-1.5">
         <TierBadge tier={q.tier} />
         <ImportanceBadge importance={q.importance} />
@@ -43,20 +47,11 @@ function QuestionContent({ q }: { q: QuestionDetail }) {
         {q.reviewCandidate === true && learned.isLearned(q.slug) && <ReviewBadge />}
       </div>
 
-      <div className="mt-3">
-        {session.authenticated ? (
-          <LearnedCheckbox checked={learned.isLearned(q.slug)} onChange={(next) => learned.toggle(q.slug, next)} title={q.title} />
-        ) : session.ready ? (
-          <a href={loginUrl(pathname + search)} className="inline-flex min-h-11 items-center">
-            로그인하고 학습 체크하기
-          </a>
-        ) : null}
-        {learned.message && (
-          <p role="status" aria-live="polite" className="text-[var(--color-extra)]">
-            {learned.message}
-          </p>
-        )}
-      </div>
+      {learned.message && (
+        <p role="status" aria-live="polite" className="mt-3 text-[var(--color-extra)]">
+          {learned.message}
+        </p>
+      )}
 
       {q.reviewCandidate === true && learned.isLearned(q.slug) && (
         <p role="note" className="mt-4 rounded-md border border-[var(--color-extra)] p-3 text-[var(--color-extra)]">
@@ -75,17 +70,29 @@ function QuestionContent({ q }: { q: QuestionDetail }) {
         </p>
       )}
 
-      <div className="mt-4 space-y-3">
-        <KeywordList keywords={q.keywords} />
-        <ConceptList concepts={q.concepts} />
-      </div>
-
       <section aria-labelledby="answer-heading" className="mt-6 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
         <h2 id="answer-heading" className="mb-1 text-base font-bold">
           모범 답변
         </h2>
         <LazyMarkdown source={q.spokenAnswer} />
       </section>
+
+      {q.keywords.length > 0 && (
+        <section aria-labelledby="keywords-heading" className="mt-5">
+          <h2 id="keywords-heading" className="mb-1.5 text-base font-bold">
+            핵심 키워드
+          </h2>
+          <KeywordList keywords={q.keywords} />
+        </section>
+      )}
+      {q.concepts.length > 0 && (
+        <section aria-labelledby="concepts-heading" className="mt-4">
+          <h2 id="concepts-heading" className="mb-1.5 text-base font-bold">
+            관련 개념
+          </h2>
+          <ConceptList concepts={q.concepts} />
+        </section>
+      )}
 
       {q.detailMd && (
         <details className="mt-4">
@@ -111,24 +118,33 @@ function QuestionContent({ q }: { q: QuestionDetail }) {
         {q.baseVersion ? ` · 기준 버전: ${q.baseVersion}` : ''}
       </p>
 
-      {(q.prevSlug || q.nextSlug) && (
-        <nav aria-label="이전·다음 질문" className="mt-6 flex justify-between gap-4 border-t border-[var(--color-border)] pt-3">
-          {q.prevSlug ? (
-            <Link to={questionPath(q.prevSlug)} rel="prev" className="inline-flex min-h-11 items-center">
-              ← 이전 질문
-            </Link>
-          ) : (
-            <span />
-          )}
-          {q.nextSlug ? (
-            <Link to={questionPath(q.nextSlug)} rel="next" className="inline-flex min-h-11 items-center">
-              다음 질문 →
-            </Link>
-          ) : (
-            <span />
-          )}
-        </nav>
-      )}
+      <BottomBar label="이 질문의 동작">
+        {q.prevSlug ? (
+          <Link to={questionPath(q.prevSlug)} rel="prev" aria-label="이전 질문" className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border border-[var(--color-border)] no-underline">
+            ←
+          </Link>
+        ) : (
+          <span className="inline-block min-w-11" aria-hidden="true" />
+        )}
+        <div className="min-w-0 flex-1">
+          {session.authenticated ? (
+            <LearnedCheckbox checked={learned.isLearned(q.slug)} onChange={(next) => learned.toggle(q.slug, next)} title={q.title} />
+          ) : session.ready ? (
+            <a href={loginUrl(pathname + search)} className="inline-flex min-h-11 items-center text-sm font-semibold">
+              로그인하고 학습 체크하기
+            </a>
+          ) : null}
+        </div>
+        {q.nextSlug ? (
+          <Link to={questionPath(q.nextSlug)} rel="next" className="inline-flex min-h-11 items-center rounded-md bg-[var(--color-accent)] px-4 font-semibold text-[var(--color-accent-contrast)] no-underline">
+            다음 질문 →
+          </Link>
+        ) : (
+          <Link to={topicPath(q.topicSlug)} className="inline-flex min-h-11 items-center rounded-md border border-[var(--color-border)] px-4 font-semibold no-underline">
+            주제로
+          </Link>
+        )}
+      </BottomBar>
     </article>
   );
 }
