@@ -12,6 +12,7 @@ sources: ["https://objectmentor.com/resources/articles/Principles_and_Patterns.p
 concepts: [gof-patterns]
 importance: 2
 links: [{to: "pat-16", kind: FOLLOWUP}, {to: "pat-17", kind: FOLLOWUP}, {to: "ioc-25", kind: RELATED}]
+refs: ["Martin, Design Principles and Design Patterns (2000), Observer, pp.29~30 (머리글 기준 쪽 번호)"]
 ---
 **모범 답변 (30~60초)**
 옵저버는 어떤 객체에서 일어난 일을, 그 객체가 구체적인 수신자를 모른 채 관심 있는 쪽들에게 알리는 패턴입니다. Robert Martin은 센서가 미터를 몰라도 되도록, 주체가 등록된 옵저버 목록을 돌며 갱신 메서드를 호출하는 구조로 설명합니다. 스프링 문서는 `ApplicationEvent`와 `ApplicationListener`를 두고, 이벤트가 컨텍스트에 발행될 때마다 등록된 리스너 빈이 통지받는 방식이 본질적으로 표준 Observer 패턴이라고 직접 말합니다. 발행은 `ApplicationEventPublisher`의 `publishEvent`로 합니다.

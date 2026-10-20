@@ -12,6 +12,7 @@ sources: ["https://martinfowler.com/articles/microservices.html", "https://marti
 concepts: [msa-boundary, ddd]
 importance: 2
 links: [{to: "dst-06", kind: FOLLOWUP}, {to: "arc-09", kind: RELATED}, {to: "arc-10", kind: RELATED}]
+refs: ["Evans, Domain-Driven Design Reference: Definitions and Pattern Summaries (2015, CC BY 4.0), Bounded Context, PDF p.9 (문서 쪽번호 2)"]
 ---
 **모범 답변 (30~60초)**
 기술 계층이 아니라 비즈니스 기능을 기준으로 나눕니다. Fowler와 Lewis는 UI팀, 서버팀, DB팀으로 나누면 간단한 변경도 여러 팀을 거치는 프로젝트가 되므로, 서비스 하나가 UI부터 저장소까지 한 비즈니스 영역을 맡는 구성을 설명합니다. 경계를 찾는 도구로는 DDD의 바운디드 컨텍스트가 쓰이는데, 하나의 모델이 적용되는 범위를 팀, 코드베이스, DB 스키마까지 명시하는 것입니다. Azure 가이드는 서비스가 한 바운디드 컨텍스트를 넘지 않게 하고, 서비스 사이 호출이 지나치게 잦거나 함께 배포해야 하면 경계를 다시 보라고 합니다. 애매하면 굵게 시작하는 편이 낫습니다.

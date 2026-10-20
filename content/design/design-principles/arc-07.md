@@ -12,6 +12,7 @@ sources: ["https://alistair.cockburn.us/hexagonal-architecture/", "https://marti
 concepts: [layered-architecture]
 importance: 2
 links: [{to: "arc-03", kind: PREREQ}, {to: "arc-06", kind: PREREQ}, {to: "arc-08", kind: FOLLOWUP}]
+refs: ["Evans, Domain-Driven Design Reference: Definitions and Pattern Summaries (2015, CC BY 4.0), Layered Architecture(Hexagonal 언급), p.10"]
 ---
 **모범 답변 (30~60초)**
 헥사고날 아키텍처, 즉 포트와 어댑터는 애플리케이션이 사용자, 다른 프로그램, 자동 테스트, 배치로 똑같이 구동되고 실제 장치나 DB 없이도 개발과 테스트가 되게 하려는 패턴입니다. Alistair Cockburn은 문제의 뿌리를 업무 로직과 외부 상호작용이 뒤엉킨 것으로 보고, 좌우나 위아래가 아니라 안과 밖의 구분에 주목합니다. 포트는 목적 있는 대화를 정의한 API이고, 어댑터는 각 기술의 신호를 포트 호출로 바꿔 주며, 한 포트에 여러 어댑터가 붙을 수 있습니다. 그는 계층 그림은 선이 잘 지켜지지 않아 로직이 새고 포트가 둘보다 많을 수 있다는 점을 한계로 듭니다. 육각형은 6이라는 숫자에 뜻이 있어서가 아닙니다.

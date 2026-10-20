@@ -12,6 +12,7 @@ sources: ["https://www.domainlanguage.com/ddd/reference/"]
 concepts: [ddd, equals-hashcode, immutability]
 importance: 2
 links: [{to: "arc-10", kind: FOLLOWUP}, {to: "jpa-33", kind: RELATED}, {to: "jpa-21", kind: RELATED}]
+refs: ["Evans, Domain-Driven Design Reference: Definitions and Pattern Summaries (2015, CC BY 4.0), Entities, p.11"]
 ---
 **모범 답변 (30~60초)**
 엔티티는 속성이 아니라 정체성으로 구분되는 객체입니다. 속성이 바뀌어도 같은 대상이고 속성이 같아도 다른 대상일 수 있어서, 무엇이 같은 것인지를 모델이 정의해야 한다고 Eric Evans는 설명합니다. 값 객체는 속성과 그에 딸린 로직에만 관심 있는 요소로 개념적 정체성이 없고, 불변으로 다루며 연산은 부작용이 없게 만들라고 합니다. 예컨대 회원은 이름을 바꿔도 같은 회원이므로 엔티티이고, 금액은 값이 같으면 같은 것이므로 값 객체로 모델링합니다. 정체성을 추적하는 일은 비용이 크기 때문에 필요한 곳에만 붙이자는 취지입니다.
