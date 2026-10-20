@@ -1,6 +1,9 @@
 package com.doro.interview.catalog;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +21,21 @@ public class CatalogVisibility {
 
     private final boolean exposeUnpublished;
 
-    public CatalogVisibility(@Value("${interview.catalog.expose-unpublished:false}") boolean exposeUnpublished) {
+    /** 시험·도구용: 환경 검사 없이 값만 정한다. */
+    public CatalogVisibility(boolean exposeUnpublished) {
+        this.exposeUnpublished = exposeUnpublished;
+    }
+
+    /**
+     * 스프링이 쓰는 생성자. **운영(prod) 프로파일에서 비공개 노출을 켜면 기동을 거부한다**: 검수 전 콘텐츠가 실수로 공개되는 것을
+     * 구조적으로 막는다(docs/M1-PLAN.md D4).
+     */
+    @Autowired
+    public CatalogVisibility(@Value("${interview.catalog.expose-unpublished:false}") boolean exposeUnpublished, Environment environment) {
+        if (exposeUnpublished && environment.acceptsProfiles(Profiles.of("prod"))) {
+            throw new IllegalStateException(
+                    "interview.catalog.expose-unpublished=true 는 운영(prod) 프로파일에서 쓸 수 없다. 검수 전 콘텐츠가 공개된다.");
+        }
         this.exposeUnpublished = exposeUnpublished;
     }
 

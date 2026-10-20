@@ -16,6 +16,14 @@ public record ApiResponse<T>(boolean success, T data, String code, String messag
         return new ApiResponse<>(true, data, null, null, null, null, Instant.now());
     }
 
+    /**
+     * 캐시 대상(읽기 전용 GET) 성공 응답: {@code timestamp} 를 싣지 않는다. 본문이 요청마다 달라지면 본문 해시 ETag 가
+     * 매번 바뀌어 304 재검증이 동작하지 않는다.
+     */
+    public static <T> ApiResponse<T> cacheable(T data) {
+        return new ApiResponse<>(true, data, null, null, null, null, null);
+    }
+
     public static ApiResponse<Void> ok() {
         return new ApiResponse<>(true, null, null, null, null, null, Instant.now());
     }
