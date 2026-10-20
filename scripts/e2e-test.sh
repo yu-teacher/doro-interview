@@ -71,9 +71,9 @@ wait_http "http://127.0.0.1:$DORO_PORT/health" "가짜 Doro"
 
 log "== 백엔드 jar 빌드·기동(포트 $API_PORT, 비공개 주제 노출 켬: 개발·시험 전용, 토큰은 가짜 Doro 의 JWKS 로 검증) =="
 ./gradlew bootJar --no-daemon -q
-# DORO_IAM_REVOCATION_CHECK=OFF: 세션 폐기 확인은 진짜 IAM 이 필요하다. INTERVIEW_DELETED_SYNC_ENABLED=false: 탈퇴 동기화는 단위·통합 시험이 따로 본다.
+# DORO_IAM_REVOCATION_CHECK=OFF: 세션 폐기 확인은 진짜 IAM 이 필요하다. 탈퇴 동기화는 켜 둔다(2초 주기, 가짜 Doro 의 /dev/deleted 로 시험: web/e2e/quiz.integration.e2e.ts).
 DB_PASSWORD="$CI_DB_PASSWORD" DB_PORT="$DB_PORT" SERVER_PORT="$API_PORT" SERVER_ADDRESS="$BIND_HOST" INTERVIEW_CATALOG_EXPOSE_UNPUBLISHED=true \
-  IAM_HOST=127.0.0.1 IAM_PORT="$DORO_PORT" DORO_IAM_REVOCATION_CHECK=OFF INTERVIEW_DELETED_SYNC_ENABLED=false \
+  IAM_HOST=127.0.0.1 IAM_PORT="$DORO_PORT" DORO_IAM_REVOCATION_CHECK=OFF INTERVIEW_DELETED_SYNC_ENABLED=true INTERVIEW_DELETED_SYNC_INTERVAL=PT2S INTERVIEW_DELETED_SYNC_INITIAL_DELAY=PT1S DORO_IAM_INTERNAL_TOKEN=fake-internal-token \
   java -jar build/libs/doro-interview-0.0.1-SNAPSHOT.jar >"$LOG_DIR/api.log" 2>&1 &
 JAR_PID=$!
 wait_http "http://127.0.0.1:$API_PORT/actuator/health" "백엔드"
@@ -108,6 +108,7 @@ wait_http "http://127.0.0.1:$GW_PORT/interview/" "웹(게이트웨이 경유)"
 curl -fs -o /dev/null "http://127.0.0.1:$GW_PORT/interview/api/v1/categories" || die "게이트웨이 경유 API 가 응답하지 않는다"
 
 log "== Playwright(내장 Chromium 헤드리스, 게이트웨이 경유) =="
+E2E_PG_CONTAINER="$("${COMPOSE[@]}" ps -q postgres)"; export E2E_PG_CONTAINER
 (cd web && E2E_BFF=1 E2E_PWA=1 E2E_DORO_URL="http://127.0.0.1:$DORO_PORT" E2E_BASE_URL="http://127.0.0.1:$GW_PORT" \
   E2E_DIST_LIVE="$LOG_DIR/dist-live" E2E_DIST_V1="$LOG_DIR/dist-v1" E2E_DIST_V2="$LOG_DIR/dist-v2" \
   E2E_GW_CONTAINER="$GW" E2E_GW_CONF="$LOG_DIR/nginx.conf" E2E_GW_CONF_ENFORCED="$LOG_DIR/gw-enforced.conf" E2E_GW_CONF_REPORT="$LOG_DIR/gw-report.conf" \

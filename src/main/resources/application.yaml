@@ -65,3 +65,5 @@ interview:
   deleted-sync:
     enabled: ${INTERVIEW_DELETED_SYNC_ENABLED:true}
     interval: ${INTERVIEW_DELETED_SYNC_INTERVAL:PT1H}
+    # 기동 뒤 첫 조회까지의 대기(SDK 기본 2분). 통합 e2e 만 줄여 쓴다.
+    initial-delay: ${INTERVIEW_DELETED_SYNC_INITIAL_DELAY:PT2M}
