@@ -1,0 +1,31 @@
+concepts:
+  - slug: acid
+    name: "ACID"
+    description: "트랜잭션이 보장해야 하는 원자성·일관성·격리성·지속성"
+  - slug: tx-boundary
+    name: "트랜잭션 경계"
+    description: "어디서 시작·커밋·롤백되는가"
+  - slug: declarative-tx
+    name: "선언적 트랜잭션"
+    description: "@Transactional 기반 트랜잭션 관리"
+  - slug: programmatic-tx
+    name: "프로그래밍 방식 트랜잭션"
+    description: "TransactionTemplate 등 코드로 경계를 잡는 관리"
+  - slug: tx-manager
+    name: "트랜잭션 매니저"
+    description: "PlatformTransactionManager와 그 구현체"
+  - slug: rollback-rules
+    name: "롤백 규칙"
+    description: "어떤 예외에서 롤백하고 어떤 예외에서 커밋하는가"
+  - slug: proxy
+    name: "프록시"
+    description: "AOP 프록시 기반 동작과 그 제약"
+  - slug: thread-binding
+    name: "스레드 바인딩"
+    description: "트랜잭션과 리소스가 현재 스레드에 묶이는 방식"
+  - slug: persistence-context
+    name: "영속성 컨텍스트"
+    description: "JPA가 엔티티를 관리하는 범위"
+  - slug: dirty-checking
+    name: "변경 감지"
+    description: "플러시 때 변경된 엔티티를 UPDATE로 반영하는 동작"
