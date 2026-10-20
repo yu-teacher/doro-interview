@@ -4,6 +4,7 @@ import com.doro.interview.catalog.CatalogViews.CategoryView;
 import com.doro.interview.catalog.CatalogViews.ConceptDetail;
 import com.doro.interview.catalog.CatalogViews.ConceptView;
 import com.doro.interview.catalog.CatalogViews.QuestionView;
+import com.doro.interview.catalog.CatalogViews.SearchResult;
 import com.doro.interview.catalog.CatalogViews.TopicView;
 
 import java.util.List;
@@ -21,6 +22,9 @@ public interface CatalogReader {
     Optional<TopicView> topic(String slug);
 
     Optional<QuestionView> question(String slug);
+
+    /** 보이는 질문만 검색한다(제목·키워드·개념 이름·본문, 부분 일치, 단어는 AND). 점수 순, 동점은 사전 순서. */
+    SearchResult search(SearchQuery query);
 
     /** 보이는 질문이 하나라도 있는 개념만(비공개 질문에만 붙은 개념은 나타나지 않는다). 사전 순서. */
     List<ConceptView> concepts();

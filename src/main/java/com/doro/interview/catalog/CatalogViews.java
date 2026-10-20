@@ -44,6 +44,17 @@ public final class CatalogViews {
     public record ConceptView(String slug, String name, String description, int questionCount) {
     }
 
+    /**
+     * 검색 결과 한 건. {@code score} 는 단어마다 제목 3 + 키워드 2 + 개념 2 + 본문 1 의 합이고,
+     * {@code matchedIn} 은 어느 단어든 일치한 곳(title / keywords / concepts / body)이다.
+     */
+    public record SearchHit(QuestionSummary question, String topicName, int score, List<String> matchedIn) {
+    }
+
+    /** {@code total} 은 limit 와 무관한 전체 일치 수다. */
+    public record SearchResult(List<String> words, int total, List<SearchHit> hits) {
+    }
+
     /** 개념 상세: 그 개념의 보이는 질문(카테고리·주제·tier·번호 순). */
     public record ConceptDetail(ConceptView concept, List<QuestionSummary> questions) {
     }

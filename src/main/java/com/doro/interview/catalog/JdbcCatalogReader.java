@@ -7,6 +7,8 @@ import com.doro.interview.catalog.CatalogViews.ConceptView;
 import com.doro.interview.catalog.CatalogViews.QuestionRef;
 import com.doro.interview.catalog.CatalogViews.QuestionSummary;
 import com.doro.interview.catalog.CatalogViews.QuestionView;
+import com.doro.interview.catalog.CatalogViews.SearchHit;
+import com.doro.interview.catalog.CatalogViews.SearchResult;
 import com.doro.interview.catalog.CatalogViews.SourceView;
 import com.doro.interview.catalog.CatalogViews.TierCounts;
 import com.doro.interview.catalog.CatalogViews.TopicSummary;
@@ -182,6 +184,91 @@ public class JdbcCatalogReader implements CatalogReader {
         }, slug, slug);
         byKind.replaceAll((k, v) -> List.copyOf(v));
         return byKind;
+    }
+
+    // ------------------------------------------------------------------ 검색
+
+    private static final String TITLE_MATCH = "q.title ILIKE ?";
+    private static final String KEYWORDS_MATCH = "array_to_string(q.keywords, ' ') ILIKE ?";
+    private static final String CONCEPT_MATCH = """
+            EXISTS (SELECT 1 FROM question_concept qc JOIN concept c ON c.slug = qc.concept_slug
+                    WHERE qc.question_id = q.id AND c.name ILIKE ?)""";
+    private static final String BODY_MATCH = "q.answer_md ILIKE ?";
+
+    @Override
+    public SearchResult search(SearchQuery query) {
+        List<String> patterns = query.likePatterns();
+        List<Object> selectParams = new ArrayList<>();
+        List<Object> whereParams = new ArrayList<>();
+        StringBuilder score = new StringBuilder("0");
+        StringBuilder where = new StringBuilder();
+        for (String pattern : patterns) {
+            // 단어마다: 점수(제목 3, 키워드 2, 개념 2, 본문 1)와 "넷 중 하나에는 일치해야 한다"는 조건
+            score.append(" + CASE WHEN ").append(TITLE_MATCH).append(" THEN 3 ELSE 0 END")
+                    .append(" + CASE WHEN ").append(KEYWORDS_MATCH).append(" THEN 2 ELSE 0 END")
+                    .append(" + CASE WHEN ").append(CONCEPT_MATCH).append(" THEN 2 ELSE 0 END")
+                    .append(" + CASE WHEN ").append(BODY_MATCH).append(" THEN 1 ELSE 0 END");
+            for (int i = 0; i < 4; i++) {
+                selectParams.add(pattern);
+            }
+            where.append(" AND (").append(TITLE_MATCH).append(" OR ").append(KEYWORDS_MATCH).append(" OR ")
+                    .append(CONCEPT_MATCH).append(" OR ").append(BODY_MATCH).append(")");
+            for (int i = 0; i < 4; i++) {
+                whereParams.add(pattern);
+            }
+        }
+        // matchedIn: 어느 단어든 그 위치에 일치했는지
+        String matchedTitle = anyWord(TITLE_MATCH, patterns.size(), selectParams, patterns);
+        String matchedKeywords = anyWord(KEYWORDS_MATCH, patterns.size(), selectParams, patterns);
+        String matchedConcepts = anyWord(CONCEPT_MATCH, patterns.size(), selectParams, patterns);
+        String matchedBody = anyWord(BODY_MATCH, patterns.size(), selectParams, patterns);
+
+        String sql = """
+                SELECT %s, t.name AS topic_name, (%s) AS score,
+                       %s AS m_title, %s AS m_keywords, %s AS m_concepts, %s AS m_body,
+                       COUNT(*) OVER () AS total
+                FROM question q JOIN topic t ON t.slug = q.topic_slug JOIN category cat ON cat.slug = t.category_slug
+                WHERE %s%s
+                ORDER BY score DESC, cat.sort, cat.slug, t.sort, t.slug, %s
+                LIMIT ?
+                """.formatted(SUMMARY_COLUMNS, score, matchedTitle, matchedKeywords, matchedConcepts, matchedBody,
+                visibility.questionVisible("q", "t"), where, QUESTION_ORDER);
+        List<Object> params = new ArrayList<>(selectParams);
+        params.addAll(whereParams);
+        params.add(query.limit());
+
+        int[] total = {0};
+        List<SearchHit> hits = jdbc.query(sql, (rs, n) -> {
+            total[0] = rs.getInt("total");
+            List<String> matched = new ArrayList<>();
+            if (rs.getBoolean("m_title")) {
+                matched.add("title");
+            }
+            if (rs.getBoolean("m_keywords")) {
+                matched.add("keywords");
+            }
+            if (rs.getBoolean("m_concepts")) {
+                matched.add("concepts");
+            }
+            if (rs.getBoolean("m_body")) {
+                matched.add("body");
+            }
+            return new SearchHit(summary(rs), rs.getString("topic_name"), rs.getInt("score"), List.copyOf(matched));
+        }, params.toArray());
+        return new SearchResult(query.words(), total[0], List.copyOf(hits));
+    }
+
+    /** `(조건 OR 조건 …)` — 단어 수만큼 같은 조건을 반복하고 매개변수를 순서대로 쌓는다. */
+    private static String anyWord(String condition, int count, List<Object> params, List<String> patterns) {
+        StringBuilder sb = new StringBuilder("(");
+        for (int i = 0; i < count; i++) {
+            if (i > 0) {
+                sb.append(" OR ");
+            }
+            sb.append(condition);
+            params.add(patterns.get(i));
+        }
+        return sb.append(")").toString();
     }
 
     // ------------------------------------------------------------------ 개념

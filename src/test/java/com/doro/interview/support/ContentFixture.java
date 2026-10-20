@@ -56,6 +56,13 @@ public final class ContentFixture {
     /** extraLines 는 frontmatter 에 그대로 덧붙는 줄이다(예: `concepts: ["proxy"]`, `importance: 3`, `links: [{to: "aa-01", kind: FOLLOWUP}]`). */
     public ContentFixture questionFull(String category, String topic, String slug, String tier, String title, String body,
                                        String reviewedAt, List<String> sources, List<String> extraLines) {
+        return questionWith(category, topic, slug, tier, title, List.of("하나", "둘"), body, reviewedAt, sources, extraLines);
+    }
+
+    /** 키워드까지 지정하는 가장 일반적인 형태. */
+    public ContentFixture questionWith(String category, String topic, String slug, String tier, String title, List<String> keywords,
+                                       String body, String reviewedAt, List<String> sources, List<String> extraLines) {
+        String kw = String.join(", ", keywords.stream().map(k -> "\"" + k + "\"").toList());
         String status = reviewedAt == null ? "DRAFT" : "REVIEWED";
         String reviewed = reviewedAt == null ? "" : "reviewed_at: " + reviewedAt + "\n";
         String src = sources.isEmpty() ? "" : "sources: [" + String.join(", ", sources.stream().map(s -> "\"" + s + "\"").toList()) + "]\n";
@@ -67,7 +74,7 @@ public final class ContentFixture {
         };
         write(content.resolve(category).resolve(topic).resolve(slug + ".md"),
                 "---\nslug: \"" + slug + "\"\ntopic: \"" + topic + "\"\ntier: " + tier + "\ndifficulty: " + difficulty + "\ntitle: \"" + title + "\"\n"
-                        + "keywords: [\"하나\", \"둘\"]\nhas_extra: " + body.contains("(보충)") + "\nstatus: " + status + "\n" + reviewed + src + extra
+                        + "keywords: [" + kw + "]\nhas_extra: " + body.contains("(보충)") + "\nstatus: " + status + "\n" + reviewed + src + extra
                         + "---\n" + body);
         return this;
     }
