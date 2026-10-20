@@ -119,13 +119,14 @@ public class ContentLoader implements ApplicationRunner {
         jdbc.update(con -> {
             var ps = con.prepareStatement("""
                     INSERT INTO question (slug, topic_slug, sort, tier, difficulty, title, answer_md, keywords, has_extra,
-                                          content_hash, status, reviewed_at, needs_review)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, FALSE)
+                                          content_hash, status, reviewed_at, sources, needs_review)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::jsonb, FALSE)
                     ON CONFLICT (slug) DO UPDATE SET
                         topic_slug = EXCLUDED.topic_slug, sort = EXCLUDED.sort, tier = EXCLUDED.tier,
                         difficulty = EXCLUDED.difficulty, title = EXCLUDED.title, answer_md = EXCLUDED.answer_md,
                         keywords = EXCLUDED.keywords, has_extra = EXCLUDED.has_extra,
                         status = EXCLUDED.status, reviewed_at = EXCLUDED.reviewed_at,
+                        sources = EXCLUDED.sources,
                         needs_review = CASE
                             WHEN EXCLUDED.status <> 'REVIEWED' THEN FALSE
                             WHEN EXCLUDED.reviewed_at IS DISTINCT FROM question.reviewed_at THEN FALSE
@@ -152,6 +153,7 @@ public class ContentLoader implements ApplicationRunner {
             } else {
                 ps.setObject(12, reviewedAt);
             }
+            ps.setString(13, jsonStringArray(q.sources()));
             return ps;
         });
     }
@@ -168,6 +170,17 @@ public class ContentLoader implements ApplicationRunner {
                 sb.append(",\"note\":").append(jsonString(s.note()));
             }
             sb.append('}');
+        }
+        return sb.append(']').toString();
+    }
+
+    static String jsonStringArray(List<String> values) {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < values.size(); i++) {
+            if (i > 0) {
+                sb.append(',');
+            }
+            sb.append(jsonString(values.get(i)));
         }
         return sb.append(']').toString();
     }

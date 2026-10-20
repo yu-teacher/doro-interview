@@ -141,9 +141,21 @@ public class ContentParser {
             }
             keywords.add(s);
         }
+        List<String> sources = new ArrayList<>();
+        Object rawSources = map.get("sources");
+        if (rawSources instanceof List<?> sourceList) {
+            for (Object s : sourceList) {
+                if (!(s instanceof String url)) {
+                    throw new ContentException(path + ": sources 에 문자열(URL)이 아닌 값이 있다");
+                }
+                sources.add(url);
+            }
+        } else if (rawSources != null) {
+            throw new ContentException(path + ": sources 는 URL 문자열 목록이어야 한다");
+        }
         return new QuestionDoc(str(map, "slug", path), topic, str(map, "tier", path), intOr(map, "difficulty", -1, path),
                 str(map, "title", path), List.copyOf(keywords), bool(map, "has_extra", false, path),
-                strOr(map, "status", "DRAFT", path), instantOrNull(map.get("reviewed_at"), path), body, path);
+                strOr(map, "status", "DRAFT", path), instantOrNull(map.get("reviewed_at"), path), body, List.copyOf(sources), path);
     }
 
     // ------------------------------------------------------------------ 도우미

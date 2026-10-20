@@ -21,7 +21,14 @@ public final class ContentModels {
     }
 
     public record QuestionDoc(String slug, String topic, String tier, int difficulty, String title, List<String> keywords,
-                              boolean hasExtra, String status, Instant reviewedAt, String body, String path) {
+                              boolean hasExtra, String status, Instant reviewedAt, String body, List<String> sources,
+                              String path) {
+
+        /** sources(검수 때 대조한 출처 URL)가 없는 질문. */
+        public QuestionDoc(String slug, String topic, String tier, int difficulty, String title, List<String> keywords,
+                           boolean hasExtra, String status, Instant reviewedAt, String body, String path) {
+            this(slug, topic, tier, difficulty, title, keywords, hasExtra, status, reviewedAt, body, List.of(), path);
+        }
 
         /** 정렬 순서: 슬러그 끝의 번호(tx-07 → 7). 번호가 없으면 0. */
         public int sort() {

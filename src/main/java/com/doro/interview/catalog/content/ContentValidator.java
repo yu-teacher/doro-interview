@@ -73,6 +73,12 @@ public final class ContentValidator {
             check(fenceCount(q.body()) % 2 == 0, problems, at, "코드 펜스(```)가 짝이 맞지 않는다");
             check(STATUSES.contains(q.status()), problems, at, "status 값이 틀렸다: " + q.status());
             check(!"REVIEWED".equals(q.status()) || q.reviewedAt() != null, problems, at, "REVIEWED 질문에는 reviewed_at 이 있어야 한다");
+            check(q.sources().size() <= 20, problems, at, "sources 는 20개 이하여야 한다");
+            for (String url : q.sources()) {
+                check(url.startsWith("https://") || url.startsWith("http://"), problems, at, "질문 출처 URL 형식이 틀렸다: " + url);
+            }
+            check(!com.doro.interview.catalog.AnswerSplitter.split(q.body()).spokenAnswer().isBlank(), problems, at,
+                    "본문은 '**모범 답변' 줄 다음에 답변 문단이 있어야 한다");
             check(q.hasExtra() == q.body().contains("(보충)"), problems, at,
                     "has_extra(" + q.hasExtra() + ")가 본문의 (보충) 표기와 어긋난다");
         }
