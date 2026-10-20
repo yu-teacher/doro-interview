@@ -101,7 +101,8 @@ DB `service_interview`, 서비스 전용 Postgres 역할(도로 DB 계정 분리
 - `category(slug PK, name, sort)` — 자바, 스프링, 네트워크, DB … 새 카테고리는 데이터 추가만으로 늘어난다.
 - `topic(slug PK, category_slug FK, name, sort, description, sources JSONB[url,title], base_version, published BOOL)` — 시드 7편은 모두 카테고리 `spring`. `published`는 주제 단위 노출 스위치.
 - `question(id UUID, slug UNIQUE, topic_slug FK, tier[BASIC|DEEP|TRICKY], difficulty 1~3, title, answer_md, keywords TEXT[], has_extra BOOL, evidence_note, sources JSONB(검수 때 대조한 출처 URL, 해시 제외·M1 V2), content_hash, status[DRAFT|REVIEWED], reviewed_at, needs_review BOOL, retired_at, updated_at)`
-- `question_link(from_id, to_id, kind[FOLLOWUP|RELATED])` — 사람이 지정. 없어도 동작해야 한다.
+- `question_link(from_id, to_id, kind[FOLLOWUP|PREREQ|RELATED])` — 사람이 지정(D15). 없어도 동작해야 한다.
+- `concept(slug, name, description, sort)`, `question_concept(question_id, concept_slug)` — 통제 어휘 개념 태그(D16). `question.importance` 1~3 또는 미분류(D17). 세 가지 모두 해시 제외 메타데이터.
 - 인덱스: `(topic_slug, tier, sort)`. 검색은 `ILIKE` 부분 일치(제목·키워드·본문, 다중 단어 AND)로 하고 **pg_trgm 은 쓰지 않는다**: 159행, 합성 10,000행에서도 6ms 였다(M1-PLAN D1). 행이 수천을 넘거나 지연이 문제될 때 도입한다.
 
 **개인별 학습 상태**
