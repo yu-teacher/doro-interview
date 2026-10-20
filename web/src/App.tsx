@@ -4,7 +4,9 @@ import { Layout } from './components/Layout';
 import { UpdateNotice } from './components/UpdateNotice';
 import { ConceptPage } from './pages/ConceptPage';
 import { ConceptsPage } from './pages/ConceptsPage';
+import { ExplorePage } from './pages/ExplorePage';
 import { HomePage } from './pages/HomePage';
+import { MeHubPage } from './pages/MeHubPage';
 import { MineDetailPage, MinePage } from './pages/MinePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { QuestionPage } from './pages/QuestionPage';
@@ -33,6 +35,8 @@ const PAGES: Record<AppRoutePath, ReactElement> = {
   '/stats': <StatsPage />,
   '/mine': <MinePage />,
   '/mine/:id': <MineDetailPage />,
+  '/explore': <ExplorePage />,
+  '/me': <MeHubPage />,
 };
 
 /** 경로 정의. 시험에서는 MemoryRouter 안에 이것만 넣는다. */

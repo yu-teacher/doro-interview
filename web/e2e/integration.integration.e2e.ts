@@ -172,8 +172,13 @@ test.describe('읽기 흐름', () => {
     const word = '프록시';
     const expected = await api<{ total: number; hits: { question: Question }[] }>(request, 'search?q=' + encodeURIComponent(word));
     await page.goto('/interview/');
-    await page.getByRole('searchbox', { name: '질문 검색' }).fill(word);
-    await page.getByRole('searchbox', { name: '질문 검색' }).press('Enter');
+    // 폰의 헤더에는 검색 아이콘뿐이라 검색 화면으로 들어간 뒤 입력한다(데스크톱은 헤더에 입력창이 있다)
+    const box = page.getByRole('searchbox', { name: '질문 검색' });
+    if ((await box.count()) === 0) {
+      await page.getByRole('link', { name: '검색' }).click();
+    }
+    await box.fill(word);
+    await box.press('Enter');
     await expect(page).toHaveURL(/\/interview\/search\?q=/);
     await expect(page.getByRole('heading', { level: 1 })).toContainText(`${expected.total}건`);
     const first = expected.hits[0].question;

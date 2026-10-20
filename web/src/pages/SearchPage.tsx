@@ -3,6 +3,7 @@ import { searchQuestions } from '../api/catalog';
 import type { SearchResult } from '../api/types';
 import { AsyncView } from '../components/AsyncView';
 import { QuestionCard } from '../components/QuestionCard';
+import { SearchBox } from '../components/SearchBox';
 import { useApi } from '../hooks/useApi';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useSessionKey } from '../session/SessionProvider';
@@ -43,9 +44,13 @@ export function SearchPage() {
   );
   if (!q) {
     return (
-      <div className="py-8 text-center">
+      <div className="py-4">
         <h1 className="text-xl font-bold">검색</h1>
         <p className="mt-2 text-[var(--color-muted)]">검색어를 입력해 주세요.</p>
+        {/* 폰의 헤더에는 입력창이 없어 이 화면이 검색 입구다 */}
+        <div className="mt-3 md:hidden">
+          <SearchBox id="search-page-input" autoFocus landmark="검색 화면의 질문 검색" />
+        </div>
       </div>
     );
   }

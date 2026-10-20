@@ -72,6 +72,12 @@ const PAGES: Case[] = [
   { name: '내 현황', path: '/stats', session: 'authenticated', ready: (p) => p.getByRole('region', { name: '자주 틀린 질문' }).waitFor() },
   { name: '훑기 주제 선택', path: '/skim', ready: (p) => p.getByRole('link', { name: 'JPA' }).waitFor() },
   { name: '훑기(키워드 공개)', path: '/skim/transaction', ready: (p) => p.getByRole('button', { name: '키워드 보기' }).waitFor(), act: (p) => p.getByRole('button', { name: '키워드 보기' }).click() },
+  // F0: 새 껍데기(아래 탭 바)와 탐색·내 공부·검색 입구
+  { name: '탐색', path: '/explore', ready: (p) => p.getByRole('heading', { level: 2, name: '스프링' }).waitFor() },
+  { name: '탐색(로그인·진도)', path: '/explore', session: 'authenticated', ready: (p) => p.getByRole('progressbar').first().waitFor() },
+  { name: '내 공부(비로그인)', path: '/me', ready: (p) => p.getByRole('heading', { level: 1, name: '내 공부' }).waitFor() },
+  { name: '내 공부(로그인)', path: '/me', session: 'authenticated', ready: (p) => p.getByRole('link', { name: /내 질문/ }).first().waitFor() },
+  { name: '검색 입구(검색어 없음)', path: '/search', ready: (p) => p.getByRole('heading', { level: 1, name: '검색' }).waitFor() },
   // M4: 내 질문
   { name: '내 질문(목록)', path: '/mine', session: 'authenticated', ready: (p) => p.getByRole('link', { name: '강사님이 짚어 준 질문 1', exact: true }).waitFor() },
   { name: '내 질문(비로그인)', path: '/mine', ready: (p) => p.getByRole('link', { name: '로그인' }).first().waitFor() },
@@ -166,4 +172,37 @@ test('긴 이름과 주소는 줄바꿈되어 가로로 넘치지 않는다', as
   const vw = page.viewportSize()?.width ?? 0;
   const doc = await page.evaluate(() => document.documentElement.scrollWidth);
   expect(doc).toBeLessThanOrEqual(vw + 1);
+});
+
+// 아래 탭 바(폰)가 본문 끝을 가리지 않는다: 맨 아래까지 내렸을 때 바닥글이 탭 바 위에 온다
+test.describe('아래 탭 바', () => {
+  test('맨 아래까지 내리면 바닥글이 탭 바에 가려지지 않는다', async ({ page }, info) => {
+    test.skip(info.project.name === 'phone-landscape' || info.project.name.startsWith('desktop'), '폭이 좁은 세로 폰에서만 탭 바가 보인다');
+    await installApi(page, 'anonymous');
+    await page.goto('/interview/explore');
+    await page.getByRole('heading', { level: 2, name: '스프링' }).waitFor();
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    const bar = page.getByRole('navigation', { name: '하단 메뉴' });
+    await bar.waitFor();
+    const barTop = (await bar.boundingBox())?.y ?? 0;
+    const footerBottom = (await page.locator('footer').boundingBox())?.y ?? 0;
+    const footerHeight = (await page.locator('footer').boundingBox())?.height ?? 0;
+    expect(footerBottom + footerHeight).toBeLessThanOrEqual(barTop + 1);
+    // 탭 4개는 모두 44px 이상으로 눌린다
+    for (const box of await bar.getByRole('link').all()) {
+      const b = await box.boundingBox();
+      expect(b?.height ?? 0).toBeGreaterThanOrEqual(44);
+      expect(b?.width ?? 0).toBeGreaterThanOrEqual(44);
+    }
+  });
+
+  test('탭을 누르면 해당 화면으로 가고 현재 탭이 바뀐다', async ({ page }, info) => {
+    test.skip(info.project.name === 'phone-landscape', '가로 폰은 데스크톱 상단 메뉴를 쓴다');
+    await installApi(page, 'anonymous');
+    await page.goto('/interview/');
+    await page.getByRole('heading', { level: 2, name: '스프링' }).first().waitFor();
+    await page.getByRole('navigation', { name: '하단 메뉴' }).getByRole('link', { name: '탐색' }).click();
+    await expect(page).toHaveURL(/\/interview\/explore$/);
+    await expect(page.getByRole('navigation', { name: '하단 메뉴' }).getByRole('link', { name: '탐색' })).toHaveAttribute('aria-current', 'page');
+  });
 });

@@ -13,6 +13,11 @@
   --color-official: #166534;
   --color-extra: #92400e;
   --color-lab: #5b21b6;
+  /* 역할 색(F0): 맞음/완료, 주의/후보, 정보. 글자색으로 쓸 때 배경과 4.5:1 이상 */
+  --color-success: #166534;
+  --color-warning: #92400e;
+  --color-info: #1d4ed8;
+  --color-surface-2: #f1f5f9;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,6 +32,21 @@
     --color-official: #86efac;
     --color-extra: #fcd34d;
     --color-lab: #c4b5fd;
+    --color-success: #86efac;
+    --color-warning: #fcd34d;
+    --color-info: #93c5fd;
+    --color-surface-2: #17233b;
+  }
+}
+
+/* 폰에서는 글자를 조금 키운다(17px 기준, rem 으로 쓰는 모든 크기가 같이 커진다). 데스크톱은 16px. */
+html {
+  font-size: 106.25%;
+}
+
+@media (min-width: 48rem) {
+  html {
+    font-size: 100%;
   }
 }
 
@@ -52,6 +72,11 @@ a {
 :focus-visible {
   outline: 3px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+/* 본문(main)은 화면 이동 때 프로그램이 포커스를 옮기는 대상일 뿐(tabindex=-1)이라 큰 테두리를 그리지 않는다. 키보드로 닿는 요소의 포커스 링은 그대로다. */
+main:focus-visible {
+  outline: none;
 }
 
 code, pre {

@@ -256,7 +256,7 @@ describe('시험 화면: 결과', () => {
     expect(await screen.findByRole('heading', { level: 2, name: '시험 결과' })).toBeTruthy();
     expect(screen.getByText('2문제 중 1문제 맞음 (50%)')).toBeTruthy();
     expect(screen.getByText(/맞음 1 · 틀림 1 · 건너뜀 1/)).toBeTruthy();
-    const wrong = screen.getByRole('list');
+    const wrong = within(screen.getByRole('main')).getByRole('list');
     expect(within(wrong).getByText('질문 1')).toBeTruthy();
     expect(within(wrong).queryByText('질문 2')).toBeNull();
     expect(within(wrong).getByRole('link', { name: '사전에서 보기' }).getAttribute('href')).toBe('/q/tx-01');

@@ -1,47 +1,11 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { SERVICE_NAME } from '../config';
-import { conceptsPath, minePath, quizStartPath, searchPath } from '../routes';
 import { loginUrl, useSession } from '../session/SessionProvider';
-
-function SearchForm() {
-  const navigate = useNavigate();
-  const [params] = useSearchParams();
-  const [value, setValue] = useState(params.get('q') ?? '');
-
-  function submit(e: FormEvent) {
-    e.preventDefault();
-    const q = value.trim();
-    if (q) {
-      navigate(searchPath(q));
-    }
-  }
-
-  return (
-    <form role="search" onSubmit={submit} className="flex w-full gap-2 sm:w-auto">
-      <label htmlFor="search-input" className="sr-only">
-        질문 검색
-      </label>
-      <input
-        id="search-input"
-        type="search"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="질문 검색 (예: 프록시 전파)"
-        maxLength={100}
-        autoComplete="off"
-        // 16px 이상이라야 iOS 가 입력할 때 화면을 확대하지 않는다
-        className="min-h-11 min-w-0 flex-1 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-base sm:w-72"
-      />
-      <button
-        type="submit"
-        className="min-h-11 rounded-md bg-[var(--color-accent)] px-4 font-semibold text-[var(--color-accent-contrast)]"
-      >
-        검색
-      </button>
-    </form>
-  );
-}
+import { ChromeContext, useChromeState } from './chrome';
+import { SearchIcon } from './icons';
+import { SearchBox } from './SearchBox';
+import { TabBar, TABS, useActiveTab } from './TabBar';
 
 /** 로그인 상태에 따른 헤더 메뉴. 상태를 알 수 없으면(오류) 추측하지 않고 다시 시도를 안내한다. */
 function SessionNav() {
@@ -93,43 +57,68 @@ function useRouteFocus(mainRef: React.RefObject<HTMLElement | null>) {
   }, [pathname, mainRef]);
 }
 
+/** 데스크톱 상단 메뉴(폰에서는 아래 탭 바가 같은 4개를 맡는다). */
+function DesktopNav() {
+  const current = useActiveTab();
+  return (
+    <nav aria-label="주요 메뉴" className="hidden items-center gap-x-1 md:flex">
+      {TABS.map((tab) => (
+        <Link
+          key={tab.to}
+          to={tab.to}
+          aria-current={current === tab.to ? 'page' : undefined}
+          className={`inline-flex min-h-11 items-center rounded-md px-3 no-underline ${
+            current === tab.to ? 'bg-[var(--color-surface-2)] font-bold text-[var(--color-accent)]' : 'text-[var(--color-text)]'
+          }`}
+        >
+          {tab.label}
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
 export function Layout() {
   const mainRef = useRef<HTMLElement | null>(null);
   useRouteFocus(mainRef);
+  const chrome = useChromeState();
   return (
-    <div className="mx-auto flex min-h-screen max-w-3xl flex-col px-4">
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-10 focus:rounded-md focus:bg-[var(--color-surface)] focus:px-4 focus:py-3"
-      >
-        본문으로 건너뛰기
-      </a>
-      <header className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <nav aria-label="주요 메뉴" className="flex flex-wrap items-center gap-x-4">
+    <ChromeContext.Provider value={chrome.value}>
+      <div className="mx-auto flex min-h-screen max-w-3xl flex-col px-4 pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-10 focus:rounded-md focus:bg-[var(--color-surface)] focus:px-4 focus:py-3"
+        >
+          본문으로 건너뛰기
+        </a>
+        <header className="flex flex-wrap items-center gap-x-4 gap-y-2 py-3">
           <Link to="/" className="inline-flex min-h-11 shrink-0 items-center text-lg font-bold no-underline">
             {SERVICE_NAME}
           </Link>
-          <Link to={conceptsPath()} className="inline-flex min-h-11 shrink-0 items-center">
-            개념
-          </Link>
-          <Link to={quizStartPath()} className="inline-flex min-h-11 shrink-0 items-center">
-            시험
-          </Link>
-          <Link to={minePath()} className="inline-flex min-h-11 shrink-0 items-center">
-            내 질문
-          </Link>
-          <SessionNav />
-        </nav>
-        <SearchForm />
-      </header>
-      <main id="main" ref={mainRef} tabIndex={-1} className="flex-1 pb-12 outline-none">
-        <Outlet />
-      </main>
-      <footer className="border-t border-[var(--color-border)] py-4 text-sm text-[var(--color-muted)]">
-        공식 문서를 읽고 정리한 면접 질문입니다. 검수 상태와 근거 표기를 확인하세요.
-        {/* 통합 e2e 가 서로 다른 두 빌드를 구분하는 표식(운영 빌드에는 없다) */}
-        {import.meta.env.VITE_BUILD_MARK && <span data-build-mark={import.meta.env.VITE_BUILD_MARK} className="sr-only"> 빌드 {import.meta.env.VITE_BUILD_MARK}</span>}
-      </footer>
-    </div>
+          <DesktopNav />
+          <div className="ml-auto flex items-center gap-x-3">
+            <SessionNav />
+            <Link to="/search" aria-label="검색" className="inline-flex size-11 items-center justify-center rounded-md text-[var(--color-text)] md:hidden">
+              <SearchIcon />
+            </Link>
+            <div className="hidden md:block">
+              <SearchBox />
+            </div>
+          </div>
+        </header>
+        <main id="main" ref={mainRef} tabIndex={-1} className="flex-1 pb-8 outline-none md:pb-12">
+          <Outlet />
+        </main>
+        <footer className="border-t border-[var(--color-border)] py-4 text-sm text-[var(--color-muted)]">
+          공식 문서를 읽고 정리한 면접 질문입니다. 검수 상태와 근거 표기를 확인하세요.
+          {/* 통합 e2e 가 서로 다른 두 빌드를 구분하는 표식(운영 빌드에는 없다) */}
+          {import.meta.env.VITE_BUILD_MARK && <span data-build-mark={import.meta.env.VITE_BUILD_MARK} className="sr-only"> 빌드 {import.meta.env.VITE_BUILD_MARK}</span>}
+        </footer>
+      </div>
+      {/* 폰의 아래 고정 영역: 평소엔 탭 바, 화면이 동작 바를 내면 그 바가 대신한다 */}
+      <div ref={chrome.setSlot} className="fixed inset-x-0 bottom-0 z-20">
+        {!chrome.hasBar && <TabBar />}
+      </div>
+    </ChromeContext.Provider>
   );
 }
