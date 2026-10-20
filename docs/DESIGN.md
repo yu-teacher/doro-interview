@@ -90,6 +90,7 @@
 - `account` → 없음. 현재 사용자 해석(`CurrentUser`)을 인터페이스로 제공하고 **`api` 컨트롤러만** 쓴다. 서비스 계층(`ProgressService` 등)은 사용자 id 를 **인자로 받는다**(M2-PLAN D5): 남의 id 를 읽을 길이 시그니처에 드러나고, 사용자 id 를 입력으로 받는 엔드포인트가 없음을 구조 시험이 고정한다.
 - `catalog` → 없음. 사용자 상태가 전혀 없는 읽기 전용 콘텐츠.
 - `progress` → `catalog` (질문·주제 가시성 판정과 질문 slug 목록: `isVisibleQuestion`·`visibleQuestionSlugs`), `account` (`AccountDeleted` 이벤트 구독).
+- 다른 모듈이 시험 통계를 읽는 통로는 **`quiz.read` 패키지**(`QuizStatsReader`: 후보 판정용 `lastWrongAmong`·`lastWrong`)뿐이다(ArchUnit 로 고정).
 - `quiz` → `catalog` (질문 읽기), `account` (`AccountDeleted` 구독), `progress` (**`progress.read` 패키지만**: `ProgressReader` 로 "내가 체크한 질문" 풀 구성, JDK 타입만 반환). **`quiz`는 `progress`에 쓰지 않는다**(`progress.read` 밖의 클래스를 쓰면 ArchUnit 이 빌드를 깨뜨린다).
 - 합성 계층(`api`)은 세 모듈을 읽어 화면용 응답을 조립한다. 예: 질문 목록에 `learned`(progress)와 `recentWrong`(quiz 통계)을 붙인다. 모듈 간 호출은 인터페이스(`ProgressReader`, `QuizStatsReader`)로 하고 서로의 엔티티·리포지토리를 직접 쓰지 않는다.
 - 모듈 사이에는 **DB 외래키를 걸지 않는다**(질문 ID/slug만 참조, 존재 검증은 서비스 계층). 나중에 `catalog`를 따로 떼어낼 수 있게 하기 위함이지, 지금 서비스를 쪼개자는 뜻은 아니다. 풀 구성이 "카탈로그 ∩ 내 체크" 조인이라 지금 쪼개면 서비스 간 호출만 늘어난다.
@@ -107,9 +108,9 @@ DB `service_interview`, 서비스 전용 Postgres 역할(도로 DB 계정 분리
 
 **개인별 학습 상태**
 - `user_progress(user_id, question_slug, learned_at, PK(user_id, question_slug))` — **행이 있으면 "완전히 학습함", 없으면 미학습.** 체크하면 행 생성, 해제하면 행 삭제(PUT 으로 상태 지정, 멱등). 진도가 소유하는 사실은 이것뿐이다.
-- `quiz_question_stats(user_id, question_id, ask_count, miss_count, last_asked_at, last_result[CORRECT|WRONG], PK(user_id, question_id))` — **시험이 소유하는 통계.** 가중 랜덤과 "다시 공부 후보" 표시의 원본이다.
-- `quiz_session(id, user_id, scope JSONB[categories,topics,tiers,pool], planned_count, started_at, finished_at)`
-- `quiz_item(session_id, seq, question_id, result[CORRECT|WRONG|SKIPPED], seconds, answer_text NULL)` — 세션 기록.
+- `quiz_question_stats(user_id, question_slug, ask_count, miss_count, last_asked_at, last_result[CORRECT|WRONG], PK(user_id, question_slug))` — **시험이 소유하는 통계.** 가중 랜덤과 "다시 공부 후보" 표시의 원본이다. 건너뜀은 통계에 반영하지 않는다. **다시 공부 후보 = 내 체크가 있고 `last_result` 가 WRONG 인 질문**(체크가 풀리면 후보도 사라지고, 틀려도 체크는 자동으로 풀리지 않는다).
+- `quiz_session(id UUID — 클라이언트가 만든다, user_id, scope JSONB[categories,topics,tiers], include_unlearned, planned_count 1~30, started_at, finished_at)` — 시작할 때 문제 순서를 전부 정해 `quiz_item` 을 결과 없이 만들어 두므로 새로고침해도 이어서 풀 수 있다.
+- `quiz_item(session_id, seq, question_slug, result NULL|CORRECT|WRONG|SKIPPED, seconds, answer_text NULL ≤2,000자, answered_at, PK(session_id, seq), UNIQUE(session_id, question_slug))` — 세션 기록. **결과는 한 번 정하면 고정**이다(같은 결과를 다시 보내면 변화 없음, 다른 결과는 409).
 - `user_pref(user_id PK, include_unlearned_default BOOL 기본 false)`
 - `my_note(user_id, question_slug, body, updated_at)` — **일반 텍스트**로만 저장·표시(XSS 면적 제거). 길이 상한.
 - 사용자 사본 `interview_user` 는 `account` 모듈 소유(§6.0). 위 모든 `user_id` 는 IAM 주체 id이며 외래키는 걸지 않는다.
@@ -136,11 +137,11 @@ DB `service_interview`, 서비스 전용 Postgres 역할(도로 DB 계정 분리
 - **확장 여지**: 나중에 간격 반복이 필요하면 `quiz_question_stats` 에 `due_at/interval` 을 더하고 `pick` 의 가중치를 대체하면 된다. 이번 범위에서는 만들지 않는다.
 
 ## 8. 모드와 화면 (모바일 우선 PWA)
-- **홈**: 카테고리별 진도(체크 수/전체), 다시 공부 후보(체크했지만 최근 틀린 질문), 랜덤 면접 시작 버튼, 학습 연속 일수.
+- **홈**: 카테고리별 진도(체크 수/전체), 다시 공부 후보(체크했지만 최근 틀린 질문, 5개까지, 여기서 바로 체크 해제), 내 현황 링크. 시험 시작은 상단 "시험" 탭. *학습 연속 일수는 비목표로 뺐다*(날짜 기반 활동 기록이 새로 필요하다. M3-PLAN §10 Q5).
 - **질문 은행**: 카테고리 → 주제 탭, 검색, 필터(난이도·tier·`보충 포함`·**내 체크 상태**). 질문 상세에 모범 답변, 핵심 키워드, **인라인 토큰 근거 배지**(`(공식 문서)`·`(보충)`·`(실험 확인)` 표기 위치에 그대로 배지, M1-PLAN D5), 기준 버전, 주제 출처 링크, **"완전히 학습함" 체크 토글**, 내 노트.
 - **빠른 체크**: 주제 목록에서 질문 옆 체크박스로 바로 체크·해제하고, 주제 전체 "모두 체크/해제"는 확인창을 거친다(실수 방지).
 - **시험 영역**(상단 탭 "시험") **랜덤 면접**: 범위 선택(카테고리·주제·tier·개수·미학습 포함 여부) → 한 문제씩 질문만 보이고 타이머 → 내 답 입력(선택) → 모범 답변과 나란히 비교 → 맞음/틀림 → 결과 화면(맞힌 비율, 틀린 질문 목록과 각 질문의 "사전에서 보기" 링크).
-- **퀴즈(훑기)**: 답변을 가리고 키워드로 자가 점검(시드 사이트의 기능). 평가 기록은 남기지 않는 가벼운 모드.
+- **퀴즈(훑기)**(`/skim`, M3 구현): 주제(와 난이도)를 고르면 질문 제목만 보이고 "키워드 보기"로 자가 점검(알았음/모르겠음). **서버에 아무것도 보내지 않고 로그인도 필요 없다**(질문 목록 응답만 쓰고 섞기는 화면 안에서).
 - **내 현황**: 카테고리·주제별 진도 바, 30일 출제량·정답률, 자주 틀린 질문 TOP.
 - **관리(편집자)**: 검수 상태 변경, `needs_review` 목록, 주제 공개 스위치.
 - 비로그인 사용자는 질문 은행만 읽을 수 있고, 체크·랜덤 면접·노트는 로그인 유도.
@@ -149,7 +150,7 @@ DB `service_interview`, 서비스 전용 Postgres 역할(도로 DB 계정 분리
 ## 9. API (`/interview/api/`, 게이트웨이가 `/interview` 를 떼고 전달)
 - 공개(published 주제·닫히지 않은 질문만, 그 외는 404): `GET /api/v1/categories`(주제 포함), `GET /api/v1/topics/{slug}`(질문 요약 목록), `GET /api/v1/questions/{slug}`, `GET /api/v1/search?q&limit`(페이지네이션 없음, limit 기본 30·최대 100, M1-PLAN D2)
 - 로그인 필요(없으면 401), M2 구현: `PUT /api/v1/progress/{slug} {learned}`(멱등), `PUT /api/v1/progress {topic, learned, expectedCount}`(주제 일괄; 확인창에 보여 준 개수와 실제가 다르면 **409**), `GET /api/v1/progress/summary`, `GET/PUT /api/v1/notes/{slug}`(일반 텍스트, 2,000자, 공백뿐이면 삭제). 본문은 정해진 필드만 정확한 JSON 타입으로 받는다(모르는 필드·`"false"` 문자열은 400). 사용자 id 는 토큰에서만 얻고 경로·본문·쿼리에 받지 않는다. 게이트웨이는 쓰기를 `PUT` 만 통과시킨다. 로그인 상태 조회는 `GET /api/v1/bff/session`(로그인 필요 없음, 항상 200).
-- 로그인 필요, M3: `POST /api/v1/quiz`(범위 → 세션과 첫 문제), `POST /api/v1/quiz/{id}/items/{seq} {result, answerText?}`, `POST /api/v1/quiz/{id}/finish`, `GET /api/v1/me/stats`, `GET/PUT /api/v1/me/prefs`, `GET /api/v1/review-candidates`(다시 공부 후보)
+- 로그인 필요, M3 구현: **쓰기는 전부 PUT, 세션 id 는 클라이언트가 만든 UUID**(게이트웨이가 쓰기를 PUT 만 통과시키고, 같은 id 로 다시 보내면 같은 세션이라 멱등이다): `PUT /api/v1/quiz/{sessionId} {count, includeUnlearned, categories?, topics?, tiers?, mode?}`(풀이 비면 400 `QUIZ-400-01`), `GET /api/v1/quiz/{sessionId}`, `PUT /api/v1/quiz/{sessionId}/items/{seq} {result, seconds, answerText?}`, `PUT /api/v1/quiz/{sessionId}/finish`, `GET /api/v1/me/stats`(최근 30일), `GET/PUT /api/v1/me/prefs`, `GET /api/v1/review-candidates`. 남의 세션은 404(존재를 알리지 않는다). 질문·주제 응답에는 로그인한 사용자에게만 `reviewCandidate` 가 `learned` 와 같은 방식으로 합쳐진다.
 - 편집자(M4): `PATCH /api/v1/admin/questions/{slug}`, `PUT /api/v1/admin/topics/{slug}/published`
 - 오류 규격·페이지네이션·레이트 리밋은 games와 같은 규약을 쓴다. 주제의 질문 목록·질문 상세·검색 결과·개념 상세 응답에는 **로그인한 사용자에게만** `learned` 가 합쳐진다(비로그인 응답은 `learned` 키 자체가 없어 M1 과 바이트가 같다). 응답 본문이 곧 사용자별 ETag 이고, 로그인 응답은 `Cache-Control: private, no-cache` 다.
 
