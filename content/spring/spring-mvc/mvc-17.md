@@ -6,13 +6,16 @@ difficulty: 2
 title: "가상 스레드(`spring.threads.virtual.enabled`)를 켜면 무엇이 달라지나요?"
 keywords: ["가상 스레드", "Java 21", "spring.threads.virtual.enabled", "SimpleAsyncTaskExecutor", "블로킹 코드"]
 has_extra: true
-status: DRAFT
+status: REVIEWED
+reviewed_at: 2026-10-20
+sources: ["https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html"]
 ---
 **모범 답변 (30~60초)**
-"Java 21 이상에서 `spring.threads.virtual.enabled=true`를 주면 Boot가 자동 구성하는 작업 실행·스케줄링 인프라가 가상 스레드를 쓰게 됩니다. 문서상 `@EnableAsync`, Spring MVC의 비동기 요청 처리 등이 그 대상으로 나옵니다. 가상 스레드는 블로킹 호출을 해도 OS 스레드를 오래 붙잡지 않으므로, 기존의 동기 블로킹 MVC 코드를 리액티브로 바꾸지 않고도 높은 동시성을 얻으려는 선택지입니다. 다만 CPU 바운드 작업이 빨라지는 것은 아니고, 코드의 스레드 안전성 문제나 DB 커넥션 풀 같은 다른 병목은 그대로입니다. 웹 서버(Tomcat)의 요청 처리 스레드에 어떻게 반영되는지는 제가 이번에 문서로 확인하지 못해 따로 확인이 필요합니다."
+Java 21 이상에서 `spring.threads.virtual.enabled=true`를 주면 Boot가 자동 구성하는 `AsyncTaskExecutor`가 가상 스레드를 쓰는 `SimpleAsyncTaskExecutor`가 되고, 스케줄러도 `SimpleAsyncTaskScheduler`가 됩니다. 이 실행기는 `@EnableAsync`와 Spring MVC의 비동기 요청 처리 등에 쓰입니다. Boot 프로퍼티 설명에 따르면 `server.tomcat.threads.max`는 가상 스레드를 켜면 효과가 없습니다. 가상 스레드는 블로킹 호출에서 플랫폼 스레드를 오래 붙잡지 않아서, 동기 블로킹 코드를 리액티브로 바꾸지 않고 동시성을 높이려는 선택지입니다. 다만 CPU 바운드 작업이 빨라지는 것은 아니고, DB 커넥션 풀 같은 다른 병목이나 코드의 스레드 안전성 문제는 그대로입니다.
 
-- (공식 문서) Java 21+ 및 프로퍼티 설정 필요, 자동 구성 `AsyncTaskExecutor`는 가상 스레드 기반 `SimpleAsyncTaskExecutor`, 스케줄러는 `SimpleAsyncTaskScheduler`로 바뀜. 문서 해당 페이지는 Tomcat/Jetty 동작을 다루지 않습니다.
-- (보충) "블로킹해도 OS 스레드를 오래 점유하지 않는다", "CPU 바운드에는 도움이 안 된다", "커넥션 풀이 병목으로 남는다"는 가상 스레드 일반 지식입니다.
+- (공식 문서, Boot 작업 실행) Executor 빈이 없으면 Boot가 `AsyncTaskExecutor`를 자동 구성하며, 가상 스레드를 켜면(Java 21+ 및 `spring.threads.virtual.enabled=true`) 가상 스레드를 쓰는 `SimpleAsyncTaskExecutor`, 아니면 `ThreadPoolTaskExecutor`가 된다. 이 실행기는 `@EnableAsync`, Spring MVC의 비동기 요청 처리, WebFlux의 블로킹 실행 지원 등에 쓰인다. 스케줄러는 가상 스레드를 켜면 풀 관련 속성을 무시하는 `SimpleAsyncTaskScheduler`, 아니면 `ThreadPoolTaskScheduler`가 되고, 빌더 빈들도 같은 조건에서 가상 스레드를 쓰도록 자동 구성된다.
+- (공식 문서, Boot 프로퍼티) `spring.threads.virtual.enabled`는 "가상 스레드를 사용할지 여부"이고 기본값은 false다. `server.tomcat.threads.max`는 가상 스레드를 켜면 효과가 없다고 설명한다.
+- (보충) "블로킹해도 플랫폼 스레드를 오래 점유하지 않는다", "CPU 바운드에는 도움이 안 된다", "커넥션 풀이 병목으로 남는다"는 가상 스레드 일반 지식이다. Tomcat 요청 처리 스레드가 가상 스레드로 바뀌는지를 직접 서술한 문장은 읽은 페이지에 없고, 위 프로퍼티 설명이 간접 단서일 뿐이다.
 
 ```yaml
 spring:
