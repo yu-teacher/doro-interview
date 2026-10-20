@@ -1,5 +1,7 @@
 # M0 착수 계획 — 뼈대와 콘텐츠 파이프라인
 
+> **M0 구현 완료 (2026-10-20, 로컬 커밋).** 결과와 계획 대비 달라진 점은 맨 아래 §7.
+
 > 범위: [DESIGN.md](DESIGN.md) §12의 M0. **로그인·학습 체크·랜덤 면접은 이번에 만들지 않는다**(M2·M3). M0가 끝나면 "시드 159개가 검증된 콘텐츠 파일로 저장소에 있고, 앱이 그것을 DB에 멱등하게 반영하며, CI가 초록"인 상태다.
 
 ## 1. 완료 기준 (전부 만족해야 M0 종료)
@@ -80,3 +82,28 @@
 | `includeBuild('../Doro')` 때문에 CI에서 Doro 레포 필요 | games `ci.yml` 의 방식(형제 디렉터리 checkout)을 그대로 쓴다 |
 | 변환 결과를 사람이 전부 못 읽음 | M0는 구조 검증까지. 내용 검수는 DESIGN §5.1의 별도 트랙(트랜잭션 편부터) |
 | 콘텐츠 반영 중 일부만 들어감 | 단일 트랜잭션 + 롤백 테스트(S4-⑤) |
+
+## 7. 결과 (2026-10-20)
+완료 기준 1~6 모두 충족. 로컬 커밋 7개, `scripts/ci-test.sh all` 초록(변환기 23 + 백엔드 65 + 웹 3).
+
+| 기준 | 확인 방법 |
+|---|---|
+| 1. 159/7/TRICKY 39, 전부 DRAFT·비공개 | `ContentIntegrityTest`(파일), `RealContentLoadTest`(DB). 시드 원문 대비 줄 단위 전수 보존 검증(누락·추가 0)도 한 번 수행 |
+| 2. 멱등·닫기 | `ContentLoaderTest`(행·해시·수정시각 동일, 파일 삭제→`retired_at`, 되살림), `RealContentLoadTest`(실제 콘텐츠 재반영 해시 동일) |
+| 3. 검증이 잡는 것 | `ContentValidatorTest`(규칙별), 변환기 단위 테스트(개수 불일치·키워드 누락 등). 파일 삭제·`has_extra` 불일치 변이를 일부러 넣어 실패하는 것을 확인 |
+| 4. CI 초록 | `.github/workflows/ci.yml`(웹·백엔드 병렬). 실제 GitHub 실행은 저장소 푸시 후 확인 필요 |
+| 5. 기동 | 빌드한 jar 를 격리 Postgres 에 띄워 health UP, 로그에 "콘텐츠 반영: 질문 159", jar 안에 질문 159개 포함 |
+| 6. 모듈 규칙 | `ModuleBoundaryTest` + `ModuleRulesSelfTest`(일부러 만든 위반 fixture 를 규칙이 실제로 실패로 잡음) |
+
+### 계획과 달라진 점
+- **Doro SDK(`includeBuild('../Doro')`)는 M0 에서 제외**했다. 로그인·Guard 를 안 쓰므로 CI 에 Doro 레포 checkout 이 필요 없다. M2 에서 추가한다.
+- **JPA 대신 JDBC(`JdbcTemplate`)** 로 시작했다. 콘텐츠 반영은 `INSERT … ON CONFLICT` upsert 가 간단하고 정확하다. 읽기 API(M1)에서 JPA 가 필요하면 그때 추가한다.
+- 로더 테스트는 **테스트 클래스별 전용 Postgres 스키마**에서 돌린다(재반영의 "파일에 없는 질문 닫기"가 전역 동작이라 공유 스키마에서는 시험할 수 없다).
+- 계획에 없던 **정합성 규칙을 검증기에 추가**했다: `has_extra` 와 본문 `(보충)` 일치, 공개 주제는 모든 질문이 REVIEWED, 질문 slug 가 주제 접두사로 시작, 파일의 `topic`·`category` 가 디렉터리 이름과 일치.
+- 계획의 `account` 모듈(사용자 사본)이 추가되어 패키지는 5개(`account`, `catalog`, `progress`, `quiz`, `api`).
+
+### 알려 둘 것 (M1 이후에 정할 것)
+- 시드 본문에 **"데모 근거: `TxExperimentTest…`" 같은 비공개 데모 프로젝트 언급**이 있다. 사이트에 그대로 나가면 독자가 확인할 수 없다 → 검수 때 코드 발췌 형태로 바꾸거나 문구를 정리한다(DESIGN §13-6).
+- 시드의 **"개요" 절과 07편의 "버전 변화 한눈에 보기" 표**는 질문이 아니라서 `content/` 로 옮기지 않았다(원본은 시드 폴더에 있다). 07 표의 위치는 M1 에서 정한다.
+- `base_version` 은 7편 모두 "Spring Framework 7 / Boot 4" 로 일괄 지정했다. 검수 때 주제별로 확인한다.
+- **사용자가 할 일**: GitHub 저장소 `doro-interview` 생성과 첫 푸시. CI 가 실제로 초록인지는 푸시 뒤에 확인한다.

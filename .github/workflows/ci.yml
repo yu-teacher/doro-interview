@@ -1,0 +1,49 @@
+name: CI
+
+# main 푸시와 PR 마다 린트·타입·테스트를 돌린다. 배포는 하지 않는다(배포 파이프라인은 M2 에서 붙인다).
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Frontend (lint, types, tests, build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm run lint
+      - run: npx tsc -b
+      - run: npm test
+      - run: npm run build
+
+  backend:
+    name: Backend (converter tests, content integrity, tests on an isolated Postgres)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v4
+      # 변환기 단위 테스트 → 격리 Postgres 기동 → gradle test(마이그레이션·로더·콘텐츠 정합성·모듈 의존 규칙) → 정리
+      - run: scripts/ci-test.sh backend
