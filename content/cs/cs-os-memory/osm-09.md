@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.kernel.org/doc/html/latest/mm/page_tables.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://man7.org/linux/man-pages/man2/getrusage.2.html"]
+concepts: [virtual-memory]
+importance: 2
+links: [{to: "osm-10", kind: FOLLOWUP}, {to: "osm-18", kind: FOLLOWUP}, {to: "osm-19", kind: FOLLOWUP}, {to: "osm-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 페이지 폴트는 MMU가 가상 주소의 변환을 찾지 못하거나 접근 권한이 맞지 않을 때 CPU가 현재 실행을 멈추고 커널의 핸들러를 실행하게 하는 예외입니다. 지연 할당, copy-on-write, 스왑아웃처럼 정상적인 원인이 있어서, 접근이 허용된 주소라면 커널이 물리 페이지를 할당하거나 저장 장치에서 읽어 와 페이지 테이블을 고치고 실행을 이어 갑니다. 이렇게 실제로 접근할 때 페이지를 올리는 것이 요구 페이징입니다. 디스크 I/O 없이 끝나는 폴트를 마이너, I/O가 필요한 폴트를 메이저라고 부르며, 허용되지 않은 주소를 건드리면 SIGSEGV가 갑니다.

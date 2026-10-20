@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/develop/using-commands/transactions/", "https://redis.io/docs/latest/develop/programmability/eval-intro/"]
+concepts: [redis, race-condition]
+importance: 2
+links: [{to: "cch-18", kind: FOLLOWUP}, {to: "cch-21", kind: FOLLOWUP}, {to: "dbl-03", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `WATCH`는 키를 감시하다가 `EXEC` 전에 다른 곳에서 그 키를 바꾸면 트랜잭션 전체를 취소하고 `EXEC`가 null을 돌려주는 낙관적 락입니다. 읽고 계산하고 `MULTI`로 쓰는 흐름에서 충돌이 나면 애플리케이션이 처음부터 재시도해야 합니다. Lua 스크립트는 서버 안에서 한 덩어리로 실행되고 그동안 다른 작업이 블록되므로 조건 분기까지 원자적으로 처리할 수 있고, 문서도 트랜잭션으로 되는 일은 스크립트로 더 간단하고 빠르게 할 수 있다고 말합니다. 스크립트가 접근하는 키는 `KEYS` 인자로 명시해야 하고, 스크립트 캐시는 휘발성이라 `EVALSHA`가 `NOSCRIPT`를 받으면 다시 올려야 합니다.

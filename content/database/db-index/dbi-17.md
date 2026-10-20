@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-bitmap-scans.html", "https://www.postgresql.org/docs/16/indexes-multicolumn.html", "https://dev.mysql.com/doc/refman/8.4/en/index-merge-optimization.html", "https://dev.mysql.com/doc/refman/8.4/en/index-btree-hash.html"]
+concepts: [index-design]
+importance: 1
+links: [{to: "dbi-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 항상 못 쓰는 것은 아닙니다. PostgreSQL 16에서 인덱스 스캔 하나는 AND로 묶인 조건만 쓸 수 있어서, (a, b) 인덱스 하나로 a = 5 OR b = 6을 바로 처리하지는 못합니다. 하지만 OR의 각 항에 쓸 수 있는 인덱스가 있으면 각각 스캔해서 만든 비트맵을 OR로 합치는 BitmapOr 계획이 가능합니다. 대신 OR의 한쪽 항이라도 인덱스를 못 쓰면 전체를 Seq Scan으로 읽어야 하고, 비트맵은 물리 순서라 인덱스 정렬 순서가 사라져서 ORDER BY에는 별도 정렬이 필요합니다. MySQL 8.4(InnoDB)에도 비슷한 Index Merge 최적화가 있습니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://microservices.io/patterns/data/saga.html", "https://learn.microsoft.com/en-us/azure/architecture/patterns/saga", "https://martinfowler.com/articles/201701-event-driven.html"]
+concepts: [distributed-consistency, messaging]
+importance: 2
+links: [{to: "dst-09", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 코레오그래피는 중앙 조정자 없이 각 서비스가 로컬 트랜잭션을 끝낸 뒤 도메인 이벤트를 발행하고, 다음 서비스가 그 이벤트에 반응하는 방식입니다. 오케스트레이션은 오케스트레이터가 참여자에게 어떤 로컬 트랜잭션을 실행할지 명령하고, 각 작업의 상태를 저장하며 실패 시 보상까지 지휘합니다. 코레오그래피는 서비스가 적은 단순한 흐름에 어울리고 단일 장애점이 없지만, 단계가 늘수록 전체 흐름을 파악하기 어렵고 서비스끼리 순환 의존이 생길 수 있으며 통합 테스트도 어렵습니다. 오케스트레이션은 복잡한 흐름이나 서비스가 늘어날 때 낫고 순환 의존을 피하지만, 조정 로직을 따로 구현해야 하고 오케스트레이터가 장애점이 될 수 있습니다.

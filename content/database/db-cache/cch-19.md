@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/develop/clients/patterns/distributed-locks/", "https://redis.io/docs/latest/operate/oss_and_stack/management/replication/"]
+concepts: [distributed-lock, distributed-consistency]
+importance: 1
+links: [{to: "dbl-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 복제는 비동기라서, 클라이언트 A가 마스터에 락 키를 만든 직후 복제본에 전달되기 전에 마스터가 죽고 그 복제본이 마스터가 되면 클라이언트 B도 같은 락을 얻어 상호 배제가 깨집니다. 장애 중 가끔 둘이 락을 쥐어도 괜찮은 용도라면 이 방식을 쓸 수 있습니다. Redis 문서가 제안하는 Redlock은 복제 없이 독립된 마스터 N대, 예를 들어 5대에 같은 키와 랜덤 값으로 짧은 타임아웃을 두고 락을 시도해, 과반수에서 성공하고 걸린 시간이 유효 시간보다 짧을 때만 획득으로 봅니다. 남은 유효 시간은 TTL에서 걸린 시간을 뺀 값이며, 프로세스 사이 시계가 비슷한 속도로 간다는 가정이 있습니다.

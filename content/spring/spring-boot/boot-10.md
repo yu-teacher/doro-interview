@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/web/servlet.html", "https://docs.spring.io/spring-boot/specification/executable-jar/index.html", "https://docs.spring.io/spring-boot/specification/executable-jar/nested-jars.html", "https://docs.spring.io/spring-boot/specification/executable-jar/launching.html", "https://docs.spring.io/spring-boot/gradle-plugin/packaging.html", "https://docs.spring.io/spring-boot/how-to/webserver.html", "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide"]
+concepts: [build-tool]
+importance: 2
+links: [{to: "bld-15", kind: RELATED}, {to: "cic-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Boot는 서블릿 애플리케이션에 내장 Tomcat과 Jetty를 지원하고, 보통 starter를 추가하면 설정된 서버 인스턴스가 함께 들어옵니다. 기본 포트는 8080이고 `server.port`로 바꿉니다. 그래서 외부 톰캣에 WAR를 배포하지 않고, 빌드 플러그인이 애플리케이션과 의존 jar를 한 파일로 묶은 실행 가능 jar를 만들면 `java -jar`로 바로 실행합니다. Gradle에서는 `bootJar` 태스크가 만들고, jar 안에는 애플리케이션 클래스는 `BOOT-INF/classes`, 의존 jar는 `BOOT-INF/lib`에 중첩되어 있습니다.

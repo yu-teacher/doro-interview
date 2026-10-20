@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html", "https://docs.spring.io/spring-data/jpa/reference/jpa/locking.html", "https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html"]
+concepts: [optimistic-lock, db-locking]
+importance: 2
+links: [{to: "dbl-03", kind: RELATED}, {to: "dbl-04", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 낙관적 락은 충돌이 드물다고 가정하고 데이터를 잠그지 않은 채 진행하며 `@Version` 컬럼으로 충돌을 감지합니다. 버전은 영속화될 때 부여되고 UPDATE마다 증가하며, UPDATE/DELETE의 where 절에서 버전을 비교합니다. 갱신된 행이 없으면 `OptimisticLockException`이 나고, 이 경우 세션을 버려야 합니다. 비관적 락은 충돌이 날 것이라 가정하고 DB 락을 실제로 잡습니다. `PESSIMISTIC_WRITE`는 for update, `PESSIMISTIC_READ`는 for share 락에 해당하고, 사용자 상호작용에 걸쳐 오래 잡지 말라고 권하며 경합은 대기·데드락을 부릅니다. Spring Data에서는 리포지토리 메서드에 `@Lock`을 붙입니다. 충돌이 잦은 재고 차감은 비관적 락이, 일반 수정 화면은 낙관적 락이 어울립니다(보충).

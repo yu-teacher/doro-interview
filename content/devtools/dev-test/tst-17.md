@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://javadoc.io/static/org.mockito/mockito-core/5.23.0/org.mockito/org/mockito/exceptions/misusing/UnnecessaryStubbingException.html", "https://javadoc.io/static/org.mockito/mockito-core/5.23.0/org.mockito/org/mockito/quality/Strictness.html", "https://javadoc.io/static/org.mockito/mockito-junit-jupiter/5.23.0/org.mockito.junit.jupiter/org/mockito/junit/jupiter/MockitoExtension.html", "https://javadoc.io/static/org.mockito/mockito-core/5.23.0/org.mockito/org/mockito/Mockito.html"]
+concepts: [mocking-junit]
+importance: 1
+links: [{to: "tst-05", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 테스트에서 `when(...)`으로 스터빙했는데 실행 중 한 번도 쓰이지 않으면, 엄격 스터빙(`STRICT_STUBS`)이 켜진 상태에서는 Mockito가 `UnnecessaryStubbingException`으로 테스트를 실패시킵니다. 쓸모없는 테스트 코드나 복사 붙여넣기 실수를 잡으려는 동작입니다. 스터빙한 메서드를 다른 인자로 호출한 경우에도 인자 불일치를 `PotentialStubbingProblem`으로 알려 줍니다. 해결은 필요 없는 스터빙을 지우거나 테스트와 대상 코드의 오해를 바로잡는 것이고, 정말 공통 준비라 일부 테스트에서만 쓰인다면 `lenient().when(...)`으로 그 스터빙만 완화합니다. `MockitoExtension`을 쓰면 이 모드가 적용되고, `mock()`만 직접 쓰면 에러가 나지 않았습니다.

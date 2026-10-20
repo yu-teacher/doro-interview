@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-savepoint.html", "https://www.postgresql.org/docs/16/tutorial-transactions.html", "https://dev.mysql.com/doc/refman/8.4/en/savepoint.html"]
+concepts: [tx-boundary]
+importance: 1
+links: [{to: "dbt-20", kind: FOLLOWUP}, {to: "tx-09", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 SAVEPOINT는 트랜잭션 안에 찍는 표시점입니다. `ROLLBACK TO SAVEPOINT`를 하면 그 이후 실행한 명령만 취소하고 트랜잭션은 계속 이어가며, `RELEASE SAVEPOINT`는 표시점만 없애고 그 이후의 변경은 유지합니다. PostgreSQL 16에서는 트랜잭션 블록 안에서 문장 하나가 에러를 내면 트랜잭션이 aborted 상태가 되어 트랜잭션 블록이 끝날 때까지 이후 명령이 모두 거부됩니다. 이때 전체를 롤백하지 않고 제어권을 되찾는 방법이 바로 ROLLBACK TO SAVEPOINT여서, 실패할 수 있는 문장을 세이브포인트로 감싸 부분 롤백을 합니다.

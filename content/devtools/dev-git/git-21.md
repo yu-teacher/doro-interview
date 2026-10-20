@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/gitglossary", "https://git-scm.com/book/ko/v2/Git-%EB%B8%8C%EB%9E%9C%EC%B9%98-%EB%A6%AC%EB%AA%A8%ED%8A%B8-%EB%B8%8C%EB%9E%9C%EC%B9%98", "https://git-scm.com/docs/git-push", "https://git-scm.com/docs/git-fetch", "https://git-scm.com/docs/git-config"]
+concepts: [git-branching]
+importance: 2
+links: [{to: "git-17", kind: FOLLOWUP}, {to: "git-04", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 origin/main 같은 원격 추적 브랜치는 마지막으로 원격과 통신했을 때 그 브랜치가 어디를 가리켰는지 기억하는 로컬 북마크입니다. 직접 커밋하는 브랜치가 아니고 fetch나 push 때 자동으로 갱신됩니다. 로컬 브랜치의 upstream은 그 브랜치가 기본으로 pull과 push 대상으로 삼는 원격 브랜치로 config에 저장됩니다. 기본 설정에서 새로 만든 브랜치는 upstream이 없어서 git push가 실패하므로 git push -u origin 브랜치로 처음 한 번 연결하고, 원격에서 지워진 브랜치의 흔적은 git fetch --prune으로 정리합니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html", "https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/stdatomic.h.html", "https://www.kernel.org/doc/html/latest/core-api/wrappers/memory-barriers.html", "https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html"]
+concepts: [memory-model, race-condition]
+importance: 1
+links: [{to: "osp-05", kind: PREREQ}, {to: "jt-05", kind: RELATED}, {to: "jt-09", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 원자 연산은 읽고 수정하고 쓰는 과정이 중간에 끼어들 수 없는 하나의 연산이라서, 락 없이 카운터를 안전하게 올릴 수 있습니다. 메모리 순서는 한 스레드의 쓰기가 다른 스레드에 어떤 순서로 보이는지를 정합니다. 한 스레드가 데이터를 쓰고 플래그를 release로 쓴 뒤 다른 스레드가 그 플래그를 acquire로 읽어 새 값을 보면, 앞서 쓴 데이터도 보입니다. 뮤텍스의 unlock과 lock이 바로 release와 acquire입니다. relaxed 원자 연산은 원자적이지만 이런 동기화는 아니고, volatile은 원자성을 주지 않으며 동기화 연산도 아니어서 스레드 간 동기화에 쓰면 안 됩니다.

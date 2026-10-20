@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html", "https://docs.spring.io/spring-boot/3.3/reference/features/spring-application.html", "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-6.1-Release-Notes", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/task/VirtualThreadTaskExecutor.html"]
+concepts: [virtual-thread, thread-pool]
+importance: 2
+links: [{to: "misc-15", kind: FOLLOWUP}, {to: "jt-15", kind: RELATED}, {to: "mvc-17", kind: RELATED}, {to: "jt-20", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 가상 스레드는 JDK 21 이상에서 쓰는 경량 스레드로, 블로킹 I/O가 많은 서버에서 "요청당 스레드" 모델을 유지하면서 동시 처리량을 높여 줍니다. 스프링은 6.1부터 JDK 21과 가상 스레드 호환을 지원했고 `VirtualThreadTaskExecutor` 같은 설정 옵션을 추가했습니다. Boot에서는 Java 21 이상에서 `spring.threads.virtual.enabled=true` 한 줄로 켭니다. 켜면 톰캣 요청 처리 스레드와 `applicationTaskExecutor`가 가상 스레드를 쓰고, 스레드 풀 크기 설정은 효과가 없어집니다. 다만 `synchronized` 등으로 캐리어 스레드가 고정되는 pinning이 있으면 처리량이 줄 수 있고, 가상 스레드가 많아져도 Hikari 풀은 그대로 10개라서 병목이 DB 커넥션으로 옮겨 갈 수 있습니다.

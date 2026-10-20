@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/git-cherry-pick", "https://git-scm.com/docs/gitworkflows"]
+concepts: [git-branching]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 cherry-pick은 다른 브랜치에 있는 특정 커밋이 도입한 변경만 골라 현재 브랜치 끝에 새 커밋으로 적용하는 명령입니다. 운영 중인 릴리스 브랜치에 핫픽스 하나만 가져오는 백포트가 대표적인 용도입니다. 변경 내용은 같아도 부모가 다르므로 해시가 다른 새 커밋이 생기고, 나중에 원래 브랜치를 merge하면 같은 변경이 서로 다른 커밋으로 히스토리에 두 번 보일 수 있습니다. 공개된 브랜치 사이라면 -x로 원본 커밋 ID를 메시지에 남겨 추적할 수 있게 합니다.

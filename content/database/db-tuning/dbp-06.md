@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/queries-limit.html", "https://www.postgresql.org/docs/16/functions-comparisons.html", "https://dev.mysql.com/doc/refman/8.4/en/limit-optimization.html", "https://dev.mysql.com/doc/refman/8.4/en/row-constructor-optimization.html"]
+concepts: [index-design]
+importance: 2
+links: [{to: "dbi-20", kind: RELATED}, {to: "jpa-35", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 OFFSET n은 앞의 n행을 건너뛰어야 하는데, 건너뛰는 행도 서버 안에서는 일단 계산해야 해서 페이지가 뒤로 갈수록 읽는 행이 늘고 느려집니다. 키셋 페이징은 마지막으로 본 행의 정렬 키를 기억했다가, WHERE (created_at, id) < (마지막 값) ORDER BY created_at DESC, id DESC LIMIT 20처럼 그 다음 행부터 인덱스로 바로 찾는 방식이라 페이지 깊이와 상관없이 비용이 거의 일정합니다. 대신 임의 페이지로 바로 점프하기 어렵고, 정렬 키가 유일해야 합니다. MySQL 8.4(InnoDB)에서는 이 행 생성자 비교가 인덱스 범위로 쓰이지 않았고, OR 조건으로 풀어 쓰자 인덱스 범위 스캔이 되었습니다.

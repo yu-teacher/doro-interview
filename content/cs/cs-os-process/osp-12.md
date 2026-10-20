@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_cond_wait.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_cond_signal.html"]
+concepts: [race-condition]
+importance: 2
+links: [{to: "jt-08", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 조건 변수는 어떤 조건이 참이 될 때까지 스레드를 재우고 깨우는 장치인데, 조건 자체는 공유 변수라서 mutex로 보호해야 합니다. cond_wait는 mutex를 풀고 잠드는 일을 원자적으로 해서 그 사이에 다른 스레드가 조건을 바꾸고 signal해도 놓치지 않고, 깨어나면 mutex를 다시 잡고 돌아옵니다. 그래도 깨어났다고 조건이 참이라는 보장은 없습니다. 가짜 깨어남이 있을 수 있고, 다른 스레드가 먼저 조건을 소비했을 수도 있어서 while로 다시 검사해야 합니다. 또 signal은 기다리는 스레드가 없으면 사라지므로 상태는 조건 변수가 아니라 변수에 남겨야 합니다.

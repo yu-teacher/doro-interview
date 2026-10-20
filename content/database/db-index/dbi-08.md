@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-index-only-scans.html", "https://www.postgresql.org/docs/16/indexes-unique.html", "https://www.postgresql.org/docs/16/indexes-multicolumn.html"]
+concepts: [index-design]
+importance: 2
+links: [{to: "dbi-09", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 커버링 인덱스는 쿼리에 필요한 컬럼을 인덱스에 모두 담아서 테이블 힙을 읽지 않고 Index Only Scan으로 답하게 만든 인덱스입니다. PostgreSQL 16에서는 INCLUDE 절로 검색 키가 아닌 페이로드 컬럼을 붙일 수 있어서, (x) INCLUDE (y) 인덱스는 WHERE x = ? 로 찾고 y를 돌려주는 쿼리를 힙 접근 없이 처리합니다. INCLUDE 컬럼은 검색에 쓰이지 않으므로 인덱스가 다루지 못하는 데이터 타입이어도 되고, 유니크 인덱스라면 유일성은 키 컬럼 x에만 적용됩니다. 반면 y를 키에 넣은 (x, y) 인덱스는 y에 대한 조건과 정렬도 지원하지만 유니크가 조합 전체에 적용됩니다. 넓은 컬럼을 많이 넣으면 인덱스가 커지므로 조심해야 합니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html", "https://docs.oracle.com/javase/specs/jls/se25/html/jls-5.html", "https://gameprogrammingpatterns.com/flyweight.html"]
+concepts: [type-system, gof-patterns]
+importance: 2
+links: [{to: "jl-10", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `Integer.valueOf(int)`가 -128에서 127까지는 항상 캐시한 같은 인스턴스를 돌려주고, JLS도 이 범위의 상수 박싱은 서로 같은 참조가 되어야 한다고 규정하기 때문입니다. 그래서 127끼리는 `==`가 true이고, 128은 보통 새 객체라 false입니다. 문서는 범위 밖 값도 캐시할 수 있다고 하고 JLS도 그 밖의 값의 동일성에 기대지 말라고 하므로, 값 비교는 `equals`로 해야 합니다. 변하지 않는 공유 가능한 상태를 하나만 두고 재사용해 메모리를 아끼는 것이 플라이웨이트이고, Nystrom은 공유 객체를 대개 불변으로 둔다고 설명합니다.

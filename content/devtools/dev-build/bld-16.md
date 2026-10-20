@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.gradle.org/current/userguide/dependency_versions.html", "https://docs.gradle.org/current/userguide/dependency_constraints.html", "https://docs.gradle.org/current/userguide/graph_resolution.html", "https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html"]
+concepts: [dependency-management]
+importance: 1
+links: [{to: "bld-12", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 Gradle에서 `'ex:d:1.0'`처럼 간단히 쓴 버전은 고정이 아니라 필요한 버전이라는 요구일 뿐이라, 다른 경로에서 2.0이 요구되면 충돌 해결에서 가장 높은 2.0이 이깁니다. 낮은 버전으로 고정하려면 `strictly`를 써야 하고, 문서에 따르면 직접 선언한 의존성의 `strictly`는 버전을 내릴 수 있습니다. 전이 의존성의 버전만 바꾸고 싶을 때는 의존성 제약(`constraints`)을 쓰는데, 제약은 기본으로 엄격하지 않아서 요구보다 낮추지는 못합니다. Maven은 이와 달리 직접 선언한 쪽이 가까워서 이깁니다.

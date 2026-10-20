@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://microservices.io/patterns/data/transactional-outbox.html", "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html", "https://docs.spring.io/spring-modulith/reference/events.html"]
+concepts: [distributed-consistency, messaging]
+importance: 2
+links: [{to: "dst-07", kind: PREREQ}, {to: "dst-21", kind: FOLLOWUP}, {to: "tx-19", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 서비스가 DB를 갱신하면서 메시지도 브로커로 보내야 할 때 2PC로 둘을 묶기가 현실적이지 않아 생기는 이중 쓰기 문제가 있습니다. 커밋 전에 보내면 롤백됐는데 메시지가 나가고, 커밋 후에 보내면 그 사이에 죽어서 메시지를 잃습니다. Transactional Outbox는 비즈니스 데이터를 바꾸는 같은 로컬 트랜잭션 안에서 보낼 메시지를 outbox 테이블에 함께 저장하고, 메시지 릴레이라는 별도 프로세스가 그 테이블을 읽어 브로커에 발행하는 방식입니다. 메시지는 커밋된 경우에만 나가고 순서도 지킬 수 있습니다. 다만 릴레이가 발행 후 표시 전에 죽으면 같은 메시지를 다시 보내므로 소비자는 멱등해야 합니다.

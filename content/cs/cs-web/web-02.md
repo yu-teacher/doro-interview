@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9110.html"]
+concepts: [http-protocol, authn-authz]
+importance: 3
+links: [{to: "sec-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 401은 요청에 유효한 인증 자격 증명이 없어서 처리하지 않았다는 뜻이고, 표준에 따르면 401 응답에는 사용할 인증 방식을 알려 주는 WWW-Authenticate 헤더가 반드시 있어야 합니다. 클라이언트는 새 자격 증명을 실어 다시 요청할 수 있습니다. 403은 서버가 요청을 이해했지만 수행을 거부한다는 뜻이고, 자격 증명을 보냈다면 그것으로는 부족하다고 판단했다는 의미라서 같은 자격 증명으로 자동 재시도하지 말라고 권고됩니다. 그래서 로그인이 안 됐거나 토큰이 유효하지 않으면 401, 요청은 알아듣지만 허용하지 않으면 403으로 나눕니다. 리소스가 있다는 사실 자체를 숨기고 싶으면 403 대신 404를 써도 됩니다.

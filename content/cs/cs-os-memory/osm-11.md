@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/mmap.html", "https://man7.org/linux/man-pages/man2/mmap.2.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html"]
+concepts: [virtual-memory, io-filesystem]
+importance: 1
+links: [{to: "osm-20", kind: FOLLOWUP}, {to: "osm-09", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `mmap`은 파일의 일정 구간을 프로세스의 주소 공간에 매핑해서 포인터로 메모리처럼 읽고 쓰게 해 주는 시스템 콜입니다. `read`처럼 호출할 때마다 사용자 버퍼로 읽는 대신, 매핑된 주소에 처음 접근할 때 페이지 폴트가 나고 커널이 페이지 캐시의 페이지를 연결해 줍니다. `MAP_SHARED`는 쓴 내용이 같은 영역을 매핑한 다른 프로세스에 보이고 파일에도 반영되며 정확한 반영 시점은 `msync`로 제어합니다. `MAP_PRIVATE`는 쓰면 copy-on-write 사본이 생겨서 파일은 바뀌지 않습니다.

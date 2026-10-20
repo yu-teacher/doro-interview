@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/exceptionhandlers.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-exceptionhandler.html"]
+concepts: [global-exception-handling, mvc-request-flow]
+importance: 2
+links: [{to: "mvc-21", kind: FOLLOWUP}, {to: "mvc-22", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 컨트롤러 예외는 DispatcherServlet이 `HandlerExceptionResolver` 빈 체인에 위임해 해결합니다. 리졸버는 오류 뷰 `ModelAndView`, 처리 완료를 뜻하는 빈 `ModelAndView`, 다음 리졸버에게 넘기는 `null` 중 하나를 반환합니다. MVC Config가 자동 선언하는 것은 셋입니다. `ExceptionHandlerExceptionResolver`는 `@ExceptionHandler`를, `ResponseStatusExceptionResolver`는 `@ResponseStatus` 예외를, `DefaultHandlerExceptionResolver`는 Spring MVC 예외를 상태 코드로 처리합니다. 끝까지 미해결이면 Servlet 컨테이너로 전파되어 에러 페이지나 `/error`로의 ERROR 디스패치로 이어집니다.

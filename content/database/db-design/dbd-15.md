@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-altertable.html", "https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/runtime-config-client.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-online-ddl-operations.html"]
+concepts: [online-schema-change, db-locking]
+importance: 2
+links: [{to: "dbd-16", kind: FOLLOWUP}, {to: "dbd-21", kind: FOLLOWUP}, {to: "dbd-22", kind: FOLLOWUP}, {to: "dbl-09", kind: RELATED}, {to: "dbl-06", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16의 ALTER TABLE은 문서에 따로 적힌 경우가 아니면 ACCESS EXCLUSIVE 락을 잡아 읽기와 쓰기를 모두 막습니다. 큰 테이블에서는 락을 기다리는 시간과 락을 쥐고 있는 시간이 모두 위험이어서, DDL 세션에 lock_timeout을 걸어 못 얻으면 포기하고 재시도합니다. 제약을 추가할 때는 NOT VALID로 먼저 추가해 전체 스캔을 건너뛰고, 나중에 VALIDATE CONSTRAINT로 검증하면 락 수준이 SHARE UPDATE EXCLUSIVE로 낮아져 쓰기를 막지 않습니다. MySQL 8.4(InnoDB)에서는 컬럼 추가가 기본 INSTANT 알고리즘이지만 변경 종류에 따라 INPLACE, COPY로 달라집니다.

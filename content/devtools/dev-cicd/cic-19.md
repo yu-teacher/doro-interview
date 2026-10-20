@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/reference/dockerfile/", "https://docs.spring.io/spring-boot/reference/web/graceful-shutdown.html"]
+concepts: [graceful-shutdown, container]
+importance: 2
+links: [{to: "cic-14", kind: PREREQ}, {to: "dkr-16", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 셸 형식으로 쓴 ENTRYPOINT가 원인일 가능성이 큽니다. `ENTRYPOINT java -jar app.jar`처럼 쓰면 Docker가 `/bin/sh -c`로 실행하는데, 공식 문서에 따르면 이 셸은 신호를 전달하지 않아서 자바가 PID 1이 되지 못하고 `docker stop`의 SIGTERM을 받지 못합니다. 그러면 Spring Boot의 종료 훅이 돌지 않고 제한 시간 뒤 SIGKILL로 강제 종료되어 처리 중이던 요청이 끊깁니다. 해결은 `ENTRYPOINT ["java", "-jar", "app.jar"]`처럼 exec 형식을 쓰거나, 셸 형식이라면 `exec java -jar app.jar`로 시작해 자바가 PID 1이 되게 하는 것입니다. 셸에 따라 명령이 하나면 알아서 바꿔 주기도 하지만 문서가 보장하지는 않습니다.

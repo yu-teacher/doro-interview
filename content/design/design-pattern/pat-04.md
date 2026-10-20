@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://objectmentor.com/resources/articles/Principles_and_Patterns.pdf", "https://gameprogrammingpatterns.com/flyweight.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html", "https://docs.spring.io/spring-framework/reference/core/beans/definition.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/BeanFactory.html"]
+concepts: [gof-patterns]
+importance: 2
+links: [{to: "pat-05", kind: FOLLOWUP}, {to: "ioc-09", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 둘 다 객체를 만드는 코드를 호출자에게서 감추는 생성 패턴입니다. Robert Martin은 Abstract Factory를 구체 클래스에 대한 의존을 한 곳에만 두게 해 주는 패턴으로 설명합니다. 사용자는 팩토리 인터페이스만 알고, 어떤 구현체가 만들어지는지는 모릅니다. Nystrom은 생성자를 감추고 이미 만든 객체가 있으면 그것을 돌려주는 구조를 Factory Method의 예로 듭니다. JDK에서는 `List.of`가 구현 클래스를 숨기고 `List`를 돌려주는 정적 팩토리이고, 스프링에서는 `BeanFactory`가 이름으로 구분한 빈 정의를 가진 중앙 레지스트리 역할을 하면서 인스턴스를 돌려줍니다.

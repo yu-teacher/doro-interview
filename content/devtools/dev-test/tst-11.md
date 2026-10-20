@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html", "https://docs.spring.io/spring-framework/reference/testing/annotations/integration-spring/annotation-mockitobean.html"]
+concepts: [test-strategy]
+importance: 3
+links: [{to: "tst-13", kind: FOLLOWUP}, {to: "tst-15", kind: FOLLOWUP}, {to: "tst-16", kind: FOLLOWUP}, {to: "tst-01", kind: PREREQ}, {to: "boot-14", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `@SpringBootTest`는 `SpringApplication`으로 애플리케이션 컨텍스트 전체를 띄워서 실제 빈 배선까지 확인하는 통합 테스트입니다. 슬라이스 테스트는 계층 하나에 필요한 자동 설정과 빈만 로드합니다. `@WebMvcTest`는 컨트롤러, `@ControllerAdvice`, 필터 같은 MVC 구성요소만 스캔하고 `MockMvc`를 구성하므로 서비스 같은 협력자는 `@MockitoBean`으로 채웁니다. `@DataJpaTest`는 `@Entity`와 Spring Data JPA 리포지토리만 구성하고 기본적으로 트랜잭션을 걸어 테스트마다 롤백합니다. 슬라이스 애노테이션은 한 테스트에 하나만 쓸 수 있습니다. 컨트롤러 매핑이나 JPA 쿼리만 보면 슬라이스가, 계층을 가로지르는 흐름은 `@SpringBootTest`가 맞습니다.

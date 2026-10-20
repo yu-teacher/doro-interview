@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-jobs", "https://docs.github.com/en/actions/get-started/understand-github-actions", "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"]
+concepts: [ci-pipeline]
+importance: 2
+links: [{to: "cic-10", kind: FOLLOWUP}, {to: "cic-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 기본적으로 job 사이에는 의존성이 없어서 모두 병렬로 실행됩니다. 순서가 필요하면 `needs`에 선행 job을 적고, 그러면 선행 job이 성공해야 그 job이 실행됩니다. 선행 job이 실패하거나 건너뛰어지면 그것을 필요로 하는 job도 건너뛰고, 의존 사슬의 뒤쪽 job도 모두 건너뜁니다. 선행 job의 결과와 관계없이 실행하고 싶으면, 예를 들어 알림이나 정리 작업이라면 `if: ${{ always() }}`를 씁니다. job은 각각 다른 가상 머신에서 돌기 때문에 파일은 공유되지 않고, 값은 job의 `outputs`와 `needs` 컨텍스트로, 파일은 아티팩트로 넘깁니다.

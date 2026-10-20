@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/at-aspectj.html", "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/aspectj-support.html", "https://docs.spring.io/spring-boot/reference/features/aop.html", "https://docs.spring.io/spring-boot/reference/using/build-systems.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/EnableAspectJAutoProxy.html"]
+concepts: [aop]
+importance: 1
+links: [{to: "aop-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 Spring AOP에서 Aspect는 Spring 빈으로 등록되어야 동작합니다. XML이나 `@Bean` 메서드로 등록할 수도 있고, 클래스패스 스캔으로 자동 감지하려면 `@Aspect`만으로는 부족해서 `@Component` 같은 애노테이션을 따로 붙여야 합니다. 그리고 `@EnableAspectJAutoProxy`로 @AspectJ 지원을 켜고, `aspectjweaver`(1.9 이상)가 클래스패스에 있어야 합니다. Spring Boot는 AspectJ가 클래스패스에 있으면 자동 설정이 AspectJ auto proxy를 켜 주므로 `@EnableAspectJAutoProxy`가 필요 없고, 스타터로는 `spring-boot-starter-aspectj`를 씁니다.

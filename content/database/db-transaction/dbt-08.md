@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/transaction-iso.html", "https://www.postgresql.org/docs/16/mvcc-serialization-failure-handling.html"]
+concepts: [isolation-level, mvcc]
+importance: 2
+links: [{to: "dbt-09", kind: FOLLOWUP}, {to: "dbt-16", kind: FOLLOWUP}, {to: "dbl-14", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16의 REPEATABLE READ는 스냅샷 격리로 구현되어, 트랜잭션의 첫 문장이 실행된 시점의 스냅샷을 끝까지 봅니다. 그래서 다른 트랜잭션이 중간에 커밋한 수정이나 새로 삽입한 행이 보이지 않고, 표준이 허용하는 phantom read도 일어나지 않습니다. 다만 내 스냅샷에서 보이던 행을 다른 트랜잭션이 먼저 수정하거나 삭제하고 커밋했는데 내가 그 행을 UPDATE나 DELETE하려고 하면 could not serialize access due to concurrent update 에러로 롤백됩니다. 이때 애플리케이션은 트랜잭션 전체를 처음부터 다시 실행해야 하고, PostgreSQL이 자동으로 재시도해 주지는 않습니다.

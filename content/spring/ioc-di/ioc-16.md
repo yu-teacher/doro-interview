@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Lazy.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/ObjectProvider.html"]
+concepts: [ioc-di]
+importance: 2
+links: [{to: "ioc-15", kind: PREREQ}, {to: "ioc-17", kind: FOLLOWUP}, {to: "pat-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 가장 좋은 방법은 설계 변경입니다. 공통 로직을 제3의 클래스로 분리해 A와 B가 모두 그것에 의존하게 하거나, 한쪽이 이벤트를 발행하고 다른 쪽이 구독하는 방식으로 방향을 끊습니다. 임시 대안으로는 한쪽을 세터 주입으로 바꾸는 방법이 있지만 공식 문서는 비권장이라고 합니다. 또 한쪽 주입 지점에 @Lazy를 붙이면 지연 해석 프록시가 주입되어 순환이 풀리고, ObjectProvider로 의존성을 늦게 조회할 수도 있습니다. 생성자 주입을 유지하면 순환이 있을 때 시작 단계에서 바로 실패하기 때문에 문제를 일찍 발견한다는 장점이 있습니다.

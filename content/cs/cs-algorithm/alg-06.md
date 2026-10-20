@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/binarySearch.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Arrays.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collections.html"]
+concepts: [complexity-sorting]
+importance: 3
+links: [{to: "alg-18", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 이진 탐색은 정렬된 배열에서 구간의 가운데 값과 찾는 값을 비교해 구간을 절반씩 줄여 가는 탐색이고, 비교 횟수가 O(log n)입니다. 입력이 정렬돼 있어야 한다는 것이 전제 조건이고, 정렬되지 않았다면 결과가 정의되지 않습니다. 가운데 원소를 상수 시간에 읽는 임의 접근 리스트에서 O(log n) 시간에 동작합니다. 정렬된 연결 리스트에서도 쓸 수 있지만 순회가 O(n)번이라 선형 탐색과 같고 줄어드는 것은 비교 횟수뿐입니다. 같은 값이 여럿이면 그중 어느 것을 찾을지는 보장되지 않습니다.

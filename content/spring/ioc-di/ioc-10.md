@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/classpath-scanning.html", "https://docs.spring.io/spring-framework/reference/core/beans/definition.html", "https://docs.spring.io/spring-boot/reference/using/using-the-springbootapplication-annotation.html", "https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html"]
+concepts: [ioc-di]
+importance: 2
+links: [{to: "ioc-11", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 @ComponentScan이 지정한 패키지 아래 클래스패스를 훑어 @Component가 붙은 후보 클래스를 찾아 빈 정의로 자동 등록합니다. @Service, @Repository, @Controller는 모두 @Component를 메타 애노테이션으로 가진 특수화로, 계층 의미를 드러내고 도구나 AOP가 겨냥하기 쉽게 해 줍니다. 예를 들어 @Repository는 예외 변환 대상으로 표시하는 마커입니다. 빈 이름은 기본적으로 클래스 단순명의 첫 글자를 소문자로 바꾼 것이며 value로 직접 지정할 수 있습니다. includeFilters/excludeFilters로 범위를 조정할 수도 있습니다.

@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/backup-dump.html", "https://www.postgresql.org/docs/16/continuous-archiving.html", "https://www.postgresql.org/docs/16/app-pgbasebackup.html"]
+concepts: [db-scaling]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 pg_dump는 SQL이나 아카이브 형태로 데이터베이스를 논리적으로 덤프하는 방식으로, 시작 시점의 일관된 스냅샷을 만들고 일부 테이블만 복원할 수도 있지만 복원 시점을 고를 수는 없습니다. PITR은 파일 수준 베이스 백업에 더해 그 이후의 WAL 파일을 계속 아카이브해 두었다가, 원하는 시점까지 WAL을 재생해 복구하는 방식입니다. 이를 위해 archive_mode와 archive_command를 설정해야 하고, 복구는 클러스터 전체 단위로만 됩니다. 실수로 테이블을 지운 직전 시점으로 돌리는 용도에 맞지만, 베이스 백업 주기와 WAL 보관 용량을 함께 계획해야 합니다.

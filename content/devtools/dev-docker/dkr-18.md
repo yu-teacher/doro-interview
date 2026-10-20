@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/build/building/best-practices/", "https://docs.docker.com/get-started/docker-concepts/building-images/build-tag-and-publish-an-image/", "https://docs.docker.com/reference/cli/docker/image/tag/"]
+concepts: [container]
+importance: 1
+links: [{to: "dkr-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 태그를 생략하면 Docker는 `latest` 를 기본으로 씁니다. 함정은 이름만 보고 항상 가장 최신이라고 믿기 쉽다는 점입니다. 태그는 게시자가 다른 이미지를 가리키도록 옮길 수 있는 라벨일 뿐이라 같은 태그로 다시 빌드하면 내용이 달라질 수 있고, 그러면 빌드 시점마다 결과가 달라지고 어떤 버전을 썼는지 추적하기도 어렵습니다. 그래서 `FROM` 에는 구체적인 버전 태그를 쓰고, 완전히 고정하려면 `@sha256:` digest까지 지정합니다. 다만 digest 고정은 보안 패치의 자동 반영을 포기하는 것이므로 갱신은 도구로 관리해야 합니다.

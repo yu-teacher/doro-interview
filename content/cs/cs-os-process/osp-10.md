@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.kernel.org/doc/html/latest/scheduler/sched-design-CFS.html", "https://www.kernel.org/doc/html/latest/scheduler/sched-eevdf.html", "https://man7.org/linux/man-pages/man7/sched.7.html"]
+concepts: [process-management]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 CFS는 모든 태스크가 CPU를 똑같이 나눠 쓰는 이상적인 멀티태스킹 CPU를 실제 하드웨어에서 흉내 냅니다. 태스크마다 실행한 만큼 누적되는 가상 실행 시간 vruntime을 추적하고, 가장 적게 실행한 태스크, 곧 vruntime이 가장 작은 태스크를 다음에 고릅니다. 실행 가능한 태스크는 vruntime을 키로 하는 레드-블랙 트리에 정렬되어 맨 왼쪽이 뽑힙니다. nice 값은 스케줄러가 우대하는 정도에 반영되어 한 단계 차이마다 1.25배가 됩니다. 다만 커널 문서에 따르면 리눅스는 6.6부터 CFS에서 EEVDF로 옮겨 가는 중이고, EEVDF는 lag가 0 이상인 태스크 중 가상 데드라인이 가장 빠른 것을 고릅니다.

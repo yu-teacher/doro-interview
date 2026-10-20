@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations", "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax", "https://docs.github.com/en/actions/tutorials/build-and-test-code/java-with-gradle"]
+concepts: [ci-pipeline]
+importance: 1
+links: [{to: "cic-03", kind: PREREQ}, {to: "cic-05", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 matrix는 job 정의 하나에 변수와 값 목록을 주면 모든 조합마다 job을 자동으로 만들어 주는 기능입니다. 예를 들어 JDK 두 개와 OS 두 개를 주면 job이 네 개 돕니다. `include`는 기존 조합에 변수를 덧붙이거나 새 조합을 추가하고, `exclude`는 특정 조합을 뺍니다. `include`는 `exclude` 처리가 모두 끝난 뒤에 처리됩니다. `fail-fast`는 기본값이 true라서 한 조합이 실패하면 진행 중이거나 대기 중인 나머지 조합이 취소되고, 실험용 조합은 `continue-on-error`를 true로 두어 실패해도 다른 조합에 영향이 없게 합니다. 버전 값은 `'17'`처럼 문자열로 적는 것이 안전합니다.

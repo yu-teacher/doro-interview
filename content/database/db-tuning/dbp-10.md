@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-index-only-scans.html", "https://www.postgresql.org/docs/16/routine-vacuuming.html"]
+concepts: [index-design, mvcc]
+importance: 1
+links: [{to: "dbi-09", kind: RELATED}, {to: "dbt-10", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 Index Only Scan은 필요한 컬럼이 모두 인덱스에 있어도, 인덱스 항목에는 가시성 정보가 없어서 그 행이 현재 스냅샷에 보이는지 확인해야 합니다. 그래서 가시성 맵에서 해당 힙 페이지의 모든 행이 보이는 것으로 표시돼 있으면 힙을 읽지 않고, 아니면 힙을 읽으러 가는데 이것이 EXPLAIN의 Heap Fetches입니다. 최근에 갱신이 많았거나 VACUUM이 아직 안 돈 테이블은 Heap Fetches가 커져서 일반 인덱스 스캔과 다를 바 없어지고, VACUUM이 가시성 맵을 갱신해 줍니다. 컬럼을 더 담으려면 INCLUDE로 커버링 인덱스를 만들 수 있지만 인덱스가 커지는 비용이 있습니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-createsequence.html", "https://www.postgresql.org/docs/16/functions-sequence.html", "https://www.postgresql.org/docs/16/datatype-numeric.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-auto-increment-handling.html"]
+concepts: [schema-design]
+importance: 2
+links: [{to: "dbd-20", kind: FOLLOWUP}, {to: "dbt-18", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 시퀀스는 여러 트랜잭션이 동시에 번호를 받아야 해서, nextval이 한 번 번호를 내주면 트랜잭션이 롤백돼도 되돌리지 않습니다. 그래서 INSERT가 실패하거나 롤백되면 그 번호는 버려지고 컬럼에는 빈 번호가 생깁니다. serial이든 identity든 마찬가지이고, MySQL 8.4(InnoDB)의 AUTO_INCREMENT도 롤백된 값을 재사용하지 않습니다. 기본키처럼 gap이 있어도 되는 용도에는 문제가 없지만, 연속성이 필수인 번호는 시퀀스에 기대면 안 됩니다. 그런 경우에는 카운터 행을 락을 잡고 갱신해 채번하는 방법이 있는데, 시퀀스보다 동시성 비용이 훨씬 큽니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://www.kernel.org/doc/html/latest/mm/page_tables.html"]
+concepts: [virtual-memory]
+importance: 3
+links: [{to: "osm-05", kind: FOLLOWUP}, {to: "osm-08", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 페이징은 물리 메모리를 고정 크기의 프레임으로, 가상 주소 공간을 같은 크기의 페이지로 나누고 페이지 테이블로 대응시키는 방식입니다. 가상 주소의 상위 비트는 페이지 번호로 테이블을 찾는 인덱스가 되고, 하위 비트는 페이지 안의 오프셋이 됩니다. 한 줄짜리 거대한 테이블은 대부분 비어 있어 낭비가 크므로, 상위 테이블이 하위 테이블을 가리키는 계층형으로 만들어 안 쓰는 큰 구간은 상위에서 비어 있다고만 표시합니다. 세그멘테이션은 코드·데이터·스택처럼 의미 단위로 가변 크기 구간을 나누는 방식이라 외부 단편화가 생기기 쉽고, 현대 범용 OS는 페이징을 중심으로 씁니다.

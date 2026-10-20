@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/book/ko/v2/%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-Git-%EA%B8%B0%EC%B4%88", "https://git-scm.com/book/ko/v2/Git-%EB%8F%84%EA%B5%AC-Reset-%EB%AA%85%ED%99%95%ED%9E%88-%EC%95%8C%EA%B3%A0-%EA%B0%80%EA%B8%B0"]
+concepts: [git-internals]
+importance: 3
+links: [{to: "git-06", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 워킹 트리는 실제로 편집하는 파일이고, 스테이징 영역(index)은 다음 커밋에 들어갈 스냅샷을 모아 두는 곳이며, 저장소(.git 디렉터리)는 커밋과 객체가 영구적으로 저장되는 곳입니다. git add는 워킹 트리의 내용을 index에 올리고, git commit은 index에 올라 있는 내용을 새 커밋으로 기록합니다. 그래서 add한 뒤 파일을 또 고치면 add 시점의 내용만 커밋되고 이후 수정은 워킹 트리에만 남습니다. git status는 이 세 영역의 차이를 보여 줍니다.

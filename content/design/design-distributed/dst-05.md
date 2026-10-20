@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://microservices.io/patterns/apigateway.html", "https://docs.spring.io/spring-cloud-gateway/reference/", "https://samnewman.io/patterns/architectural/bff/"]
+concepts: [msa-boundary]
+importance: 2
+links: [{to: "dst-15", kind: FOLLOWUP}, {to: "dst-08", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 API 게이트웨이는 클라이언트가 마이크로서비스들에 접근하는 단일 진입점입니다. 어떤 요청은 해당 서비스로 그대로 라우팅하고, 어떤 요청은 여러 서비스를 호출해 결과를 합쳐 줍니다. 클라이언트는 서비스가 어떻게 나뉘었는지, 인스턴스가 어디 있는지 몰라도 되고 클라이언트마다 맞는 API를 받을 수도 있으며, 한 번의 왕복으로 필요한 데이터를 받으므로 네트워크가 느린 모바일에 특히 유리합니다. 인증 확인 같은 공통 관심사도 둘 수 있습니다. 대신 개발·배포·운영할 부품이 하나 늘고 네트워크 홉이 추가됩니다. 클라이언트 종류마다 게이트웨이를 따로 두는 BFF 변형도 있는데, 이는 따로 다룹니다.

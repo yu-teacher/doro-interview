@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/quicksort.html", "https://xlinux.nist.gov/dads/HTML/introspectiveSort.html"]
+concepts: [complexity-sorting, recursion-dp]
+importance: 3
+links: [{to: "alg-08", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 퀵 정렬은 피벗을 하나 고르고 나머지를 피벗보다 작은 쪽과 큰 쪽으로 나눈 다음 각 부분을 재귀로 정렬합니다. 보통은 O(n log n)이지만 최악에는 Θ(n²)입니다. 피벗이 계속 한쪽 끝으로 쏠리면 단계마다 원소 하나만 줄기 때문이고, 예를 들어 첫 원소를 피벗으로 쓰면 이미 정렬된 입력이 그런 경우입니다. 피벗을 무작위로 고르면 이런 입력의 영향을 피할 수 있고, 좋은 피벗을 Select로 고르면 최악도 O(n log n)이 되며, 재귀가 너무 깊어지면 힙 정렬로 바꾸는 인트로 정렬도 있습니다. 보통 제자리 정렬로 구현합니다.

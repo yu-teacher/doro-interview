@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-select.html", "https://www.postgresql.org/docs/16/runtime-config-client.html", "https://www.postgresql.org/docs/16/errcodes-appendix.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-parameters.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-locking-reads.html"]
+concepts: [db-locking]
+importance: 2
+links: [{to: "dbd-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16은 기본적으로 충돌하는 락을 풀릴 때까지 무한정 기다립니다. 바로 실패시키려면 SELECT FOR UPDATE NOWAIT를 쓰고, 못 잡으면 즉시 오류가 납니다. 대기 시간에 상한을 두려면 lock_timeout을 세션이나 트랜잭션에 설정하는데, 락 한 번을 얻는 시도마다 적용되고 0이면 꺼져 있으며 postgresql.conf에 전역으로 두는 것은 권장되지 않습니다. 두 경우 모두 SQLSTATE는 55P03입니다. MySQL 8.4 InnoDB도 NOWAIT를 지원하고, 기본 대기 상한인 innodb_lock_wait_timeout이 50초라 넘으면 1205 오류가 나는데, 이때 트랜잭션 전체가 아니라 현재 문장만 롤백된다는 점이 다릅니다.

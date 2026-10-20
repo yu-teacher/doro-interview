@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/view-pg-locks.html"]
+concepts: [db-locking, mvcc]
+importance: 3
+links: [{to: "dbl-02", kind: FOLLOWUP}, {to: "dbl-09", kind: FOLLOWUP}, {to: "dbt-06", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 락은 주로 테이블 수준과 행 수준으로 나뉩니다. 명령은 대상 테이블에 알맞은 모드의 락을 자동으로 잡는데, 모드 이름에 row가 들어 있어도 여덟 가지는 모두 테이블 락이고 서로 어떤 모드와 충돌하느냐만 다릅니다. 일반 SELECT는 ACCESS SHARE를 잡고 이 모드는 ACCESS EXCLUSIVE와만 충돌하므로, DROP TABLE, TRUNCATE, VACUUM FULL, 많은 ALTER TABLE처럼 ACCESS EXCLUSIVE를 잡는 명령이 아니면 읽기는 막히지 않습니다. 행 락은 같은 행을 바꾸거나 잠그려는 쪽만 막고 일반 SELECT는 막지 않습니다. 그래서 한 트랜잭션이 행을 UPDATE하는 중에도 다른 세션은 커밋된 값을 바로 읽고, 같은 행을 UPDATE하려는 세션만 기다립니다. 락은 보통 트랜잭션이 끝날 때 풀립니다.

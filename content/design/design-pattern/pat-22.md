@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Iterator.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Iterable.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/ArrayList.html", "https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html"]
+concepts: [java-collections, gof-patterns]
+importance: 2
+links: [{to: "jc-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 이터레이터는 컬렉션의 내부 구조를 드러내지 않고 요소를 하나씩 순회하게 해 주는 객체입니다. 자바에서는 `Iterable`을 구현하면 향상된 for 문의 대상이 되고, JLS는 이 문을 `iterator()`로 얻은 이터레이터를 도는 코드로 번역한다고 규정합니다. `Iterator`는 순회 중 요소 삭제를 정의된 방식으로 허용합니다. `ArrayList`의 이터레이터는 fail-fast라서, 순회 중 이터레이터 자신의 메서드가 아닌 `list.remove` 같은 방법으로 구조를 바꾸면 `ConcurrentModificationException`을 던질 수 있습니다. 다만 문서는 이 동작이 보장되지 않는다고 하므로, 순회 중 삭제는 `Iterator.remove`로 하는 편이 안전합니다.

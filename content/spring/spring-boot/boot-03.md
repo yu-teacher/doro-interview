@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/using/auto-configuration.html", "https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html"]
+concepts: [auto-configuration]
+importance: 3
+links: [{to: "boot-04", kind: FOLLOWUP}, {to: "boot-05", kind: FOLLOWUP}, {to: "boot-19", kind: FOLLOWUP}, {to: "ioc-27", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 자동 설정은 클래스패스의 jar 의존성을 보고 필요한 빈을 자동으로 구성하는 기능입니다. 예를 들어 HSQLDB가 있고 DB 연결 빈을 직접 설정하지 않았다면 인메모리 DB를 구성합니다. `@EnableAutoConfiguration`이나 `@SpringBootApplication`으로 켜고, 대상은 `@AutoConfiguration` 클래스로 jar의 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` 파일에 한 줄에 하나씩 나열됩니다. 각 클래스는 `@ConditionalOnClass`, `@ConditionalOnMissingBean` 같은 `@Conditional*` 조건이 맞을 때만 적용되고, `--debug`로 실행하면 조건 평가 리포트(conditions report)가 출력됩니다.

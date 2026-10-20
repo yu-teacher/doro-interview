@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/build/building/best-practices/", "https://docs.docker.com/reference/dockerfile/"]
+concepts: [container]
+importance: 1
+links: [{to: "dkr-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 둘 다 빌드 컨텍스트의 파일을 이미지로 넣지만, COPY는 단순 복사만 하고 ADD는 원격 HTTPS URL이나 Git 저장소에서 가져오는 기능과 컨텍스트의 로컬 tar 파일을 자동으로 푸는 기능까지 합니다. 공식 문서는 멀티 스테이지에서 단계 사이 복사에는 대체로 COPY를 쓰라고 하고, ADD는 원격 아티팩트를 내려받는 것처럼 그 기능이 필요할 때 가장 좋다고 합니다. 그래서 단순 복사는 COPY를 기본으로 둡니다. 멀티 스테이지에서 앞 단계의 결과물을 가져올 때도 `COPY --from` 을 씁니다. ADD는 내려받은 파일의 체크섬을 검증하는 `--checksum` 옵션도 지원합니다.

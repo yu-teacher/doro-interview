@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/queries-table-expressions.html", "https://dev.mysql.com/doc/refman/8.4/en/join.html"]
+concepts: [join-query]
+importance: 3
+links: [{to: "dbs-10", kind: FOLLOWUP}, {to: "dbs-12", kind: FOLLOWUP}, {to: "dbp-05", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 INNER JOIN은 조건이 참인 행 쌍만 돌려줍니다. LEFT JOIN은 내부 조인을 한 뒤 오른쪽에 짝이 없는 왼쪽 행을 오른쪽 컬럼을 NULL로 채워 추가하므로 왼쪽 행은 하나도 사라지지 않고, RIGHT JOIN은 방향만 반대입니다. FULL JOIN은 양쪽의 짝 없는 행을 모두 유지하고, CROSS JOIN은 조건 없이 N 곱하기 M개의 모든 조합을 만듭니다. PostgreSQL 16 기준으로 다섯 가지가 모두 되지만, MySQL 8.4에서는 FULL OUTER JOIN 문법이 없어서 LEFT JOIN 결과에 오른쪽에만 있는 행을 UNION ALL로 붙여 흉내 냅니다.

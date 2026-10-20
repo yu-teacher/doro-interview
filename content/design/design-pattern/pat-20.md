@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://martinfowler.com/eaaCatalog/frontController.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/special-bean-types.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/sequence.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/DispatcherServlet.html"]
+concepts: [mvc-request-flow, gof-patterns]
+importance: 3
+links: [{to: "pat-19", kind: FOLLOWUP}, {to: "mvc-02", kind: RELATED}, {to: "mvc-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 프론트 컨트롤러는 웹 사이트의 모든 요청을 하나의 핸들러 객체를 거치게 하는 컨트롤러입니다. Fowler는 보안, 국제화 같은 공통 처리가 여러 객체에 흩어져 중복되는 문제를 막고, 이 객체가 공통 동작을 수행한 뒤 요청별 동작은 명령 객체에 넘긴다고 설명합니다. 스프링 문서는 Spring MVC가 이 패턴을 중심으로 설계되었고, `DispatcherServlet`이 요청 처리의 공유 알고리즘을 제공하는 동안 실제 작업은 설정 가능한 위임 컴포넌트가 한다고 합니다. 요청 매핑은 `HandlerMapping`, 핸들러 호출은 `HandlerAdapter`, 뷰 결정은 `ViewResolver`가 맡습니다.

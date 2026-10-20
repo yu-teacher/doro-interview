@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://microservices.io/patterns/client-side-discovery.html", "https://microservices.io/patterns/server-side-discovery.html", "https://learn.microsoft.com/en-us/azure/architecture/microservices/design/interservice-communication"]
+concepts: [msa-boundary]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 컨테이너와 오토스케일링 환경에서는 서비스 인스턴스의 개수와 위치가 계속 바뀌어서 호출하는 쪽이 주소를 고정해 둘 수 없습니다. 그래서 인스턴스 위치를 알고 있는 서비스 레지스트리를 두고 찾아 씁니다. 클라이언트 측 디스커버리는 클라이언트가 레지스트리에 직접 물어 인스턴스 하나를 골라 호출합니다. 홉이 적지만 클라이언트가 레지스트리에 결합되고 언어마다 구현이 필요합니다. 서버 측 디스커버리는 클라이언트가 알려진 위치의 라우터(로드 밸런서)에 요청하면 라우터가 레지스트리를 보고 인스턴스로 전달합니다. 클라이언트는 단순해지지만 라우터라는 부품과 홉이 하나 늘어납니다. Kubernetes나 AWS ELB가 서버 측의 예입니다.

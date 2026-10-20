@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-examine.html", "https://www.postgresql.org/docs/16/using-explain.html", "https://www.postgresql.org/docs/16/indexes-partial.html", "https://www.postgresql.org/docs/16/planner-stats.html", "https://www.postgresql.org/docs/16/runtime-config-query.html"]
+concepts: [query-planner, index-design]
+importance: 3
+links: [{to: "dbi-12", kind: FOLLOWUP}, {to: "dbi-19", kind: FOLLOWUP}, {to: "dbp-04", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 플래너는 인덱스가 있는지가 아니라 계획별 예상 비용을 비교해서 가장 싼 계획을 고르기 때문입니다. 조건에 맞는 행이 테이블의 큰 비율이면 인덱스를 거쳐 힙을 여기저기 읽는 것보다 순차로 전부 읽는 쪽이 싸서 Seq Scan이 선택됩니다. 테이블이 몇 페이지 안 되는 아주 작은 경우도 마찬가지입니다. 통계가 오래되어 행 수 추정이 틀려도 엉뚱한 계획이 나올 수 있어서, 먼저 ANALYZE를 하고 enable_seqscan을 꺼서 인덱스 계획을 강제로 만든 다음 계획 비용과 실제 시간을 비교해 보는 것이 공식 문서가 권하는 점검 순서입니다.

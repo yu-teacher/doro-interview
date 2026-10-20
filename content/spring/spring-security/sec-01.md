@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html", "https://docs.spring.io/spring-security/reference/servlet/authorization/architecture.html", "https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html"]
+concepts: [authn-authz]
+importance: 3
+links: [{to: "sec-02", kind: FOLLOWUP}, {to: "sec-04", kind: FOLLOWUP}, {to: "sec-06", kind: FOLLOWUP}, {to: "sec-08", kind: FOLLOWUP}, {to: "web-02", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 인증은 AuthenticationManager가 맡고, 보통 구현체인 ProviderManager가 여러 AuthenticationProvider에게 위임합니다. 사용자명과 비밀번호는 DaoAuthenticationProvider, JWT는 JwtAuthenticationProvider가 담당하고, 인증을 호출한 필터가 결과 Authentication을 SecurityContextHolder에 넣습니다. 인가는 AuthorizationFilter가 현재 인증 정보와 요청을 AuthorizationManager에 넘겨 허용 여부를 판단하는 구조입니다. 거부되면 AccessDeniedException이 던져지고 ExceptionTranslationFilter가 응답으로 바꿉니다.

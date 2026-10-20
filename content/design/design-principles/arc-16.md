@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://martinfowler.com/bliki/MonolithFirst.html", "https://docs.spring.io/spring-modulith/reference/fundamentals.html", "https://docs.spring.io/spring-modulith/reference/verification.html"]
+concepts: [msa-boundary]
+importance: 2
+links: [{to: "dst-02", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Monolith First는 Martin Fowler가 2015년 글에서 동료들의 논의를 정리해 내놓은 주장으로, 새 시스템은 마이크로서비스 대신 모놀리스로 시작하라는 것입니다. 그는 성공한 마이크로서비스 사례는 거의 모두 커진 모놀리스를 쪼갠 것이고, 처음부터 마이크로서비스로 만든 시스템은 거의 다 심각한 곤란을 겪었다는 이야기를 들었다고 합니다. 이유로 서비스 운영의 추가 비용, 아직 쓸모가 검증되지 않은 시점의 Yagni, 서비스 경계를 처음부터 맞추기 어렵고 서비스 간 리팩터링이 더 힘들다는 점을 듭니다. 다만 근거가 일화뿐이고 반대 주장도 있어 조언이 잠정적이라고 스스로 밝히며, 모듈성을 신경 써 설계하는 모놀리스는 논리적인 방법이지만 성공 사례를 충분히 듣지 못했다고 말합니다.

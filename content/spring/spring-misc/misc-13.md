@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html", "https://docs.spring.io/spring-security/reference/servlet/architecture.html", "https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html", "https://docs.spring.io/spring-security/reference/servlet/integrations/concurrency.html"]
+concepts: [thread-binding, bean-lifecycle]
+importance: 1
+links: [{to: "jt-18", kind: RELATED}, {to: "ioc-14", kind: RELATED}, {to: "sec-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 기본은 메서드 파라미터와 지역 변수로 넘기는 것이고, 그게 가장 안전합니다. 요청 단위 컨텍스트가 꼭 필요하면 request 스코프 빈을 쓰는데, 싱글톤에 주입할 때는 스코프 프록시를 넣어 요청마다 실제 인스턴스를 찾게 해야 합니다. `ThreadLocal`도 쓸 수 있는데, Spring Security의 `SecurityContextHolder`가 기본으로 `ThreadLocal`에 현재 인증 정보를 저장합니다. 다만 스레드 풀은 스레드를 재사용하므로 요청이 끝나면 반드시 비워야 값이 새지 않고, 새 스레드나 비동기 작업으로 넘어가면 값이 자동으로 전파되지 않으니 `DelegatingSecurityContextRunnable` 같은 방법으로 직접 옮겨야 합니다.

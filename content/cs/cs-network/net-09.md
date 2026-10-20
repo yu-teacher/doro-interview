@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc8085.html"]
+concepts: [tcp]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 먼저 닫은 쪽이 마지막 ACK를 보낸 뒤 연결 정보를 바로 지우면 두 가지 문제가 생깁니다. 마지막 ACK가 유실되면 상대가 FIN을 다시 보내는데 응답할 쪽이 없고, 같은 주소·포트 조합으로 곧바로 새 연결을 맺으면 이전 연결의 지연된 세그먼트가 새 연결에 섞일 수 있습니다. 그래서 규격은 2×MSL 동안 TIME-WAIT에 머물도록 하고 MSL을 2분으로 가정합니다. 서버에 많이 쌓이면 어느 쪽이 먼저 닫을지를 설계로 조정하거나 연결을 재사용해 연결 수 자체를 줄이고, 포트 고갈이 문제라면 타임스탬프를 이용한 재사용 같은 규격의 완화책을 확인합니다. 타이머를 무작정 줄이는 것은 위 안전장치를 포기하는 일입니다.

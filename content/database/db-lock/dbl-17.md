@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/transaction-iso.html", "https://www.postgresql.org/docs/16/applevel-consistency.html"]
+concepts: [isolation-level, db-locking]
+importance: 1
+links: [{to: "dbl-14", kind: PREREQ}, {to: "dbt-09", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16의 SERIALIZABLE은 REPEATABLE READ와 똑같이 스냅샷으로 동작하면서, 직렬 실행으로는 나올 수 없는 읽기 쓰기 의존성 패턴이 생기는지를 추가로 감시합니다. 이때 쓰는 술어 락(SIReadLock)은 아무도 블로킹하지 않으므로 데드락의 원인이 되지 않고, 대신 위험한 패턴이 감지되면 트랜잭션 하나를 SQLSTATE 40001 직렬화 실패로 중단시킵니다. 두 트랜잭션이 같은 조건으로 집계를 읽고 서로 다른 행을 바꾸는 경우가 대표적인데, REPEATABLE READ에서는 둘 다 커밋되어 비즈니스 규칙이 깨질 수 있습니다. 그래서 SERIALIZABLE을 쓰는 애플리케이션은 40001 오류가 나면 트랜잭션을 처음부터 재시도하는 로직이 필수이고, 감시에 오버헤드가 있습니다.

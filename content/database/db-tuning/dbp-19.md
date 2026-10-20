@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/routine-vacuuming.html", "https://www.postgresql.org/docs/16/runtime-config-client.html", "https://www.postgresql.org/docs/16/monitoring-stats.html", "https://www.postgresql.org/docs/16/sql-vacuum.html"]
+concepts: [mvcc]
+importance: 1
+links: [{to: "dbt-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 VACUUM은 어떤 트랜잭션의 스냅샷에서 아직 보일 수 있는 죽은 행 버전은 지울 수 없습니다. 그래서 스냅샷을 쥔 채 오래 열려 있는 트랜잭션이 있으면 그 시점 이후에 생긴 죽은 행을 못 치워서, 그 사이 테이블과 인덱스가 계속 부풀 수 있습니다. 공식 문서는 열린 트랜잭션이 vacuum을 막아 bloat에 기여할 수 있다고 하고, 오래된 트랜잭션은 pg_stat_activity의 backend_xmin 같은 값으로 찾아 끝내라고 하며, idle_in_transaction_session_timeout으로 트랜잭션 안에서 놀고 있는 세션을 끊을 수 있다고 합니다. 그래서 트랜잭션 안에서 외부 API 호출처럼 오래 걸리는 일을 하지 않는 게 중요합니다.

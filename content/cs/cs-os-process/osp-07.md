@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.kernel.org/doc/html/latest/locking/lockdep-design.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html"]
+concepts: [deadlock]
+importance: 3
+links: [{to: "osp-14", kind: FOLLOWUP}, {to: "jt-12", kind: RELATED}, {to: "dbl-05", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 데드락은 둘 이상의 흐름이 서로가 쥔 자원을 기다리느라 영원히 진행하지 못하는 상태입니다. 보통 네 조건이 동시에 성립할 때 생긴다고 설명합니다. 자원을 한 번에 한 흐름만 쓰는 상호 배제, 자원을 쥔 채 다른 자원을 기다리는 점유와 대기, 쥔 자원을 강제로 빼앗을 수 없는 비선점, 서로 상대가 가진 자원을 기다리는 원형 사슬인 순환 대기입니다. 하나라도 깨면 데드락을 예방할 수 있어서, 락을 항상 같은 순서로 잡아 순환 대기를 깨는 방법이 흔히 쓰입니다.

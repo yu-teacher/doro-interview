@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/functions-admin.html", "https://www.postgresql.org/docs/16/view-pg-locks.html", "https://dev.mysql.com/doc/refman/8.4/en/locking-functions.html"]
+concepts: [distributed-lock, db-locking]
+importance: 2
+links: [{to: "dbl-16", kind: FOLLOWUP}, {to: "cch-18", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 어드바이저리 락은 테이블 행이 아니라 애플리케이션이 정한 숫자 키에 거는 락이고, 서버는 사용을 강제하지 않으니 쓰는 쪽이 약속대로 써야 합니다. PostgreSQL 16에서 세션 레벨 락은 명시적으로 풀거나 세션이 끝날 때까지 유지되고 트랜잭션 의미를 따르지 않아서, 트랜잭션 안에서 잡고 롤백해도 락이 남습니다. 트랜잭션 레벨 락은 트랜잭션이 끝나면 자동으로 풀리고 해제 함수가 없어 짧은 용도에 편합니다. pg_try_ 접두 함수는 기다리지 않고 true나 false를 돌려줍니다. 잡은 락은 pg_locks에서 보이고, 개수에는 공유 메모리 크기에 따른 상한이 있습니다. MySQL 8.4에는 비슷한 용도로 이름으로 거는 GET_LOCK이 있고, 이것도 커밋이나 롤백으로 풀리지 않습니다.

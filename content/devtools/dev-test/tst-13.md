@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management/caching.html", "https://docs.spring.io/spring-framework/reference/testing/integration.html", "https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html"]
+concepts: [test-strategy]
+importance: 2
+links: [{to: "tst-11", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 TestContext 프레임워크는 한 번 로드한 컨텍스트를 static 캐시에 보관해서, 설정이 같은 테스트 클래스끼리 재사용합니다. 캐시 키는 설정 클래스나 위치, 활성 프로필, 프로퍼티 소스, 컨텍스트 초기화기와 커스터마이저 같은 설정 조합이라서, 프로필이나 `@TestPropertySource`, `@MockitoBean` 구성이 하나라도 다르면 새 컨텍스트가 만들어집니다. 캐시 크기는 기본 32개이고 넘으면 가장 오래 쓰지 않은 것부터 닫습니다. 테스트가 컨텍스트를 오염시켰다면 `@DirtiesContext`로 캐시에서 제거합니다. 캐시가 static이어서 테스트를 프로세스별로 포크해서 돌리면 캐시가 지워져 효과가 없습니다.

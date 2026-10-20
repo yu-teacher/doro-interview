@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop/proxying.html", "https://docs.spring.io/spring-framework/reference/core/aop/introduction-proxies.html"]
+concepts: [proxy, aop]
+importance: 3
+links: [{to: "pat-12", kind: FOLLOWUP}, {to: "aop-06", kind: RELATED}, {to: "aop-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 스프링 AOP는 프록시 기반입니다. 대상이 인터페이스를 하나라도 구현하면 JDK 동적 프록시를 쓰고 그 인터페이스들을 프록시합니다. 인터페이스가 없으면 대상 클래스를 상속한 서브클래스를 런타임에 만드는 CGLIB 프록시를 씁니다. CGLIB은 상속에 기대므로 `final` 클래스는 프록시할 수 없고, `final`이나 `private` 메서드는 오버라이드할 수 없어 어드바이스를 적용하지 못합니다. 설정으로 CGLIB을 강제할 수 있는데, 프레임워크 기본은 인터페이스 기반이지만 Spring Boot는 설정에 따라 클래스 기반을 기본으로 켤 수 있습니다.

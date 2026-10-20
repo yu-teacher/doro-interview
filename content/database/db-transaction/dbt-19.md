@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-next-key-locking.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-consistent-read.html"]
+concepts: [isolation-level, db-locking]
+importance: 1
+links: [{to: "dbt-02", kind: PREREQ}, {to: "dbt-12", kind: PREREQ}, {to: "dbl-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 MySQL 8.4(InnoDB)의 REPEATABLE READ에서 일반 SELECT는 첫 읽기가 만든 스냅샷을 읽으므로 다른 세션이 삽입한 행이 보이지 않습니다. 그리고 FOR UPDATE나 FOR SHARE 같은 잠금 읽기와 UPDATE, DELETE는 범위 조건이면 next-key 락과 gap 락으로 그 범위에 다른 세션이 끼어드는 삽입을 막아 phantom을 방지합니다. 다만 잠금 읽기는 스냅샷이 아니라 최신 상태를 읽어서, 한 트랜잭션에서 일반 SELECT와 잠금 문장을 섞으면 서로 다른 시점을 보게 됩니다. READ COMMITTED에서는 gap 락을 쓰지 않아 phantom이 생길 수 있습니다.

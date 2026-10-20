@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/testing/annotations/integration-spring/annotation-mockitobean.html", "https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/bean-overriding.html", "https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management/caching.html", "https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html"]
+concepts: [test-strategy, mocking-junit]
+importance: 2
+links: [{to: "tst-13", kind: FOLLOWUP}, {to: "tst-05", kind: PREREQ}, {to: "boot-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 컨텍스트 안의 빈을 Mockito 목으로 바꾸려면 테스트 클래스 필드에 `@MockitoBean`을, 실제 빈을 감싼 스파이로 바꾸려면 `@MockitoSpyBean`을 붙입니다. 이 둘은 Spring Framework 자체가 제공하는 테스트 애노테이션이고, Boot 4 문서도 이것을 쓰라고 안내합니다. `@MockitoBean`의 기본 전략은 같은 타입의 빈이 있으면 교체하고 없으면 새로 만드는 `REPLACE_OR_CREATE`입니다. 예전 Boot의 `@MockBean`은 Boot 4.1.0의 `spring-boot-test` jar에서 찾을 수 없었습니다. 주의할 점은 목 구성이 컨텍스트 캐시 키에 들어가서, 테스트 클래스마다 목 구성이 다르면 컨텍스트가 새로 만들어져 테스트가 느려진다는 것입니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-async.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/return-types.html", "https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html"]
+concepts: [thread-pool, mvc-request-flow]
+importance: 2
+links: [{to: "mvc-07", kind: PREREQ}, {to: "jt-14", kind: RELATED}, {to: "mvc-17", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 컨트롤러가 `Callable`, `DeferredResult`, `CompletableFuture` 같은 비동기 타입을 반환하면 Spring MVC가 `request.startAsync()`를 호출하고, DispatcherServlet과 필터는 컨테이너 스레드를 반납하지만 응답은 열려 있습니다. 결과가 준비되면 요청이 다시 디스패치되어 응답이 완성됩니다. `Callable`은 `AsyncTaskExecutor`가 Spring MVC 관리 스레드에서 실행하고, `DeferredResult`는 이벤트나 콜백으로 다른 스레드가 값을 채웁니다. 스트리밍은 `SseEmitter`, `StreamingResponseBody`를 씁니다. 다만 `Callable` 안에서 블로킹하면 그 실행기 스레드가 묶이므로 실행기 설계가 중요하고, 가상 스레드는 이 부담을 줄이는 선택지입니다.

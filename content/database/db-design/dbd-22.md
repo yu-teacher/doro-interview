@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-altertable.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-online-ddl-operations.html"]
+concepts: [online-schema-change]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16에서 non-volatile DEFAULT를 단 ADD COLUMN은 기본값이 메타데이터에 저장되어 기존 행을 다시 쓰지 않으므로 큰 테이블에서도 거의 즉시 끝납니다. 하지만 random()처럼 volatile한 DEFAULT를 쓰거나 컬럼 타입을 바꾸면 테이블과 인덱스 전체를 재작성하고, 그동안 ACCESS EXCLUSIVE 락이 유지됩니다. 타입 변경은 USING이 내용을 바꾸지 않고 이진 호환일 때만 예외입니다. 이번 실험에서는 text를 varchar(100)으로 바꿀 때는 재작성이 일어났고 varchar(100)을 varchar(200)으로 늘릴 때는 일어나지 않았습니다. 큰 테이블의 타입 변경은 새 컬럼을 추가해 나눠서 채운 뒤 교체하는 식으로 계획합니다.

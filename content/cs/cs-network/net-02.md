@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc768.html", "https://www.rfc-editor.org/rfc/rfc8085.html", "https://www.rfc-editor.org/rfc/rfc1035.html"]
+concepts: [tcp]
+importance: 3
+links: [{to: "net-03", kind: FOLLOWUP}, {to: "net-08", kind: FOLLOWUP}, {to: "web-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 TCP는 연결을 먼저 맺고 바이트 스트림을 순서대로, 유실 없이 전달해 주는 신뢰성 있는 프로토콜이며 흐름 제어와 혼잡 제어도 갖추고 있습니다. UDP는 연결 없이 데이터그램을 하나씩 보내는 최소한의 프로토콜이라 전달, 순서, 중복 방지를 보장하지 않지만 그만큼 오버헤드와 지연이 작습니다. 웹, 파일 전송, 메일처럼 빠짐없이 도착해야 하면 TCP를 쓰고, DNS 질의처럼 짧은 요청과 응답이나 실시간 음성·영상처럼 늦은 재전송이 오히려 쓸모없는 경우에는 UDP를 씁니다. 다만 UDP를 쓰는 애플리케이션은 신뢰성이 필요하면 직접 구현하고 혼잡 제어도 스스로 책임져야 합니다.

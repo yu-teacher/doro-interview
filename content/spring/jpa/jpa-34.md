@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"]
+concepts: [entity-mapping]
+importance: 2
+links: [{to: "jpa-33", kind: RELATED}, {to: "jo-05", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 @Enumerated를 붙이지 않으면 기본은 ORDINAL, 즉 선언 순서 정수 저장입니다(사양상 `@EnumeratedValue`가 없을 때). Hibernate 입문 가이드는 JPA가 기본값을 잘못 골랐다고 표현하며, 정수 인코딩은 관계형 데이터를 해석하기 어렵게 만든다는 이유로 대부분의 enum 속성에 EnumType.STRING을 권합니다. STRING은 상수 이름을 저장합니다. (보충) 또 ORDINAL은 중간에 상수를 끼워 넣거나 순서를 바꾸면 기존 데이터의 의미가 어긋날 수 있는데, 이는 문서의 직접 설명이 아니라 제 추론입니다. 이름이 아니라 별도 코드값으로 저장하고 싶으면 Hibernate 7 계열 가이드에 소개된 @EnumeratedValue나 AttributeConverter를 쓸 수 있는데, 컨버터는 @Enumerated와 같은 속성에 함께 쓸 수 없습니다.

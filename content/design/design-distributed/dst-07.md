@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://microservices.io/patterns/communication-style/idempotent-consumer.html", "https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html", "https://www.cidrdb.org/cidr2007/papers/cidr07p15.pdf", "https://www.cl.cam.ac.uk/teaching/2122/ConcDisSys/dist-sys-notes.pdf"]
+concepts: [idempotency, messaging]
+importance: 3
+links: [{to: "dst-11", kind: FOLLOWUP}, {to: "dst-21", kind: FOLLOWUP}, {to: "dst-22", kind: FOLLOWUP}, {to: "web-01", kind: RELATED}, {to: "web-21", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 멱등성은 같은 요청이나 메시지를 여러 번 처리해도 한 번 처리한 것과 결과가 같은 성질입니다. 메시지를 잃지 않으려고 at-least-once 전달을 쓰는 시스템이 많은데, 이 경우 처리 후 확인(ack) 전에 죽으면 같은 메시지가 다시 전달되고 네트워크 재시도도 있어서 중복은 정상 동작의 일부입니다. 그래서 소비자는 멱등해야 합니다. 가장 흔한 방법은 처리한 메시지 ID를 DB에 기록하는 것으로, 메시지를 처리하는 트랜잭션 안에서 ID를 처리 이력 테이블에 넣고, 기본 키 충돌로 insert가 실패하면 이미 처리한 메시지라고 보고 무시합니다. 조회처럼 원래 멱등한 연산은 별도 장치가 필요 없습니다.

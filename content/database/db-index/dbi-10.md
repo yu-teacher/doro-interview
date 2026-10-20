@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-partial.html", "https://www.postgresql.org/docs/16/runtime-config-query.html"]
+concepts: [index-design]
+importance: 1
+links: [{to: "dbd-04", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 부분 인덱스는 WHERE 술어를 만족하는 행만 담는 인덱스입니다. 테이블 대부분을 차지해 어차피 인덱스를 안 쓰는 흔한 값이나 쿼리가 관심 없는 값을 빼서 인덱스를 작게 만들고 갱신 비용도 줄이며, 또 WHERE success 같은 조건으로 일부 행에 대해서만 유일성을 강제하는 유니크 인덱스로도 씁니다. 다만 쿼리의 WHERE가 인덱스 술어를 함의한다고 플래너가 알아볼 수 있어야 쓰이는데, 일반적인 증명기가 없어서 단순한 부등식 외에는 술어가 쿼리 조건에 그대로 들어 있어야 합니다. 매칭이 계획 시점에 일어나서 파라미터화된 조건은 안 된다고 문서는 설명하는데, 실험에서는 범용(generic) 계획에서만 못 썼습니다.

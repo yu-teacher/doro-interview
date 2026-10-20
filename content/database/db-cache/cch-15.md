@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/integration/cache/strategies.html", "https://docs.spring.io/spring-framework/reference/integration/cache/annotations.html", "https://redis.io/docs/latest/develop/get-started/faq/"]
+concepts: [cache, distributed-consistency]
+importance: 3
+links: [{to: "cch-16", kind: FOLLOWUP}, {to: "cch-22", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 Spring 캐시 추상화는 조회할 때 캐시에서 먼저 찾고 없으면 메서드를 실행해 결과를 넣는 방식이라, 데이터를 바꾸는 쪽에서 캐시를 따로 갱신하지 않으면 캐시가 오래된 값을 계속 돌려줍니다. 그래서 수정 메서드에 `@CachePut`으로 새 값을 넣거나 `@CacheEvict`로 항목을 지웁니다. `@CacheEvict`는 기본적으로 메서드가 성공한 뒤에 실행되므로 예외가 나면 캐시는 그대로 남고, `beforeInvocation = true`면 결과와 상관없이 먼저 지웁니다. 문서는 추상화가 아무것도 잠그지 않아 여러 스레드가 동시에 갱신하거나 지우면 오래된 값을 쓸 수 있다고 하므로, 일관성이 중요하면 공급자의 기능을 확인해야 합니다.

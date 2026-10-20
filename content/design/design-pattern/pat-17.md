@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://gameprogrammingpatterns.com/observer.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Observable.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Observer.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/Flow.html"]
+concepts: [gof-patterns, garbage-collection]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 Nystrom은 몇 가지를 짚습니다. 옵저버는 동기 호출이라 느린 옵저버가 주체를 막을 수 있고, 주체가 옵저버 참조를 쥐고 있어서 등록 해제를 잊으면 화면이 닫혀도 가비지 컬렉션이 안 되는 lapsed listener 문제가 생깁니다. 또 누가 알림을 받는지는 런타임 목록을 봐야 알 수 있어 흐름 추적이 어렵습니다. 그는 양쪽을 함께 이해해야 하는 관계에는 더 명시적인 방법을 쓰라고 조언합니다. JDK 문서는 `Observable`이 deprecated된 이유로 제한적인 이벤트 모델, 불명확한 알림 순서, 상태 변경과 알림이 일대일이 아닌 점을 들고 `Flow` 같은 대안을 안내합니다.

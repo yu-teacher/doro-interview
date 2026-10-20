@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-select.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-locking-reads.html"]
+concepts: [db-locking, messaging]
+importance: 2
+links: [{to: "dbl-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 여러 워커가 같은 테이블의 대기 작업을 가져갈 때, SELECT ... FOR UPDATE SKIP LOCKED는 다른 워커가 이미 잠근 행을 기다리지 않고 건너뛰고 나머지 행만 잠가서 돌려줍니다. 그래서 워커들이 서로 락을 기다리지 않고 서로 다른 작업을 가져갑니다. 보통 CTE에서 LIMIT n으로 뽑은 id를 UPDATE로 running 같은 상태로 바꾸고 RETURNING으로 받아 갑니다. 다만 잠긴 행을 건너뛰기 때문에 일반 조회에는 맞지 않는 일관성 없는 뷰이고 큐처럼 한 행만 맡으면 되는 용도에만 씁니다. 행 락을 잡는 것은 디스크 쓰기를 동반할 수 있고, NOWAIT나 SKIP LOCKED도 테이블 락은 보통대로 기다립니다. MySQL 8.4 InnoDB도 같은 문법을 지원합니다.

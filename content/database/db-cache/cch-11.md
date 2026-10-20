@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/develop/reference/eviction/"]
+concepts: [redis, cache]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 volatile 계열 정책은 만료 시간이 설정된 키만 퇴출 후보로 보기 때문에, TTL이 걸린 키가 없으면 noeviction처럼 동작해서 메모리가 차면 쓰기 오류가 납니다. 문서는 이 정책들을 한 인스턴스에 캐시와 영구 키를 함께 둘 때 쓰는 용도로 보고, 가능하면 인스턴스를 나누라고 권합니다. TTL을 거는 것 자체도 메모리를 더 쓰기 때문에 allkeys-lru가 더 효율적입니다. Redis의 LRU는 정확한 LRU가 아니라 무작위로 뽑은 표본 중 가장 오래 쓰이지 않은 키를 지우는 근사 알고리즘이고, 표본 수는 `maxmemory-samples`로 조절합니다. 복제와 AOF 버퍼는 maxmemory 계산에 포함되지 않으므로 여유를 남깁니다.

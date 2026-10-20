@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/build/building/multi-stage/", "https://docs.docker.com/get-started/docker-concepts/building-images/multi-stage-builds/", "https://docs.docker.com/build/building/best-practices/"]
+concepts: [container]
+importance: 3
+links: [{to: "dkr-10", kind: FOLLOWUP}, {to: "dkr-08", kind: PREREQ}, {to: "cic-13", kind: RELATED}, {to: "bld-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 멀티 스테이지 빌드는 Dockerfile에 `FROM` 을 여러 번 써서 단계를 나누고, 앞 단계에서 빌드한 결과물만 `COPY --from` 으로 최종 단계에 가져오는 방식입니다. 컴파일러 같은 빌드 도구는 앞 단계에 남고 최종 이미지에는 실행에 필요한 것만 들어가서, 이미지가 작아지고 공격 표면도 줄어듭니다. 단계에 `AS build` 처럼 이름을 붙여 참조하면 Dockerfile 순서를 바꿔도 깨지지 않고, `--target` 으로 특정 단계까지만 빌드할 수도 있습니다. 자바라면 JDK로 빌드하고 JRE 이미지에 jar만 담는 구성이 흔합니다.

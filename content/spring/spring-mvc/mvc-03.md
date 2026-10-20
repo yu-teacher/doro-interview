@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/responsebody.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/return-types.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/RestController.html"]
+concepts: [mvc-request-flow]
+importance: 3
+links: [{to: "mvc-04", kind: FOLLOWUP}, {to: "mvc-05", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 `@RestController`는 `@Controller`와 `@ResponseBody`를 함께 붙인 메타 어노테이션일 뿐입니다. `@Controller` 메서드가 `String`을 반환하면 뷰 이름으로 간주되어 `ViewResolver`가 실제 View로 해석하고 렌더링합니다. `@RestController`는 클래스 수준 `@ResponseBody`가 모든 메서드에 상속되므로, 반환값이 `HttpMessageConverter`를 거쳐 응답 본문에 바로 쓰입니다. 그래서 같은 `String` 반환이라도 `@RestController`에서는 뷰 이름이 아니라 본문 문자열이 됩니다. JSON API는 `@RestController`, 모델을 템플릿 뷰로 렌더링하는 화면 응답은 `@Controller`를 씁니다.

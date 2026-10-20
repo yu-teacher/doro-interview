@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.junit.org/5.14.4/writing-tests/assertions.html", "https://assertj.github.io/doc/", "https://docs.spring.io/spring-boot/reference/testing/test-scope-dependencies.html", "https://javadoc.io/static/org.assertj/assertj-core/3.27.6/org/assertj/core/api/SoftAssertions.html"]
+concepts: [mocking-junit]
+importance: 2
+links: [{to: "tst-10", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 JUnit Jupiter는 `Assertions` 클래스에 `assertEquals`, `assertTrue`, `assertThrows` 같은 static 메서드를 두고, 실패하면 `AssertionError`를 던집니다. AssertJ는 `assertThat(값)`에서 시작해 `hasSize(2).contains("x")`처럼 값의 타입에 맞는 단언을 이어 붙이는 라이브러리로, 컬렉션, 문자열, 예외, 객체 필드 비교까지 풍부한 단언과 읽기 쉬운 실패 메시지를 줍니다. JUnit도 `assertAll`로 여러 단언을 묶어 한꺼번에 보고하고, AssertJ는 `SoftAssertions`로 같은 일을 합니다. JUnit 문서도 더 강력한 단언이 필요하면 AssertJ 같은 라이브러리를 쓰라고 권하고, Spring Boot 테스트 스타터에도 AssertJ가 들어 있습니다.

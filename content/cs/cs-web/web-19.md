@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9110.html", "https://www.rfc-editor.org/rfc/rfc9111.html"]
+concepts: [cache, http-protocol]
+importance: 1
+links: [{to: "mvc-06", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 콘텐츠 협상은 클라이언트가 Accept, Accept-Language, Accept-Encoding 같은 헤더로 선호를 보내면 서버가 맞는 표현을 골라 응답하는 방식입니다. 이때 Vary 헤더는 응답을 고르는 데 쓰인 요청 헤더 이름을 알려 주고, 캐시는 Vary에 적힌 헤더 값이 원래 요청과 같을 때만 그 저장본을 재사용하므로 사실상 캐시 키를 넓혀 줍니다. Vary를 빼먹으면 캐시가 같은 URL이라는 이유만으로 JSON용으로 만든 응답을 HTML을 원하는 요청에도 내주는 식으로 잘못된 표현이 재사용됩니다. 맞는 표현이 없으면 406이나 기본 표현을 보낼 수 있고, 표준은 서버 주도 협상이 공유 캐시 재사용을 제한한다는 단점도 적고 있습니다.

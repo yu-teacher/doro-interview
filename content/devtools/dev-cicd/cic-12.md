@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency", "https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/control-deployments"]
+concepts: [ci-pipeline]
+importance: 1
+links: [{to: "cic-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `concurrency.group`에 문자열이나 표현식을 주면 같은 그룹에서는 한 번에 하나의 workflow나 job만 실행됩니다. 이미 실행 중인데 새 실행이 들어오면 새 실행은 대기(pending)하고, 기존에 대기하던 실행은 기본적으로 취소되어 새것으로 대체됩니다. `cancel-in-progress: true`를 주면 실행 중인 것까지 취소합니다. 그래서 CI는 workflow 이름과 ref를 합친 그룹을 쓰되 PR 실행에만 취소를 켜서 오래된 커밋의 빌드를 버리고, 운영 배포는 `production` 같은 고정 그룹을 쓰되 배포가 도중에 끊기지 않도록 취소를 켜지 않는 편이 안전합니다. concurrency와 environment는 서로 연결되어 있지 않으므로 필요한 곳에 각각 지정해야 합니다.

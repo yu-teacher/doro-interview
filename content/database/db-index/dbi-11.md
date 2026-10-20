@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-expressional.html", "https://dev.mysql.com/doc/refman/8.4/en/create-index.html"]
+concepts: [index-design]
+importance: 2
+links: [{to: "dbi-16", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 인덱스 컬럼에는 컬럼 대신 함수나 스칼라 식의 결과를 둘 수 있습니다. CREATE INDEX ON t (lower(col))를 만들면 WHERE lower(col) = '값' 조건에 인덱스를 쓸 수 있고, 검색할 때는 식을 다시 계산하지 않고 인덱스에 저장된 값을 비교합니다. 대신 행을 삽입하거나 HOT이 아닌 업데이트를 할 때마다 식을 계산해야 해서 쓰기 비용이 크므로, 조회 속도가 더 중요할 때 씁니다. 쿼리 쪽 식이 인덱스 식과 같은 형태여야 쓰이고, UNIQUE를 붙이면 대소문자만 다른 값을 막는 제약도 만들 수 있습니다. MySQL 8.4(InnoDB)에서는 함수 키 파트라고 부르며 식을 괄호로 감싸 만듭니다.

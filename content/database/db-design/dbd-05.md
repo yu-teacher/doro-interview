@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/datatype-json.html"]
+concepts: [schema-design]
+importance: 1
+links: [{to: "dbi-14", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 json은 입력 텍스트를 그대로 저장해 공백, 키 순서, 중복 키를 보존하고 처리할 때마다 다시 파싱합니다. jsonb는 분해된 바이너리 형태로 저장해서 입력은 조금 느리지만 처리가 빠르고 GIN 인덱스를 쓸 수 있으며, 공백과 키 순서는 보존하지 않고 중복 키는 마지막 값만 남깁니다. 그래서 특별한 이유가 없으면 jsonb를 씁니다. JSON 컬럼은 속성이 제각각이거나 자주 바뀌는 부가 정보를 담을 때 적합하고, 조건과 조인에 쓰는 핵심 데이터는 정형 컬럼으로 두는 게 좋습니다. JSON 안의 구조는 대개 DB가 강제하지 않기 때문입니다.

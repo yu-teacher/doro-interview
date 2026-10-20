@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9110.html"]
+concepts: [idempotency, http-protocol]
+importance: 2
+links: [{to: "dst-22", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 멱등의 정의가 같은 요청을 여러 번 보냈을 때 서버에 미치는 의도된 효과가 한 번 보냈을 때와 같다는 것이지, 응답이 같다는 뜻이 아니기 때문입니다. DELETE를 처음 보내면 리소스가 사라지고 204 같은 성공 응답이 오고, 두 번째에는 이미 없으니 404가 올 수 있습니다. 그래도 두 경우 모두 요청이 의도한 결과, 즉 그 리소스가 없는 상태는 같습니다. 표준도 서버가 요청마다 로그를 남기는 식의 부수 효과를 가져도 멱등 판정과 무관하다고 하고, 재시도했을 때 응답은 달라질 수 있음을 인정합니다. 그래서 응답을 못 받고 연결이 끊겼을 때 DELETE는 자동으로 재시도해도 안전합니다.

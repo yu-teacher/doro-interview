@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc768.html"]
+concepts: [tcp]
+importance: 2
+links: [{to: "net-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 TCP는 메시지가 아니라 순서 있는 바이트 스트림을 전달합니다. 송신 TCP는 애플리케이션의 write 호출들을 세그먼트로 자유롭게 나누거나 합치고, 세그먼트 경계와 애플리케이션의 읽기·쓰기 경계 사이에는 대응 관계가 보장되지 않습니다. 그래서 세 번 보낸 데이터가 한 번에 읽히거나 한 번 보낸 데이터가 두 번에 나뉘어 읽혀도 규격대로의 정상 동작입니다. 경계가 필요하면 애플리케이션 프로토콜에서 길이 접두어나 구분자로 직접 표시하고, 받는 쪽은 필요한 길이가 찰 때까지 읽는 루프를 돌려야 합니다. 반대로 UDP는 데이터그램 하나가 수신 한 번에 대응해 경계가 유지됩니다.

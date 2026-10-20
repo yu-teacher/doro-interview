@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/FilterInputStream.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collections.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/task/TaskDecorator.html", "https://gameprogrammingpatterns.com/service-locator.html"]
+concepts: [gof-patterns]
+importance: 2
+links: [{to: "pat-14", kind: FOLLOWUP}, {to: "aop-04", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 데코레이터는 대상과 같은 인터페이스를 구현하는 래퍼가 대상 객체를 감싸 두고, 호출을 위임하면서 기능을 덧붙이는 패턴입니다. `FilterInputStream` 문서는 다른 입력 스트림을 감싸 기본 데이터 원천으로 쓰면서 데이터를 변환하거나 기능을 더하고, 나머지 요청은 감싼 스트림에 그대로 넘긴다고 설명합니다. 같은 인터페이스를 유지하므로 여러 겹으로 중첩할 수 있습니다. 스프링의 `TaskDecorator`는 문서가 직접 decorator라는 이름을 붙인 콜백으로, 실행될 `Runnable`을 감싸 실행 컨텍스트를 설정하거나 통계를 남기는 용도이고, Nystrom은 로깅을 덧씌우는 래퍼를 데코레이터 예로 듭니다.

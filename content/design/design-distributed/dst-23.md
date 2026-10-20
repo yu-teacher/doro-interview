@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed/"]
+concepts: [distributed-consistency]
+importance: 3
+links: [{to: "dbd-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 CAP를 일관성, 가용성, 파티션 내성 중 둘만 고르는 것으로 외우면 오해입니다. CAP를 제안한 Brewer 본인이 2012년 글에서 이 2-of-3 표현이 늘 오해를 부르는 단순화였다고 말합니다. 첫째, 파티션은 드물어서 파티션이 없을 때는 일관성이나 가용성을 포기할 이유가 없습니다. 둘째, 일관성과 가용성 사이의 선택은 한 시스템 안에서도 서브시스템, 연산, 데이터, 사용자 단위로 미세하게 달라질 수 있습니다. 셋째, 세 속성은 이분법이 아니라 연속적입니다. 현대적인 목표는 파티션을 감지하고, 제한된 모드로 동작하다가, 복구 때 일관성을 회복하고 실수를 보상하는 전략을 미리 세우는 것입니다. 또 CAP의 C는 ACID의 C와 같은 뜻이 아닙니다.

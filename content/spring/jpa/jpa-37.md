@@ -9,6 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-data/jpa/reference/auditing.html"]
+concepts: [spring-data-jpa, entity-mapping]
 ---
 **모범 답변 (30~60초)**
 엔티티가 언제 누구에 의해 만들어지고 바뀌었는지를 자동으로 기록하는 기능입니다. 엔티티에 @CreatedDate, @LastModifiedDate로 시각을, @CreatedBy, @LastModifiedBy로 사용자를 표시합니다. 날짜 어노테이션은 JDK 8 날짜 타입, long, 레거시 Date 등에 쓸 수 있습니다. 생성·수정 시각만 필요하면 AuditorAware 구현이 필요 없지만, 사용자를 기록하려면 현재 사용자를 알려 주는 AuditorAware 빈이 필요하고 제네릭 타입이 어노테이션을 붙인 속성 타입과 맞아야 합니다. 설정은 @EnableJpaAuditing으로 켜고, 엔티티에는 JPA 엔티티 리스너인 AuditingEntityListener를 @EntityListeners로 등록하는 방식이 문서에 나옵니다.

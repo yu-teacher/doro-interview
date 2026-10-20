@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/runtime-config-resource.html", "https://www.postgresql.org/docs/16/using-explain.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-buffer-pool.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-parameters.html"]
+concepts: [connection-pool]
+importance: 2
+links: [{to: "dbp-21", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 work_mem은 정렬이나 해시 테이블 같은 쿼리 연산 하나가 임시 파일로 넘어가기 전에 쓸 수 있는 메모리이고 기본은 4MB입니다. 연산 단위라서 복잡한 쿼리는 여러 개를 동시에 쓰고 동시 세션도 곱해지므로, 올릴 때는 총 메모리를 따져야 합니다. 해시 연산은 work_mem에 hash_mem_multiplier(기본 2.0)를 곱한 한도를 씁니다. shared_buffers는 테이블과 인덱스 블록을 캐시하는 공유 메모리로 기본 128MB이고, 전용 서버라면 RAM의 25% 정도를 시작값으로 보고 40%를 넘기면 효과가 적을 것이라고 문서가 안내합니다. MySQL 8.4(InnoDB)의 대응은 innodb_buffer_pool_size로, 전용 서버에서는 물리 메모리의 80%까지 잡기도 합니다.

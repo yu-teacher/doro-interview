@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9846.html", "https://www.rfc-editor.org/rfc/rfc8446.html"]
+concepts: [cryptography]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 클라이언트가 ClientHello에 지원하는 암호 목록과 Diffie-Hellman 키 공유 값을 담아 보내면, 서버가 ServerHello로 선택한 파라미터와 자기 키 공유 값을 답하고 여기서 공유 비밀이 만들어져 이후 메시지는 모두 암호화됩니다. 이어서 서버가 EncryptedExtensions, Certificate, CertificateVerify, Finished를 보냅니다. CertificateVerify는 인증서의 개인키를 가졌다는 서명 증명이고 Finished는 핸드셰이크 전체에 대한 MAC입니다. 클라이언트가 Finished를 보내면 끝나서 완전 핸드셰이크는 1-RTT입니다. 이전 연결의 PSK가 있으면 첫 비행에 데이터를 싣는 0-RTT가 가능하지만, 전방 비밀성을 보장하지 않고 연결 간 재전송 방지 보장도 없어서 클라이언트는 재전송돼도 안전한 데이터만 보내야 합니다.

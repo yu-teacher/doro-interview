@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"]
+concepts: [persistence-context]
+importance: 3
+links: [{to: "jpa-04", kind: FOLLOWUP}, {to: "jpa-05", kind: FOLLOWUP}, {to: "jpa-06", kind: FOLLOWUP}, {to: "jpa-07", kind: FOLLOWUP}, {to: "tx-04", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 영속성 컨텍스트는 `EntityManager`(Hibernate에서는 `Session`)가 관리하는 엔티티 인스턴스의 집합으로, 식별자마다 인스턴스가 하나만 있도록 유지합니다. 수명은 보통 트랜잭션과 같고, Session은 단일 스레드에서 짧게 쓰고 버리는 객체입니다. 이점은 네 가지입니다. 첫째, 1차 캐시라서 같은 id를 다시 조회해도 DB에 가지 않습니다. 둘째, 같은 컨텍스트 안에서는 같은 id가 같은 인스턴스라는 동일성이 보장됩니다. 셋째, 쓰기 지연으로 상태 변경을 모아 두었다가 flush 때 SQL로 보냅니다. 넷째, 변경 감지로 값만 바꿔도 flush 때 UPDATE가 나갑니다. Hibernate 문서는 Session이 repeatable read 성격의 1차 캐시를 유지한다고 설명합니다.

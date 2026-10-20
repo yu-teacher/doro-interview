@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets", "https://docs.github.com/en/actions/reference/security/secrets", "https://docs.github.com/en/actions/reference/security/secure-use", "https://docs.github.com/en/actions/tutorials/authenticate-with-github_token"]
+concepts: [ci-pipeline, externalized-config]
+importance: 3
+links: [{to: "cic-18", kind: FOLLOWUP}, {to: "cic-20", kind: FOLLOWUP}, {to: "cic-03", kind: PREREQ}, {to: "dkr-05", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 코드나 워크플로 파일에 값을 적지 않고, 저장소나 조직, 환경 설정의 secrets에 등록한 뒤 `secrets` 컨텍스트로 참조합니다. 가능하면 환경 변수로 넘기고 명령행 인자로는 넘기지 않습니다. 등록한 secret은 로그에서 가려지지만 자동 마스킹은 완전하지 않습니다. 값을 Base64로 바꾸거나 그 값으로 토큰을 만들어 파생값이 생기면 그 값도 따로 등록해야 하고, JSON 같은 구조화된 값을 통째로 secret으로 두면 가려지지 않을 수 있습니다. secret이 아닌 민감한 값은 `::add-mask::값`으로 마스킹합니다. 또 `GITHUB_TOKEN`은 `permissions`로 필요한 권한만 주고, 클라우드 접근은 장기 키 대신 OIDC를 쓰는 것이 좋습니다. 값이 노출됐다면 로그를 지우고 키를 교체합니다.

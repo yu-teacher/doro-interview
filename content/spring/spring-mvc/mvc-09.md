@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/handlermapping-interceptor.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-async.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/HandlerInterceptor.html"]
+concepts: [filter-chain]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 `preHandle`은 핸들러 실행 전에 호출되어 `true`를 반환하면 다음 인터셉터와 핸들러로 진행하고, `false`면 나머지 실행 체인과 핸들러를 건너뜁니다. `postHandle`은 핸들러가 정상 실행된 직후, `afterCompletion`은 요청 처리가 모두 끝난 뒤 호출되어 리소스 정리 같은 일에 씁니다. 둘은 체인의 역순으로 호출되고, `afterCompletion`은 해당 인터셉터의 `preHandle`이 `true`를 반환했을 때만 호출됩니다. REST API에서 주의할 점은 `@ResponseBody`나 `ResponseEntity` 컨트롤러는 응답이 `HandlerAdapter` 안에서 이미 쓰이고 커밋되어서, `postHandle`에서 헤더를 추가하는 식으로 응답을 바꾸기엔 늦다는 것입니다. 이때는 `ResponseBodyAdvice`를 씁니다.

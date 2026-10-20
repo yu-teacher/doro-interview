@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc1122.html", "https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml"]
+concepts: [network-layers]
+importance: 3
+links: [{to: "net-02", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 OSI 참조 모델은 통신을 여러 계층으로 나눈 모델이고, 실제 인터넷은 TCP/IP 프로토콜 묶음을 쓰며 보통 응용, 전송, 인터넷, 링크의 4계층으로 설명합니다. TCP/IP에서는 OSI의 프레젠테이션과 응용 기능이 하나의 응용 계층으로 합쳐져 있습니다. 응용 계층에는 HTTP와 DNS 같은 프로토콜이, 전송 계층에는 TCP와 UDP가, 인터넷 계층에는 IP와 ICMP가 있고, 링크 계층은 바로 연결된 네트워크 안에서의 전달을 맡습니다. 데이터는 위 계층에서 아래로 내려갈 때 계층마다 헤더가 붙는 캡슐화를 거칩니다. 7계층 모델은 장애가 어느 층에서 났는지 말할 때 쓰는 공통 언어로 유용합니다.

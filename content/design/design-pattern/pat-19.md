@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://gameprogrammingpatterns.com/command.html", "https://docs.spring.io/spring-security/reference/servlet/architecture.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/HandlerInterceptor.html"]
+concepts: [filter-chain, gof-patterns]
+importance: 2
+links: [{to: "misc-12", kind: RELATED}, {to: "mvc-08", kind: RELATED}, {to: "misc-10", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 책임 연쇄는 요청을 받은 객체가 직접 처리하거나 하위의 다음 객체에 넘기는 구조이고, Nystrom이 이 모양을 그렇게 부릅니다. 서블릿 필터 체인이 이와 닮은 구조입니다. 컨테이너가 필터들과 서블릿으로 `FilterChain`을 만들고, 각 필터는 `chain.doFilter`로 나머지를 호출하거나, 호출하지 않고 응답을 직접 써서 체인을 끊을 수 있습니다. 호출 전후에 코드를 둘 수 있고 필터는 자기 뒤쪽에만 영향을 주므로 순서가 매우 중요합니다. 스프링 시큐리티는 `FilterChainProxy`가 요청에 맞는 `SecurityFilterChain`을 골라 그 필터들을 실행하며, 여러 체인이 있으면 처음 일치하는 하나만 쓰입니다.

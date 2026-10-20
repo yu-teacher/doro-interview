@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man7/inode.7.html", "https://man7.org/linux/man-pages/man7/path_resolution.7.html", "https://www.kernel.org/doc/html/latest/filesystems/vfs.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/link.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/unlink.html"]
+concepts: [io-filesystem]
+importance: 2
+links: [{to: "osm-07", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 inode는 파일 하나의 메타데이터를 담는 자료구조로, 파일 종류와 권한, 소유자, 크기, 타임스탬프, 링크 수 같은 정보를 갖고 파일 시스템 안에서 inode 번호로 식별됩니다. 파일 이름은 inode 안이 아니라 디렉터리에 들어 있습니다. 디렉터리는 이름과 inode를 연결해 주는 항목들을 담은 특별한 파일이어서, 같은 inode를 가리키는 이름이 여러 개일 수 있고 이름을 바꿔도 inode는 그대로입니다. 절대 경로를 열 때는 `/`부터 각 구성 요소를 디렉터리에서 차례로 찾아 inode에 도달하고, 링크 수가 0이 되고 열어 둔 곳도 없어야 파일 내용이 지워집니다.

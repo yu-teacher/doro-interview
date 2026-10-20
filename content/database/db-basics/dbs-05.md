@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/queries-table-expressions.html"]
+concepts: [sql-aggregation]
+importance: 3
+links: [{to: "dbs-09", kind: FOLLOWUP}, {to: "dbs-11", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 WHERE는 GROUP BY로 묶기 전에 개별 행을 거르고, HAVING은 묶은 뒤 그룹 단위로 거릅니다. 그래서 `sum()`이나 `count()` 같은 집계 결과로 조건을 걸려면 HAVING을 써야 하고, 집계 함수를 WHERE에 쓰면 오류가 납니다. 행 단위 조건은 WHERE에, 그룹 집계 조건은 HAVING에 나누어 쓰는 것이 문서 예시이기도 합니다. 집계 함수만 있고 GROUP BY가 없어도 전체가 한 그룹이 되므로 HAVING을 쓸 수 있습니다. PostgreSQL 16 기준이며 MySQL 8.4에서도 같게 동작했습니다.

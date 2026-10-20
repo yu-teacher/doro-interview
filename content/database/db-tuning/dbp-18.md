@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/routine-vacuuming.html", "https://www.postgresql.org/docs/16/sql-vacuum.html", "https://www.postgresql.org/docs/16/runtime-config-autovacuum.html"]
+concepts: [mvcc]
+importance: 1
+links: [{to: "dbp-19", kind: FOLLOWUP}, {to: "dbt-10", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 UPDATE나 DELETE는 기존 행 버전을 바로 지우지 않고 남겨 둡니다. 다른 트랜잭션이 아직 볼 수 있을 수 있기 때문입니다. 그 죽은 행 버전이 차지한 공간을 일반 VACUUM이 재사용 가능으로 표시하지만 운영체제에 돌려주지는 않는 게 보통이라서, 테이블 끝의 빈 페이지만 예외이고 DELETE 후에도 파일 크기는 그대로일 수 있습니다. 새 행은 그 공간을 재사용합니다. 크기를 실제로 줄이려면 VACUUM FULL로 테이블을 새 파일에 다시 써야 하는데, ACCESS EXCLUSIVE 락이 필요하고 추가 디스크 공간도 필요해서 운영 중에는 신중해야 합니다. 평소에는 autovacuum이 이 일을 합니다.

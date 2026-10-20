@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man7/sched.7.html"]
+concepts: [process-management]
+importance: 2
+links: [{to: "osp-10", kind: FOLLOWUP}, {to: "osp-18", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 FCFS는 도착 순서대로 처리해 단순하지만 긴 작업 뒤에 짧은 작업이 줄줄이 기다리는 호위 효과가 있습니다. SJF는 짧은 작업부터 돌려 동시 도착 가정에서는 평균 대기 시간이 최소지만 실행 시간을 미리 알아야 하고 긴 작업이 굶을 수 있습니다. RR은 타임 퀀텀씩 번갈아 실행해 응답성이 좋지만 퀀텀이 너무 작으면 전환이 잦아집니다. 우선순위 방식은 낮은 작업이 굶을 수 있어 오래 기다린 작업의 우선순위를 올리는 에이징을 씁니다. MLFQ는 큐를 여러 개 두고 CPU를 오래 쓴 작업을 아래 큐로 내려 짧은 대화형 작업을 유리하게 합니다.

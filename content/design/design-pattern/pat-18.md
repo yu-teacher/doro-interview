@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://alistair.cockburn.us/hexagonal-architecture/", "https://objectmentor.com/resources/articles/Principles_and_Patterns.pdf", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/HandlerAdapter.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/special-bean-types.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Arrays.html"]
+concepts: [gof-patterns, mvc-request-flow]
+importance: 2
+links: [{to: "pat-20", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 어댑터는 한 클래스의 인터페이스를 클라이언트가 기대하는 다른 인터페이스로 바꿔 주는 패턴으로, Cockburn이 GoF의 정의를 이렇게 인용합니다. Martin은 어댑터가 추상 인터페이스를 구현하면서 모든 메서드를 번역해 서버에 위임하는 객체라고 설명합니다. 스프링 MVC의 `HandlerAdapter`는 핸들러가 실제로 어떻게 호출되는지를 `DispatcherServlet`에서 가려 주므로, 서블릿은 특정 핸들러 타입에 특화된 코드를 갖지 않습니다. JDK의 `Arrays.asList`는 배열 기반 API와 컬렉션 기반 API를 잇는 다리로, 배열을 감싼 `List`를 돌려줍니다.

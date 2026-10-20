@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc4632.html", "https://www.rfc-editor.org/rfc/rfc1122.html", "https://www.rfc-editor.org/rfc/rfc3021.html"]
+concepts: [network-layers]
+importance: 2
+links: [{to: "net-06", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 IPv4 주소는 32비트 값이고 앞부분은 네트워크를 가리키는 프리픽스, 나머지는 그 네트워크 안의 호스트를 가리킵니다. 서브넷 마스크나 CIDR 표기의 /24는 앞쪽 몇 비트가 프리픽스인지를 나타내며, 192.168.1.0/24는 앞 24비트가 네트워크이고 뒤 8비트로 주소 256개를 가집니다. 호스트 부분이 전부 0이거나 전부 1인 주소는 특별한 용도라서 보통 호스트에 못 쓰므로 /24에서 쓸 수 있는 호스트는 254개입니다. 옛 A·B·C 클래스 대신 임의 길이의 프리픽스를 쓰는 것이 CIDR이고, 라우터는 여러 경로가 겹치면 가장 긴 프리픽스가 맞는 경로를 고릅니다. 같은 서브넷인지는 마스크로 걸러낸 네트워크 부분이 같은지로 판단합니다.

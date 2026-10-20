@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.gradle.org/current/userguide/dependency_locking.html", "https://docs.gradle.org/current/userguide/dependency_versions.html", "https://docs.gradle.org/current/userguide/dependency_caching.html"]
+concepts: [dependency-management]
+importance: 1
+links: [{to: "bld-07", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `2.+` 같은 동적 버전은 빌드할 때마다 저장소에서 그 시점의 최신 매칭 버전으로 해석되므로, 같은 소스인데 어느 날 갑자기 다른 버전이 들어와 빌드가 깨질 수 있습니다. 의존성 잠금은 해석된 버전을 `gradle.lockfile`에 저장해 이후 빌드가 같은 버전을 쓰게 하고, 새 버전이 나와도 잠금 상태가 바뀌지 않는 한 그대로입니다. 올릴 때는 `--update-locks`로 갱신합니다. 다만 같은 좌표인데 내용이 바뀌는 SNAPSHOT 같은 changing 버전에는 잠금을 쓰지 말라고 문서가 경고하니 구분해야 합니다.

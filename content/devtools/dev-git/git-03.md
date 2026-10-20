@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/book/ko/v2/Git-%EB%B8%8C%EB%9E%9C%EC%B9%98-%EB%B8%8C%EB%9E%9C%EC%B9%98%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80", "https://git-scm.com/book/ko/v2/Git%EC%9D%98-%EB%82%B4%EB%B6%80-Git-Refs", "https://git-scm.com/docs/gitglossary", "https://git-scm.com/docs/git-switch"]
+concepts: [git-internals, git-branching]
+importance: 3
+links: [{to: "git-09", kind: FOLLOWUP}, {to: "git-19", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 Git의 브랜치는 특정 커밋 하나를 가리키는 가벼운 포인터일 뿐입니다. 브랜치를 만들어도 파일을 복사하지 않고 현재 커밋을 가리키는 이름이 하나 생길 뿐이라 만들고 지우는 비용이 매우 작습니다. HEAD는 지금 체크아웃한 브랜치를 가리키는 특별한 포인터이고, 커밋하면 HEAD가 가리키는 브랜치가 새 커밋으로 앞으로 이동합니다. git branch는 브랜치를 만들기만 하고 이동하지 않으며, git switch로 이동하면 HEAD가 옮겨지고 워킹 트리도 그 브랜치의 내용으로 바뀝니다.

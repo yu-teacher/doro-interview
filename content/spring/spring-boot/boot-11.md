@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/actuator/index.html", "https://docs.spring.io/spring-boot/reference/actuator/endpoints.html", "https://docs.spring.io/spring-boot/reference/using/build-systems.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html"]
+concepts: [observability, web-security]
+importance: 2
+links: [{to: "boot-20", kind: FOLLOWUP}, {to: "cic-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Actuator는 운영 중인 애플리케이션을 모니터링하고 관리하는 기능으로, HTTP나 JMX 엔드포인트로 상태와 메트릭 등을 제공하며 `spring-boot-starter-actuator`로 추가합니다. 엔드포인트는 접근 허용과 노출이 모두 되어야 사용 가능한데, 기본적으로 HTTP와 JMX에는 `health`만 노출되고 더 열려면 `management.endpoints.web.exposure.include`로 지정하며 `exclude`가 `include`보다 우선합니다. 민감한 정보가 있을 수 있어서 `*`로 전부 여는 건 신중해야 하고, 방화벽이나 Spring Security로 보호합니다. health 상세는 `show-details` 기본값이 `never`라 숨겨집니다.

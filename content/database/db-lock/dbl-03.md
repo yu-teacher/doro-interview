@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/applevel-consistency.html"]
+concepts: [optimistic-lock, db-locking]
+importance: 3
+links: [{to: "dbl-02", kind: PREREQ}, {to: "jpa-23", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 비관적 락은 충돌이 날 것이라고 보고, 읽는 시점에 SELECT FOR UPDATE로 행을 먼저 잠가서 다른 트랜잭션을 기다리게 합니다. 낙관적 락은 DB 락을 길게 잡지 않고 version 컬럼 같은 값을 읽어 두었다가, UPDATE ... WHERE id = ? AND version = ? 로 갱신해서 영향받은 행이 0개면 그 사이 누가 바꾼 것이니 다시 읽고 재시도하거나 오류로 처리합니다. 충돌이 드문 곳에서는 낙관적 락이 대기가 없어 유리하고, 충돌이 잦으면 재시도가 늘어 비관적 락이 낫습니다. 비관적 락은 확실하지만 대기와 데드락 위험이 있어서 락을 쥔 채 오래 머물면 안 됩니다. 두 방식 모두 SQL 사용 패턴이라 PostgreSQL이든 MySQL이든 똑같이 적용됩니다.

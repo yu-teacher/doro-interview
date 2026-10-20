@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/web/graceful-shutdown.html", "https://docs.spring.io/spring-boot/reference/actuator/endpoints.html"]
+concepts: [graceful-shutdown]
+importance: 2
+links: [{to: "cic-15", kind: FOLLOWUP}, {to: "cic-19", kind: FOLLOWUP}, {to: "ioc-22", kind: RELATED}, {to: "dkr-16", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 앱이 종료 신호(SIGTERM)를 받으면 새 요청은 거부하고, 이미 처리 중인 요청은 유예 시간 안에 끝나기를 기다렸다가 종료하는 것이 graceful shutdown입니다. Spring Boot(4.1 문서 기준)는 내장 Tomcat, Jetty, Reactor Netty에서 기본으로 켜져 있고, 유예 시간은 `spring.lifecycle.timeout-per-shutdown-phase`로 정합니다. 끄려면 `server.shutdown=immediate`로 설정합니다. 롤링 배포에서 이전 인스턴스를 내릴 때 요청이 끊기지 않게 하려면, 유예 시간을 가장 오래 걸리는 요청보다 길게 잡고 배포 도구가 주는 종료 대기 시간도 그보다 길게 맞춰야 합니다. IDE의 정지 버튼처럼 SIGTERM을 보내지 않는 방식으로 끄면 즉시 종료될 수 있습니다.

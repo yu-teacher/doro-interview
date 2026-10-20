@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://gameprogrammingpatterns.com/state.html", "https://gameprogrammingpatterns.com/component.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Comparator.html"]
+concepts: [gof-patterns, oop-polymorphism]
+importance: 3
+links: [{to: "pat-08", kind: FOLLOWUP}, {to: "pat-09", kind: FOLLOWUP}, {to: "jc-05", kind: RELATED}, {to: "js-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 전략 패턴은 객체 동작의 일부를 별도의 하위 객체에 맡겨서 주 클래스와 분리하는 패턴입니다. Nystrom은 전략의 목적을 주 클래스를 그 동작 일부에서 떼어 내는 것이라고 설명하고, 전략 객체는 보통 상태 없이 알고리즘만 담는다고 말합니다. `Comparator`가 대표적인 예입니다. 정렬 알고리즘은 `List.sort`가 맡고, 정렬 기준만 `Comparator`로 바꿔 끼웁니다. `Comparator`는 함수형 인터페이스라서 람다나 메서드 참조로 바로 전달할 수 있습니다.

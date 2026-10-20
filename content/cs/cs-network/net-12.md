@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc1034.html", "https://www.rfc-editor.org/rfc/rfc1035.html"]
+concepts: [network-layers]
+importance: 3
+links: [{to: "net-13", kind: FOLLOWUP}, {to: "dst-08", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 애플리케이션은 운영체제의 스텁 리졸버에 묻고, 스텁은 설정된 재귀 서버에게 재귀 질의를 보내 답을 끝까지 찾아 달라고 요청합니다. 캐시에 없으면 재귀 서버가 반복 질의로 직접 찾아가는데, 먼저 루트 서버에 물으면 해당 최상위 도메인의 서버를 알려 주고, 그 서버가 다시 도메인의 권한 서버를 알려 주며, 마지막으로 권한 서버가 실제 레코드를 답합니다. 중간 서버는 답 대신 다음에 물어볼 NS를 알려 주는 위임 응답을 줍니다. 결과와 위임 정보는 TTL 동안 캐시되어 같은 질의는 이후 대부분 캐시에서 바로 답합니다.

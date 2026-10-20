@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-altertable.html", "https://www.postgresql.org/docs/16/runtime-config-client.html"]
+concepts: [online-schema-change, db-locking]
+importance: 1
+links: [{to: "dbl-09", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 ALTER TABLE이 필요로 하는 ACCESS EXCLUSIVE 락은 다른 모든 락과 충돌합니다. 그런데 어떤 트랜잭션이 그 테이블을 읽는 락을 쥔 채 열려 있으면 ALTER는 그 트랜잭션이 끝나기를 기다리고, 그 뒤에 새로 들어오는 단순 SELECT도 대기 중인 ALTER 뒤에 줄을 서서 막힐 수 있습니다. 즉 ALTER 자체는 빨라도 앞의 긴 트랜잭션 하나 때문에 서비스 조회가 멈춥니다. 대응은 DDL 세션에 짧은 lock_timeout을 걸어 못 얻으면 포기하고 나중에 재시도하는 것, 그리고 idle in transaction 같은 긴 트랜잭션을 방치하지 않는 것입니다.

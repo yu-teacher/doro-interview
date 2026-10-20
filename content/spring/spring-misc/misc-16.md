@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/integration/rest-clients.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/client/RestClient.html"]
+concepts: [http-protocol, spring-migration]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 한 번에 바꿀 필요 없이 점진적으로 이전할 수 있습니다. 공식 문서의 "Migrating to RestClient" 절은 먼저 `RestClient.create(restTemplate)`로 기존 RestTemplate의 설정을 이어받은 RestClient를 만들고, 요청 코드를 컴포넌트 단위로 하나씩 바꾼 뒤, 마지막에 인프라 설정을 `RestClient.Builder`로 옮기라고 합니다. 대응표도 있습니다. 둘은 같은 인프라를 공유해서 `ClientHttpRequestFactory`나 인터셉터를 재사용할 수 있고, 예외도 `RestClientException` 계층으로 같습니다. 다만 기본 HTTP 라이브러리가 달라(RestClient는 다른 라이브러리가 없으면 JDK HttpClient, RestTemplate은 HttpURLConnection) 런타임 동작에 미묘한 차이가 날 수 있습니다.

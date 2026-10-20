@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9110.html", "https://www.rfc-editor.org/rfc/rfc2391.html", "https://www.rfc-editor.org/rfc/rfc9112.html"]
+concepts: [network-layers, msa-boundary]
+importance: 2
+links: [{to: "dst-05", kind: RELATED}, {to: "dst-08", kind: RELATED}, {to: "web-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 L4 로드밸런서는 IP 주소와 포트 같은 전송 계층 정보만 보고 TCP 연결 단위로 서버를 고르기 때문에 빠르고 단순하지만 요청 내용은 모릅니다. L7 로드밸런서는 HTTP 같은 응용 계층 메시지를 해석해 경로, 호스트 이름, 헤더를 기준으로 요청 단위로 서버를 고르며, 클라이언트와 서버 각각과 별도 연결을 맺는 프록시, 즉 게이트웨이처럼 동작합니다. 그래서 L4에서는 클라이언트가 keep-alive 연결 하나로 여러 요청을 보내면 모두 같은 서버로 가서 부하가 한쪽에 몰릴 수 있고, L7은 요청마다 분산하거나 경로별로 다른 서버군으로 보낼 수 있습니다. 대신 L7은 메시지를 해석하는 비용이 듭니다.

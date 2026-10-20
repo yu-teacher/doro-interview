@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://docs.hibernate.org/orm/7.0/introduction/html_single/"]
+concepts: [entity-mapping, persistence-context]
+importance: 3
+links: [{to: "jpa-02", kind: FOLLOWUP}, {to: "jpa-03", kind: FOLLOWUP}, {to: "jpa-32", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 ORM은 객체 모델과 관계형 테이블 사이의 매핑을 맡아, 개발자가 SQL과 결과 집합 변환 코드를 직접 쓰지 않고 객체를 다루듯 데이터를 저장하고 조회하게 해 주는 기술입니다. Hibernate 문서는 객체와 관계형 DB의 데이터 표현 방식이 달라 생기는 패러다임 불일치가 개발 비용을 크게 높인다고 설명합니다. 불일치는 네 곳에서 드러납니다. 상속 계층은 테이블로 옮길 전략을 골라야 하고, 연관은 객체의 참조가 DB에서는 외래 키로 저장되며, 객체 그래프는 통째로 읽을 수 없어 어디서 끊을지 정해야 하고, 같은 행이 여러 객체로 만들어질 수 있어 동일성이 어긋납니다. JPA는 이 매핑의 표준 명세이고 Hibernate가 구현체이며, 영속성 컨텍스트가 한 세션 안에서는 같은 행을 같은 인스턴스로 맞춰 줍니다. 대신 N+1 같은 성능 문제는 개발자가 관리해야 합니다.

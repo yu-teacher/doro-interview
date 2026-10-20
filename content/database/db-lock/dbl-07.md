@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/monitoring-stats.html", "https://www.postgresql.org/docs/16/view-pg-locks.html", "https://www.postgresql.org/docs/16/functions-info.html", "https://www.postgresql.org/docs/16/runtime-config-client.html", "https://dev.mysql.com/doc/refman/8.4/en/performance-schema-data-locks-table.html"]
+concepts: [db-locking, observability]
+importance: 2
+links: [{to: "dbl-01", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16에서는 pg_stat_activity의 state, wait_event_type, wait_event로 락(Lock) 대기 세션을 찾고, pg_blocking_pids(pid)가 그 세션을 막는 프로세스 ID 배열을 돌려줍니다. pg_locks는 잠금 대상·모드·프로세스별로 한 줄씩 보여 주고 granted가 false면 기다리는 중입니다. 행 락은 pg_locks에 직접 안 나오고, 행을 기다리는 세션은 보통 락을 쥔 트랜잭션 ID를 기다리는 것으로 보입니다. pg_locks끼리 조인하기보다 pg_blocking_pids를 쓰라고 문서도 권합니다. idle in transaction 블로커는 idle_in_transaction_session_timeout으로 끊을 수 있습니다. MySQL 8.4는 performance_schema.data_locks를 봅니다.

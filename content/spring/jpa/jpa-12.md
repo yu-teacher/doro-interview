@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/"]
+concepts: [proxy, fetch-strategy]
+importance: 2
+links: [{to: "jpa-11", kind: PREREQ}, {to: "jpa-13", kind: FOLLOWUP}, {to: "jpa-27", kind: FOLLOWUP}, {to: "aop-14", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 LAZY 연관의 값으로 실제 엔티티 대신 프록시 객체를 넣어 둡니다. 프록시는 엔티티 클래스를 상속해 런타임에 만들어지는 객체로, 상태는 비어 있다가 처음 메서드를 호출하면 영속성 컨텍스트로 DB에서 상태를 가져온 뒤 실제 호출을 진행합니다. 프록시를 만들려면 보통 엔티티 클래스가 final이 아니어야 하고 기본 생성자가 package 이상의 가시성이어야 합니다. 프록시의 id 조회는 초기화를 일으키지 않고, `getReference()`로 쿼리 없이 연관을 설정할 수 있으며, `Hibernate.initialize`로 강제 초기화할 수 있습니다. 다만 다형성 연관에서는 `instanceof`와 캐스팅이 어긋날 수 있고, 컨텍스트가 닫힌 뒤 초기화하면 `LazyInitializationException`이 납니다.

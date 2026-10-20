@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://javadoc.io/static/org.mockito/mockito-core/5.23.0/org.mockito/org/mockito/Mockito.html", "https://docs.spring.io/spring-framework/reference/testing/annotations/integration-spring/annotation-mockitobean.html"]
+concepts: [mocking-junit]
+importance: 1
+links: [{to: "tst-05", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 spy는 실제 객체를 감싸서 스터빙하지 않은 메서드는 진짜 메서드를 실행합니다. `when(spy.get(0)).thenReturn("foo")`는 괄호 안의 `spy.get(0)`이 먼저 실제로 호출되기 때문에, 빈 리스트라면 스터빙도 하기 전에 `IndexOutOfBoundsException`이 터지고, 부작용이 있는 메서드라면 그 부작용이 실제로 일어납니다. 그래서 `doReturn("foo").when(spy).get(0)`처럼 값을 먼저 정하고 호출 대상을 나중에 지정하면, 진짜 메서드를 호출하지 않고 스터빙할 수 있습니다. 또 Mockito는 넘긴 실제 객체에 위임하지 않고 복사본을 만들기 때문에, 원본을 따로 조작해도 spy에는 반영되지 않습니다. 스프링의 `@MockitoSpyBean`으로 만든 spy도 같은 이유로 `doReturn` 형태가 권장됩니다.

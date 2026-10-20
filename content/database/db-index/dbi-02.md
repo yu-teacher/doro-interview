@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-types.html", "https://www.postgresql.org/docs/16/indexes-ordering.html", "https://www.postgresql.org/docs/16/indexes-opclass.html"]
+concepts: [index-structure, index-design]
+importance: 2
+links: [{to: "dbi-13", kind: FOLLOWUP}, {to: "dbi-16", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 B-tree는 정렬할 수 있는 데이터에 대한 동등 조건과 범위 조건에 쓰입니다. 플래너는 <, <=, =, >=, > 연산자를 쓴 비교에 B-tree를 고려하고, 이를 조합한 BETWEEN과 IN, 그리고 IS NULL, IS NOT NULL에도 사용할 수 있습니다. LIKE 'foo%'처럼 패턴이 상수이고 문자열 앞부분이 고정된 경우도 쓸 수 있지만 LIKE '%bar'는 안 됩니다. 다만 데이터베이스가 C 로케일이 아니면 LIKE용 특별한 연산자 클래스로 인덱스를 만들어야 합니다. 또 B-tree는 정렬된 순서로 행을 돌려줄 수 있어 ORDER BY를 별도 정렬 없이 처리하는 데 쓰이고, 이는 PostgreSQL 인덱스 종류 중 B-tree만 가능합니다.

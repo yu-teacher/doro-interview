@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html"]
+concepts: [layered-architecture, solid-principles]
+importance: 2
+links: [{to: "arc-06", kind: PREREQ}, {to: "arc-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 클린 아키텍처의 핵심은 의존성 규칙으로, 소스 코드 의존성은 오직 안쪽으로만 향해야 한다는 것입니다. 안쪽 원은 정책이고 바깥쪽 원은 메커니즘이며, 안쪽 코드는 바깥 원에서 선언된 이름을 언급하면 안 됩니다. Robert Martin은 엔티티, 유스케이스, 인터페이스 어댑터, 프레임워크와 드라이버의 네 원을 예로 들지만 원이 꼭 네 개일 필요는 없다고 합니다. 유스케이스가 프레젠터를 호출해야 할 때는 안쪽에 출력 포트 인터페이스를 두고 바깥의 프레젠터가 구현하게 하며, 경계를 넘는 데이터는 엔티티나 DB 행이 아니라 단순한 데이터 구조여야 한다고 설명합니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-security/reference/servlet/architecture.html", "https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html"]
+concepts: [authn-authz, filter-chain]
+importance: 3
+links: [{to: "sec-03", kind: RELATED}, {to: "sec-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Spring Security는 서블릿 필터 기반입니다. 컨테이너는 스프링 빈을 모르기 때문에 등록된 `DelegatingFilterProxy`가 스프링 빈인 `FilterChainProxy`로 위임합니다. `FilterChainProxy`는 요청에 맞는 `SecurityFilterChain`을 하나 골라 그 안의 보안 필터를 순서대로 실행합니다. 예를 들어 CSRF, 인증 필터(Basic, 폼 로그인), 마지막에 인가 필터 `AuthorizationFilter` 순서입니다. 이 필터들은 `DispatcherServlet` 앞에서 동작해 인증, 인가에 실패하면 컨트롤러에 도달하지 못합니다. 인증/인가 예외는 `ExceptionTranslationFilter`가 받아 `AuthenticationEntryPoint`(로그인 유도 등)나 `AccessDeniedHandler`(접근 거부)로 넘깁니다.

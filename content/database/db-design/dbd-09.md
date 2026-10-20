@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/ddl-partitioning.html", "https://www.postgresql.org/docs/16/sql-createtable.html", "https://dev.mysql.com/doc/refman/8.4/en/partitioning-types.html"]
+concepts: [db-scaling]
+importance: 2
+links: [{to: "dbd-10", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 range는 키 범위로 나누는 방식이라 날짜별 로그처럼 오래된 데이터를 통째로 떼어 낼 때 쓰고, list는 지역처럼 값을 직접 나열해 나누며, hash는 modulus와 remainder로 고르게 분산할 때 씁니다. range의 경계는 하한은 포함하고 상한은 제외합니다. 부모 테이블에 넣은 행은 파티션 키에 따라 해당 파티션으로 자동 라우팅되고, 맞는 파티션이 없으면 오류가 나지만 DEFAULT 파티션이 있으면 거기로 들어갑니다. 파티션 키 값을 UPDATE하면 행이 다른 파티션으로 이동합니다. 부모 테이블은 저장소가 없는 가상 테이블이고 데이터는 각 파티션에 있습니다.

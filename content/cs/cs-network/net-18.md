@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc8085.html"]
+concepts: [tcp]
+importance: 1
+links: [{to: "net-08", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 Nagle 알고리즘은 아직 ACK를 받지 못한 데이터가 있으면 작은 데이터를 바로 보내지 않고 모아 두었다가 ACK가 오거나 최대 크기 세그먼트가 채워질 때 보내서 작은 패킷이 넘치는 것을 막습니다. 지연 ACK는 수신 측이 세그먼트마다 ACK를 보내지 않고 잠시 기다렸다가 합쳐 보내는 것으로, 규격은 지연을 0.5초 미만으로 제한합니다. 송신자가 작은 쓰기를 연달아 하면 두 번째 조각이 첫 조각의 ACK를 기다리며 보류되고, 수신자는 ACK를 미루고 있어 서로를 기다리는 지연이 생길 수 있습니다. 지연에 민감한 애플리케이션은 연결별로 TCP_NODELAY를 켜서 Nagle을 끌 수 있고, 규격도 끌 방법을 제공하도록 요구합니다.

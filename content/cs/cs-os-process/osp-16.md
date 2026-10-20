@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/fork.html", "https://man7.org/linux/man-pages/man2/fork.2.html"]
+concepts: [process-management, thread-process]
+importance: 1
+links: [{to: "osp-04", kind: PREREQ}, {to: "osm-18", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 fork된 자식에는 fork를 호출한 스레드 하나만 존재하고 다른 스레드는 없지만, 주소 공간은 통째로 복제되어 리눅스에서는 뮤텍스와 조건 변수 상태까지 그대로 따라옵니다. 부모의 다른 스레드가 락을 쥔 채 fork가 일어나면 자식에는 그 락을 풀어 줄 스레드가 없어서, 자식이 그 락을 잡으면 영원히 멈출 수 있습니다. POSIX는 이런 락에 대한 자식의 동작을 정의되지 않은 동작으로 두고, 자식이 exec에 성공하기 전에는 async-signal-safe 연산만 실행하라고 규정합니다. 그래서 fork 직후 곧바로 exec하는 편이 안전하고, pthread_atfork 핸들러가 도움이 될 수 있습니다.

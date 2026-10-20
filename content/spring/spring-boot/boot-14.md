@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html", "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide"]
+concepts: [test-strategy, mocking-junit]
+importance: 2
+links: [{to: "tst-11", kind: RELATED}, {to: "tst-12", kind: RELATED}, {to: "tst-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `@SpringBootTest`는 `SpringApplication`으로 전체 컨텍스트를 올리는 통합 테스트이고, `webEnvironment` 기본값은 서버를 띄우지 않는 `MOCK`입니다. 나머지는 필요한 계층만 올리는 슬라이스 테스트입니다. `@WebMvcTest`는 컨트롤러, `@ControllerAdvice`, 필터 같은 웹 계층만 스캔하고 일반 `@Component`는 스캔하지 않아서 협력 객체는 `@MockitoBean`으로 대체하며, `MockMvc`를 구성합니다. `@DataJpaTest`는 엔티티와 JPA 리포지토리를 구성하고 기본으로 각 테스트를 트랜잭션으로 감싸 끝나면 롤백합니다. 임베디드 DB가 있으면 그것을 쓰고, 실제 DB는 `@AutoConfigureTestDatabase(replace = NONE)`로 씁니다.

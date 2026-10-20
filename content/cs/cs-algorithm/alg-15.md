@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/topologicalSort.html", "https://xlinux.nist.gov/dads/HTML/topologicalOrder.html", "https://xlinux.nist.gov/dads/HTML/directAcycGraph.html"]
+concepts: [graph-algorithms]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 위상 정렬은 방향 그래프의 모든 간선 u→v에서 u가 v보다 앞에 오도록 정점을 나열하는 것이고, 사이클이 없는 방향 그래프(DAG)에서만 가능합니다. 대표적인 방법은 진입 차수가 0인 정점을 큐에 넣고 꺼낼 때마다 그 정점의 나가는 간선을 지워 새로 진입 차수가 0이 된 정점을 큐에 넣는 것입니다. 사이클이 있으면 그 정점들은 진입 차수가 끝내 0이 되지 않아서 출력된 정점 수가 전체보다 적어지므로 사이클을 알 수 있습니다. 가능한 순서는 보통 여러 개입니다.

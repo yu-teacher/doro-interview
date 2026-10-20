@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/reference/cli/docker/container/stop/", "https://docs.docker.com/reference/dockerfile/", "https://docs.docker.com/reference/cli/docker/container/run/", "https://docs.docker.com/build/building/best-practices/"]
+concepts: [container, graceful-shutdown]
+importance: 2
+links: [{to: "dkr-03", kind: PREREQ}, {to: "cic-19", kind: RELATED}, {to: "cic-14", kind: RELATED}, {to: "ioc-22", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `docker stop` 은 컨테이너의 메인 프로세스, 즉 PID 1에 SIGTERM을 보내고, 유예 시간(리눅스 컨테이너 기본 10초) 안에 끝나지 않으면 SIGKILL로 강제 종료합니다. 그런데 셸 형식으로 쓰면 앱이 `/bin/sh -c` 의 자식이 되어 PID 1이 아니고, 공식 문서는 ENTRYPOINT의 셸 형식이 이래서 앱이 SIGTERM을 받지 못한다고 설명합니다. 그래서 ENTRYPOINT와 CMD는 exec 형식으로 쓰고, 래퍼 스크립트에서는 `exec` 로 앱을 실행합니다. 신호 처리와 좀비 프로세스 정리가 필요하면 `--init` 으로 init 프로세스를 PID 1에 둘 수 있습니다.

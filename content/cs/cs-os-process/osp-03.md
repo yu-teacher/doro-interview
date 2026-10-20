@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man7/sched.7.html", "https://www.kernel.org/doc/html/latest/locking/mutex-design.html", "https://man7.org/linux/man-pages/man2/fork.2.html"]
+concepts: [process-management, thread-process]
+importance: 3
+links: [{to: "osm-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 컨텍스트 스위치는 CPU가 실행하던 흐름의 상태, 즉 프로그램 카운터와 레지스터 등을 저장하고 다음에 실행할 흐름의 상태를 복원해 넘기는 일입니다. 운영체제가 프로세스마다 상태, 레지스터 저장 공간, 주소 공간, 열린 파일 같은 정보를 모아 두는 구조가 PCB입니다. 전환하는 동안에는 사용자 작업이 진행되지 않는 순수한 오버헤드이고, 다른 프로세스로 바뀌면 주소 공간이 달라져 캐시와 TLB 효율도 떨어지기 쉬워서 같은 프로세스 안의 스레드 전환보다 보통 무겁습니다.

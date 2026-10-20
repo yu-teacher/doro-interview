@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html"]
+concepts: [ioc-di, immutability]
+importance: 3
+links: [{to: "ioc-03", kind: FOLLOWUP}, {to: "ioc-15", kind: FOLLOWUP}, {to: "tst-20", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 공식 문서가 필수 의존성에는 생성자 주입, 선택적 의존성에는 세터 주입을 권하고, Spring 팀도 대체로 생성자 주입을 선호한다고 밝힙니다. 이유는 첫째 필드를 final로 두어 불변 객체를 만들 수 있고, 둘째 필수 의존성이 null이 아님이 보장되며, 셋째 생성이 끝난 시점에 항상 완전히 초기화된 객체가 호출자에게 전달되기 때문입니다. 또 생성자 인자가 너무 많아지면 클래스 책임이 과하다는 신호로 읽을 수 있습니다. 필드 주입은 final을 쓸 수 없고, 스프링 없이 new 하면 의존성이 null이라 단위 테스트에서 리플렉션으로 넣어야 해서 불편합니다.

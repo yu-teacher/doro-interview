@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.junit.org/5.14.4/writing-tests/nested-tests.html", "https://docs.junit.org/5.14.4/writing-tests/display-names.html", "https://docs.junit.org/5.14.4/writing-tests/annotations.html"]
+concepts: [mocking-junit]
+importance: 1
+links: [{to: "tst-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `@Nested`는 비정적 내부 클래스를 테스트 그룹으로 만들어서 "새로 만든 스택일 때", "요소를 넣은 뒤" 같은 상황별로 테스트를 계층 구조로 묶게 해 줍니다. 안쪽 테스트가 실행되기 전에 바깥 클래스의 `@BeforeEach`가 먼저 실행되고 그다음 안쪽 `@BeforeEach`가 실행되므로, 준비 코드가 바깥에서 안쪽으로 쌓이고 안쪽 테스트만 단독으로 돌려도 바깥 준비가 항상 수행됩니다. `@DisplayName`은 공백이나 한글이 들어간 사람이 읽는 이름을 붙여서 리포트와 IDE 트리를 문장처럼 읽히게 합니다. `@Nested`로는 정적 중첩 클래스를 쓸 수 없고, `@BeforeAll`은 Java 16부터 `static`으로 둘 수 있습니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/mergesort.html", "https://xlinux.nist.gov/dads/HTML/divideAndConquer.html"]
+concepts: [complexity-sorting, recursion-dp]
+importance: 2
+links: [{to: "alg-05", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 병합 정렬은 배열을 절반으로 나눠 각각 재귀적으로 정렬한 뒤 정렬된 두 부분을 하나로 합치는 분할 정복이고, 실행 시간은 Θ(n log n)입니다. 절반씩 나누니 재귀 깊이가 약 log₂ n이고, 각 단계에서 합칠 때 원소를 한 번씩만 훑으니 단계당 약 n번 비교하는 셈이라 이 차수가 나옵니다. 기본 구현에서는 입력이 이미 정렬돼 있어도 차수는 같습니다. 합치는 동안 결과를 담을 임시 공간이 필요해서 일반적인 배열 구현은 O(n) 추가 공간을 쓰고, 합칠 때 값이 같으면 왼쪽을 먼저 꺼내면 안정 정렬이 됩니다.

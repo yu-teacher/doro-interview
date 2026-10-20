@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/testing.html", "https://docs.spring.io/spring-framework/reference/testing/unit.html", "https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/fixture-di.html", "https://javadoc.io/static/org.mockito/mockito-core/5.23.0/org.mockito/org/mockito/InjectMocks.html"]
+concepts: [mocking-junit, ioc-di]
+importance: 2
+links: [{to: "tst-06", kind: PREREQ}, {to: "ioc-02", kind: RELATED}, {to: "ioc-03", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 의존성을 생성자로 받으면 테스트에서 스프링도 Mockito 애노테이션도 없이 `new Service(fakeRepo, mail)`로 바로 조립할 수 있고, 필요한 협력자가 빠지면 컴파일러가 알려 줍니다. 스프링 문서도 IoC를 잘 쓰면 세터나 적절한 생성자 덕분에 테스트에서 객체를 쉽게 엮을 수 있다고 합니다. 반면 `@InjectMocks`는 생성자, 세터, 필드 순으로 주입을 시도하고 실패해도 오류를 보고하지 않습니다. 생성자 주입이면 가장 큰 생성자를 골라 테스트에 선언된 목으로 인자를 채우는데, 못 찾은 인자는 `null`로 들어가서 나중에 NPE가 날 수 있습니다. 그래서 필요한 목을 빠뜨리지 않았는지 확인하거나 직접 `new`로 만드는 편이 안전합니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/using-explain.html", "https://www.postgresql.org/docs/16/sql-explain.html", "https://www.postgresql.org/docs/current/sql-explain.html"]
+concepts: [query-planner]
+importance: 2
+links: [{to: "dbp-02", kind: PREREQ}, {to: "dbp-09", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 actual time과 rows는 loops가 2 이상이면 한 번 실행당 평균이라서, 노드가 쓴 총 시간과 행 수는 loops를 곱해서 봐야 합니다. 먼저 볼 것은 추정 rows와 actual rows가 크게 어긋나는지인데, LIMIT 때문에 중간에 멈춘 노드는 어긋나 보여도 오류가 아닙니다. BUFFERS의 shared hit은 공유 버퍼에서 바로 찾은 블록 수, read는 공유 버퍼에 없어서 읽어 온 블록 수이고, temp read/written은 정렬이나 해시가 work_mem을 넘어 쓴 임시 파일 블록입니다. 상위 노드의 수치는 하위 노드를 포함하니 노드별로 내려가며 I/O가 어디서 생기는지 봅니다.

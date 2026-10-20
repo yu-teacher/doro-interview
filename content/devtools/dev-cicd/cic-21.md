@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches", "https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-jobs"]
+concepts: [ci-pipeline]
+importance: 1
+links: [{to: "cic-05", kind: PREREQ}, {to: "git-22", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 브랜치 보호 규칙에서 병합 전에 통과해야 할 상태 체크로 CI job을 지정하면, 그 체크가 모두 통과해야 PR을 보호된 브랜치에 병합할 수 있습니다. 문서에 따르면 필수 체크는 성공뿐 아니라 건너뜀(skipped)이나 neutral 상태여도 통과로 취급합니다. 그래서 `needs`로 이어진 앞 job이 실패해서 뒤 job이 건너뛰어지는 구조에서 뒤 job만 필수로 걸어 두면, 건너뛴 체크가 통과로 계산되어 병합이 허용될 수 있습니다. 필수 체크는 실제 검증을 하는 job으로 지정해야 합니다. 또 여러 워크플로에서 job 이름이 겹치면 결과가 모호해 병합이 막힐 수 있으니 이름을 유일하게 하고, strict 설정이면 병합 전에 PR 브랜치를 베이스 브랜치에 최신화해야 합니다.

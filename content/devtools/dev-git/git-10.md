@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/git-rebase", "https://git-scm.com/book/ko/v2/Git-%EB%B8%8C%EB%9E%9C%EC%B9%98-Rebase-%ED%95%98%EA%B8%B0"]
+concepts: [git-branching]
+importance: 3
+links: [{to: "git-15", kind: FOLLOWUP}, {to: "git-16", kind: FOLLOWUP}, {to: "git-09", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 둘 다 한 브랜치의 변경을 다른 브랜치에 합치는 방법이고 최종 파일 내용은 같을 수 있지만 히스토리가 다릅니다. merge는 기존 커밋을 그대로 두고 두 갈래를 부모로 가진 merge 커밋을 추가해 실제 진행 과정을 보존합니다. rebase는 내 브랜치의 커밋들을 대상 브랜치 끝 위에 하나씩 다시 적용해서 내용은 같지만 해시가 다른 새 커밋을 만들고, 그 결과 히스토리가 선형이 됩니다. 아직 공개하지 않은 내 작업을 정리해 올릴 때는 rebase, 이미 공유된 브랜치에서는 merge를 쓰는 식으로 구분합니다.

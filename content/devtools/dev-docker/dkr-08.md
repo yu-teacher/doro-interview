@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/build/cache/", "https://docs.docker.com/build/cache/invalidation/", "https://docs.docker.com/get-started/docker-concepts/building-images/using-the-build-cache/", "https://docs.docker.com/build/building/best-practices/"]
+concepts: [container]
+importance: 2
+links: [{to: "dkr-09", kind: FOLLOWUP}, {to: "dkr-02", kind: PREREQ}, {to: "cic-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Dockerfile의 각 명령은 레이어가 되고, 빌드는 명령마다 캐시에 같은 것이 있으면 다시 실행하지 않고 재사용합니다. 한 레이어의 캐시가 무효화되면 그 뒤 레이어는 모두 다시 실행됩니다. 그래서 덜 바뀌는 명령을 위에, 자주 바뀌는 명령을 아래에 둡니다. 소스 전체를 먼저 `COPY` 하면 코드 한 줄만 바뀌어도 의존성 설치가 다시 도니, 의존성 정의 파일만 먼저 복사해 설치하고 그다음 소스를 복사합니다. `RUN` 은 명령 문자열만 비교하므로 패키지가 새로 나와도 자동 갱신되지 않아, 필요하면 `--no-cache` 로 다시 빌드합니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://gameprogrammingpatterns.com/singleton.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Runtime.html"]
+concepts: [gof-patterns]
+importance: 3
+links: [{to: "pat-02", kind: FOLLOWUP}, {to: "pat-03", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 싱글톤은 클래스의 인스턴스를 하나로 제한하면서 그 인스턴스에 전역으로 접근하는 지점을 제공하는 패턴입니다. 다만 Robert Nystrom은 이 패턴이 득보다 해가 많다고 주장합니다. 싱글톤은 클래스 안에 감춘 전역 변수일 뿐이라 코드 추적이 어려워지고, 어디서든 가져다 쓸 수 있어 모듈 간 결합이 쉽게 생기며, 모든 스레드에 노출되어 동시성 버그의 원인이 되기 때문입니다. 또 인스턴스 제한과 전역 접근이라는 두 문제를 한꺼번에 풀기 때문에, 접근 편의만 필요했던 경우에도 나중에 인스턴스를 늘리기 어려워집니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-exceptionhandler.html"]
+concepts: [global-exception-handling, exception-handling]
+importance: 2
+links: [{to: "mvc-10", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 핸들러를 너무 넓게 잡으면 의도치 않은 예외까지 한곳에서 처리해 원인 파악이 어려워지고, 상태 코드도 일괄 500 같은 값으로 뭉개질 수 있습니다. 문서도 핸들러 인자 타입은 가능한 한 구체적으로 선언하고, 여러 예외를 한 메서드가 받는 대신 예외별 핸들러로 나누라고 권합니다. 래핑된 예외 상황에서 `Exception` 인자를 받으면 항상 래퍼 예외가 들어오므로 `getCause()`로 실제 원인을 직접 찾아야 하는 번거로움도 있습니다. 그래서 알려진 비즈니스 예외는 구체적으로 먼저 처리하고, 일반 `Exception` 핸들러는 마지막 방어선으로만 두며 로그를 남기는 것이 좋습니다.

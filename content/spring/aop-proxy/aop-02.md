@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop/introduction-defn.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/aop/Advisor.html", "https://docs.spring.io/spring-framework/reference/core/aop-api/advisor.html"]
+concepts: [aop]
+importance: 2
+links: [{to: "aop-03", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 Aspect는 여러 클래스에 걸친 횡단 관심사를 모듈화한 것으로, Spring에서는 `@Aspect`가 붙은 일반 클래스입니다. Join Point는 실행 중의 한 지점인데 Spring AOP에서는 항상 메서드 실행을 뜻합니다. Advice는 그 지점에서 Aspect가 수행하는 동작이고, Pointcut은 Advice를 적용할 Join Point를 고르는 조건식으로 Spring은 기본적으로 AspectJ 표현식을 씁니다. Target은 어드바이스되는 대상 객체이고, AOP Proxy는 Aspect 계약을 구현하려고 AOP 프레임워크가 만든 객체입니다. Weaving은 Aspect를 대상과 연결해 어드바이스된 객체를 만드는 일이며 Spring AOP는 런타임에 합니다. Advisor는 Spring AOP API에서 Advice 하나와 Pointcut을 묶은 작은 Aspect입니다.

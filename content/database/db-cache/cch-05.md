@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/"]
+concepts: [redis]
+importance: 2
+links: [{to: "cch-10", kind: FOLLOWUP}, {to: "osm-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 RDB는 정해 둔 주기마다 데이터셋 전체를 하나의 파일로 찍는 시점 스냅샷이고, AOF는 받은 쓰기 명령을 계속 로그로 남겼다가 재시작 때 다시 실행해 복구하는 방식입니다. RDB는 파일이 작고 재시작이 빠르지만, 장애가 나면 마지막 스냅샷 이후 몇 분의 데이터를 잃을 수 있습니다. AOF는 fsync 정책을 고를 수 있고 기본인 매초 방식이면 최대 1초 정도만 잃어 내구성이 더 좋은 대신 파일이 보통 더 크고 정책에 따라 느릴 수 있습니다. 둘을 함께 쓸 수 있고 이 경우 재시작할 때는 더 완전한 AOF를 읽습니다. 순수 캐시라면 영속성을 끄는 선택도 있습니다.

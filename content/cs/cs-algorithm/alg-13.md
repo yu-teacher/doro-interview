@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/dijkstraalgo.html", "https://xlinux.nist.gov/dads/HTML/bellmanford.html", "https://xlinux.nist.gov/dads/HTML/shortestpath.html"]
+concepts: [graph-algorithms]
+importance: 2
+links: [{to: "alg-20", kind: FOLLOWUP}, {to: "ds-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 둘 다 한 출발점에서 다른 모든 정점까지의 최단 경로를 구하는 알고리즘입니다. 다익스트라는 가중치가 모두 음이 아니어야 하고, 아직 확정되지 않은 정점 중 거리가 가장 짧은 것을 우선순위 큐로 골라 확정해 가는 그리디 방식입니다. 벨만-포드는 음수 가중치도 되고, 모든 간선을 V-1번 완화한 뒤 한 번 더 확인해서 음수 사이클이 있으면 알려 주고 시간은 O(VE)입니다. 그래서 음수 간선이 없으면 다익스트라, 있거나 음수 사이클 검출이 필요하면 벨만-포드를 씁니다.

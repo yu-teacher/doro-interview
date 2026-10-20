@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9111.html"]
+concepts: [cache, http-protocol]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 아닙니다. no-cache는 이름과 달리 저장을 막지 않고, 저장된 응답을 다른 요청에 재사용하기 전에 반드시 원 서버에 검증 요청을 보내 성공 응답을 받으라는 뜻입니다. ETag 같은 검증자가 있으면 바뀌지 않았을 때 304로 본문 전송을 아낄 수 있습니다. 저장 자체를 막으려면 no-store를 쓰는데, 캐시는 요청과 응답의 어떤 부분도 저장하면 안 되고 그 응답으로 다른 요청을 처리해서도 안 됩니다. 다만 표준은 no-store가 프라이버시를 보장하는 수단은 아니라고 적고 있습니다. private은 공유 캐시에는 저장하지 못하게 하고 브라우저 같은 개인 캐시는 저장해도 된다는 뜻입니다. must-revalidate는 stale이 된 뒤에만 재검증을 강제하므로 no-cache와 다릅니다.

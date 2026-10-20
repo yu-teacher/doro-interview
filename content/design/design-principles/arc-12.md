@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://12factor.net/config", "https://12factor.net/processes", "https://12factor.net/backing-services"]
+concepts: [externalized-config]
+importance: 2
+links: [{to: "arc-04", kind: PREREQ}, {to: "boot-17", kind: RELATED}, {to: "sec-10", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 12-Factor는 배포마다 달라지는 설정, 즉 DB 같은 백엔드 서비스 주소, 외부 서비스 자격 증명, 호스트 이름을 코드에서 엄격히 분리해 환경변수에 두라고 합니다. 환경변수는 코드를 고치지 않고 배포별로 바꿀 수 있고, 저장소에 실수로 올라갈 가능성이 작으며, 언어와 OS에 중립적이라는 이유입니다. 또 development 같은 이름의 묶음 대신 변수마다 배포별로 독립 관리해야 배포가 늘어도 조합이 폭발하지 않는다고 합니다. 프로세스는 무상태·공유 없음이어야 하는데, 프로세스가 여럿이면 다음 요청을 다른 프로세스가 받을 가능성이 높고 재시작하면 로컬 상태가 사라지기 때문입니다. 그래서 지속할 데이터는 DB 같은 백엔드 서비스에 두고, 스티키 세션은 위반이라고 문서가 말합니다.

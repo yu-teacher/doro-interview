@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html"]
+concepts: [authn-authz]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 ProviderManager는 가장 흔한 AuthenticationManager 구현으로 AuthenticationProvider 목록에 인증을 위임합니다. 각 provider는 성공이나 실패를 돌려주거나, 판단을 보류해 다음 provider에게 넘길 수 있습니다. 아무도 처리하지 못하면 ProviderNotFoundException이 발생합니다. 선택적으로 parent AuthenticationManager를 두어 처리하지 못했을 때 참고하게 할 수 있고, 여러 SecurityFilterChain이 하나의 parent를 공유하는 구성이 흔합니다. 기본적으로 인증 결과에서 민감한 credentials를 지우는데, 상태 없는 앱에서 UserDetails를 캐싱하면 문제가 될 수 있어 복사해서 캐시하거나 eraseCredentialsAfterAuthentication을 끄라고 문서가 안내합니다.

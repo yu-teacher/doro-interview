@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"]
+concepts: [persistence-context]
+importance: 2
+links: [{to: "jpa-03", kind: PREREQ}, {to: "jpa-08", kind: FOLLOWUP}, {to: "jpa-19", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 엔티티 인스턴스는 비영속, 영속, 준영속, 삭제 네 상태 중 하나입니다. 비영속(Hibernate 용어로 transient, 사양 용어로 new)은 `new`로 만들기만 해서 영속성 컨텍스트와 무관한 상태입니다. 영속(managed)은 컨텍스트가 관리하는 상태로 `persist`나 조회로 됩니다. 준영속(detached)은 식별자는 있지만 컨텍스트와 더는 연결되지 않은 상태로, `detach`·`clear`·컨텍스트 종료로 되며 변경이 DB와 동기화되지 않습니다. 삭제(removed)는 `remove`로 삭제가 예약된 상태이고 커밋이나 flush 때 DELETE가 나갑니다. 트랜잭션 범위 컨텍스트는 커밋 때 관리하던 엔티티가 준영속이 되고, 준영속 프록시를 초기화하면 지연 로딩 예외가 납니다.

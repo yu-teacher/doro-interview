@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-exceptionhandler.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-advice.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/exceptionhandlers.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/RestControllerAdvice.html"]
+concepts: [global-exception-handling]
+importance: 3
+links: [{to: "mvc-11", kind: FOLLOWUP}, {to: "mvc-12", kind: FOLLOWUP}, {to: "mvc-19", kind: FOLLOWUP}, {to: "mvc-20", kind: FOLLOWUP}, {to: "mvc-21", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 `@ExceptionHandler`는 처리할 예외 타입을 지정해 예외 처리 메서드를 선언하는 어노테이션입니다. 컨트롤러 안에 두면 그 컨트롤러(와 상속 계층)에서 난 예외에만 적용되고, `@ControllerAdvice` 클래스에 두면 모든 컨트롤러에 전역으로 적용됩니다. `@RestControllerAdvice`는 `@ControllerAdvice`에 `@ResponseBody`를 합친 것이라 반환값이 응답 본문으로 직렬화됩니다. 내부적으로는 `ExceptionHandlerExceptionResolver`가 이 메서드들을 호출하고, 전역 핸들러는 컨트롤러의 로컬 핸들러보다 뒤에 적용됩니다. 그래서 컨트롤러는 비즈니스 예외를 던지기만 하고 오류 응답 변환은 advice 한곳에서 관리할 수 있습니다.

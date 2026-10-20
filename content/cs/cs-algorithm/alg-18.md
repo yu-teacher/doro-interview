@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/binarySearch.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Arrays.html", "https://docs.python.org/3/library/bisect.html"]
+concepts: [complexity-sorting, numeric-precision]
+importance: 1
+links: [{to: "jl-20", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 low와 high가 둘 다 int 최댓값에 가까우면 low+high가 int 범위를 넘어 음수가 되고, 그 값을 2로 나눈 mid로 배열에 접근하면 잘못된 위치를 읽거나 예외가 납니다. 그래서 low + (high - low) / 2처럼 차이를 먼저 구해 계산하거나 부호 없는 오른쪽 시프트를 씁니다. 다만 low+high가 넘치려면 배열이 약 2³⁰개(10억 7천만 개 남짓) 이상이어야 해서 흔히 터지는 버그는 아닙니다. 자바 Arrays.binarySearch는 못 찾으면 -(삽입 위치) - 1을 돌려줘서 항상 음수이고, 파이썬 bisect는 삽입 위치를 그대로 돌려줍니다.

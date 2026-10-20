@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man2/syscalls.2.html", "https://man7.org/linux/man-pages/man7/vdso.7.html"]
+concepts: [process-management]
+importance: 2
+links: [{to: "osp-03", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 시스템 콜은 프로그램이 파일, 네트워크, 메모리 매핑 같은 커널 기능을 쓰기 위한 기본 인터페이스입니다. 보통 C 라이브러리의 래퍼 함수가 인자를 레지스터에 담아 커널로 진입하는 명령을 실행하고, CPU가 유저 모드에서 커널 모드로 전환해 처리한 뒤 돌아옵니다. 이 모드 전환과 커널 진입 경로 때문에 일반 함수 호출보다 훨씬 비쌉니다. 그래서 작은 입출력을 모아서 한 번에 보내는 버퍼링처럼 호출 횟수를 줄이는 것이 중요하고, 시간 조회처럼 아주 자주 쓰이는 일부 호출은 커널이 공유 메모리로 정보를 노출해 커널 진입 없이 처리하는 vDSO를 씁니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://martinfowler.com/bliki/InversionOfControl.html", "https://martinfowler.com/articles/injection.html", "https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html"]
+concepts: [ioc-di, solid-principles]
+importance: 3
+links: [{to: "arc-06", kind: PREREQ}, {to: "ioc-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 IoC는 제어 흐름이 뒤집히는 일반적인 현상으로, 프레임워크가 내 코드를 호출하는 것을 가리키며 "Don't call us, we'll call you"라는 할리우드 원칙으로도 불립니다. DI는 IoC가 너무 일반적이라 Martin Fowler가 IoC 옹호자들과 논의해 정한 더 구체적인 이름으로, 별도의 조립자가 구현체를 객체에 넣어 주어 객체가 구현체를 직접 만들지 않게 하는 패턴입니다. 서비스 로케이터도 구현에서 분리해 주지만 사용하는 쪽이 로케이터에 명시적으로 요청하고 로케이터에 의존한다는 점이 다릅니다. DIP는 이들과 층위가 다른, 소스 의존이 추상화를 향해야 한다는 설계 원칙입니다.

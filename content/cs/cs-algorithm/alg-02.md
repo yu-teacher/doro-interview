@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/bubblesort.html", "https://xlinux.nist.gov/dads/HTML/insertionSort.html", "https://xlinux.nist.gov/dads/HTML/selectionSort.html"]
+concepts: [complexity-sorting]
+importance: 2
+links: [{to: "alg-03", kind: FOLLOWUP}, {to: "alg-04", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 세 알고리즘 모두 임의 입력에서는 O(n²)입니다. 버블 정렬은 인접한 쌍을 비교해 바꾸며 훑는 일을 교환이 없을 때까지 반복하므로 이미 정렬된 입력에서는 Θ(n)에 가깝습니다. 삽입 정렬은 다음 원소를 앞쪽의 정렬된 부분 안 제자리에 끼워 넣으며 시간이 원소 이동 때문에 O(n²)이라서, 이미 정렬된 입력에서는 이동이 없어 선형에 그칩니다. 선택 정렬은 남은 것 중 최솟값을 찾아 제자리로 보내며 실행 시간이 Θ(n²)이고 교환은 O(n)번입니다. 같은 O(n²)여도 입력 상태에 따라 실제 연산 수는 크게 달라집니다.

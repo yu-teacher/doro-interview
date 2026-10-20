@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/routine-vacuuming.html", "https://www.postgresql.org/docs/16/mvcc-intro.html"]
+concepts: [mvcc]
+importance: 2
+links: [{to: "dbt-13", kind: FOLLOWUP}, {to: "dbp-18", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16에서 UPDATE나 DELETE는 기존 행 버전을 바로 지우지 않고 남겨 둡니다. 다른 트랜잭션이 아직 그 버전을 볼 수 있기 때문입니다. 나중에 어떤 트랜잭션도 보지 않게 된 옛 버전이 dead tuple이고, VACUUM이 테이블과 인덱스에서 그 버전을 제거해 공간을 재사용할 수 있게 표시합니다. 일반 VACUUM은 보통 공간을 OS에 돌려주지 않고 같은 테이블이 재사용하게 하며, 파일을 새로 써서 줄이는 VACUUM FULL은 테이블에 ACCESS EXCLUSIVE 락이 필요합니다. 평소에는 autovacuum이 이를 대신 돌립니다.

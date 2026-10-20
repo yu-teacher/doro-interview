@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/transaction-iso.html", "https://www.postgresql.org/docs/16/sql-set-transaction.html"]
+concepts: [isolation-level]
+importance: 3
+links: [{to: "dbt-03", kind: FOLLOWUP}, {to: "dbt-08", kind: FOLLOWUP}, {to: "tx-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 격리 수준은 동시 트랜잭션 사이에서 어떤 이상 현상을 허용하는지로 정의됩니다. dirty read는 커밋되지 않은 데이터를 읽는 것, non-repeatable read는 같은 행을 다시 읽었더니 다른 트랜잭션의 커밋으로 값이 바뀐 것, phantom read는 같은 조건으로 다시 조회했더니 행 집합이 바뀐 것입니다. PostgreSQL 16에서는 네 수준을 지정할 수 있지만 내부적으로는 세 가지만 구현해서 READ UNCOMMITTED는 READ COMMITTED처럼 동작하고, REPEATABLE READ는 표준보다 강해 phantom도 막으며, serialization anomaly까지 막는 것은 SERIALIZABLE뿐입니다.

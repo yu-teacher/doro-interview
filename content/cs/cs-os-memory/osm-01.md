@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://www.kernel.org/doc/html/latest/mm/page_tables.html"]
+concepts: [virtual-memory]
+importance: 3
+links: [{to: "osm-04", kind: FOLLOWUP}, {to: "osm-09", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 가상 메모리는 프로그램이 물리 메모리의 실제 배치를 몰라도 되도록 해 주는 추상화입니다. 프로그램이 메모리를 읽고 쓸 때 쓰는 주소는 전부 가상 주소이고, CPU의 MMU가 페이지 테이블을 보고 이것을 물리 주소로 변환합니다. 이 덕분에 흩어진 물리 메모리를 연속된 것처럼 보여 줄 수 있고, 지금 필요한 부분만 물리 메모리에 올리는 요구 페이징이 가능하며, 프로세스마다 주소 공간을 따로 줘서 서로를 보호하면서도 필요한 부분은 통제된 방식으로 공유할 수 있습니다.

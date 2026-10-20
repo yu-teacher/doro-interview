@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/fork.html", "https://man7.org/linux/man-pages/man2/fork.2.html", "https://www.kernel.org/doc/html/latest/mm/page_tables.html"]
+concepts: [virtual-memory, process-management]
+importance: 2
+links: [{to: "osm-09", kind: PREREQ}, {to: "osp-04", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `fork()`는 자식을 부모의 정확한 복사본으로 만들지만 메모리를 그 자리에서 전부 복사하지는 않습니다. Linux에서는 copy-on-write로 구현되어, 부모의 페이지 테이블과 자식용 태스크 구조만 복제하고 물리 페이지는 부모와 자식이 공유합니다. 누군가 공유 페이지에 쓰려고 하면 그때 페이지 폴트가 나서 커널이 그 페이지만 복사해 쓰는 쪽에 주고, 그래서 서로의 쓰기는 상대에게 보이지 않습니다. 따라서 `fork` 자체의 비용은 페이지 테이블 복제 수준이라 비교적 빠르고, 복사 비용은 쓰기가 일어난 페이지만큼 나중에 나눠서 냅니다.

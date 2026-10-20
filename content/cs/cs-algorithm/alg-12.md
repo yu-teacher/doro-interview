@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/dynamicprog.html", "https://xlinux.nist.gov/dads/HTML/principle.html", "https://xlinux.nist.gov/dads/HTML/divideAndConquer.html", "https://xlinux.nist.gov/dads/HTML/memoize.html", "https://xlinux.nist.gov/dads/HTML/knapsackProblem.html"]
+concepts: [recursion-dp]
+importance: 2
+links: [{to: "alg-19", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 동적 계획법은 같은 부분문제가 여러 번 반복해서 나타나는 겹치는 부분문제와, 전체 최적해가 부분문제의 최적해로 만들어지는 최적 부분 구조가 있을 때 씁니다. 분할 정복도 문제를 작게 나눠 풀고 합치지만 부분문제가 서로 겹치지 않는 경우가 많아서 저장해 봐야 이득이 없습니다. 그래서 병합 정렬에는 메모가 소용없고 피보나치에는 효과가 큽니다. 계산량은 서로 다른 부분문제의 수에 부분문제당 전이 비용을 곱해 어림합니다. 0-1 배낭은 부분집합 2ⁿ개를 보는 대신 표 칸 수만큼으로 줄어듭니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html"]
+concepts: [solid-principles, oop-polymorphism]
+importance: 2
+links: [{to: "arc-02", kind: PREREQ}, {to: "arc-01", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 LSP를 상속 규칙으로 이해하는 경우가 많지만, Robert Martin은 자신을 포함한 많은 사람이 그렇게 오해했고 실제로는 서브타이핑에 관한 원칙이라고 말합니다. 인터페이스를 구현한 모든 것이 하위 타입이고 덕 타이핑도 암묵적인 인터페이스의 하위 타입이므로, 인터페이스를 쓰는 쪽이 어떤 구현을 받아도 혼란을 겪지 않아야 합니다. 구현이 사용하는 쪽을 혼란시키면 if나 switch 분기가 늘어난다고 합니다. ISP는 사용자가 필요 없는 것에 의존하지 않도록 인터페이스를 작게 유지하라는 원칙인데, 저자는 정적 타입 언어에서 호출하지 않는 메서드가 바뀌어도 컴파일 의존 때문에 재컴파일과 재배포를 해야 한다고 주장합니다.

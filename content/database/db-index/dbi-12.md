@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/planner-stats.html", "https://www.postgresql.org/docs/16/sql-analyze.html", "https://www.postgresql.org/docs/16/indexes-examine.html"]
+concepts: [query-planner]
+importance: 2
+links: [{to: "dbp-09", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 플래너는 WHERE 조건이 테이블 행 중 몇 퍼센트를 고를지, 즉 선택도를 추정해서 계획별 비용을 계산하고, 그 재료가 pg_class의 행 수와 페이지 수, 그리고 pg_statistic에 저장된 컬럼 통계입니다. 행 수·페이지 수는 VACUUM이나 ANALYZE가, 컬럼 통계는 ANALYZE가 갱신하며 갱신 직후에도 근사값입니다. 통계가 없거나 오래되어 행 수 추정이 틀리면 인덱스를 놓치거나 비효율적인 계획이 나올 수 있으므로, 데이터가 크게 바뀐 뒤나 인덱스 사용을 점검할 때는 ANALYZE를 먼저 합니다. 분포가 불규칙한 컬럼은 default_statistics_target이나 컬럼별 SET STATISTICS를 올려 정확도를 높이고, 컬럼 간 상관이 있으면 확장 통계를 쓸 수 있습니다.

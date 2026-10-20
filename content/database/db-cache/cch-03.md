@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/commands/expire/", "https://redis.io/docs/latest/commands/set/"]
+concepts: [redis, cache]
+importance: 2
+links: [{to: "cch-04", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 `EXPIRE`나 `SET 키 값 EX 초`로 키에 TTL을 걸면 시간이 지난 뒤 키가 자동으로 지워지고, 남은 시간은 `TTL`로 확인합니다. 주의할 점은 `SET`처럼 값을 통째로 덮어쓰면 TTL이 사라지고, `INCR`나 `LPUSH`처럼 값을 바꾸기만 하는 명령은 TTL을 그대로 둔다는 것입니다. 삭제는 두 방식으로 이뤄집니다. 만료된 키에 클라이언트가 접근했을 때 지우는 수동 방식과, 접근이 없어도 Redis가 주기적으로 만료 시간이 있는 키 중 일부를 무작위로 골라 지우는 능동 방식입니다. 복제 환경에서는 마스터가 만료를 판단해 DEL을 복제본과 AOF에 전달합니다.

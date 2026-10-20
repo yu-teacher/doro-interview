@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man7/pthreads.7.html", "https://man7.org/linux/man-pages/man2/fork.2.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/fork.html"]
+concepts: [thread-process, process-management]
+importance: 2
+links: [{to: "osp-16", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 스레드는 주소 공간을 공유해서 생성과 전환이 가볍고 데이터를 메모리로 바로 공유할 수 있지만, 그 대가로 공유 데이터에 락이 필요하고 한 스레드의 메모리 오류가 프로세스 전체를 죽입니다. 프로세스는 메모리가 격리되어 하나가 죽어도 다른 프로세스는 영향을 받지 않고 권한도 따로 줄 수 있지만, 통신에 IPC가 필요하고 생성 비용이 큽니다. 그래서 같은 데이터를 빠르게 공유하며 협력하는 작업은 멀티스레드, 장애와 보안 경계를 나눠야 하거나 서로 독립적인 작업은 멀티프로세스를 고릅니다.

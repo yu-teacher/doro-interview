@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/book/ko/v2/Git-%EB%B8%8C%EB%9E%9C%EC%B9%98-%EB%B8%8C%EB%9E%9C%EC%B9%98-%EC%9B%8C%ED%81%AC%ED%94%8C%EB%A1%9C", "https://git-scm.com/docs/gitworkflows"]
+concepts: [git-branching]
+importance: 2
+links: [{to: "cic-01", kind: RELATED}, {to: "cic-21", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 읽은 공식 문서에는 Git Flow나 트렁크 기반 개발이라는 이름의 전략이 정의되어 있지 않고, Git이 제공하는 브랜치 운용 방식만 설명합니다. Pro Git은 안정 코드만 두는 master와 테스트용 develop이나 next 같은 장기 브랜치, 그리고 주제 하나를 위한 짧은 토픽 브랜치를 소개합니다. gitworkflows는 기능이나 버그마다 토픽 브랜치를 만들고 이를 필요한 가장 오래된 통합 브랜치에서 갈라 위쪽 브랜치로 merge하며, 상위 브랜치를 하위 브랜치로 merge하는 것은 API 변경 같은 분명한 사유가 있을 때만 하라고 합니다. 어떤 전략을 택할지는 팀 규모와 배포 방식에 따라 정합니다.

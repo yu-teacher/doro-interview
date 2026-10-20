@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"]
+concepts: [entity-mapping, fetch-strategy]
+importance: 1
+links: [{to: "jpa-17", kind: PREREQ}, {to: "jpa-18", kind: PREREQ}, {to: "jpa-19", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 먼저 양방향이 꼭 필요한지 따져 보겠습니다. 게시글 조회는 게시글 리포지토리에서 회원 id 조건으로도 충분하다면 `Member.posts`를 없애 설계를 단순하게 할 수 있습니다(제 의견이며 요구사항에 따라 다릅니다). 두 번째로 `CascadeType.ALL`과 `orphanRemoval`로 게시글이 많은 회원을 지우면 자식을 하나씩 DELETE하게 되고 JDBC 배치도 방해받으므로, 대량이면 벌크 삭제나 DB의 `ON DELETE CASCADE`(`@OnDelete`)를 고려합니다. 세 번째로 컬렉션을 fetch join과 페이징에 같이 쓰면 메모리 페이징이 되니 피하고, 컬렉션 지연 로딩에는 batch size를 둡니다(보충).

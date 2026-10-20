@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/tutorial-transactions.html", "https://www.postgresql.org/docs/16/app-psql.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-autocommit-commit-rollback.html"]
+concepts: [tx-boundary]
+importance: 2
+links: [{to: "tx-02", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 autocommit은 문장 하나가 끝날 때마다 자동으로 커밋되는 모드입니다. PostgreSQL 16에서는 BEGIN 없이 실행한 문장이 각각 암묵적인 BEGIN과 COMMIT으로 감싸진 단일 문장 트랜잭션이고, 여러 문장을 묶으려면 BEGIN이나 START TRANSACTION으로 명시적 트랜잭션을 엽니다. psql에는 AUTOCOMMIT 변수가 있어 끄면 psql이 암묵적으로 BEGIN을 넣어 줍니다. MySQL 8.4(InnoDB)에서는 연결마다 autocommit이 기본으로 켜져 있고, `SET autocommit = 0`으로 끄면 항상 트랜잭션이 열려 있으며 커밋 없이 세션이 끝나면 롤백됩니다.

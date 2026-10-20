@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://fetch.spec.whatwg.org/"]
+concepts: [web-security]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 요청의 credentials 모드가 include, 즉 fetch에 credentials: 'include'를 주거나 XHR에서 withCredentials를 켠 경우에는, 응답의 Access-Control-Allow-Origin이 *이면 CORS 검사가 실패하도록 표준이 정해 두었기 때문입니다. 자격 증명이 붙은 응답을 아무 출처에나 공유하면 위험하니, 허용할 출처를 구체적으로 적고 Access-Control-Allow-Credentials: true를 함께 보내야 하며 true는 대소문자를 구분합니다. Allow-Methods, Allow-Headers, Expose-Headers의 *도 같은 경우에는 와일드카드로 인정되지 않습니다. 또 CORS 검사는 브라우저가 응답을 스크립트에 넘길지 정하는 것이라서, 실패해도 요청은 서버에 이미 도착했고 쿠키도 실려 있을 수 있습니다.

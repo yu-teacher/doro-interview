@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.gradle.org/current/userguide/java_plugin.html", "https://docs.gradle.org/current/userguide/java_library_plugin.html", "https://docs.spring.io/spring-boot/gradle-plugin/packaging.html", "https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html"]
+concepts: [dependency-management]
+importance: 1
+links: [{to: "bld-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `compileOnly`는 메인 소스셋의 컴파일에만 쓰이는 구성이라, 테스트 소스셋의 컴파일 클래스패스와 런타임 클래스패스에는 들어가지 않습니다. 그래서 테스트 코드가 그 라이브러리의 클래스를 참조하면 컴파일 클래스패스에 없어서 문제가 됩니다. 테스트에서도 필요하면 `testCompileOnly`나 `testImplementation`에 따로 선언해야 합니다. Maven의 `provided`는 테스트 클래스패스에도 들어가서 이 점이 다릅니다. 스프링 부트 문서도 같은 이유로 war 패키징에서 `compileOnly` 대신 `providedRuntime`을 권합니다.

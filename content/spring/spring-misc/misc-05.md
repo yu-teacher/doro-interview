@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/data-access/dao.html", "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-advice.html"]
+concepts: [exception-handling, rollback-rules]
+importance: 2
+links: [{to: "jl-06", kind: RELATED}, {to: "tx-08", kind: RELATED}, {to: "mvc-10", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Checked 예외는 컴파일러가 처리를 강제하고, Unchecked(RuntimeException)는 강제하지 않습니다. 스프링은 `SQLException` 같은 기술별 예외를 `DataAccessException`을 루트로 하는 런타임 예외 계층으로 번역합니다. 그래서 DAO마다 catch-and-throw나 `throws` 선언을 반복하지 않고, 복구할 수 없는 예외는 상위 계층에서 한 번에 처리합니다. 웹에서는 `@RestControllerAdvice`의 `@ExceptionHandler`가 그 자리입니다. 트랜잭션에서 중요한 점은, 기본 설정에서는 RuntimeException과 Error일 때만 롤백하고 checked 예외는 롤백하지 않는다는 것입니다. checked 예외에도 롤백하려면 `rollbackFor`를 지정해야 합니다.

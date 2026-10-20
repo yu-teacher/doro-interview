@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/sem_wait.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/sem_post.html", "https://man7.org/linux/man-pages/man7/sem_overview.7.html"]
+concepts: [race-condition]
+importance: 3
+links: [{to: "osp-11", kind: FOLLOWUP}, {to: "osp-12", kind: FOLLOWUP}, {to: "jt-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 뮤텍스는 임계 구역에 한 번에 한 스레드만 들어가게 하는 잠금이고, 잠근 스레드가 소유자라서 그 스레드만 풀 수 있습니다. 세마포어는 0 이상의 카운터를 가진 동기화 객체로, wait는 값을 줄이고 값이 0이면 기다리며 post는 값을 늘려 대기자를 깨웁니다. 소유자 개념이 없어서 다른 스레드가 post해도 되므로, 동시에 N개만 허용하는 자원 제한이나 한 스레드가 다른 스레드에게 이벤트를 알리는 신호 용도로 씁니다. 초깃값 1인 세마포어를 뮤텍스처럼 쓸 수는 있지만 소유자 검사가 없습니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-createsequence.html"]
+concepts: [schema-design]
+importance: 1
+links: [{to: "dbt-18", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 CACHE를 1보다 크게 하면 각 세션이 시퀀스에서 번호를 한 번에 여러 개 미리 받아 메모리에 두고 씁니다. 번호가 서로 겹치지는 않지만, 세션 A가 1~10을 받아 1을 쓴 뒤 세션 B가 11~20을 받아 11을 쓰면 A의 2가 11보다 나중에 나올 수 있어서 시간 순서는 보장되지 않습니다. 또 세션이 끝나면 못 쓴 미리 받은 번호는 버려져 구멍이 생기고, 다른 세션에서 한 setval은 그 세션의 캐시가 소진되기 전에는 보이지 않습니다. 기본값 1에서는 번호가 순차적으로 발급됩니다. 그래도 id 순서를 커밋 순서로 믿으면 안 되니 정렬이 중요하면 별도 시각 컬럼을 둡니다.

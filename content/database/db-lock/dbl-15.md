@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://dev.mysql.com/doc/refman/8.4/en/innodb-locking.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-locks-set.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html", "https://dev.mysql.com/doc/refman/8.4/en/performance-schema-data-locks-table.html", "https://www.postgresql.org/docs/16/explicit-locking.html"]
+concepts: [db-locking, isolation-level]
+importance: 2
+links: [{to: "dbl-19", kind: FOLLOWUP}, {to: "dbt-19", kind: RELATED}, {to: "dbt-08", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 MySQL 8.4 InnoDB의 행 락은 사실 인덱스 레코드에 거는 락입니다. 레코드 락은 인덱스 레코드 하나를, 갭 락은 인덱스 레코드 사이의 빈 구간을 잠가서 그 구간에 다른 트랜잭션이 삽입하지 못하게 하고, next-key 락은 레코드 락과 그 앞쪽 갭 락의 조합입니다. 기본 격리 수준인 REPEATABLE READ에서는 범위 조건의 잠금 읽기와 UPDATE, DELETE가 next-key 락을 써서 범위 안의 삽입을 막아 팬텀을 방지하지만, 유니크 인덱스로 존재하는 한 행을 찾을 때는 레코드 락만 겁니다. READ COMMITTED로 바꾸면 갭 락은 외래 키와 중복 키 검사에만 쓰입니다. PostgreSQL 16의 행 락은 같은 행의 쓰기·잠금만 막고 갭 개념이 없어서, 같은 범위를 잠가도 새 행 삽입은 막히지 않았습니다(READ COMMITTED 실험).

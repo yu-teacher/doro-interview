@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/functions-aggregate.html", "https://www.postgresql.org/docs/16/sql-expressions.html", "https://dev.mysql.com/doc/refman/8.4/en/problems-with-null.html"]
+concepts: [sql-aggregation, null-handling]
+importance: 3
+links: [{to: "dbs-19", kind: FOLLOWUP}, {to: "dbs-04", kind: RELATED}, {to: "dbp-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `COUNT(*)`는 NULL 여부와 상관없이 입력 행의 수를 셉니다. COUNT(컬럼)은 그 컬럼 값이 NULL이 아닌 행만 세고, COUNT(DISTINCT 컬럼)은 NULL이 아닌 값 중 서로 다른 값의 개수를 셉니다. 대부분의 집계 함수가 NULL을 무시하고 `COUNT(*)`만 행 자체를 센다는 점이 핵심입니다. 그래서 NULL이 많은 컬럼에 COUNT(컬럼)을 쓰면 전체 행 수보다 작게 나오고, AVG도 NULL 행을 빼고 평균을 냅니다. PostgreSQL 16 기준이며 MySQL 8.4에서도 같습니다.

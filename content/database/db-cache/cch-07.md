@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/commands/keys/", "https://redis.io/docs/latest/commands/scan/"]
+concepts: [redis]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 `KEYS`는 한 번에 패턴에 맞는 모든 키를 찾는 O(N) 명령이라, Redis가 명령을 차례로 처리하는 탓에 키가 많으면 그동안 다른 요청이 막힙니다. 그래서 문서는 애플리케이션 코드에서 쓰지 말라고 경고합니다. `SCAN`은 커서를 받아 한 번에 조금씩만 돌려주고 다음 커서를 알려 주므로 서버를 오래 붙잡지 않습니다. 커서 0으로 시작해 응답의 커서가 0이 될 때까지 반복하면 되고, 순회 내내 존재한 키는 반드시 나오지만 같은 키가 여러 번 나올 수 있어 애플리케이션이 중복을 견뎌야 합니다. `COUNT`는 작업량의 힌트일 뿐이라 반환 개수를 보장하지 않고, 빈 결과가 와도 커서가 0이 아니면 끝난 게 아닙니다.

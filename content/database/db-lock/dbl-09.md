@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-lock.html", "https://www.postgresql.org/docs/16/functions-info.html", "https://www.postgresql.org/docs/16/runtime-config-client.html"]
+concepts: [db-locking, online-schema-change]
+importance: 2
+links: [{to: "dbl-01", kind: PREREQ}, {to: "dbd-21", kind: RELATED}, {to: "dbd-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16의 테이블 락은 ACCESS SHARE부터 ACCESS EXCLUSIVE까지 여덟 모드이고, SELECT는 ACCESS SHARE, FOR UPDATE는 ROW SHARE, INSERT·UPDATE·DELETE는 ROW EXCLUSIVE를 잡습니다. DROP TABLE, TRUNCATE와 많은 ALTER TABLE이 잡는 ACCESS EXCLUSIVE는 모든 모드와 충돌합니다. 문제는 대기열입니다. 오래 열린 트랜잭션이 SELECT로 ACCESS SHARE를 쥐고 있으면 ALTER TABLE은 그 트랜잭션이 끝나길 기다리는데, 그 뒤에 들어온 일반 SELECT도 대기 중인 ALTER 뒤에 줄을 서서 함께 막힙니다. 그래서 운영 중 DDL은 짧은 lock_timeout을 걸어 못 잡으면 포기하고 다시 시도하는 방식을 흔히 씁니다.

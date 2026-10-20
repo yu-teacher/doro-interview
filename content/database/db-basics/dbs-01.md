@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/ddl-constraints.html", "https://www.postgresql.org/docs/16/indexes-unique.html"]
+concepts: [schema-design]
+importance: 3
+links: [{to: "dbs-02", kind: FOLLOWUP}, {to: "dbs-18", kind: FOLLOWUP}, {to: "dbi-06", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 기본키는 행을 식별하는 값으로, 유일해야 하고 NULL이 될 수 없으며 테이블당 하나만 둘 수 있습니다. 유니크 제약은 값이 중복되지 않게만 막고, 한 테이블에 여러 개 둘 수 있습니다. PostgreSQL 16 기준으로 둘 다 만들면 유니크 B-tree 인덱스가 자동으로 생기고 그 인덱스가 중복을 검사합니다. 외래키는 참조 대상 컬럼을 생략하면 상대 테이블의 기본키를 가리킵니다. 유니크 컬럼은 NULL을 허용하는 것이 기본이라, 기본키와 달리 NULL이 들어갈 수 있다는 점이 가장 큰 차이입니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9110.html"]
+concepts: [idempotency, http-protocol]
+importance: 2
+links: [{to: "web-17", kind: PREREQ}, {to: "dst-07", kind: RELATED}, {to: "dst-22", kind: RELATED}, {to: "dst-19", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 그냥 다시 보내는 것은 권장되지 않습니다. 타임아웃은 요청이 서버에 닿지 않았다는 뜻이 아니라 응답을 못 받았다는 뜻일 뿐이라 서버에서는 이미 처리됐을 수 있습니다. 표준은 클라이언트가 비멱등 메서드 요청을 자동으로 재시도하지 말라고 하고, 요청이 실제로는 멱등하다는 것을 알거나 원래 요청이 적용되지 않았음을 확인할 방법이 있을 때만 예외라고 합니다. POST를 안전하게 재시도하려면 서버가 중복을 걸러 줘야 합니다. 클라이언트가 요청마다 고유한 식별자를 만들어 헤더나 본문에 실어 보내고, 서버가 그 식별자를 저장해 두었다가 같은 식별자가 다시 오면 처리를 반복하지 않고 처음 결과를 돌려주는 설계를 씁니다.

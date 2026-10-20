@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/functions-aggregate.html", "https://www.postgresql.org/docs/16/queries-table-expressions.html"]
+concepts: [sql-aggregation, null-handling]
+importance: 1
+links: [{to: "dbs-07", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 GROUP BY 없이 집계 함수만 쓰면 입력이 0행이어도 전체가 한 그룹이라 결과 행은 항상 하나 나옵니다. 이때 count는 0을 돌려주지만 sum, avg, max 같은 나머지 집계는 NULL을 돌려줍니다. 합계가 0으로 보여야 할 곳에서 NULL이 나오거나 이후 계산이 NULL이 되는 일이 생기므로 `COALESCE(sum(x), 0)`으로 바꿔 줍니다. 반면 GROUP BY가 있으면 그룹이 하나도 없으므로 결과도 0행입니다. PostgreSQL 16 기준이고 MySQL 8.4에서도 같게 동작했습니다.

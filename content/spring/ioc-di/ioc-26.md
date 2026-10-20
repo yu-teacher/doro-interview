@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/environment.html"]
+concepts: [externalized-config]
+importance: 2
+links: [{to: "ioc-27", kind: FOLLOWUP}, {to: "boot-08", kind: RELATED}, {to: "boot-18", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Environment는 프로파일과 프로퍼티 두 가지를 모델링합니다. `@Profile`은 클래스나 `@Bean` 메서드에 붙여 해당 프로파일이 활성일 때만 등록되게 하고, 설정 클래스에 붙이면 그 안의 `@Bean`과 `@Import`가 통째로 빠집니다. 표현식은 `!`, `&`, `|`를 쓰지만 `&`와 `|`는 괄호 없이 섞을 수 없습니다. 활성화는 `spring.profiles.active`나 `setActiveProfiles`로 하고, 활성 프로파일이 하나도 없을 때만 default 프로파일이 적용됩니다. 프로퍼티는 PropertySource들을 우선순위대로 찾는데, 표준 환경에서는 시스템 프로퍼티가 OS 환경 변수보다 앞서고 값은 병합되지 않고 높은 쪽이 통째로 덮어씁니다.

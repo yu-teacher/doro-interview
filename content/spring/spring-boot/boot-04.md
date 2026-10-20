@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/using/auto-configuration.html", "https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html"]
+concepts: [auto-configuration, ioc-di]
+importance: 2
+links: [{to: "boot-05", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 자동 설정은 비침투적이라서 제가 같은 타입의 빈을 정의하면 물러납니다. 이 메커니즘이 `@ConditionalOnMissingBean`입니다. 이 조건은 그때까지 처리된 빈 정의를 기준으로 평가되는데, 자동 설정 클래스는 사용자 정의 빈이 모두 등록된 뒤에 로드되도록 보장되기 때문에, 해당 타입의 빈이 없을 때만 기본 빈이 만들어집니다. 예를 들어 `DataSource` 빈을 직접 정의하면 기본 임베디드 DB 지원은 빠집니다. 특정 자동 설정이 싫다면 `@SpringBootApplication(exclude = ...)`, `excludeName`, `spring.autoconfigure.exclude` 프로퍼티로 제외합니다.

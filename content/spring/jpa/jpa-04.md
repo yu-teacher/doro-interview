@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"]
+concepts: [persistence-context, cache]
+importance: 2
+links: [{to: "jpa-03", kind: PREREQ}, {to: "jpa-05", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 영속성 컨텍스트는 식별자에서 엔티티 인스턴스로 가는 유일한 매핑을 갖고 있어서, `find`로 조회하면 먼저 그 매핑을 찾고 없을 때만 DB에서 읽어 넣습니다. 그래서 같은 트랜잭션에서 같은 id를 두 번 조회하면 SQL은 한 번이고 `==` 비교도 true입니다. 한계는 범위입니다. 컨텍스트는 보통 트랜잭션 단위로 짧게 살아서 애플리케이션 전체 캐시가 아닙니다. 또 JPQL은 컨텍스트에 이미 있어도 SQL을 DB에 보내고, 결과 행을 컨텍스트의 기존 인스턴스와 맞춰 돌려줄 뿐입니다. 전역 캐시가 필요하면 SessionFactory 단위의 2차 캐시를 따로 검토합니다.

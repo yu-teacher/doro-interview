@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/compose/how-tos/startup-order/", "https://docs.docker.com/reference/compose-file/services/", "https://docs.docker.com/reference/dockerfile/"]
+concepts: [container, graceful-shutdown]
+importance: 1
+links: [{to: "dkr-12", kind: PREREQ}, {to: "cic-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 아닙니다. `depends_on` 은 컨테이너를 의존 순서대로 시작할 뿐이고, 기본 문법에서는 의존 서비스가 준비됐는지는 기다리지 않습니다. 그래서 DB 컨테이너가 떠 있어도 아직 연결을 받지 못하는 시점에 앱이 먼저 접속하다 실패할 수 있습니다. 해결하려면 DB 서비스에 `healthcheck` 를 정의하고 `depends_on` 에 `condition: service_healthy` 를 주면, Compose가 헬스체크가 통과할 때까지 기다렸다가 앱을 시작합니다. 다만 운영 중 DB 연결이 잠시 끊기는 경우도 있으므로 앱 쪽 연결 재시도도 함께 두는 것이 좋습니다.

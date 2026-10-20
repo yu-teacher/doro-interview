@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop/introduction-defn.html", "https://docs.spring.io/spring-framework/reference/core/aop/introduction-proxies.html"]
+concepts: [gof-patterns, proxy]
+importance: 2
+links: [{to: "aop-05", kind: FOLLOWUP}, {to: "pat-10", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 둘 다 같은 인터페이스를 구현한 객체가 실제 객체를 감싸는 구조라 모양은 거의 같고, 의도가 다릅니다. 프록시 패턴은 접근 제어가 목적입니다. 지연 생성, 권한 확인, 원격 호출 대리 같은 것입니다. 데코레이터는 기능을 덧붙여 확장하는 것이 목적이고, 여러 겹으로 겹쳐 씁니다. Spring AOP의 프록시는 호출을 가로채 트랜잭션이나 로깅 같은 부가 기능을 붙이는 데 쓰이는데, 클라이언트는 프록시인지 모른 채 같은 타입으로 호출한다는 점에서 이 구조를 활용합니다.

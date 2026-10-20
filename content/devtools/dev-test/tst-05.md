@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://javadoc.io/static/org.mockito/mockito-core/5.23.0/org.mockito/org/mockito/Mockito.html"]
+concepts: [mocking-junit]
+importance: 3
+links: [{to: "tst-17", kind: FOLLOWUP}, {to: "tst-18", kind: FOLLOWUP}, {to: "tst-04", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `when(mock.find(1)).thenReturn("kim")`은 이 호출이 오면 이 값을 돌려주라고 미리 정해 두는 스터빙이고, `verify(mock).find(1)`은 실제로 그 호출이 일어났는지 확인하는 검증입니다. `verify`는 기본이 정확히 한 번이고 `times`, `never`, `atLeast`로 횟수를 바꿉니다. 스텁하지 않은 메서드는 값을 반환할 때 대체로 객체는 `null`, 기본형은 `0`이나 `false`, 컬렉션은 빈 컬렉션을 돌려줍니다. 인자는 `equals`로 비교하고, 유연하게 맞추려면 `anyInt()` 같은 매처를 쓰되 한 호출에서는 인자를 전부 매처로 쓰거나 전부 실제 값으로 써야 합니다. 인자를 꺼내서 따로 검사하려면 `ArgumentCaptor`를 씁니다.

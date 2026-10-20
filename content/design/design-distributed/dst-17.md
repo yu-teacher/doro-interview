@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://kafka.apache.org/41/getting-started/introduction/", "https://kafka.apache.org/41/design/design/", "https://learn.microsoft.com/en-us/azure/architecture/guide/technology-choices/messaging"]
+concepts: [messaging]
+importance: 2
+links: [{to: "dst-04", kind: PREREQ}, {to: "dst-21", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 전통적인 메시지 큐는 소비자가 메시지를 처리하면 브로커가 그것을 지우는 것이 일반적입니다. Kafka는 이벤트를 토픽의 파티션 로그에 추가하고, 소비해도 지우지 않고 토픽별로 설정한 보존 기간 동안 남겨 둡니다. 소비자는 자기가 읽은 위치인 오프셋만 관리하므로 과거 오프셋으로 되감아 다시 읽을 수 있어, 버그를 고친 뒤 재처리하는 것도 가능합니다. 같은 키의 이벤트는 같은 파티션에 들어가 그 파티션 안에서는 쓰인 순서대로 읽히고, 컨슈머 그룹 안에서는 파티션 하나를 한 시점에 소비자 하나가 읽습니다. 그래서 작업을 한 번씩 분배하는 용도는 큐가, 여러 소비자가 같은 이벤트를 독립적으로 읽고 재생해야 하면 스트림이 어울립니다. 다만 Kafka 4.1은 큐처럼 쓰는 share group도 프리뷰로 제공합니다.

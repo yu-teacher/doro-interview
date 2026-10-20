@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/"]
+concepts: [redis]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 `appendfsync`는 AOF를 디스크에 언제 동기화할지 정합니다. `always`는 명령을 추가할 때마다 fsync해서 매우 안전하지만 매우 느리고, `everysec`는 초당 한 번이라 빠르면서 장애 때 최대 약 1초의 쓰기를 잃을 수 있어 기본값이며, `no`는 운영체제에 맡겨 더 빠르지만 덜 안전합니다. AOF는 계속 커지기 때문에 Redis가 현재 데이터셋을 만드는 데 필요한 최소 명령 집합으로 백그라운드에서 다시 쓰는 재작성을 하고, 7.0부터는 base 파일과 incr 파일을 manifest가 묶어 가리키며 재작성이 끝나면 매니페스트를 원자적으로 교체합니다. 서버가 쓰다 죽어 마지막 명령이 잘려도 기본 설정은 그 부분만 버리고 로드합니다.

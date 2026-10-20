@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-select.html"]
+concepts: [db-locking]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16의 행 락은 강한 순서로 FOR UPDATE, FOR NO KEY UPDATE, FOR SHARE, FOR KEY SHARE 네 가지입니다. FOR UPDATE는 가장 강해서 같은 행에 다른 네 모드를 전부 막고 DELETE와 키 컬럼을 바꾸는 UPDATE가 이 모드를 씁니다. FOR NO KEY UPDATE는 약간 약해서 FOR KEY SHARE는 막지 않으며 키가 아닌 컬럼만 바꾸는 일반 UPDATE가 이 모드입니다. FOR SHARE는 공유 락이라 FOR SHARE끼리는 공존하지만 수정은 막고, FOR KEY SHARE는 가장 약해서 DELETE나 키 변경만 막습니다. 락이 약할수록 같은 행을 동시에 다루는 트랜잭션이 늘어납니다.

@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_spin_lock.html", "https://www.kernel.org/doc/html/latest/locking/mutex-design.html", "https://www.kernel.org/doc/html/latest/locking/spinlocks.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html"]
+concepts: [race-condition]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 스핀락은 락을 못 얻으면 잠들지 않고 루프를 돌며 계속 확인하는 바쁜 대기 방식이고, 뮤텍스는 대기자를 재워 CPU를 양보하게 하는 방식입니다. 임계 구역이 아주 짧아서 곧 풀릴 때는 잠들고 깨는 컨텍스트 스위치를 피해 유리할 수 있고, 락을 오래 쥐면 기다리는 동안 CPU만 낭비합니다. 리눅스 커널의 뮤텍스도 락 소유자가 실행 중이면 곧 풀 가능성이 높다고 보고 잠시 스핀하다가 잠드는 방식을 씁니다. POSIX 스핀락은 우선순위 역전을 겪을 수 있다고 명시되어 있습니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/", "https://docs.docker.com/get-started/docker-overview/"]
+concepts: [container]
+importance: 3
+links: [{to: "dkr-02", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 컨테이너는 앱과 실행에 필요한 파일을 묶어 격리된 프로세스로 실행하는 방식이고, VM은 자체 커널과 하드웨어 드라이버까지 갖춘 운영체제 전체를 띄우는 방식입니다. 그래서 컨테이너는 모두 같은 커널을 공유하며, 앱 하나를 격리하려고 VM을 띄우는 것보다 오버헤드가 적고 같은 인프라에서 더 많은 앱을 돌릴 수 있습니다. 격리는 리눅스 커널의 네임스페이스 기능으로 만듭니다. 다만 커널을 공유하므로 VM보다 격리 경계가 얇다는 점은 알아 두어야 하고, 실무에서는 클라우드 VM 위에 컨테이너를 올려 둘을 함께 쓰는 경우가 많습니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/using-explain.html", "https://www.postgresql.org/docs/16/indexes-ordering.html"]
+concepts: [query-planner, index-design]
+importance: 1
+links: [{to: "dbp-09", kind: PREREQ}, {to: "dbi-20", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 LIMIT이 있으면 플래너는 앞의 몇 행만 필요하다고 보고 전체가 아니라 일부 비용으로 계획을 비교합니다. 그래서 ORDER BY ts LIMIT 1이면 ts 인덱스를 순서대로 훑다가 조건에 맞는 첫 행에서 멈추는 계획이 싸 보일 수 있습니다. 그런데 조건에 맞는 행이 인덱스 순서의 뒤쪽에 몰려 있으면 그 앞의 행을 전부 읽고 필터로 버려야 해서, LIMIT이 없는 쿼리보다 훨씬 느려질 수 있습니다. EXPLAIN ANALYZE에서 Rows Removed by Filter가 크면 이 경우를 의심하고, (flag, ts) 같은 복합 인덱스로 필터와 정렬을 한꺼번에 만족시키는 식으로 해결합니다.

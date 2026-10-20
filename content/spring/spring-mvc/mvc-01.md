@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/sequence.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/special-bean-types.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/arguments.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/return-types.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/responsebody.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/method/support/HandlerMethodArgumentResolver.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/method/support/HandlerMethodReturnValueHandler.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/mvc/method/annotation/RequestMappingHandlerAdapter.html"]
+concepts: [mvc-request-flow]
+importance: 3
+links: [{to: "mvc-02", kind: FOLLOWUP}, {to: "mvc-05", kind: FOLLOWUP}, {to: "mvc-08", kind: FOLLOWUP}, {to: "mvc-11", kind: FOLLOWUP}, {to: "misc-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 요청은 Servlet 컨테이너를 거쳐 `DispatcherServlet`으로 들어옵니다. DispatcherServlet은 `HandlerMapping`에게 요청을 처리할 핸들러(보통 `@RequestMapping` 컨트롤러 메서드)와 인터셉터 목록을 찾게 하고, `HandlerAdapter`가 호출 세부사항을 감춘 채 핸들러를 실행합니다. 어노테이션 컨트롤러에서는 ArgumentResolver가 `@PathVariable`, `@RequestBody` 같은 인자를 만들고 ReturnValueHandler가 반환값을 처리합니다. `@ResponseBody`면 `HttpMessageConverter`가 응답 본문에 쓰고, 모델과 뷰 이름이면 `ViewResolver`를 거쳐 뷰를 렌더링합니다. 예외는 `HandlerExceptionResolver` 빈들이 해결합니다.

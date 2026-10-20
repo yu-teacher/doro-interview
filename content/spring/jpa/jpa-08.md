@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"]
+concepts: [spring-data-jpa, persistence-context]
+importance: 2
+links: [{to: "jpa-07", kind: PREREQ}, {to: "jpa-09", kind: FOLLOWUP}, {to: "jpa-29", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 둘 다이고, 엔티티가 새것인지에 따라 갈립니다. Spring Data JPA 문서에 따르면 새 엔티티면 `EntityManager.persist`, 아니면 `merge`를 호출합니다. 새것인지 판단하는 기본 규칙은 두 가지로, 래퍼 타입 `@Version` 필드가 있으면 그 값이 null일 때 새것이고, 없으면 id가 null일 때 새것입니다. 그래서 id를 직접 할당하는 엔티티는 id가 null이 아니므로 새것으로 판단되지 않아 merge가 호출됩니다. 이럴 땐 `Persistable`을 구현해 `isNew()`를 직접 제어하는 방식을 공식 문서가 안내합니다. IDENTITY로 id를 생성하면 새 엔티티의 id는 null이라 persist가 호출되고, merge는 전달한 객체가 아니라 반환된 복사본이 영속 상태가 됩니다.

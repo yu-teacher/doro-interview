@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/fsync.html", "https://man7.org/linux/man-pages/man2/fsync.2.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://www.kernel.org/doc/html/latest/admin-guide/sysctl/vm.html"]
+concepts: [io-filesystem]
+importance: 2
+links: [{to: "cch-10", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 아닙니다. 파일에 쓴 데이터는 먼저 커널의 페이지 캐시에 올라가 dirty 페이지로 표시되고, 나중에 커널 플러셔 스레드가 장치에 내려 씁니다. 그래서 `write`가 성공해도 그 시점에 정전이 나면 데이터가 사라질 수 있습니다. 저장을 확실히 하고 싶으면 `fsync`를 호출해야 하는데, 이 호출은 해당 파일의 변경 데이터를 저장 장치로 전송하고 완료될 때까지 돌아오지 않습니다. 새 파일을 만든 경우 디렉터리 항목까지 보장하려면 디렉터리에도 `fsync`가 필요할 수 있습니다. 그리고 `fsync`가 정확히 무엇을 보장하는지는 구현에 따라 다릅니다.

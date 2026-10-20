@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/features/external-config.html"]
+concepts: [externalized-config]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 명령행 인자가 가장 높고, 그 다음이 환경 변수, 그 다음이 `application.yml` 같은 설정 파일(config data)입니다. 예를 들어 `application.yml`에 `server.port: 8080`이 있어도 `--server.port=9000`으로 실행하면 9000이 됩니다. 시스템 프로퍼티는 환경 변수보다 높고 명령행보다 낮습니다. 프로파일 전용 파일은 같은 위치의 기본 파일을 항상 덮어씁니다. 그래서 파일에는 기본값을 두고 환경별 값은 환경 변수나 명령행으로 덮어쓰는 방식을 씁니다. 이때 환경 변수는 점 대신 밑줄과 대문자로 씁니다.

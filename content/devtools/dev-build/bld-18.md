@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/gradle-plugin/managing-dependencies.html"]
+concepts: [dependency-management]
+importance: 1
+links: [{to: "bld-13", kind: PREREQ}, {to: "boot-06", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `ext['slf4j.version']` 같은 속성으로 관리 버전을 바꾸는 것은 `io.spring.dependency-management` 플러그인이 `spring-boot-dependencies` BOM의 속성을 읽어 쓰는 기능입니다. 그래서 Gradle 자체의 `platform`으로 BOM을 가져온 경우에는 이 속성이 적용되지 않고, 그때는 `resolutionStrategy.eachDependency` 같은 Gradle의 방식으로 버전을 지정해야 합니다. 어느 쪽이든 부트 릴리스는 정해진 서드파티 버전 조합으로 검증되므로, 버전을 덮어쓰면 호환성 문제가 생길 수 있어 신중해야 합니다.

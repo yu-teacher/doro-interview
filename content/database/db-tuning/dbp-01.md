@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-explain.html", "https://www.postgresql.org/docs/16/using-explain.html", "https://dev.mysql.com/doc/refman/8.4/en/explain.html", "https://www.postgresql.org/docs/current/sql-explain.html"]
+concepts: [query-planner]
+importance: 3
+links: [{to: "dbp-02", kind: FOLLOWUP}, {to: "dbp-08", kind: FOLLOWUP}, {to: "dbi-03", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 EXPLAIN은 쿼리를 실행하지 않고 플래너가 고른 실행 계획과 비용 추정치만 보여 줍니다. EXPLAIN ANALYZE는 쿼리를 실제로 실행한 뒤 노드별 실제 소요 시간과 실제 행 수를 추정치 옆에 같이 보여 줘서, 플래너의 추정이 얼마나 맞았는지 확인할 수 있습니다. 대신 실제로 실행되기 때문에 INSERT, UPDATE, DELETE에 쓰면 데이터가 바뀌므로 BEGIN과 ROLLBACK으로 감싸야 하고, 시간 측정 자체의 오버헤드가 있으며 결과를 클라이언트로 보내는 시간은 빠집니다. MySQL 8.4(InnoDB)에서도 EXPLAIN ANALYZE는 문장을 실행하고 트리 형식으로 실제 시간과 행 수를 보여 줍니다.

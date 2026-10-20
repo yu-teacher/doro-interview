@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc6298.html", "https://www.rfc-editor.org/rfc/rfc5681.html"]
+concepts: [tcp]
+importance: 2
+links: [{to: "net-10", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 TCP는 바이트마다 순번을 매겨 세그먼트에 첫 바이트의 순번을 싣고, 수신 측은 다음에 받기를 기대하는 순번을 누적 ACK로 알려 줍니다. 그래서 중복 세그먼트는 순번으로 걸러내고 순서가 뒤바뀐 세그먼트는 순번을 보고 순서대로 재조립해 애플리케이션에 넘깁니다. 세그먼트가 손실되거나 체크섬이 틀려 ACK가 오지 않으면 재전송 타이머(RTO)가 만료될 때 다시 보내는데, RTO는 측정한 왕복 시간으로 동적으로 계산하고 재전송이 반복되면 두 배씩 늘립니다. 중간 세그먼트만 사라졌을 때는 같은 ACK가 세 번 중복해서 오면 타이머를 기다리지 않고 바로 재전송하는 빠른 재전송을 합니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html", "https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/tx.html"]
+concepts: [test-strategy]
+importance: 2
+links: [{to: "tst-16", kind: FOLLOWUP}, {to: "tst-11", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 기본값인 `MOCK`은 웹 컨텍스트를 만들되 내장 서버는 띄우지 않고 mock 웹 환경을 제공해서, `MockMvc` 같은 도구로 컨트롤러를 빠르게 호출해 볼 때 씁니다. `RANDOM_PORT`는 내장 서버를 임의 포트에 실제로 띄워서 진짜 HTTP 요청으로 확인할 수 있고, 포트는 `@LocalServerPort`로 받습니다. `DEFINED_PORT`는 설정한 포트나 8080에 띄우기 때문에 포트가 겹치면 충돌할 수 있습니다. `NONE`은 웹 환경 없이 컨텍스트만 올려서 비웹 로직을 확인할 때 씁니다. 실제 서버를 띄우면 요청이 다른 스레드에서 처리되므로, 테스트에 건 롤백이 서버 쪽 변경에는 적용되지 않는다는 점을 주의해야 합니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.kernel.org/doc/html/latest/admin-guide/mm/multigen_lru.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://www.kernel.org/doc/html/latest/mm/multigen_lru.html"]
+concepts: [virtual-memory]
+importance: 1
+links: [{to: "osm-10", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 스래싱은 지금 활발히 쓰는 페이지들의 합, 곧 작업 집합이 물리 메모리보다 커서 페이지 폴트와 교체가 계속 반복되는 상태입니다. 방금 내보낸 페이지가 곧바로 다시 필요해져서 CPU가 일은 못 하고 디스크 입출력만 기다리게 되고, 체감 성능이 급격히 무너집니다. 폴트율은 프레임이 작업 집합에 못 미치는 순간 완만하게 나빠지는 것이 아니라 벼랑처럼 치솟을 수 있습니다. 완화하려면 동시에 돌리는 작업 수나 메모리 사용량을 줄이고 메모리를 늘리는 것이 기본입니다. 커널은 회수로 감당이 안 되면 OOM killer로 프로세스를 종료하고, multi-gen LRU에서는 최근 작업 집합을 지키도록 설정할 수도 있습니다.

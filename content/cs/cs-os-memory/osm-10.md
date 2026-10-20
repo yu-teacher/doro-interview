@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.kernel.org/doc/html/latest/mm/multigen_lru.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/multigen_lru.html"]
+concepts: [virtual-memory]
+importance: 2
+links: [{to: "osm-16", kind: FOLLOWUP}, {to: "osm-17", kind: FOLLOWUP}, {to: "ds-19", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 물리 메모리가 가득 찼을 때 어떤 페이지를 내보낼지 정하는 규칙이 페이지 교체 알고리즘입니다. FIFO는 가장 먼저 들어온 페이지를 내보내서 구현이 단순하지만 자주 쓰는 페이지도 나이만으로 쫓겨날 수 있습니다. LRU는 가장 오래 쓰지 않은 페이지를 내보내서 최근에 쓴 것이 곧 또 쓰인다는 지역성에 잘 맞지만, 모든 접근을 정확히 기록하기는 비용이 큽니다. Clock은 페이지를 원형으로 두고 참조 비트가 켜진 페이지에게 한 번 기회를 주며 비트를 끄고 넘어가는 LRU 근사입니다. Linux도 페이지 테이블의 접근 비트를 읽어 최근성을 근사합니다.

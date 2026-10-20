@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/transaction-iso.html", "https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/applevel-consistency.html"]
+concepts: [race-condition, isolation-level]
+importance: 3
+links: [{to: "dbt-17", kind: RELATED}, {to: "dbt-02", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 두 트랜잭션이 같은 값을 읽은 뒤 각자 계산한 결과를 쓰면, 나중에 쓴 쪽이 먼저 쓴 쪽의 변경을 덮어써서 한쪽 갱신이 사라지는 문제입니다. PostgreSQL 16에서 가장 간단한 해법은 값을 애플리케이션으로 꺼내지 않고 UPDATE accounts SET balance = balance + 10 처럼 DB 안에서 갱신하는 것입니다. 기본 격리 수준인 READ COMMITTED에서는 두 번째 UPDATE가 첫 트랜잭션의 커밋을 기다렸다가 갱신된 행에 다시 적용되기 때문입니다. 읽어서 애플리케이션에서 계산해야 하면 SELECT FOR UPDATE로 먼저 잠그거나 버전 컬럼으로 낙관적 락을 씁니다. REPEATABLE READ 이상에서는 다른 트랜잭션이 먼저 커밋한 행을 바꾸려 하면 오류가 나므로 트랜잭션 전체를 재시도해야 합니다.

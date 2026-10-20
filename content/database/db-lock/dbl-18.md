@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-select.html", "https://www.postgresql.org/docs/16/transaction-iso.html"]
+concepts: [db-locking, isolation-level]
+importance: 1
+links: [{to: "dbl-14", kind: PREREQ}, {to: "dbl-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16에서 ORDER BY가 먼저 적용되고 그 뒤에 정렬된 순서대로 행을 잠급니다. READ COMMITTED에서 어떤 행이 다른 트랜잭션에게 잠겨 있으면 락이 풀릴 때까지 기다리는데, 그동안 그 트랜잭션이 정렬 컬럼 값을 바꿔 커밋하면 풀린 뒤 갱신된 행을 돌려주게 됩니다. 결과에 정렬 키가 이미 바뀐 행이 앞쪽에 섞여서 보기에는 순서가 어긋난 것처럼 보입니다. 우선순위 큐에서 가장 높은 우선순위 몇 건을 FOR UPDATE로 가져가려는 코드가 이런 상황의 예입니다. 서브쿼리 안에 FOR UPDATE를 넣으면 엄격한 순서를 얻지만 테이블의 모든 행을 잠그는 대가가 있고, REPEATABLE READ 이상에서는 이 경우 직렬화 오류가 납니다. SKIP LOCKED를 쓰면 잠긴 행을 건너뛰어 기다리지 않습니다.

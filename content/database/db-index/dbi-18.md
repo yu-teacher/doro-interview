@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-multicolumn.html", "https://www.postgresql.org/docs/18/release-18.html", "https://dev.mysql.com/doc/refman/8.4/en/multiple-column-indexes.html", "https://dev.mysql.com/doc/refman/8.4/en/range-optimization.html"]
+concepts: [index-design]
+importance: 3
+links: [{to: "dbi-04", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 문서에 따르면 다중 컬럼 B-tree 인덱스는 컬럼 일부만 조건에 써도 쓸 수 있지만, 선두 컬럼 조건이 없으면 인덱스 전체를 훑어야 해서 대부분은 플래너가 순차 스캔을 택합니다. 즉 가능은 해도 효율이 없습니다. (PostgreSQL 18 릴리스 노트에는 B-tree skip scan이 새 기능으로 올라 있어 이 설명은 16 기준입니다.) MySQL 8.4 문서는 조건 컬럼이 인덱스의 왼쪽 접두부가 아니면 조회에 인덱스를 못 쓴다고 설명하지만, 쿼리가 인덱스에 있는 컬럼만 쓰고 조건이 맞으면 Skip Scan 범위 접근으로 선두 컬럼의 고유값마다 건너뛰며 훑는 예외가 있습니다. 두 DB 모두 b로 자주 조회한다면 b를 선두에 둔 별도 인덱스를 만드는 것이 정석입니다.

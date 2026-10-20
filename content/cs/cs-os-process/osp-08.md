@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man2/wait.2.html", "https://man7.org/linux/man-pages/man2/getppid.2.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/wait.html", "https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/sigaction.html"]
+concepts: [process-management]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 좀비는 이미 종료했지만 부모가 wait하지 않아서 종료 상태 같은 최소 정보만 남아 있는 자식 프로세스입니다. 부모가 waitpid로 상태를 읽어 가야 사라지고, 쌓이면 프로세스 테이블 슬롯을 차지해서 더 이상 프로세스를 못 만들 수 있습니다. 고아는 반대로 부모가 먼저 종료했지만 자식은 살아 있는 경우로, 리눅스에서는 init이나 가장 가까운 subreaper가 새 부모가 되어 이후 대신 wait로 정리해 줍니다. 부모가 SIGCHLD를 SIG_IGN으로 두면(Linux 2.6 이상) 자식이 좀비가 되지 않게 할 수도 있습니다.

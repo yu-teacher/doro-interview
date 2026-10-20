@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/errcodes-appendix.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-deadlocks-handling.html"]
+concepts: [deadlock, db-locking]
+importance: 2
+links: [{to: "jt-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 가장 효과적인 방어는 여러 행이나 테이블을 잠글 때 모든 트랜잭션이 같은 순서로 잡게 하는 것입니다. 예를 들어 항상 id 오름차순으로 갱신하면 서로 반대로 기다리는 순환이 생기지 않습니다. PostgreSQL 16 문서는 또 한 객체에 처음 잡는 락을 이후 필요한 가장 강한 모드로 잡으라고 권합니다. 트랜잭션을 짧게 유지하고 락을 쥔 채 사용자 입력을 기다리지 않아야 합니다. 그래도 완전히 없앨 수는 없어서, 데드락 오류(PostgreSQL은 40P01, MySQL은 1213)를 받으면 트랜잭션 전체를 처음부터 다시 실행하는 재시도 로직을 둡니다. MySQL 8.4 InnoDB 문서는 적절한 인덱스로 잠기는 범위를 줄이고 가능하면 READ COMMITTED를 고려하라고 합니다.

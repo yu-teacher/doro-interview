@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/recursion.html", "https://xlinux.nist.gov/dads/HTML/tailRecursion.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackOverflowError.html", "https://docs.python.org/3/library/sys.html"]
+concepts: [recursion-dp, memory-layout]
+importance: 3
+links: [{to: "alg-11", kind: FOLLOWUP}, {to: "alg-17", kind: FOLLOWUP}, {to: "osm-03", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 재귀는 함수가 문제의 일부를 직접 자기 자신에게 맡기는 기법이고, 더 이상 쪼갤 수 없어 바로 푸는 베이스 케이스와 문제를 줄여 다시 호출하는 재귀 케이스로 이루어집니다. 베이스 케이스에 도달하지 못하거나 깊이가 지나치면 호출마다 쌓이는 스택 프레임이 한계를 넘습니다. 자바는 StackOverflowError를 던지고 파이썬은 기본 재귀 한도를 두어 넘으면 예외를 냅니다. 대응은 종료 조건과 인자가 줄어드는지부터 확인하고, 깊이가 입력 크기에 비례하면 반복문이나 명시적 스택으로 바꾸거나 한도를 조심해서 늘리는 것입니다.

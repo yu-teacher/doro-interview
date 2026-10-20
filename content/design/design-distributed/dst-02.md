@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://martinfowler.com/bliki/MicroservicePremium.html", "https://martinfowler.com/bliki/MonolithFirst.html", "https://martinfowler.com/bliki/MicroservicePrerequisites.html", "https://martinfowler.com/articles/microservices.html"]
+concepts: [msa-boundary]
+importance: 2
+links: [{to: "arc-16", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 대부분의 시스템은 모놀리스로 시작하는 편이 낫다는 것이 Fowler의 주장입니다. 마이크로서비스는 배포 자동화, 모니터링, 장애 처리, 최종 일관성 같은 부담, 즉 마이크로서비스 프리미엄을 내야 하고 이것이 개발 속도를 늦추므로, 모놀리스로 관리하기 어려울 만큼 복잡할 때만 고려하라고 합니다. 또 서비스 경계를 잘 잡아야 하는데 경험 많은 아키텍트도 초기에는 어렵고, 서비스 사이의 리팩터링은 모놀리스보다 훨씬 힘들다고 합니다. 그래서 모듈성을 지킨 모놀리스로 시작해 경계가 드러나면 나누는 방식을 권하지만, 본인도 사례가 적어 잠정적인 조언이라고 덧붙입니다.

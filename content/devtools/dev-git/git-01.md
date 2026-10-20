@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/book/ko/v2/%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-Git-%EA%B8%B0%EC%B4%88", "https://git-scm.com/book/ko/v2/Git-%EB%B8%8C%EB%9E%9C%EC%B9%98-%EB%B8%8C%EB%9E%9C%EC%B9%98%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80"]
+concepts: [git-internals]
+importance: 3
+links: [{to: "git-02", kind: FOLLOWUP}, {to: "git-08", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 Subversion 같은 도구는 파일마다 변경분(델타)의 목록을 관리하지만, Git은 커밋할 때마다 그 순간의 프로젝트 모습을 스냅샷으로 기록합니다. 다만 바뀌지 않은 파일은 새로 저장하지 않고 이전에 저장한 것을 가리키는 링크만 남기기 때문에, 바뀐 파일만 새로 저장됩니다. 모든 데이터는 내용에서 계산한 체크섬으로 식별됩니다. 또 히스토리가 로컬 저장소에 통째로 있어서 대부분의 명령을 네트워크 없이 실행하므로, 오프라인에서도 커밋하고 과거 버전과 비교할 수 있습니다.

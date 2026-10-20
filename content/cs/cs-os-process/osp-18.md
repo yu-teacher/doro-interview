@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutexattr_getprotocol.html", "https://www.kernel.org/doc/html/latest/locking/rt-mutex.html", "https://man7.org/linux/man-pages/man7/sched.7.html"]
+concepts: [race-condition, process-management]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 기아는 준비 상태인데도 더 우선하는 작업에 계속 밀려 CPU나 자원을 오래 받지 못하는 상태입니다. 오래 기다린 작업의 우선순위를 올리는 에이징으로 줄입니다. 우선순위 역전은 높은 우선순위 스레드가 낮은 우선순위 스레드가 쥔 락을 기다리는 동안, 중간 우선순위 스레드가 낮은 스레드를 계속 선점해 결과적으로 중간 스레드가 높은 스레드보다 먼저 도는 현상입니다. 락 보유자가 대기자의 높은 우선순위를 물려받는 우선순위 상속이나 락을 쥔 동안 미리 정한 천장 우선순위로 올리는 우선순위 천장으로 막고, POSIX 뮤텍스에서는 선택 기능인 PTHREAD_PRIO_INHERIT와 PTHREAD_PRIO_PROTECT입니다.

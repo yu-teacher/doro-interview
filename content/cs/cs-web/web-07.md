@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9111.html"]
+concepts: [cache, http-protocol]
+importance: 3
+links: [{to: "web-10", kind: FOLLOWUP}, {to: "web-16", kind: FOLLOWUP}, {to: "web-19", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 캐시는 저장한 응답의 신선도 수명이 현재 나이보다 크면 신선하다고 보고, 서버에 묻지 않고 그 응답을 재사용합니다. 나이는 서버가 응답을 만들었거나 마지막으로 검증한 뒤 지난 시간입니다. 신선도 수명은 공유 캐시면 s-maxage, 그다음 max-age, 그다음 Expires에서 Date를 뺀 값 순으로 먼저 맞는 규칙을 쓰므로, max-age=60이면 60초 동안 서버 접속 없이 쓰입니다. 시간이 지나 stale이 되면 보통 바로 버리지 않고 조건부 요청으로 재검증해서, 바뀌지 않았다면 304로 계속 씁니다. 명시적 만료 정보가 없으면 캐시가 Last-Modified 등으로 수명을 추정하는 휴리스틱도 허용됩니다.

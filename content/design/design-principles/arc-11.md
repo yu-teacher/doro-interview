@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-modulith/reference/fundamentals.html", "https://docs.spring.io/spring-modulith/reference/verification.html"]
+concepts: [layered-architecture, msa-boundary]
+importance: 1
+links: [{to: "arc-03", kind: PREREQ}, {to: "dst-02", kind: RELATED}, {to: "arc-16", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Spring Modulith에서 애플리케이션 모듈은 다른 모듈에 노출하는 API와 접근하면 안 되는 내부 구현, 그리고 다른 모듈의 API를 참조하는 부분으로 이루어진 기능 단위입니다. 기본적으로 메인 애플리케이션 클래스가 있는 패키지의 직접 하위 패키지 하나가 모듈이고, 그 패키지의 public 타입이 API이며 그 아래 하위 패키지는 내부로 간주됩니다. `ApplicationModules.of(...).verify()`는 모듈 간 순환 의존이 없는지, 다른 모듈의 내부 패키지를 참조하지 않는지를 검사하고, `allowedDependencies`로 허용 의존을 제한할 수도 있습니다. 내부 타입이 public이면 컴파일러가 잘못된 참조를 막아 주지 못한다고 문서가 설명하고, 레거시용 open 모듈에서는 내부 의존이 허용됩니다.

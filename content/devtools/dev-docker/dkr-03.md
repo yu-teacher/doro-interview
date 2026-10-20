@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/reference/dockerfile/", "https://docs.docker.com/build/building/best-practices/"]
+concepts: [container]
+importance: 3
+links: [{to: "dkr-16", kind: FOLLOWUP}, {to: "dkr-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 RUN은 이미지를 빌드할 때 실행되어 결과가 레이어로 남고, CMD와 ENTRYPOINT는 컨테이너를 시작할 때 무엇을 실행할지 정합니다. CMD는 기본값이라 `docker run` 뒤에 명령을 주면 통째로 대체됩니다. ENTRYPOINT는 컨테이너를 하나의 실행 파일처럼 쓰게 하는 고정된 시작점이라 `docker run` 인자가 그 뒤에 붙고, 바꾸려면 `--entrypoint` 를 써야 합니다. 둘을 함께 쓰면 ENTRYPOINT가 실행 파일, CMD가 기본 인자가 되며 이때는 둘 다 JSON 배열인 exec 형식으로 씁니다.

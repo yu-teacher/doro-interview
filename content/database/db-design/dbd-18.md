@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/ddl-partitioning.html", "https://www.postgresql.org/docs/16/sql-createtable.html", "https://dev.mysql.com/doc/refman/8.4/en/partitioning-limitations-partitioning-keys-unique-keys.html", "https://dev.mysql.com/doc/refman/8.4/en/partitioning-limitations.html"]
+concepts: [db-scaling, schema-design]
+importance: 1
+links: [{to: "dbs-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 파티션 테이블의 유니크 인덱스는 실제로는 파티션마다 따로 있는 인덱스들의 모음이라, 각 인덱스는 자기 파티션 안의 중복만 검사할 수 있습니다. 그래서 PostgreSQL 16은 기본키나 유니크 제약의 컬럼에 파티션 키 컬럼이 모두 들어 있어야만 만들게 해 줍니다. 파티션 키가 제약에 들어 있으면 같은 값은 항상 같은 파티션에 들어가므로 파티션별 검사만으로 전체 유일성이 보장되기 때문입니다. 결과적으로 id 하나만으로는 기본키를 걸 수 없고 (id, created_at) 같은 복합키가 되며, id 단독 유일성은 DB가 보장하지 못합니다. MySQL 8.4(InnoDB)도 같은 규칙이고 파티션 테이블에서는 외래키를 지원하지 않습니다.

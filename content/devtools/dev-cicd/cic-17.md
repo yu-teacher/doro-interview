@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows", "https://docs.github.com/en/actions/reference/security/secure-use", "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax", "https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets", "https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching"]
+concepts: [ci-pipeline, web-security]
+importance: 1
+links: [{to: "cic-18", kind: FOLLOWUP}, {to: "cic-04", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `pull_request`는 PR을 베이스에 합친 병합 결과를 체크아웃해 PR 쪽 코드로 실행되고, 포크에서 온 PR에서는 `GITHUB_TOKEN`을 제외한 시크릿이 전달되지 않습니다. 반대로 `pull_request_target`은 베이스 저장소의 기본 브랜치 컨텍스트에서 실행되어, PR 헤드의 안전하지 않은 코드가 실행되지 않으므로 포크 PR에 라벨이나 댓글을 다는 용도에 적합합니다. 하지만 이 트리거는 저장소 쓰기 권한이 있는 토큰과 시크릿에 접근할 수 있어서, 여기서 PR의 코드를 체크아웃해 빌드하거나 실행하면 공격자의 코드가 그 권한으로 돌아 저장소 탈취로 이어질 수 있습니다. 그래서 `pull_request_target`에서는 신뢰할 수 없는 PR 코드를 체크아웃하거나 실행하지 말고, 꼭 필요한 경우가 아니면 이 트리거를 쓰지 않습니다.

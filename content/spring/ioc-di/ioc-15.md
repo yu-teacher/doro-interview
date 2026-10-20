@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/BeanCurrentlyInCreationException.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/support/AbstractAutowireCapableBeanFactory.html"]
+concepts: [ioc-di]
+importance: 3
+links: [{to: "ioc-16", kind: FOLLOWUP}, {to: "ioc-17", kind: FOLLOWUP}, {to: "ioc-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 A가 B를, B가 A를 필요로 하는 상호 의존 구조입니다. 둘 다 생성자 주입이면 어느 쪽도 먼저 만들 수 없기 때문에 컨테이너가 순환을 감지하고 시작 단계에서 예외를 던집니다. 공식 문서는 BeanCurrentlyInCreationException이라고 하는데, 실제로는 UnsatisfiedDependencyException으로 감싸져 나오고 그 원인(root cause)이 BeanCurrentlyInCreationException입니다. 공식 문서는 해결책으로 한쪽 또는 양쪽을 세터 주입으로 바꾸라고 하지만, 세터 주입으로 순환을 허용하는 것은 권장하지 않는다고 덧붙입니다. 세터 방식은 한 빈이 완전히 초기화되기 전에 다른 빈에 주입되기 때문입니다. 근본적으로는 책임을 재설계해 순환 자체를 없애는 것이 좋습니다.

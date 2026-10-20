@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/transaction-iso.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-consistent-read.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html"]
+concepts: [isolation-level, db-locking]
+importance: 1
+links: [{to: "dbt-08", kind: PREREQ}, {to: "dbl-14", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16의 REPEATABLE READ에서는 내 스냅샷 이후에 다른 트랜잭션이 수정하고 커밋한 행을 UPDATE하면 직렬화 실패 에러로 롤백되어 처음부터 재시도해야 합니다. MySQL 8.4(InnoDB)의 REPEATABLE READ에서는 에러 없이 UPDATE가 최신 커밋 값에 적용됩니다. 일반 SELECT는 스냅샷을 보지만 DML에는 스냅샷이 항상 적용되지는 않아 UPDATE와 DELETE가 방금 커밋된 행을 건드릴 수 있고, 그 결과 내가 바꾼 행은 스냅샷에 없던 변경까지 포함해서 보이게 됩니다. 같은 REPEATABLE READ라는 이름이어도 충돌을 에러로 알려 주느냐 조용히 합쳐 주느냐가 다릅니다.

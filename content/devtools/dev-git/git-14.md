@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/git-tag", "https://git-scm.com/docs/git-push", "https://git-scm.com/book/ko/v2/Git%EC%9D%98-%EA%B8%B0%EC%B4%88-%ED%83%9C%EA%B7%B8"]
+concepts: [git-internals]
+importance: 1
+links: [{to: "git-08", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 경량 태그는 커밋을 가리키는 이름일 뿐이고, 주석 태그는 만든 사람, 날짜, 메시지, 선택적으로 서명을 담은 별도의 태그 객체입니다. 공식 문서는 릴리스에는 주석 태그를, 개인적이거나 임시 표시에는 경량 태그를 권하고, git describe 같은 명령은 기본으로 경량 태그를 무시합니다. 태그는 일반 git push로는 올라가지 않아서 git push origin 태그이름이나 --tags로 따로 보내야 합니다. 이미 공개한 태그를 다른 커밋으로 옮기는 것은 피하고 새 이름을 쓰라고 안내합니다.

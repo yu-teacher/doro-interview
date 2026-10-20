@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/integration/cache/annotations.html"]
+concepts: [proxy, cache]
+importance: 2
+links: [{to: "aop-10", kind: RELATED}, {to: "tx-15", kind: RELATED}, {to: "aop-18", kind: RELATED}, {to: "tx-20", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 캐시 어노테이션은 기본이 프록시 모드라서, 스프링이 빈을 감싼 프록시가 바깥에서 들어오는 호출을 가로채 캐시를 확인하는 방식입니다. 같은 클래스의 다른 메서드가 `this`로 `@Cacheable` 메서드를 부르면 프록시를 거치지 않고 원본 객체의 메서드를 바로 호출하기 때문에 캐시 로직이 실행되지 않고, 문서도 같은 클래스 안의 로컬 호출은 가로챌 수 없다고 말합니다. 해결은 캐시 대상 메서드를 다른 빈으로 분리해 주입받아 호출하거나, 바이트코드를 직접 위빙하는 AspectJ 모드로 바꾸는 것입니다. 문서는 프록시 모드에서는 어노테이션을 public 메서드에만 적용하라고 안내합니다.

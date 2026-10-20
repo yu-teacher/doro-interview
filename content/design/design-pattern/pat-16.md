@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/context-introduction.html", "https://gameprogrammingpatterns.com/observer.html"]
+concepts: [gof-patterns, tx-boundary, thread-pool]
+importance: 2
+links: [{to: "ioc-25", kind: RELATED}, {to: "tx-19", kind: RELATED}, {to: "tx-23", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 네, 기본은 동기입니다. 스프링 문서에 따르면 리스너는 이벤트를 동기로 받고, 모든 리스너가 처리를 마칠 때까지 `publishEvent()`가 블로킹됩니다. 장점은 같은 스레드에서 돌기 때문에 리스너가 발행자의 트랜잭션 컨텍스트 안에서 동작할 수 있다는 점입니다. 특정 리스너를 비동기로 돌리려면 `@Async`를 함께 쓰는데, 이때 리스너가 던진 예외는 호출자에게 전파되지 않고, 반환값으로 후속 이벤트를 발행할 수 없으며, `ThreadLocal`과 로깅 컨텍스트도 기본으로는 전파되지 않습니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/JpaRepository.html", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"]
+concepts: [fetch-strategy, proxy]
+importance: 1
+links: [{to: "jpa-12", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `findById`는 즉시 쿼리를 날려 실제 엔티티를 `Optional`로 줍니다. `getReferenceById`는 DB 조회 없이 프록시를 돌려주고, 프록시의 id 접근은 조회를 일으키지 않으며 다른 속성을 처음 접근할 때 로딩합니다. 대상이 없으면 그 접근 시점에 `EntityNotFoundException`이 납니다. 그래서 게시글을 쓸 때 작성자의 존재 확인이 필요 없고 FK만 필요하다면 `getReferenceById`로 SELECT 한 번을 아낄 수 있습니다. 구 `getOne`과 `getById`는 deprecated이고 `getReferenceById`를 쓰라고 합니다. JPA `EntityManager.getReference`에 대응한다는 설명은 문서로 확인하지 못했습니다(보충).

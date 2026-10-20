@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.domainlanguage.com/ddd/reference/"]
+concepts: [ddd, tx-boundary]
+importance: 2
+links: [{to: "arc-05", kind: PREREQ}, {to: "arc-15", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 애그리거트는 엔티티와 값 객체를 묶고 경계를 그어 그 안의 일관성을 지키는 단위입니다. Eric Evans는 루트 엔티티를 하나 정해 외부 객체는 루트만 참조하게 하고, 애그리거트 전체의 불변식을 루트가 강제하게 하라고 합니다. 같은 경계가 트랜잭션과 분산의 단위여서, 경계 안은 일관성 규칙을 동기적으로 적용하고 경계를 넘는 갱신은 비동기로 처리합니다. 리포지토리는 애그리거트 루트들이 메모리 컬렉션인 것처럼 접근하게 해 주는 서비스이고, 직접 접근이 필요한 루트에만 만듭니다. 내부 객체를 따로 조회하면 루트가 규칙을 강제할 수 없게 되기 때문입니다.

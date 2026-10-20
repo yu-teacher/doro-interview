@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/features/logging.html"]
+concepts: [observability]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 starter를 쓰면 기본 로깅 구현은 Logback이고, 기본적으로 콘솔에만 출력합니다. 기본으로 ERROR, WARN, INFO 레벨 메시지가 찍힙니다. 레벨은 `logging.level.<로거 이름>`으로 조절하고 루트 로거는 `logging.level.root`입니다. 관련 로거를 묶은 로거 그룹도 있어서 미리 정의된 `web`, `sql` 그룹으로 `logging.level.sql=debug`처럼 한 줄에 여러 로거를 바꿀 수 있습니다. 파일로도 남기려면 `logging.file.name`이나 `logging.file.path`를 지정하고, 커스텀 Logback 설정은 `logback-spring.xml`을 씁니다.

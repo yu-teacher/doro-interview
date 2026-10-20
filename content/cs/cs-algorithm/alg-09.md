@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/heapSort.html", "https://xlinux.nist.gov/dads/HTML/selectionSort.html", "https://xlinux.nist.gov/dads/HTML/inplacesort.html"]
+concepts: [complexity-sorting, tree-heap]
+importance: 1
+links: [{to: "ds-13", kind: RELATED}, {to: "ds-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 힙 정렬은 먼저 배열을 힙으로 만든 다음 최댓값을 반복해서 꺼내는 정렬이고, 실행 시간은 O(n log n)입니다. 정렬된 항목이 원래 항목과 같은 저장 공간을 차지하는 제자리 정렬로 구현할 수 있습니다. 가장 큰 원소를 반복해서 골라 정렬된 쪽으로 보낸다는 점에서 선택 정렬의 변형으로 볼 수 있고, 다음 최댓값을 힙으로 빨리 찾는다는 점이 다릅니다. 안정성은 기대할 수 없습니다. 표준적인 방식으로 직접 구현해 같은 키 세 개를 정렬했더니 순서가 바뀌었기 때문입니다.

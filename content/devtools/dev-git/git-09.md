@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/git-merge", "https://git-scm.com/docs/gitglossary", "https://git-scm.com/book/ko/v2/Git-%EB%B8%8C%EB%9E%9C%EC%B9%98-%EB%B8%8C%EB%9E%9C%EC%B9%98%EC%99%80-Merge-%EC%9D%98-%EA%B8%B0%EC%B4%88"]
+concepts: [git-branching]
+importance: 2
+links: [{to: "git-10", kind: FOLLOWUP}, {to: "git-20", kind: FOLLOWUP}, {to: "git-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 합치려는 브랜치가 현재 브랜치의 후손이면, 즉 현재 브랜치에서 갈라진 뒤 한쪽만 앞으로 나갔다면 Git은 새 커밋을 만들지 않고 브랜치 포인터만 앞으로 옮기는 fast-forward를 합니다. 양쪽에 서로 다른 커밋이 있으면 공통 조상과 두 브랜치 끝을 비교하는 3-way merge로 결과를 만들고, 부모가 둘인 merge 커밋을 기록합니다. --no-ff는 fast-forward가 가능해도 merge 커밋을 만들게 해서, 그 기능이 한 덩어리로 합쳐졌다는 흔적을 히스토리에 남깁니다.

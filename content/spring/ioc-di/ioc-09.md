@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/beanfactory.html", "https://docs.spring.io/spring-framework/reference/core/beans/introduction.html", "https://docs.spring.io/spring-framework/reference/core/beans/context-introduction.html"]
+concepts: [ioc-di]
+importance: 2
+links: [{to: "ioc-23", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 BeanFactory는 빈을 인스턴스화하고 연결하는 기본 기능을 제공하는 컨테이너 인터페이스입니다. ApplicationContext는 이것의 하위 인터페이스이자 상위 집합으로, 생명주기 관리, BeanPostProcessor와 BeanFactoryPostProcessor 자동 등록, 메시지 소스(국제화), 이벤트 발행, AOP 통합, 웹 전용 컨텍스트 등을 추가로 제공합니다. 순수 DefaultListableBeanFactory는 후처리기를 자동으로 감지하지 않아서 AutowiredAnnotationBeanPostProcessor 같은 것을 직접 등록해야 @Autowired가 동작합니다. 그래서 완전한 빈 처리 제어가 필요한 경우가 아니면 ApplicationContext를 사용하는 것이 맞습니다.

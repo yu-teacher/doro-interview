@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.kernel.org/doc/html/latest/locking/lockdep-design.html", "https://www.kernel.org/doc/html/latest/locking/mutex-design.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html"]
+concepts: [deadlock]
+importance: 2
+links: [{to: "dbl-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 예방은 데드락 조건 중 하나를 구조적으로 깨는 것이고, 모든 스레드가 락을 같은 순서로 잡도록 정해 순환 대기를 없애는 방법이 대표적입니다. 회피는 자원 요청을 허락하기 전에 허락한 결과가 안전 상태인지 확인하는 방식으로 은행원 알고리즘이 대표적인데, 프로세스의 최대 요구량을 미리 알아야 해서 범용 시스템에서는 잘 쓰지 않습니다. 탐지는 대기 그래프에서 사이클을 찾아 프로세스를 종료하거나 자원을 회수하는 것입니다. 코드에서는 trylock이 실패하면 가진 락을 풀고 다시 시도하거나 타임아웃을 두기도 합니다. 리눅스 커널은 lockdep으로 락 순서 위반을 검증합니다.

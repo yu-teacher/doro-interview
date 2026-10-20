@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/", "https://sre.google/sre-book/addressing-cascading-failures/", "https://learn.microsoft.com/en-us/azure/architecture/patterns/retry", "https://resilience4j.readme.io/docs/retry", "https://resilience4j.readme.io/docs/timeout"]
+concepts: [resilience, idempotency]
+importance: 2
+links: [{to: "dst-13", kind: PREREQ}, {to: "dst-07", kind: PREREQ}, {to: "dst-22", kind: FOLLOWUP}, {to: "web-09", kind: RELATED}, {to: "web-21", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 재시도는 일시적 오류를 넘기는 데는 좋지만, 서버가 과부하로 실패하는 중이면 재시도 자체가 부하를 더해 회복을 늦춥니다. 특히 호출 계층이 여러 겹이고 계층마다 재시도하면 시도 횟수가 곱해집니다. 계층 셋이 각각 세 번씩 시도하면 맨 아래 DB는 요청 하나에 27번 호출됩니다. 그래서 모든 원격 호출에 타임아웃을 두고, 재시도는 한 지점에서만 하며 횟수를 제한하고, 지수 백오프에 지터를 섞어 재시도 시점이 한꺼번에 몰리지 않게 하고, 재시도 예산(로컬 토큰 버킷 등)으로 전체 재시도량을 제한합니다. AWS는 Circuit Breaker가 동작 상태를 갈라 테스트가 어렵고 복구를 늦출 수 있다며 토큰 버킷을 권합니다. 부작용이 있는 호출은 멱등할 때만 재시도해야 합니다.

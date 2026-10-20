@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://javadoc.io/static/org.mockito/mockito-core/5.23.0/org.mockito/org/mockito/Mockito.html", "https://javadoc.io/static/org.mockito/mockito-core/5.23.0/org.mockito/org/mockito/InjectMocks.html", "https://javadoc.io/static/org.mockito/mockito-junit-jupiter/5.23.0/org.mockito.junit.jupiter/org/mockito/junit/jupiter/MockitoExtension.html"]
+concepts: [mocking-junit]
+importance: 2
+links: [{to: "tst-20", kind: FOLLOWUP}, {to: "tst-05", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `@Mock`은 의존성 자리에 쓸 목을 만들고, `@InjectMocks`는 테스트 대상 객체를 만들면서 그 목들을 주입합니다. 이 애노테이션들은 누군가 초기화해 줘야 동작하는데, JUnit 5에서는 테스트 클래스에 `@ExtendWith(MockitoExtension.class)`를 붙이면 확장이 목을 만들고 주입하며 엄격 스터빙 검사도 함께 해 줍니다. 확장을 안 쓰려면 `MockitoAnnotations.openMocks(this)`를 직접 호출해야 합니다. 이 확장은 `@Mock`을 테스트 메서드 파라미터로도 받아서, 한 테스트에서만 쓸 목을 지역적으로 만들 수 있습니다.

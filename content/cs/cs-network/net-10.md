@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc5681.html", "https://www.rfc-editor.org/rfc/rfc7323.html"]
+concepts: [tcp]
+importance: 2
+links: [{to: "net-11", kind: FOLLOWUP}, {to: "net-19", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 흐름 제어는 수신자가 처리하지 못하는 속도로 보내지 않게 하는 것이고, 수신자가 ACK에 실어 알리는 수신 윈도우(rwnd)로 송신량을 제한합니다. 혼잡 제어는 중간 네트워크가 감당할 수 있는 양을 넘지 않게 하는 것이고, 송신자가 스스로 관리하는 혼잡 윈도우(cwnd)로 제한합니다. 송신자는 이 둘 중 작은 값만큼만 아직 확인되지 않은 데이터를 보낼 수 있습니다. 수신 윈도우가 0이 되면 송신자는 멈추지만 주기적으로 윈도우를 확인하는 프로브를 보내 다시 열릴 때를 알아냅니다. 정리하면 하나는 종단의 수신자를, 다른 하나는 네트워크를 보호합니다.

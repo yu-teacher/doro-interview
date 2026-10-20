@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/features/external-config.html", "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide"]
+concepts: [externalized-config]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 `@Value`는 필드 하나에 프로퍼티 하나를 주입하는 방식이고, `@ConfigurationProperties`는 접두사 아래의 설정을 객체 하나로 묶어 타입 안전하게 바인딩합니다. 설정이 여러 개이거나 계층 구조이면 `@ConfigurationProperties`를 권장합니다. 공식 비교표로는 relaxed binding이 `@ConfigurationProperties`는 완전 지원이고 `@Value`는 제한적이며, IDE 자동완성용 메타데이터는 `@ConfigurationProperties`만 지원합니다. 반대로 SpEL 평가는 `@Value`만 됩니다. `@ConfigurationProperties`에는 `@Validated`와 JSR-303 구현체로 검증도 붙일 수 있습니다.

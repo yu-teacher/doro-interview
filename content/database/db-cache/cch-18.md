@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/develop/clients/patterns/distributed-locks/", "https://redis.io/docs/latest/commands/set/", "https://redis.io/docs/latest/develop/programmability/eval-intro/"]
+concepts: [distributed-lock, redis]
+importance: 2
+links: [{to: "cch-19", kind: FOLLOWUP}, {to: "dbl-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 락 획득은 `SET 키 고유값 NX PX 시간` 한 명령으로 합니다. 키가 없을 때만 설정되어 한 클라이언트만 성공하고, 만료 시간이 있어 락을 쥔 클라이언트가 죽어도 결국 풀립니다. 값에 클라이언트와 요청마다 고유한 랜덤 값을 넣는 이유는 해제 때문입니다. 작업이 TTL보다 오래 걸려 락이 만료되고 다른 클라이언트가 새로 잡았는데 그냥 `DEL`을 하면 남의 락을 지우게 됩니다. 그래서 값이 내가 넣은 것일 때만 지우도록 읽기와 삭제를 Lua 스크립트 하나로 묶어 원자적으로 실행합니다. 문서는 Redis 8.4의 `DELEX`로 대체할 수 있다고 하지만 그 이전 버전에서는 스크립트가 필요합니다.

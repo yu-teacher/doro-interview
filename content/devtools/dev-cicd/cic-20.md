@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets", "https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows", "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax", "https://docs.github.com/en/actions/reference/security/secrets"]
+concepts: [ci-pipeline]
+importance: 1
+links: [{to: "cic-06", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 설정되지 않은 secret을 참조하면 오류 없이 빈 문자열이 됩니다. 이름의 오타가 흔한 원인이고, 포크에서 시작된 워크플로는 `GITHUB_TOKEN`을 제외한 시크릿을 전달받지 못하며, Dependabot이 일으킨 이벤트에서도 시크릿이 전달되지 않습니다. 재사용 워크플로를 호출할 때도 시크릿이 자동으로 넘어가지 않아서, 호출하는 쪽에서 이름을 지정해 넘기거나 `secrets: inherit`를 써야 합니다. 환경(environment)에 등록한 시크릿을 호출한 쪽이 넘기지 않으면 역시 빈 문자열이 되는데, 재사용 워크플로의 시크릿에 `required: true`를 주면 넘기지 않았을 때 실행이 실패하게 할 수 있습니다. 또 `if:` 조건에서는 `secrets`를 직접 참조할 수 없어서, job의 환경 변수에 담은 뒤 그 변수를 조건에 씁니다.

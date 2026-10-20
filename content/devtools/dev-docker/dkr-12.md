@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/get-started/docker-concepts/running-containers/multi-container-applications/", "https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-docker-compose/", "https://docs.docker.com/compose/how-tos/networking/", "https://docs.docker.com/compose/intro/features-uses/", "https://docs.docker.com/compose/intro/compose-application-model/"]
+concepts: [container]
+importance: 2
+links: [{to: "dkr-13", kind: FOLLOWUP}, {to: "dkr-11", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 Docker Compose는 여러 컨테이너로 이루어진 앱의 서비스, 네트워크, 볼륨, 환경 변수를 `compose.yaml` 하나에 정의해 두고 `docker compose up` 한 번으로 띄우는 도구입니다. 서비스마다 `docker run` 을 길게 치면서 실행 순서와 네트워크를 손으로 관리하는 번거로움이 사라지고, 개발이나 테스트 환경을 같은 파일로 재현할 수 있습니다. Compose는 프로젝트마다 기본 네트워크를 하나 만들어 모든 서비스를 붙이고, 서비스끼리는 서비스 이름으로 통신합니다. `ports` 의 호스트 포트는 호스트에서 접속할 때만 쓰고 서비스 간 통신에는 컨테이너 포트를 씁니다.

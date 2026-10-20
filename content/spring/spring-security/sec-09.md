@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-security/reference/features/authentication/password-storage.html"]
+concepts: [cryptography]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 DelegatingPasswordEncoder는 bcrypt 같은 단일 인코더를 기본으로 삼는 대신 스프링 시큐리티가 도입한 인코더로, 저장 형식은 {id}encodedPassword입니다. 문서가 드는 이유는 세 가지입니다. 이미 오래된 인코딩을 쓰는 앱이 많고, 모범 사례가 앞으로 또 바뀌며, 프레임워크가 호환성을 깨는 변경을 자주 할 수 없다는 점입니다. 인코딩은 idForEncode로 지정한 인코더가 하고 결과 앞에 그 id를 붙이며, 검증은 저장된 값의 {id}로 인코더를 골라 합니다. 문서 예시는 idForEncode로 bcrypt를 씁니다. 매핑되지 않았거나 id가 없으면 기본적으로 matches가 IllegalArgumentException을 던지고, setDefaultPasswordEncoderForMatches로 바꿀 수 있습니다.

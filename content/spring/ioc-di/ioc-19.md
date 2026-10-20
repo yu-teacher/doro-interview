@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired-qualifiers.html", "https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/resource.html", "https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired.html"]
+concepts: [ioc-di]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 @Autowired는 스프링 애노테이션으로 타입 기반이고, 한정자 값은 타입으로 고른 후보 안에서 좁히는 보조 수단입니다. @Resource는 JSR-250 표준으로 이름 기반이며 name으로 지정한 빈을 찾습니다. name을 생략하면 필드명이나 세터의 프로퍼티명을 이름으로 삼고, 그 이름의 빈이 없을 때만 타입 매칭으로 폴백합니다. 적용 위치도 달라서 @Autowired는 필드, 생성자, 다중 인자 메서드에 쓸 수 있고 required 속성이 있지만, @Resource는 필드와 단일 인자 세터에만 쓸 수 있습니다. 생성자나 다중 인자 메서드에서 한정이 필요하면 @Autowired와 @Qualifier를 조합합니다.

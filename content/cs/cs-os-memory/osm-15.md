@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/select.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/poll.html", "https://man7.org/linux/man-pages/man2/select.2.html", "https://man7.org/linux/man-pages/man7/epoll.7.html"]
+concepts: [io-filesystem]
+importance: 2
+links: [{to: "cch-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `select`는 fd를 고정 크기 비트 집합으로 넘기는 방식이라 fd 번호가 `FD_SETSIZE`(glibc에서 1024) 이상이면 쓸 수 없고, 호출마다 집합을 다시 만들어 넘겨야 하며 검사해야 할 범위(`nfds`)가 커질수록 작업량도 늘어납니다. `poll`은 fd를 구조체 배열로 넘겨서 번호 한도는 없지만 여전히 호출마다 전체 목록을 넘깁니다. `epoll`은 관심 있는 fd 목록을 커널 안에 두고 한 번 등록해 둔 뒤, 준비된 목록만 `epoll_wait`로 꺼내 오는 방식이라 감시 대상이 많을 때 확장성이 좋습니다. 레벨 트리거와 에지 트리거를 모두 지원하는데, 에지 트리거는 논블로킹 fd와 함께 `EAGAIN`이 날 때까지 읽는 식으로 써야 합니다.

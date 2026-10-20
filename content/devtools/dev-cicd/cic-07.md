@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/features/profiles.html", "https://docs.spring.io/spring-boot/reference/features/external-config.html"]
+concepts: [externalized-config]
+importance: 3
+links: [{to: "boot-08", kind: RELATED}, {to: "boot-07", kind: RELATED}, {to: "arc-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 프로파일을 씁니다. `spring.profiles.active=prod`로 활성 프로파일을 정하면 `application-prod.properties`와 `@Profile("prod")`가 붙은 빈이 적용되고, 아무것도 지정하지 않으면 `default` 프로파일이 쓰입니다. 같은 키가 여러 곳에 있으면 PropertySource 우선순위로 정해지는데, 설정 파일보다 OS 환경 변수가, 환경 변수보다 명령행 인자가 이깁니다. 그래서 같은 JAR나 이미지에 환경 변수만 바꿔 넣어 스테이징과 운영에 배포할 수 있습니다. 비밀번호 같은 값은 코드나 이미지에 넣지 않고 CI의 secrets나 배포 환경에서 주입합니다. 환경 변수에서는 점 대신 밑줄을 쓰므로 `spring.profiles.active`는 `SPRING_PROFILES_ACTIVE`가 됩니다.

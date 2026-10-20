@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/filters.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/exceptionhandlers.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-exceptionhandler.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/sequence.html"]
+concepts: [global-exception-handling, filter-chain]
+importance: 2
+links: [{to: "mvc-08", kind: PREREQ}, {to: "mvc-11", kind: PREREQ}, {to: "sec-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 기본적으로 잡히지 않습니다. `@ExceptionHandler`는 DispatcherServlet 수준의 `HandlerExceptionResolver` 메커니즘 위에 만들어졌는데, Filter는 Servlet 필터 체인에서 대상 Servlet, 즉 DispatcherServlet의 앞뒤에서 실행되기 때문입니다. 필터에서 던진 예외는 DispatcherServlet의 예외 해결 체인에 도달하지 못하고 Servlet 컨테이너로 전파되어, 컨테이너의 에러 페이지 처리나 ERROR 디스패치(`/error`)로 다뤄집니다. 필터에서 일관된 오류 응답을 주고 싶다면 필터 안에서 직접 응답을 쓰거나, ERROR 디스패치를 받는 컨트롤러를 두는 식으로 별도 처리해야 합니다.

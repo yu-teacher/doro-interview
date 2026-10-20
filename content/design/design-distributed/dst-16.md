@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://martinfowler.com/bliki/StranglerFigApplication.html", "https://learn.microsoft.com/en-us/azure/architecture/patterns/strangler-fig"]
+concepts: [msa-boundary]
+importance: 1
+links: [{to: "dst-01", kind: PREREQ}, {to: "arc-16", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Strangler Fig는 레거시 시스템을 한 번에 갈아엎지 않고 기능을 조금씩 새 시스템으로 옮겨 가며 점진적으로 대체하는 방식입니다. 이름은 다른 나무에 붙어 자라다 결국 그 자리를 대체하는 교살자 무화과에서 따왔습니다. Azure 가이드는 클라이언트와 레거시 사이에 파사드(프록시)를 두고 라우팅을 바꿔 가며 일부 요청을 새 서비스로 보내다가, 다 옮기면 레거시를 폐기하고 파사드를 걷어 내거나 레거시 클라이언트용 어댑터로 남긴다고 설명합니다. Fowler는 전면 교체가 기존 동작 파악의 어려움과 긴 개발 기간 때문에 대부분 실패했다고 말합니다. 점진 방식은 위험과 투자를 나누지만 두 시스템이 공존하는 과도기 구조의 비용이 들고, 파사드가 단일 장애점이나 병목이 되지 않게 해야 합니다.

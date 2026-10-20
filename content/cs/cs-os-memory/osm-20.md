@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/mmap.html", "https://man7.org/linux/man-pages/man2/mmap.2.html"]
+concepts: [virtual-memory, io-filesystem]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 파일은 페이지 단위로 매핑되므로 파일 크기가 페이지의 배수가 아니면 마지막 페이지의 남는 부분은 0으로 채워진 채 읽히고, 그 부분을 고쳐도 파일에는 쓰이지 않습니다. 반면 파일 끝이 속한 페이지를 지난 매핑 구간에 접근하면 SIGBUS 시그널을 받습니다. 매핑한 뒤 파일 크기가 바뀔 때 추가되거나 잘려 나간 부분을 접근하면 어떻게 되는지는 명세가 정하지 않으며, 구현에 따라 줄어든 뒤 접근에서 SIGBUS가 날 수 있습니다. 파일 끝을 넘어 쓴다고 파일이 늘어나지 않고 크기는 `ftruncate`로 직접 바꿔야 합니다.

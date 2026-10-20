@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.junit.org/5.14.4/overview.html", "https://docs.junit.org/6.1.3/overview.html", "https://docs.spring.io/spring-boot/reference/testing/index.html"]
+concepts: [mocking-junit]
+importance: 2
+links: [{to: "tst-03", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 JUnit 5는 JUnit Platform, Jupiter, Vintage 세 부분으로 이뤄집니다. Platform은 JVM에서 테스트 프레임워크를 실행하는 기반으로, `TestEngine` API와 콘솔 런처를 제공하고 IDE와 Gradle, Maven이 이것을 통해 테스트를 돌립니다. Jupiter는 `@Test` 같은 새 프로그래밍 모델과 확장 모델이고 Jupiter용 `TestEngine`을 포함합니다. Vintage는 JUnit 3과 4로 작성된 옛 테스트를 Platform 위에서 실행해 주는 엔진이라서, 기존 테스트를 점진적으로 옮길 때 씁니다.

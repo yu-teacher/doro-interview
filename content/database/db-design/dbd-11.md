@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/warm-standby.html", "https://dev.mysql.com/doc/refman/8.4/en/replication-implementation.html"]
+concepts: [db-scaling]
+importance: 2
+links: [{to: "dbd-12", kind: FOLLOWUP}, {to: "dbd-13", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 스트리밍 복제는 primary가 만든 WAL 레코드를 standby가 네트워크로 받아 계속 재생해서 primary를 그대로 따라가는 물리 복제입니다. 기본은 비동기라서 primary가 커밋한 뒤 조금 늦게 standby에 반영되고, primary가 갑자기 죽으면 아직 전달되지 않은 커밋은 잃을 수 있습니다. synchronous_standby_names를 설정하면 커밋이 standby의 확인을 기다리는 동기 복제가 되어 유실 위험은 줄지만 응답 시간이 최소한 primary와 standby 사이 왕복 시간만큼 늘어납니다. synchronous_commit 값으로 어느 단계까지 기다릴지 정합니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/git-reset", "https://git-scm.com/book/ko/v2/Git-%EB%8F%84%EA%B5%AC-Reset-%EB%AA%85%ED%99%95%ED%9E%88-%EC%95%8C%EA%B3%A0-%EA%B0%80%EA%B8%B0"]
+concepts: [git-undo]
+importance: 3
+links: [{to: "git-11", kind: FOLLOWUP}, {to: "git-18", kind: FOLLOWUP}, {to: "git-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 세 옵션 모두 현재 브랜치가 가리키는 커밋을 지정한 커밋으로 옮깁니다. 차이는 그다음에 index와 워킹 트리를 어디까지 맞추느냐입니다. --soft는 index와 워킹 트리를 그대로 두어 커밋만 취소한 효과가 나고, 기본값인 --mixed는 index까지 새 HEAD에 맞춰 변경이 스테이징되지 않은 상태로 워킹 트리에 남습니다. --hard는 워킹 트리까지 덮어써서 추적 파일의 수정 내용이 사라집니다. 그래서 커밋하지 않은 작업이 있을 때 --hard는 특히 조심해야 합니다.

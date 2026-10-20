@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/read.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/select.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/poll.html", "https://man7.org/linux/man-pages/man2/open.2.html", "https://man7.org/linux/man-pages/man7/aio.7.html", "https://man7.org/linux/man-pages/man7/io_uring.7.html"]
+concepts: [io-filesystem]
+importance: 3
+links: [{to: "osm-15", kind: FOLLOWUP}, {to: "jt-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 블로킹 I/O는 `read`를 호출한 스레드가 데이터가 올 때까지 멈춰서 기다리는 방식입니다. 논블로킹은 `O_NONBLOCK`을 켜서 데이터가 없으면 기다리지 않고 `EAGAIN`으로 바로 돌아오게 하는 방식이라 직접 반복해서 확인해야 합니다. I/O 멀티플렉싱은 `select`, `poll`, `epoll`로 여러 파일 디스크립터 중 준비된 것이 생길 때까지 한 곳에서 기다리고, 준비된 것만 읽습니다. 여기까지는 준비됐다는 통지를 받는 모델이고, 비동기 I/O는 요청을 미리 제출하고 작업이 끝났다는 통지를 받는 모델로 POSIX AIO나 Linux의 io_uring이 해당합니다.

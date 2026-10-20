@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop/proxying.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/aop/framework/AopContext.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/EnableAspectJAutoProxy.html"]
+concepts: [proxy]
+importance: 3
+links: [{to: "aop-18", kind: FOLLOWUP}, {to: "tx-15", kind: RELATED}, {to: "pat-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 프록시를 거쳐 target에 도달한 뒤에 target 내부에서 `this.bar()`를 호출하면, 그 호출은 프록시가 아니라 원본 객체를 직접 부르는 것이라 `bar()`에 걸린 어드바이스가 실행되지 않습니다. 명시적이든 암시적이든 `this`를 통한 자기 호출은 모두 어드바이스를 우회하고, `@Transactional` 메서드를 같은 클래스의 다른 메서드가 부르면 트랜잭션이 안 걸리는 것이 대표 사례입니다. 해결책은 첫째, 구조를 바꿔 호출 대상을 다른 빈으로 분리하는 것이고 문서도 이것을 가장 덜 침습적인 방법으로 꼽습니다. 둘째, 자기 자신(프록시)을 주입받아 호출하는 방법, 셋째 `AopContext.currentProxy()`는 문서가 강하게 비권장합니다. 마지막으로 AspectJ 컴파일·로드 타임 위빙은 프록시가 없으니 문제가 없습니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/datatype-uuid.html", "https://www.postgresql.org/docs/16/functions-uuid.html", "https://www.postgresql.org/docs/current/functions-uuid.html", "https://www.postgresql.org/docs/16/sql-cluster.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-index-types.html", "https://dev.mysql.com/doc/refman/8.4/en/miscellaneous-functions.html"]
+concepts: [schema-design, index-structure]
+importance: 2
+links: [{to: "dbi-15", kind: RELATED}, {to: "jpa-10", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 bigint identity는 8바이트에 값이 증가해서 인덱스가 작고 삽입이 한쪽 끝으로 몰리는 반면, PostgreSQL의 gen_random_uuid()가 만드는 v4 UUID는 16바이트에 무작위라 인덱스 곳곳으로 흩어져 들어갑니다. 대신 UUID는 시퀀스 같은 중앙 발급 없이 여러 노드나 클라이언트에서 겹치지 않게 만들 수 있습니다. 한 DB가 번호를 발급하는 일반 서비스라면 bigint가 기본이고, 분산 생성이 필요하거나 외부에 순번을 숨기고 싶을 때 UUID를 고려합니다. MySQL 8.4(InnoDB)에서는 기본키가 곧 클러스터드 인덱스이고 모든 보조 인덱스에 기본키가 붙어서 긴 키의 비용이 더 크게 번집니다.

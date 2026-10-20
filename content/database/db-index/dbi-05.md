@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-intro.html", "https://www.postgresql.org/docs/16/storage-hot.html", "https://www.postgresql.org/docs/16/btree-implementation.html", "https://www.postgresql.org/docs/16/monitoring-stats.html"]
+concepts: [index-structure]
+importance: 3
 ---
 **모범 답변 (30~60초)**
 인덱스는 테이블과 별도로 저장되기 때문에 행을 INSERT, UPDATE, DELETE 할 때마다 그 테이블의 인덱스를 함께 갱신해야 하고, 인덱스가 많을수록 쓰기 비용과 저장 공간이 늘어납니다. PostgreSQL 16에서는 UPDATE가 인덱스에 걸린 컬럼을 바꾸지 않고 같은 페이지에 여유 공간이 있으면 HOT 업데이트로 새 인덱스 항목 없이 처리할 수 있습니다. 하지만 인덱스 컬럼 하나만 바꿔도 그 테이블의 모든 인덱스에 새 항목이 필요합니다. 그래서 읽기 이득이 쓰기 비용보다 큰 인덱스만 두고, 거의 안 쓰는 인덱스는 지웁니다. 사용 횟수는 pg_stat_user_indexes의 idx_scan으로 볼 수 있습니다.

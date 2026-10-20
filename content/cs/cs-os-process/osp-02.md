@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man5/proc_pid_stat.5.html", "https://man7.org/linux/man-pages/man7/sched.7.html"]
+concepts: [process-management]
+importance: 2
+links: [{to: "osp-08", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 교과서 모델에서 프로세스는 생성, 준비, 실행, 대기, 종료 상태를 오갑니다. 준비는 CPU만 받으면 돌 수 있는 상태로 준비 큐에서 기다리고, 스케줄러가 고르면 실행이 됩니다. 실행 중 시간이 다 되거나 더 높은 우선순위에 밀리면 준비로 돌아가고, I/O 완료 같은 이벤트를 기다리면 대기로 가며 이벤트가 오면 준비로 갑니다. 리눅스는 /proc/PID/stat에 R(실행), S(인터럽트 가능한 대기), D(인터럽트 불가 디스크 대기), T(정지), Z(좀비) 같은 문자로 상태를 보여 줍니다.

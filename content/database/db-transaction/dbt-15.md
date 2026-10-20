@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-truncate.html", "https://www.postgresql.org/docs/16/mvcc-caveats.html", "https://dev.mysql.com/doc/refman/8.4/en/implicit-commit.html"]
+concepts: [tx-boundary]
+importance: 1
+links: [{to: "dbd-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16에서는 CREATE TABLE이나 ALTER TABLE 같은 DDL도 트랜잭션 안에서 실행되고 ROLLBACK하면 취소됩니다. 공식 문서가 명시한 것은 TRUNCATE로, 롤백되면 안전하게 되돌려진다고 하지만 MVCC-safe하지는 않아서 이전 스냅샷을 가진 트랜잭션에는 커밋 후 빈 테이블로 보일 수 있습니다. MySQL 8.4에서는 DDL 문이 진행 중인 트랜잭션을 먼저 암묵적으로 커밋하고, DDL 자체도 롤백할 수 없습니다. 그래서 MySQL에서 INSERT 뒤 CREATE TABLE을 하고 ROLLBACK해도 INSERT는 이미 커밋된 상태로 남습니다.

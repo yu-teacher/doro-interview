@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html"]
+concepts: [build-tool]
+importance: 2
+links: [{to: "bld-02", kind: PREREQ}, {to: "bld-09", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Maven에는 default, clean, site 세 개의 라이프사이클이 있고, 각 라이프사이클은 단계(phase)의 순서로 정의됩니다. default는 validate, compile, test, package, verify, install, deploy 순이며, 한 단계를 지정하면 그 앞 단계가 모두 차례로 실행됩니다. `package`는 컴파일된 코드를 jar 같은 배포 형태로 묶는 단계이고, `verify`는 그 뒤에 통합 테스트 결과 검사 같은 품질 확인까지 하는 단계입니다. 문서는 무엇을 원하는지 확실하지 않으면 `mvn verify`를 권하고, 각 단계가 하는 일은 거기에 묶인 플러그인 goal이 합니다.

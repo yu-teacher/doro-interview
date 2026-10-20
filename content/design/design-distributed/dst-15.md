@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://samnewman.io/patterns/architectural/bff/", "https://microservices.io/patterns/apigateway.html"]
+concepts: [msa-boundary]
+importance: 1
+links: [{to: "dst-05", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 BFF는 사용자 경험(UI)마다 서버 쪽 백엔드를 하나씩 두는 패턴으로, Sam Newman이 정리했습니다. Richardson은 이를 클라이언트 종류마다 API 게이트웨이를 따로 두는 게이트웨이 패턴의 변형으로 설명하니, 둘은 대립이 아니라 게이트웨이를 하나로 쓰느냐 클라이언트별로 나누느냐의 차이입니다. Newman은 범용 API 백엔드 하나가 여러 UI를 지원하면 변경이 한 배포 단위에 몰려 병목이 되고 전담 팀이 생긴다고 봅니다. BFF는 한 UI만을 위한 작은 백엔드라서 UI 팀이 함께 소유해 API와 UI를 같이 바꿀 수 있고, 여러 서비스 호출의 병렬화와 부분 실패 처리도 맡습니다. BFF끼리 생기는 중복을 공유 라이브러리로 풀면 결합이 생기니 조심해야 합니다.

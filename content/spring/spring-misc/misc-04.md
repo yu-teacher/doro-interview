@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/overview.html", "https://docs.spring.io/spring-data/commons/reference/index.html", "https://docs.spring.io/spring-data/commons/reference/repositories/core-concepts.html", "https://docs.spring.io/spring-security/reference/index.html", "https://docs.spring.io/spring-boot/index.html", "https://docs.spring.io/spring-boot/reference/using/build-systems.html", "https://docs.spring.io/spring-boot/reference/using/auto-configuration.html", "https://docs.spring.io/spring-boot/reference/web/servlet.html", "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Release-Notes"]
+concepts: [auto-configuration, mvc-request-flow]
+importance: 2
+links: [{to: "boot-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Spring Framework는 IoC 컨테이너와 DI, AOP, 트랜잭션, 테스트 같은 핵심 기반이고, Spring MVC는 그 안에 들어 있는 서블릿 기반 웹 모듈입니다. 리액티브 웹은 Framework 안의 WebFlux가 따로 맡습니다. Spring Data와 Spring Security는 Framework 위에 만들어진 별도 프로젝트로, 저장소와 릴리스 주기도 따로입니다. Spring Boot도 별도 프로젝트이고, 새 기술이 아니라 Framework를 쉽게 조립해서 바로 실행하게 해 주는 도구입니다. 검증된 의존성 목록과 스타터, 클래스패스를 보고 구성하는 자동 설정, 내장 서버가 핵심이고, Boot 4는 Framework 7 기반입니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html", "https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"]
+concepts: [dirty-checking, spring-data-jpa]
+importance: 2
+links: [{to: "jpa-06", kind: PREREQ}, {to: "jpa-08", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 트랜잭션 안에서 조회한 엔티티는 이미 영속 상태라서 변경 감지로 flush 때 UPDATE가 나가므로 `save()`가 필요 없습니다. 호출해도 id가 있어 새 엔티티가 아니므로 merge가 호출되지만, 사양상 영속 상태 엔티티에 대한 merge는 무시됩니다. 반대로 트랜잭션 밖에서 만들어졌거나 준영속인 엔티티를 바꿨다면 `save()`(merge)를 해야 반영되는데, merge는 준영속 객체의 상태를 관리 중인 인스턴스에 복사하는 것이라 해당 객체가 가진 값으로 덮어쓰게 됩니다. 그래서 조회 후 변경하는 패턴을 선호합니다.

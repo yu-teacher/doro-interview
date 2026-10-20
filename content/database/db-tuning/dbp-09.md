@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/planner-stats.html", "https://www.postgresql.org/docs/16/view-pg-stats.html", "https://www.postgresql.org/docs/16/routine-vacuuming.html", "https://www.postgresql.org/docs/16/runtime-config-autovacuum.html", "https://www.postgresql.org/docs/16/runtime-config-query.html", "https://www.postgresql.org/docs/16/sql-analyze.html", "https://www.postgresql.org/docs/16/populate.html"]
+concepts: [query-planner]
+importance: 2
+links: [{to: "dbp-17", kind: FOLLOWUP}, {to: "dbi-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 플래너는 테이블의 행 수와 페이지 수(pg_class의 reltuples, relpages), 컬럼별 null 비율, 고유값 수 n_distinct, 최빈값과 히스토그램 같은 통계(pg_stats로 조회)로 조건의 선택도를 추정해 행 수와 계획을 정합니다. 이 통계는 ANALYZE가 표본으로 갱신하고 autovacuum이 변경량이 쌓이면 자동으로 실행하지만 항상 최신은 아닙니다. 그래서 대량 적재나 값 분포가 크게 바뀐 직후에는 rows 추정이 크게 틀려 엉뚱한 계획이 나올 수 있어 수동 ANALYZE가 필요합니다. 분포가 치우친 컬럼은 default_statistics_target(기본 100)이나 컬럼별 STATISTICS를 올려 더 자세히 모을 수 있습니다.

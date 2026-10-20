@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.gradle.org/current/userguide/java_library_plugin.html", "https://docs.gradle.org/current/userguide/java_plugin.html"]
+concepts: [dependency-management]
+importance: 1
+links: [{to: "bld-14", kind: FOLLOWUP}, {to: "bld-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `api`로 선언한 의존성은 그 라이브러리를 쓰는 다른 모듈의 컴파일 클래스패스까지 전이되고, `implementation`은 내부 구현용이라 소비자의 컴파일 클래스패스에는 노출되지 않습니다. 단 실행 시점에는 둘 다 소비자의 런타임 클래스패스에 들어갑니다. 공개 메서드의 파라미터나 상위 클래스, 공개 필드 같은 모듈의 공개 인터페이스에 타입이 나오는 라이브러리만 `api`로 두고 나머지는 `implementation`을 우선하라고 문서가 권합니다. 이렇게 하면 소비자가 전이 의존성에 실수로 기대지 않고, 구현 의존성이 바뀌어도 재컴파일 범위가 줄어듭니다.

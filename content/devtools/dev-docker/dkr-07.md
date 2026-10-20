@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/engine/storage/", "https://docs.docker.com/engine/storage/volumes/", "https://docs.docker.com/engine/storage/bind-mounts/", "https://docs.docker.com/engine/storage/tmpfs/", "https://docs.docker.com/get-started/docker-concepts/running-containers/persisting-container-data/"]
+concepts: [container]
+importance: 2
+links: [{to: "dkr-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 컨테이너 안에서 쓴 파일은 쓰기 가능 레이어에 저장돼 컨테이너를 지우면 사라지므로, 데이터를 남기려면 외부 저장소를 마운트합니다. 볼륨은 Docker가 관리하는 저장소라 컨테이너가 삭제돼도 남고, 공식 문서가 데이터 영속화에 선호하는 방식입니다. 바인드 마운트는 호스트의 특정 경로를 그대로 연결해서 컨테이너가 호스트 파일을 읽고 쓰므로 소스 코드 공유처럼 호스트에서도 파일에 접근해야 할 때 맞습니다. tmpfs는 호스트 메모리에만 저장돼 컨테이너가 멈추면 사라집니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/queries-table-expressions.html", "https://dev.mysql.com/doc/refman/8.4/en/group-by-handling.html"]
+concepts: [sql-aggregation]
+importance: 2
+links: [{to: "dbs-05", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 그룹마다 한 행만 나오므로 GROUP BY에 없는 컬럼은 집계 함수 안에서만 쓸 수 있고, 그렇지 않으면 PostgreSQL 16은 오류를 냅니다. 예외는 GROUP BY 컬럼이 기본키처럼 다른 컬럼 값을 하나로 정해 주는 기능적 종속 관계일 때로, 기본키로 묶으면 그 테이블의 다른 컬럼을 그대로 SELECT에 쓸 수 있습니다. MySQL 8.4도 기능적 종속을 감지하고 ONLY_FULL_GROUP_BY 모드가 기본으로 켜져 있어 같은 쿼리를 거부합니다. 이 모드를 끄면 그룹 안의 어느 행 값이 나올지 정해지지 않아 결과가 비결정적이므로 끄는 것은 권하지 않습니다.

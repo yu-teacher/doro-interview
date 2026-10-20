@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.gradle.org/current/userguide/incremental_build.html", "https://docs.gradle.org/current/userguide/build_cache.html", "https://docs.gradle.org/current/userguide/gradle_daemon.html"]
+concepts: [build-tool]
+importance: 1
+links: [{to: "bld-09", kind: PREREQ}, {to: "cic-08", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 세 가지 모두 빌드를 빠르게 하지만 층위가 다릅니다. UP-TO-DATE 검사, 즉 증분 빌드는 task의 입력과 출력이 지난 실행 이후 바뀌지 않았으면 그 task를 건너뛰는 것입니다. 빌드 캐시는 한 걸음 더 나아가 같은 입력으로 만든 task 출력을 다른 빌드나 다른 위치, 원격 캐시를 쓰면 다른 PC의 결과에서도 가져와 재사용하며 기본으로는 꺼져 있습니다. 데몬은 빌드가 끝나도 살아 있는 장기 실행 JVM 프로세스로, JVM 시작 비용을 줄이고 정보를 메모리에 유지하며 Gradle 3.0부터 기본으로 켜져 있습니다.

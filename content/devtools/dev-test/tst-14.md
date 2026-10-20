@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.junit.org/5.14.4/writing-tests/test-instance-lifecycle.html", "https://docs.junit.org/5.14.4/writing-tests/annotations.html", "https://docs.junit.org/5.14.4/writing-tests/test-execution-order.html"]
+concepts: [mocking-junit]
+importance: 1
+links: [{to: "tst-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 기본 모드인 `PER_METHOD`에서는 JUnit이 테스트 메서드를 실행할 때마다 테스트 클래스 인스턴스를 새로 만듭니다. 그래서 한 테스트가 인스턴스 필드를 바꿔도 다음 테스트에는 영향이 없어서, 가변 상태 때문에 생기는 테스트 사이 부작용을 줄입니다. `@TestInstance(Lifecycle.PER_CLASS)`를 붙이면 클래스당 인스턴스가 하나만 만들어지고 모든 테스트가 그것을 공유하므로, 필드 상태가 테스트 사이에 남아서 `@BeforeEach`에서 초기화해야 합니다. 대신 `@BeforeAll`과 `@AfterAll`을 비static 메서드로 쓸 수 있습니다. 공식 문서도 진짜 단위 테스트는 실행 순서에 기대지 않는 것이 보통이라고 하므로, 공유 상태에 기대는 테스트는 조심해서 씁니다.

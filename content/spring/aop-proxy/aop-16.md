@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop/introduction-proxies.html", "https://docs.spring.io/spring-framework/reference/core/aop/proxying.html"]
+concepts: [proxy]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 JDK 프록시는 대상이 구현한 인터페이스를 구현할 뿐 대상 클래스와는 무관한 타입이어서, 인터페이스 타입으로 받아야 하고 구체 클래스 타입으로는 받을 수 없습니다. 문서도 CGLIB을 강제하는 이유로 "인터페이스에 선언되지 않은 메서드를 어드바이스해야 할 때"와 "프록시를 구체 타입으로 메서드에 넘겨야 할 때"를 듭니다. CGLIB 프록시는 대상 클래스의 런타임 서브클래스라서 구체 클래스 타입으로 주입받아도 타입이 호환됩니다. 그래서 인터페이스가 없는 클래스는 자연스럽게 CGLIB이 쓰이고, 구체 타입이 필요하면 `proxyTargetClass`로 CGLIB을 강제합니다.

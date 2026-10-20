@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"]
+concepts: [fetch-strategy]
+importance: 3
+links: [{to: "jpa-03", kind: PREREQ}, {to: "jpa-12", kind: FOLLOWUP}, {to: "jpa-15", kind: FOLLOWUP}, {to: "jpa-28", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 즉시 로딩은 엔티티를 조회할 때 연관 엔티티도 함께 가져오고, 지연 로딩은 실제로 접근할 때 가져옵니다. 기본값은 `@ManyToOne`과 `@OneToOne`이 EAGER, `@OneToMany`와 `@ManyToMany`는 LAZY입니다. Hibernate 입문서는 `@ManyToOne`의 EAGER 기본값을 JPA의 불행한 설계라고 부르며, 거의 모든 연관을 LAZY로 두고 `fetch = LAZY`를 명시하라고 권합니다. 사용자 가이드는 EAGER 연관을 JPQL에서 JOIN FETCH하지 않으면 연관마다 추가 select가 나가 N+1이 생길 수 있다고 경고합니다. 그래서 연관은 LAZY로 두고, 필요한 작업에서만 fetch join이나 엔티티 그래프로 미리 가져오는 방식을 입문서가 권합니다.

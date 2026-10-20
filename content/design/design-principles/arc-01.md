@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html", "https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html"]
+concepts: [solid-principles]
+importance: 3
+links: [{to: "arc-02", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 SRP는 모듈이 바뀌어야 하는 이유가 하나뿐이어야 한다는 원칙입니다. 여기서 이유를 코드가 아니라 사람에게서 찾는 것이 핵심인데, Robert Martin은 변경 요청이 좁은 업무 기능 하나를 대표하는 한 사람 또는 긴밀한 집단에서만 나오도록 모듈을 설계하라고 설명합니다. 예컨대 급여 계산, 근무시간 보고서 형식, DB 저장은 각각 재무·운영·기술 쪽에서 바뀌므로 한 `Employee` 클래스에 같이 두지 않는 쪽으로 설계합니다. 같은 이유로 바뀌는 것은 모으고 다른 이유로 바뀌는 것은 떼어 놓는 일이라서, 응집도는 높이고 결합도는 낮추는 일이기도 합니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/actions/get-started/understand-github-actions", "https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments"]
+concepts: [ci-pipeline]
+importance: 3
+links: [{to: "cic-02", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 CI(지속적 통합)는 개발자가 변경을 공유 브랜치에 자주 합치고, 합칠 때마다 빌드와 테스트를 자동으로 돌려 문제를 빨리 발견하는 방식입니다. CD는 그 뒤의 배포까지 자동화하는 것인데 두 가지로 나뉩니다. Continuous Delivery는 테스트를 통과한 결과물을 언제든 배포할 수 있는 상태로 유지하고, 운영 반영은 사람이 승인해서 하는 방식입니다. Continuous Deployment는 승인 단계 없이 파이프라인을 통과하면 운영까지 자동으로 나갑니다. 어느 쪽을 쓸지는 테스트에 대한 신뢰와 팀이 감수할 위험으로 정하고, 같은 파이프라인에서 마지막 승인 단계만 넣거나 빼서 바꿀 수 있습니다.

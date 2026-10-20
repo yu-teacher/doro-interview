@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/runtime-config-locks.html", "https://www.postgresql.org/docs/16/errcodes-appendix.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-deadlocks.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-deadlock-detection.html"]
+concepts: [deadlock, db-locking]
+importance: 3
+links: [{to: "dbl-11", kind: FOLLOWUP}, {to: "osp-07", kind: RELATED}, {to: "jt-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 둘 이상의 트랜잭션이 서로 상대가 쥔 락을 기다려서 영원히 진행하지 못하는 상태입니다. 트랜잭션 1이 행 A를, 2가 행 B를 잠근 뒤 서로 상대 행을 UPDATE하려 하면 생깁니다. PostgreSQL 16은 락을 기다리기 시작한 뒤 deadlock_timeout(기본 1초)이 지나면 데드락 검사를 하고, 데드락이면 관련 트랜잭션 하나를 40P01 오류로 중단시켜 나머지가 진행되게 합니다. 어느 쪽이 중단될지는 예측하면 안 됩니다. MySQL 8.4 InnoDB는 기본으로 데드락 감지가 켜져 있어 바로 감지하고, 변경 행 수가 작은 트랜잭션을 희생자로 고르려 합니다. 어느 쪽이든 오류를 받은 트랜잭션은 처음부터 다시 실행해야 합니다.

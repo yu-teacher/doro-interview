@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/engine/logging/configure/", "https://docs.docker.com/reference/cli/docker/container/logs/", "https://docs.docker.com/engine/logging/drivers/json-file/"]
+concepts: [container, observability]
+importance: 1
+links: [{to: "boot-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Docker는 컨테이너의 표준 출력과 표준 에러를 로깅 드라이버로 수집하고, `docker logs` 로 그 내용을 볼 수 있습니다. 그래서 컨테이너 안의 앱은 로그를 파일이 아니라 표준 출력으로 내보내는 것이 맞습니다. 기본 드라이버인 `json-file` 은 기본 설정에서 로그 로테이션을 하지 않아서, 출력이 많은 컨테이너는 호스트 디스크를 많이 차지할 수 있습니다. 공식 문서는 `max-size` 와 `max-file` 옵션으로 로테이션을 켜거나 기본으로 로테이션을 하는 `local` 드라이버를 쓰라고 안내합니다. 또 컨테이너를 삭제하면 그 로그도 더는 볼 수 없습니다.

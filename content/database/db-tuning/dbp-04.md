@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/using-explain.html", "https://www.postgresql.org/docs/16/indexes-expressional.html"]
+concepts: [index-design, query-planner]
+importance: 3
+links: [{to: "dbp-12", kind: FOLLOWUP}, {to: "dbi-07", kind: RELATED}, {to: "dbi-16", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 플래너는 인덱스가 있어도 비용을 비교해서 순차 스캔이 더 싸다고 판단하면 인덱스를 쓰지 않습니다. 조건에 맞는 행이 테이블의 큰 비율이거나 테이블이 아주 작으면 그렇습니다. 또 컬럼에 함수나 연산을 씌우면, 예를 들어 created_at::date = '2026-01-05'나 id + 0 = 42처럼 쓰면 컬럼 값 자체로 인덱스를 찾을 수 없어서 못 탑니다. 이 경우 범위 조건으로 바꾸거나 그 표현식에 인덱스를 만들어야 합니다. 비교를 위해 컬럼이 캐스팅되는 타입 불일치도 같은 문제를 일으킵니다. 일단 EXPLAIN으로 실제 계획과 Filter 줄을 확인하는 게 순서입니다.

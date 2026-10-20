@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/engine/network/port-publishing/", "https://docs.docker.com/reference/dockerfile/", "https://docs.docker.com/engine/network/", "https://docs.docker.com/get-started/docker-concepts/running-containers/publishing-ports/"]
+concepts: [container]
+importance: 2
+links: [{to: "dkr-11", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 `-p 8080:80` 은 호스트의 8080 포트로 들어온 요청을 컨테이너의 80 포트로 전달하는 포트 발행입니다. 포트를 발행하지 않으면 호스트 바깥에서는 컨테이너 포트에 접근할 수 없습니다. Dockerfile의 EXPOSE는 포트를 실제로 열지 않고, 이 이미지가 어떤 포트를 쓰는지 알려 주는 문서 역할이라서 외부에서 접속하려면 `docker run -p` 가 따로 필요합니다. `-P` 를 쓰면 EXPOSE된 포트를 호스트의 임의 높은 포트에 매핑합니다. `-p` 만 쓰면 외부에도 열리므로 호스트에서만 쓰려면 `127.0.0.1:8080:80` 처럼 주소를 붙입니다.

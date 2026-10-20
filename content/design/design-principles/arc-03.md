@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://martinfowler.com/bliki/PresentationDomainDataLayering.html", "https://www.domainlanguage.com/ddd/reference/", "https://alistair.cockburn.us/hexagonal-architecture/"]
+concepts: [layered-architecture]
+importance: 3
+links: [{to: "arc-07", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 가장 흔한 형태는 화면을 맡는 프레젠테이션, 업무 규칙을 담는 도메인, 저장소를 다루는 데이터 접근의 세 계층입니다. Martin Fowler는 계층을 나누면 한 번에 한 영역만 생각하면 되고, 같은 도메인 위에 여러 화면을 올릴 수 있으며, UI 없이 도메인 로직을 테스트하기 쉬워진다고 설명합니다. 다만 이것은 논리적 계층이어서 물리적 티어 구분과는 별개입니다. 시스템이 커지면 계층 하나도 복잡해지므로 최상위를 계층이 아니라 도메인별 모듈로 나누고 그 안을 계층화하라고 권하며, 계층별로 팀을 나누는 것도 안티패턴이라고 봅니다. Cockburn은 계층 경계가 잘 지켜지지 않아 로직이 새기 쉽다고 지적합니다.

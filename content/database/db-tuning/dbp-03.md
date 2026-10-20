@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/using-explain.html", "https://www.postgresql.org/docs/16/indexes-bitmap-scans.html", "https://www.postgresql.org/docs/16/indexes-index-only-scans.html"]
+concepts: [query-planner, index-design]
+importance: 3
+links: [{to: "dbp-04", kind: FOLLOWUP}, {to: "dbp-10", kind: FOLLOWUP}, {to: "dbp-11", kind: FOLLOWUP}, {to: "dbi-03", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 Seq Scan은 테이블을 처음부터 끝까지 순서대로 읽는 방식이고, Index Scan은 인덱스로 위치를 찾아 행을 인덱스 순서대로 가져오는 방식이라 한두 행을 찾거나 ORDER BY와 인덱스 순서가 맞을 때 주로 나옵니다. Bitmap Scan은 인덱스로 일치하는 위치를 모아 비트맵을 만든 뒤 테이블을 물리적 순서로 읽어서, 중간 정도 개수의 행을 가져오거나 여러 인덱스를 AND, OR로 합칠 때 쓰입니다. Index Only Scan은 필요한 컬럼이 모두 인덱스에 있고 가시성 맵으로 확인되면 테이블을 읽지 않고 인덱스만으로 답합니다. 어느 방식이 나오는지는 조건의 선택도와 플래너의 비용 비교로 정해집니다.

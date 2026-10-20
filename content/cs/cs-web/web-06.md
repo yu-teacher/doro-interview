@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9110.html", "https://www.rfc-editor.org/rfc/rfc9846.html", "https://www.rfc-editor.org/rfc/rfc8446.html"]
+concepts: [cryptography, http-protocol]
+importance: 3
+links: [{to: "web-14", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 HTTPS는 HTTP를 TLS 위에서 쓰는 것이고, TLS는 인증, 기밀성, 무결성 세 가지를 제공합니다. 서버는 항상 인증되고 클라이언트 인증은 선택이며, 연결이 맺어진 뒤의 데이터는 종단 사이에서만 보이고 중간에서 바꾸면 탐지됩니다. 인증서 검증에서 클라이언트는 미리 설정된 신뢰 앵커를 기준으로 서버 인증서를 확인하고, 그 인증서가 접속하려는 URI의 호스트, 즉 DNS 이름이나 IP 주소에 유효한지 확인해야 합니다. 맞지 않으면 사용자 확인을 받거나 연결을 끊어야 하고, 자동화된 클라이언트는 오류를 로그에 남기고 연결을 끊는 것이 권장됩니다. 다만 TLS가 데이터 길이까지 숨겨 주지는 않습니다.

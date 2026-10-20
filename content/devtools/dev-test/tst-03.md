@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.junit.org/5.14.4/writing-tests/test-classes-and-methods.html", "https://docs.junit.org/5.14.4/writing-tests/annotations.html", "https://docs.junit.org/5.14.4/writing-tests/test-instance-lifecycle.html"]
+concepts: [mocking-junit]
+importance: 2
+links: [{to: "tst-14", kind: FOLLOWUP}, {to: "tst-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `@BeforeAll`은 클래스의 모든 테스트가 시작되기 전에 한 번, `@AfterAll`은 모든 테스트가 끝난 뒤에 한 번 실행됩니다. `@BeforeEach`와 `@AfterEach`는 테스트 메서드 하나마다 그 앞과 뒤에 실행되어서, 테스트가 열 개면 열 번 돕니다. 기본 설정에서는 `@BeforeAll`과 `@AfterAll` 메서드가 `static`이어야 합니다. 그래서 순서는 BeforeAll, 그다음 테스트마다 BeforeEach와 테스트와 AfterEach를 반복하고, 마지막에 AfterAll입니다. 비용이 큰 준비는 `@BeforeAll`에, 테스트마다 새로 있어야 하는 상태는 `@BeforeEach`에 둡니다.

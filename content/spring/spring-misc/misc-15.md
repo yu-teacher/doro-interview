@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html", "https://docs.spring.io/spring-boot/3.3/reference/features/spring-application.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/resilience/annotation/ConcurrencyLimit.html", "https://docs.spring.io/spring-framework/reference/core/resilience.html", "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes"]
+concepts: [virtual-thread, thread-pool]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 가상 스레드를 켜면 Boot가 자동 구성하는 `@Async`용 실행기와 스케줄러가 가상 스레드 기반(`SimpleAsyncTaskExecutor`, `SimpleAsyncTaskScheduler`)으로 바뀌고, 스레드 풀 크기 같은 풀 설정은 효과가 없습니다. 그래서 풀 크기로 동시성을 제한하던 곳은 다른 방법이 필요한데, Spring 7의 `@ConcurrencyLimit`이 스레드 풀 제한이 없는 가상 스레드 환경을 위한 수단입니다. `@EnableResilientMethods`로 켜고, 비동기 작업은 `SimpleAsyncTaskExecutor`의 동시성 제한으로도 제한할 수 있습니다. 또 가상 스레드는 데몬이라 `@Scheduled`만으로 유지되던 앱은 JVM이 종료될 수 있어 `spring.main.keep-alive=true`가 권장됩니다(Boot 3.3 문서).

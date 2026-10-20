@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/develop/using-commands/transactions/"]
+concepts: [redis, acid]
+importance: 2
+links: [{to: "cch-09", kind: FOLLOWUP}, {to: "dbt-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `MULTI` 이후의 명령은 바로 실행되지 않고 큐에 쌓였다가 `EXEC`에서 순서대로 한꺼번에 실행되며, 그 사이에 다른 클라이언트의 요청이 끼어들지 않아 하나의 격리된 작업처럼 동작합니다. 하지만 RDBMS 같은 롤백은 없습니다. 명령 이름이나 인자가 틀려 큐에 넣을 때 난 오류는 `EXEC`가 `EXECABORT`로 트랜잭션 전체를 거부하지만, 큐에 잘 들어간 명령이 실행 중에 실패하면, 예컨대 문자열 키에 리스트 명령을 쓰면 그 명령만 오류가 나고 나머지는 그대로 실행되어 앞서 바뀐 값도 남습니다. 문서는 롤백을 지원하지 않는 이유로 단순함과 성능을 듭니다.

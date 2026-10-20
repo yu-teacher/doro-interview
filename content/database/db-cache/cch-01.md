@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/develop/get-started/faq/", "https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/latency/", "https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/benchmarks/", "https://redis.io/docs/latest/develop/using-commands/pipelining/"]
+concepts: [redis]
+importance: 3
+links: [{to: "cch-02", kind: FOLLOWUP}, {to: "cch-07", kind: FOLLOWUP}, {to: "cch-21", kind: FOLLOWUP}, {to: "osm-14", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Redis는 데이터셋을 메모리에 두는 인메모리 데이터베이스라서 읽기와 쓰기가 매우 빠릅니다. 명령 처리는 기본적으로 단일 스레드가 멀티플렉싱으로 여러 클라이언트의 요청을 차례로 처리하는데, GET이나 SET 같은 명령은 상수 시간이라 하나가 아주 짧게 끝나고 소켓 입출력에서 막히지 않도록 설계되어 있습니다. 다만 싱글 스레드는 요청을 처리하는 부분을 가리키고, 디스크 입출력처럼 느린 작업에는 백그라운드 스레드를 씁니다. 그래서 큰 집합의 교집합처럼 오래 걸리는 명령 하나가 다른 모든 클라이언트를 기다리게 만들 수 있고, 네트워크 왕복이 병목이면 파이프라이닝으로 줄입니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/ddl-system-columns.html", "https://www.postgresql.org/docs/16/transaction-id.html", "https://www.postgresql.org/docs/16/functions-info.html", "https://www.postgresql.org/docs/16/routine-vacuuming.html"]
+concepts: [mvcc]
+importance: 1
+links: [{to: "dbt-06", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16의 모든 행 버전에는 시스템 컬럼 xmin과 xmax가 있습니다. xmin은 그 버전을 만든 트랜잭션 ID이고, xmax는 지우거나 갱신한 트랜잭션 ID이며 아직 안 지워졌으면 0입니다. UPDATE는 옛 버전의 xmax를 채우고 새 버전을 만듭니다. 트랜잭션 ID는 읽기만 하면 배정되지 않고 처음 쓸 때 배정되며, 스냅샷은 어느 트랜잭션이 진행 중이었는지를 담고 있어서 어떤 ID의 트랜잭션이 스냅샷 시점에 끝났는지로 그 버전이 보이는지 판단합니다. XID는 32비트라 wraparound를 막으려고 VACUUM이 오래된 행을 freeze합니다.

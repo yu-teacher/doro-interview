@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/git-merge"]
+concepts: [git-branching]
+importance: 3
+links: [{to: "git-10", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 두 브랜치가 같은 파일의 같은 영역을 서로 다르게 고치면 Git은 한쪽을 임의로 고르지 않고 merge를 멈추고 충돌 표식을 남깁니다. git status로 충돌 파일을 확인하고, 파일 안의 표식 사이에서 양쪽 내용을 보고 최종 내용으로 직접 고친 뒤 표식을 지웁니다. 그다음 git add로 해결했다고 표시하고 git commit이나 git merge --continue로 merge 커밋을 마무리합니다. 해결하지 않고 포기하려면 git merge --abort로 merge 전 상태로 돌아갑니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html"]
+concepts: [virtual-thread, thread-pool]
+importance: 1
+links: [{to: "jt-15", kind: RELATED}, {to: "misc-09", kind: RELATED}, {to: "jt-20", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Java 21 이상에서 `spring.threads.virtual.enabled=true`를 주면 Boot가 자동 구성하는 `AsyncTaskExecutor`가 가상 스레드를 쓰는 `SimpleAsyncTaskExecutor`가 되고, 스케줄러도 `SimpleAsyncTaskScheduler`가 됩니다. 이 실행기는 `@EnableAsync`와 Spring MVC의 비동기 요청 처리 등에 쓰입니다. Boot 프로퍼티 설명에 따르면 `server.tomcat.threads.max`는 가상 스레드를 켜면 효과가 없습니다. 가상 스레드는 블로킹 호출에서 플랫폼 스레드를 오래 붙잡지 않아서, 동기 블로킹 코드를 리액티브로 바꾸지 않고 동시성을 높이려는 선택지입니다. 다만 CPU 바운드 작업이 빨라지는 것은 아니고, DB 커넥션 풀 같은 다른 병목이나 코드의 스레드 안전성 문제는 그대로입니다.

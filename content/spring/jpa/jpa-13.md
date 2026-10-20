@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/"]
+concepts: [fetch-strategy, persistence-context]
+importance: 3
+links: [{to: "jpa-11", kind: PREREQ}, {to: "jpa-12", kind: PREREQ}, {to: "jpa-14", kind: FOLLOWUP}, {to: "jpa-28", kind: FOLLOWUP}, {to: "tx-14", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 지연 로딩 프록시나 컬렉션은 영속성 컨텍스트가 열려 있을 때만 초기화할 수 있어서, 세션이 끝난 뒤 접근하면 `LazyInitializationException`이 납니다. 해결의 원칙은 컨텍스트를 닫기 전에 필요한 연관을 미리 가져오는 것입니다. 방법으로는 JPQL fetch join, `@EntityGraph` 같은 엔티티 그래프, 필요한 컬럼만 담는 DTO 프로젝션이 있고, 서비스의 트랜잭션 안에서 DTO로 변환해 반환하는 구조를 많이 씁니다. `Hibernate.initialize`로 강제 초기화할 수도 있지만 조회가 추가로 나갑니다. 연관을 EAGER로 바꾸는 것은 근본 해결이 아닙니다. 불필요한 데이터까지 항상 가져오고 N+1이 생길 수 있기 때문입니다.

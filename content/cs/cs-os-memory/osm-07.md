@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man7/symlink.7.html", "https://man7.org/linux/man-pages/man2/link.2.html", "https://man7.org/linux/man-pages/man2/unlink.2.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/link.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/symlink.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/unlink.html"]
+concepts: [io-filesystem]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 하드 링크는 같은 inode를 가리키는 또 하나의 이름이라서 어느 쪽이 원본인지 구분할 수 없고, 이름을 하나 지워도 링크 수가 남아 있으면 내용이 그대로 있습니다. 링크 수가 0이 되고 열어 둔 프로세스도 없을 때 비로소 내용이 지워집니다. 심볼릭 링크는 다른 경로 문자열을 담은 별도의 파일이라 디렉터리나 다른 파일 시스템도 가리킬 수 있지만, 가리키는 대상이 없어져도 링크 자체는 남아서 끊어진(dangling) 링크가 됩니다. 하드 링크는 파일 시스템 경계를 넘을 수 없고 보통 디렉터리에도 만들 수 없습니다.

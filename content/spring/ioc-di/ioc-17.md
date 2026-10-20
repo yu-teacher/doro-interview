@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/support/AbstractAutowireCapableBeanFactory.html", "https://docs.spring.io/spring-boot/api/java/org/springframework/boot/SpringApplication.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html"]
+concepts: [ioc-di]
+importance: 1
+links: [{to: "ioc-15", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 세터나 필드 주입은 객체를 먼저 생성한 뒤 의존성을 나중에 채우기 때문에, 아직 완전히 초기화되지 않은 상태의 빈 참조를 상대에게 먼저 넘겨 줄 수 있어서 순환이 성립합니다. 공식 문서도 이 경우 한 빈이 완전히 초기화되기 전에 다른 빈에 주입된다고 설명합니다. 그러나 이는 초기화 전 객체가 노출되는 위험이 있어 권장되지 않습니다. Spring Boot는 2.6부터 기본적으로 순환 참조를 금지합니다. 세터나 필드 순환도 시작 단계에서 실패하고, spring.main.allow-circular-references=true로 다시 허용할 수 있습니다. 반면 부트 없이 순수 AnnotationConfigApplicationContext를 쓰면 필드 순환이 기본으로 허용됩니다.

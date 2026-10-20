@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/requestbody.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/arguments.html"]
+concepts: [mvc-request-flow]
+importance: 3
+links: [{to: "mvc-04", kind: PREREQ}, {to: "mvc-14", kind: FOLLOWUP}, {to: "mvc-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 DTO 필드에 `@NotBlank` 같은 제약을 달고 `@RequestBody`나 `@ModelAttribute` 인자에 `@Valid`(또는 `@Validated`)를 붙이면 그 인자가 검증되고, 실패하면 `MethodArgumentNotValidException`이 발생해 기본적으로 400이 됩니다. 인자 바로 뒤에 `Errors`나 `BindingResult`를 두면 예외 대신 컨트롤러에서 직접 다룹니다. 반면 `@RequestParam`, `@PathVariable` 같은 파라미터에 `@Min` 같은 제약을 직접 달면 메서드 검증이 적용되어 `HandlerMethodValidationException`이 발생합니다. `@Valid`는 중첩 검증 표시라 단독으로는 메서드 검증이 되지 않습니다. 시그니처에 따라 두 예외 중 하나가 나므로 둘 다 처리해야 합니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/pipe.html", "https://man7.org/linux/man-pages/man7/pipe.7.html", "https://man7.org/linux/man-pages/man7/unix.7.html", "https://man7.org/linux/man-pages/man7/shm_overview.7.html", "https://man7.org/linux/man-pages/man7/mq_overview.7.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/mmap.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/shm_open.html", "https://man7.org/linux/man-pages/man7/signal.7.html"]
+concepts: [process-management]
+importance: 2
+links: [{to: "osm-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 파이프는 관련 있는 프로세스 사이의 단방향 바이트 스트림이고, 이름이 있는 FIFO는 관련 없는 프로세스도 쓸 수 있습니다. 같은 머신의 UNIX 도메인 소켓은 양방향 통신이 되고 메시지 경계를 유지하는 타입도 고를 수 있습니다. 공유 메모리는 같은 메모리를 매핑해 쓰므로 데이터를 복사해 주고받지 않아도 되지만 접근 동기화를 직접 해야 합니다. 메시지 큐는 우선순위가 있는 메시지 단위로 주고받고, 시그널은 이벤트를 알리는 용도라 큰 데이터를 보내기엔 맞지 않습니다. 단순한 스트림이면 파이프, 양방향 요청 응답이면 소켓, 대량 데이터 공유면 공유 메모리를 먼저 고려합니다.

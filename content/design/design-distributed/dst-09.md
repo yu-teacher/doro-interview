@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://microservices.io/patterns/data/saga.html", "https://learn.microsoft.com/en-us/azure/architecture/patterns/saga", "https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf"]
+concepts: [distributed-consistency, idempotency]
+importance: 3
+links: [{to: "dst-10", kind: FOLLOWUP}, {to: "dst-11", kind: FOLLOWUP}, {to: "dst-24", kind: FOLLOWUP}, {to: "dbt-14", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Saga는 여러 서비스에 걸친 비즈니스 트랜잭션을 서비스별 로컬 트랜잭션의 연속으로 쪼개는 방식입니다. 각 단계는 자기 DB에서 원자적으로 커밋되고 다음 단계를 이벤트나 메시지로 이어 갑니다. 중간 단계가 비즈니스 규칙 위반 등으로 실패하면 이미 끝난 단계들을 역순으로 보상 트랜잭션을 실행해 되돌립니다. 보상은 DB 롤백이 아니라 주문 취소, 재고 복원처럼 의미상 되돌리는 별도 트랜잭션이라서 개발자가 직접 설계해야 합니다. 서비스마다 DB가 따로여서 2PC 같은 분산 트랜잭션을 쓰기 어려울 때의 대안이고, 단계 사이의 중간 상태가 다른 트랜잭션에 보일 수 있다는 점은 감수해야 합니다.

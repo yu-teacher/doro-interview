@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/connect-estab.html", "https://www.postgresql.org/docs/16/runtime-config-connection.html", "https://dev.mysql.com/doc/refman/8.4/en/connection-interfaces.html", "https://dev.mysql.com/doc/refman/8.4/en/server-system-variables.html"]
+concepts: [connection-pool]
+importance: 2
+links: [{to: "dbp-15", kind: RELATED}, {to: "misc-07", kind: RELATED}, {to: "dbd-08", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16은 연결마다 백엔드 프로세스를 하나씩 띄우는 프로세스 모델이고, max_connections의 기본값은 100이며 서버를 재시작해야 바꿀 수 있습니다. 앱 인스턴스가 늘 때마다 max_connections만 올리는 건 연결마다 서버 자원이 들어서 좋은 해법이 아닙니다. 보통은 애플리케이션 쪽에 커넥션 풀을 두고 풀 크기를 DB가 감당할 수준으로 제한하며, 필요하면 PgBouncer 같은 외부 풀러를 앞에 둡니다. 풀 크기는 코어 수와 쿼리 특성을 보고 부하 테스트로 정합니다. MySQL 8.4(InnoDB)도 기본은 연결당 스레드 모델이고 max_connections 기본값은 151입니다.

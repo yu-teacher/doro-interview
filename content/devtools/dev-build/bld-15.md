@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/gradle-plugin/packaging.html", "https://docs.spring.io/spring-boot/gradle-plugin/reacting.html", "https://docs.spring.io/spring-boot/specification/executable-jar/launching.html"]
+concepts: [build-tool]
+importance: 3
+links: [{to: "bld-01", kind: PREREQ}, {to: "boot-10", kind: RELATED}, {to: "cic-13", kind: RELATED}, {to: "dkr-09", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `bootJar`는 애플리케이션 클래스뿐 아니라 의존성 jar들까지 한 파일에 담은 실행 가능한 jar입니다. 클래스는 `BOOT-INF/classes`에, 의존 jar는 `BOOT-INF/lib`에 들어가고, 그래서 `java -jar`로 바로 실행할 수 있고, 매니페스트의 `Main-Class`는 `JarLauncher`로, 내 main 클래스는 `Start-Class`로 지정됩니다. 반면 일반 `jar` task의 결과물은 내 클래스와 리소스만 담고 있어서 의존 jar를 따로 클래스패스에 줘야 합니다. 부트 플러그인은 두 파일이 겹치지 않도록 일반 jar에 기본으로 `plain` 분류자를 붙이고, `assemble`은 `bootJar`에 의존합니다.

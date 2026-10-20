@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/git-stash", "https://git-scm.com/book/ko/v2/Git-%EB%8F%84%EA%B5%AC-Stashing%EA%B3%BC-Cleaning"]
+concepts: [git-undo]
+importance: 2
+links: [{to: "git-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 git stash는 추적 중인 파일의 수정 내용과 스테이징한 변경을 저장하고 워킹 디렉터리를 HEAD 상태로 되돌려, 브랜치를 바꾸거나 급한 일을 먼저 처리할 수 있게 합니다. 기본으로는 추적되지 않는 새 파일은 stash에 들어가지 않고 그대로 남으며, 포함하려면 -u 옵션을 씁니다. git stash pop은 가장 최근 stash를 적용하고 목록에서 지우고, apply는 적용하되 목록에 남깁니다. pop 중 충돌이 나면 stash는 지워지지 않고 남으므로 해결한 뒤 직접 drop 해야 합니다.

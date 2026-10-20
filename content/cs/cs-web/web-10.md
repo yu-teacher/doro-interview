@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9110.html", "https://www.rfc-editor.org/rfc/rfc9111.html"]
+concepts: [cache, http-protocol]
+importance: 2
+links: [{to: "web-16", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 서버가 응답에 ETag, 즉 표현을 식별하는 불투명한 검증자를 담아 주면, 클라이언트나 캐시는 나중에 같은 자원을 다시 요청하면서 If-None-Match에 그 값을 실어 보냅니다. 서버는 현재 표현의 ETag가 목록에 있으면 조건이 거짓이므로 요청을 수행하지 않고, GET이나 HEAD에는 304 Not Modified를 돌려줍니다. 304에는 본문이 없어서 클라이언트는 저장해 둔 사본을 계속 쓰고 전송량만 아낍니다. GET과 HEAD가 아닌 메서드에서는 조건이 거짓일 때 412가 나갑니다. ETag에는 W/ 접두사가 붙는 약한 값도 있는데, 표현이 바뀔 때마다 값이 바뀌지는 않을 수 있는 검증자이고, If-None-Match 비교에는 약한 비교를 씁니다.

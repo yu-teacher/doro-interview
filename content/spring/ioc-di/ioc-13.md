@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html"]
+concepts: [bean-lifecycle]
+importance: 1
+links: [{to: "ioc-06", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 prototype은 컨테이너가 생성, 의존성 주입, 초기화 콜백까지만 수행하고 클라이언트에게 넘기면 더 이상 추적하지 않습니다. 그래서 초기화 콜백은 매번 호출되지만 소멸 콜백(@PreDestroy 등)은 호출되지 않아 자원 해제는 클라이언트 책임입니다. 싱글톤은 컨테이너가 끝까지 관리해 컨텍스트를 닫을 때 소멸 콜백까지 호출하지만, prototype은 그렇지 않습니다. 컨테이너는 prototype에 대해 사실상 new 연산자를 대체하는 역할을 하고, 컨테이너가 자원을 해제하게 하려면 정리할 빈을 참조로 들고 있는 커스텀 BeanPostProcessor가 필요합니다.

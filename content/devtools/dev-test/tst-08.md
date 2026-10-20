@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.junit.org/5.14.4/writing-tests/parameterized-classes-and-tests.html", "https://docs.junit.org/5.14.4/writing-tests/annotations.html"]
+concepts: [mocking-junit]
+importance: 2
+links: [{to: "tst-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `@Test` 대신 `@ParameterizedTest`를 붙이고 인자 소스를 하나 이상 지정하면 같은 테스트 메서드가 인자만 바꿔 여러 번 실행됩니다. 이를 쓰려면 `junit-jupiter-params` 의존성이 필요합니다. 소스로는 값을 나열하는 `@ValueSource`, 쉼표로 구분한 여러 인자를 주는 `@CsvSource`, enum 상수를 쓰는 `@EnumSource`, null이나 빈 값을 주는 `@NullSource`와 `@EmptySource`, 팩토리 메서드가 `Stream<Arguments>`를 돌려주는 `@MethodSource`가 있습니다. 각 호출은 개별 테스트로 보고돼서 어떤 값에서 실패했는지 따로 보이므로, 같은 검증을 경계값 여러 개에 반복할 때 유용합니다.

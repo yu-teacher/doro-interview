@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://blog.cleancoder.com/uncle-bob/2014/05/12/TheOpenClosedPrinciple.html", "https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html", "http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod"]
+concepts: [solid-principles, oop-polymorphism]
+importance: 3
+links: [{to: "arc-06", kind: FOLLOWUP}, {to: "arc-13", kind: FOLLOWUP}, {to: "pat-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 OCP는 기존 코드를 고치지 않고도 시스템의 동작을 확장할 수 있어야 한다는 원칙입니다. Robert Martin은 Bertrand Meyer의 1988년 정의에서 이 본질을 뽑아 설명하는데, 새 기능을 새 코드 추가만으로 붙일 수 있다면 기존 코드는 다시 컴파일하거나 배포할 필요도 없다는 것입니다. 대표적인 예가 Eclipse 같은 플러그인 시스템이고, 이를 위해 고수준 정책과 저수준 세부를 분리하며 경계를 넘는 의존성의 방향을 뒤집어서 플러그인은 시스템을 알아도 시스템은 플러그인을 모르게 만듭니다. 기능을 추가할 때마다 곳곳을 고치는 샷건 서저리를 피하자는 취지입니다.

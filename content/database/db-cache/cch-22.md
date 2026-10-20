@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-data/redis/reference/redis/transactions.html", "https://redis.io/docs/latest/develop/using-commands/transactions/"]
+concepts: [tx-boundary, redis]
+importance: 1
+links: [{to: "cch-08", kind: PREREQ}, {to: "tx-19", kind: RELATED}, {to: "dst-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 기본 상태에서는 롤백되지 않습니다. `RedisTemplate`은 스프링이 관리하는 트랜잭션에 참여하지 않으므로 `@Transactional` 안에서 쓴 값은 바로 Redis에 반영되고, 이후 예외로 롤백돼도 남습니다. 템플릿마다 `setEnableTransactionSupport(true)`를 켜야 현재 트랜잭션에 연결이 묶이고, 그러면 쓰기 명령이 큐에 쌓였다가 트랜잭션이 정상 종료되면 `EXEC`로 반영되고 실패하면 `DISCARD`됩니다. 다만 이 롤백은 아직 실행하지 않은 큐를 버리는 것이지 실행된 명령을 되돌리는 것이 아니고, 트랜잭션 중에는 방금 쓴 값을 읽어도 보이지 않습니다. DB 커밋과 Redis 커밋은 별개라 둘이 원자적으로 묶이지는 않습니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html", "https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html", "https://docs.spring.io/spring-data/jpa/reference/jpa/specifications.html"]
+concepts: [spring-data-jpa]
+importance: 2
+links: [{to: "jpa-35", kind: FOLLOWUP}, {to: "jpa-36", kind: FOLLOWUP}, {to: "jpa-25", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Spring Data는 메서드 이름에서 JPQL을 만들어 줍니다. 예컨대 `findByEmailAddressAndLastname`은 `where u.emailAddress = ?1 and u.lastname = ?2`에 해당하는 쿼리가 되므로, 조건이 단순할 때 가장 간결합니다. 이름이 길어지거나 조인, 서브쿼리가 필요하면 `@Query`로 JPQL(또는 네이티브)을 직접 쓰고, 이 쿼리는 `@NamedQuery`보다 우선합니다. 조건이 동적으로 바뀌는 검색 화면은 정적 타입으로 쿼리를 만드는 QueryDSL이나 `Specification`이 맞습니다. 어느 쪽이든 팀의 선택입니다(보충). `@Query`로 UPDATE/DELETE를 하려면 `@Modifying`이 필요하고, 컨텍스트를 자동으로 비우지 않으니 `clearAutomatically = true`를 고려합니다.

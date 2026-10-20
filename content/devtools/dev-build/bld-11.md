@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html", "https://docs.gradle.org/current/userguide/java_library_plugin.html"]
+concepts: [dependency-management]
+importance: 2
+links: [{to: "bld-05", kind: PREREQ}, {to: "bld-03", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 스코프를 생략하면 `compile`이고, 모든 클래스패스에서 쓰이며 의존하는 프로젝트로 전이됩니다. `provided`는 JDK나 서블릿 컨테이너 같은 실행 환경이 제공한다고 기대하는 것으로, 컴파일과 테스트 클래스패스에는 있지만 런타임 클래스패스에는 없고 전이되지 않습니다. `runtime`은 컴파일에는 필요 없고 실행에만 필요한 것이며, `test`는 테스트 컴파일과 실행에만 쓰이고 전이되지 않습니다. Gradle에서 대응하는 구성은 대체로 `implementation`, `compileOnly`, `runtimeOnly`, `testImplementation`입니다.

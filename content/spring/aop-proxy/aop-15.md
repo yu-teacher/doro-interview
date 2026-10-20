@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html"]
+concepts: [aop]
+importance: 1
+links: [{to: "aop-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 어드바이스 메서드는 첫 파라미터로 `JoinPoint`를 받으면 인자(`getArgs`), 프록시(`getThis`), 대상 객체(`getTarget`), 메서드 시그니처(`getSignature`)를 알 수 있습니다. Around만 `ProceedingJoinPoint`를 받아 `proceed()`를 호출하는데, 0번, 1번, 여러 번 호출할 수 있고 `proceed(Object[])`로 인자를 바꿔서 넘길 수도 있습니다. 반환값은 Around가 돌려주는 값이 호출자가 보는 값이라서 캐시값이나 다른 값을 반환해 바꿀 수 있고, After Returning에서는 완전히 다른 참조를 반환할 수 없습니다. Around의 반환 타입이 void이면 호출자에게 항상 null이 돌아가므로 `Object`로 선언하는 것이 좋습니다.

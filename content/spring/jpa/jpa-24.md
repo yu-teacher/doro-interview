@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html", "https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/orm/jpa/JpaDialect.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/orm/jpa/vendor/HibernateJpaDialect.html", "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html", "https://docs.hibernate.org/orm/7.0/introduction/html_single/"]
+concepts: [declarative-tx, persistence-context]
+importance: 3
+links: [{to: "jpa-03", kind: PREREQ}, {to: "jpa-26", kind: FOLLOWUP}, {to: "tx-04", kind: RELATED}, {to: "tx-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 JPA 사양상 컨테이너 관리 영속성 컨텍스트는 기본이 트랜잭션 범위이고 변경은 커밋 시 DB에 반영되므로, 쓰기는 `@Transactional` 경계 안에서 일어납니다. 공식 문서에 따르면 Spring Data의 `CrudRepository` 읽기 메서드는 readOnly 트랜잭션, 나머지는 기본 `@Transactional`로 돌고, 선언형 쿼리 메서드에는 기본 트랜잭션 설정이 없습니다. readOnly는 트랜잭션 시스템에 주는 힌트로, flush 모드나 JDBC `Connection`의 read-only에 반영될 수 있지만 쓰기를 막는다는 보장은 없습니다. Hibernate에서는 flush 모드가 MANUAL이 되어 더티 체킹이 생략되는 것으로 알려져 있습니다(보충). 같은 클래스 내부 호출(자기호출)은 프록시를 우회해 트랜잭션이 적용되지 않습니다.

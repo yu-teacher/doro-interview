@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html", "https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html"]
+concepts: [persistence-context, spring-data-jpa]
+importance: 2
+links: [{to: "jpa-07", kind: PREREQ}, {to: "jpa-08", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `persist`는 새 엔티티라면 전달한 그 인스턴스를 영속 상태로 만듭니다. `merge`는 준영속 인스턴스의 상태를 같은 식별자의 영속 엔티티(컨텍스트에 없으면 DB에서 새로 조회한 것)에 복사하고 그 영속 엔티티를 반환하며, 전달한 원본은 계속 준영속입니다. 그래서 `save()`의 반환값을 써야 합니다. Spring Data는 새 엔티티면 `persist`, 아니면 `merge`를 호출합니다. merge는 전달 객체의 상태를 복사하므로 값이 null인 필드도 덮어써서, 일부 필드만 가진 객체로 merge하면 기존 값이 지워질 수 있습니다(보충). 변경이 필요하면 영속 엔티티를 조회한 뒤 도메인 메서드로 바꾸는 편이 안전합니다.

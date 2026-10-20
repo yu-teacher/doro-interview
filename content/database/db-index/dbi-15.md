@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://dev.mysql.com/doc/refman/8.4/en/innodb-index-types.html", "https://www.postgresql.org/docs/16/indexes-index-only-scans.html", "https://www.postgresql.org/docs/16/btree-implementation.html"]
+concepts: [index-structure]
+importance: 2
+links: [{to: "dbd-03", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 MySQL 8.4(InnoDB)에서는 테이블 자체가 기본 키 순서의 클러스터형 인덱스이고, 행 데이터가 이 인덱스에 들어 있습니다. 보조 인덱스의 각 레코드는 인덱스 컬럼과 함께 기본 키 컬럼을 담고, 행 전체를 읽으려면 그 기본 키로 클러스터형 인덱스를 한 번 더 찾습니다. 그래서 기본 키가 길면 모든 보조 인덱스가 커집니다. 반면 PostgreSQL 16은 모든 인덱스가 테이블 힙과 별도로 저장되는 보조 인덱스이고 인덱스 항목이 힙의 행을 가리킵니다. 기본 키도 예외가 아니어서, 기본 키 타입이 다른 인덱스의 크기에 영향을 주지 않습니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/actions/get-started/understand-github-actions"]
+concepts: [ci-pipeline]
+importance: 3
+links: [{to: "cic-04", kind: FOLLOWUP}, {to: "cic-05", kind: FOLLOWUP}, {to: "cic-01", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 workflow는 저장소의 `.github/workflows` 폴더에 YAML 파일로 정의하는 자동화 절차이고, event가 발생하면 시작됩니다. event는 push나 pull request 생성처럼 저장소에서 일어난 일, 스케줄, 수동 실행 같은 것입니다. workflow는 하나 이상의 job으로 이루어지고, job은 같은 runner 하나에서 실행되는 step의 묶음입니다. step은 기본적으로 순서대로 실행되고, 직접 쓴 셸 명령(`run`)이거나 재사용 가능한 action(`uses`)입니다. runner는 job을 실제로 실행하는 서버로, GitHub이 제공하는 Ubuntu, Windows, macOS 가상 머신이나 직접 운영하는 self-hosted runner를 씁니다. job은 기본적으로 서로 독립이라 병렬로 실행됩니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/engine/containers/resource_constraints/", "https://docs.docker.com/reference/cli/docker/container/run/", "https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html"]
+concepts: [container, memory-layout]
+importance: 1
+links: [{to: "jv-13", kind: RELATED}, {to: "jv-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 컨테이너는 기본적으로 메모리 제한이 없어서 호스트 메모리를 얼마든지 쓸 수 있고, 호스트 메모리가 부족해지면 커널이 프로세스를 죽이므로 운영에서는 `-m` 으로 한도를 둡니다. 한도를 넘기면 컨테이너의 프로세스가 OOM으로 강제 종료되어 종료 코드 137과 OOMKilled 상태가 남습니다. 자바는 힙 말고도 메타스페이스, 스레드 스택 같은 힙 밖 메모리를 쓰므로 한도에 딱 맞게 힙을 잡으면 안 됩니다. JVM은 컨테이너 한도를 인식해 기본 최대 힙을 한도의 일부로 잡는데, `MaxRAMPercentage` 기본값은 25이고 한도가 아주 작으면 비율이 달라지니, 필요하면 `-XX:MaxRAMPercentage` 로 조정합니다.

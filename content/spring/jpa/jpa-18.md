@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html", "https://docs.hibernate.org/orm/7.0/introduction/html_single/"]
+concepts: [entity-mapping]
+importance: 3
+links: [{to: "jpa-19", kind: FOLLOWUP}, {to: "jpa-31", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 객체에서는 양방향이 참조 두 개지만 DB에는 FK 하나입니다. 그래서 둘 중 한쪽을 연관관계의 주인으로 정하고, 공식 문서에 따르면 DB 반영은 주인 쪽이 가진 참조를 기준으로 합니다. 주인이 아닌 쪽은 `mappedBy`로 주인의 필드명을 가리키며, 그쪽만 바꾸면 DB에 반영되지 않으므로 사실상 읽기 전용입니다. 1:N 양방향에서는 N쪽이 반드시 주인이고, 일대일에서는 FK를 가진 쪽이 주인입니다. 그래서 `member.getPosts().add(post)`만 하고 `post.setMember(member)`를 빼먹으면 FK가 저장되지 않습니다. 양쪽 참조를 일관되게 맞추는 것은 개발자 책임이고, 이를 돕는 연관관계 편의 메서드를 두는 게 안전합니다(보충).

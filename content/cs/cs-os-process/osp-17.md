@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man7/signal.7.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/sigaction.html"]
+concepts: [process-management]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 표준 시그널은 큐에 쌓이지 않습니다. 같은 시그널이 블록된 동안 여러 번 와도 대기 상태는 한 번만 표시되어 핸들러가 한 번만 실행되므로, 시그널 횟수에 의존하면 안 됩니다. 반면 리눅스의 실시간 시그널은 여러 개가 큐에 쌓이고 sigqueue로 값을 함께 보낼 수 있습니다. 멀티스레드에서 kill로 프로세스에 보낸 시그널은 그 시그널을 블록하지 않은 스레드 중 임의의 하나가 받고, SIGSEGV처럼 특정 명령 때문에 생긴 시그널은 그 스레드가 받습니다. 그리고 SIGKILL과 SIGSTOP은 잡거나 블록하거나 무시할 수 없습니다.

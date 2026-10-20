@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"]
+concepts: [persistence-context]
+importance: 2
+links: [{to: "jpa-03", kind: PREREQ}, {to: "jpa-10", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 `persist`나 값 변경은 바로 SQL이 되지 않고 영속성 컨텍스트에 쌓였다가 flush 때 한꺼번에 DB로 나갑니다(IDENTITY 키 생성은 예외). Hibernate 입문서에 따르면 flush는 기본적으로 트랜잭션 커밋 시, 결과가 영향받을 수 있는 쿼리 실행 전(auto-flush), 그리고 `flush()`를 직접 호출할 때 일어납니다. 네이티브 SQL은 JPA `EntityManager`로 실행하면 항상 flush하지만, Hibernate `Session`의 네이티브 쿼리는 기본적으로 flush하지 않아 오래된 결과가 나올 수 있습니다. 플러시 모드 COMMIT이나 MANUAL은 쿼리가 stale한 결과를 돌려줄 수 있다고 문서가 경고합니다. flush는 커밋이 아니라 SQL을 DB로 보내는 것입니다.

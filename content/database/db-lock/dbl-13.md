@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-insert.html", "https://www.postgresql.org/docs/16/transaction-iso.html"]
+concepts: [race-condition, db-locking]
+importance: 2
+links: [{to: "dbl-16", kind: FOLLOWUP}, {to: "dbl-19", kind: FOLLOWUP}, {to: "misc-06", kind: RELATED}, {to: "misc-14", kind: RELATED}, {to: "dbs-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16의 INSERT ... ON CONFLICT DO UPDATE는 행마다 삽입되거나 갱신되는 둘 중 하나가 높은 동시성에서도 원자적으로 보장되는 upsert입니다. 먼저 SELECT로 있는지 확인하고 없으면 INSERT하는 방식은 두 트랜잭션이 동시에 없다고 판단해서 한쪽이 유니크 위반으로 실패할 수 있습니다. ON CONFLICT는 유니크 인덱스를 기준으로 충돌을 잡고, 충돌 원인이 다른 트랜잭션의 아직 끝나지 않은 삽입이면, 실험에서는 그 트랜잭션이 끝나기를 기다린 뒤 DO UPDATE는 갱신을, DO NOTHING은 건너뛰기를 했습니다. DO UPDATE에는 conflict_target이 필수이고, 갱신식에서는 기존 행을 테이블 이름으로, 넣으려던 값을 excluded로 참조합니다. 같은 문장 안에서 한 행을 두 번 갱신하게 되면 오류가 납니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes", "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Release-Notes", "https://docs.spring.io/spring-boot/system-requirements.html"]
+concepts: [spring-migration]
+importance: 1
+links: [{to: "boot-15", kind: RELATED}, {to: "boot-21", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Framework 7은 JDK 17 기준선을 유지하면서 JDK 25를 권장하고, Jakarta EE 11 기준(Servlet 6.1, JPA 3.2, Bean Validation 3.1)으로 올라갑니다. Jackson은 3.x를 우선 지원하고 2.x는 deprecated이며 패키지가 `tools.jackson`으로 바뀝니다. 널 안정성 표기는 JSpecify로 옮겨 갔고, JSR 305 의미의 스프링 널 어노테이션은 deprecated입니다. Hibernate ORM은 7.1/7.2를 지원합니다. 그래서 업그레이드 시 JDK, 서블릿 컨테이너(Tomcat 11), Jackson import 경로, null 어노테이션, Hibernate 버전을 점검합니다. 새 기능으로는 API 버저닝, `@Retryable`/`@ConcurrencyLimit`, `RestTestClient`가 눈에 띕니다.

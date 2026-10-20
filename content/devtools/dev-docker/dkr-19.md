@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/", "https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-an-image/", "https://docs.docker.com/build/building/best-practices/", "https://docs.docker.com/build/building/multi-stage/"]
+concepts: [container]
+importance: 1
+links: [{to: "dkr-02", kind: PREREQ}, {to: "dkr-08", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 이미지 레이어는 한번 만들어지면 바뀌지 않고, 각 레이어는 파일의 추가·수정·삭제 변경분을 담습니다. 그래서 한 `RUN` 에서 큰 파일을 만들고 다음 `RUN rm` 으로 지우면 삭제는 새 레이어에 기록될 뿐이고, 파일이 들어 있는 앞 레이어는 그대로 이미지에 남아 크기가 줄지 않습니다. 임시 파일은 만든 것과 같은 `RUN` 안에서 `&&` 로 이어 지워야 레이어에 남지 않습니다. 공식 문서가 `apt-get` 캐시를 같은 `RUN` 에서 지우라고 하는 것도 같은 이유이고, 멀티 스테이지로 필요한 결과물만 옮겨도 해결됩니다.

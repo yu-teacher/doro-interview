@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/testing.html", "https://docs.spring.io/spring-framework/reference/testing/unit.html", "https://docs.spring.io/spring-framework/reference/testing/integration.html"]
+concepts: [test-strategy]
+importance: 3
+links: [{to: "tst-04", kind: FOLLOWUP}, {to: "tst-11", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 단위 테스트는 스프링 컨테이너 없이 객체를 `new`로 만들고 협력 객체는 목이나 스텁으로 바꿔서, 클래스 하나의 로직을 빠르게 검증합니다. 통합 테스트는 실제 스프링 컨텍스트를 띄워서 빈 배선이 맞는지, JDBC나 ORM으로 하는 데이터 접근과 SQL, 매핑이 맞는지 확인합니다. 공식 문서도 통합 테스트는 단위 테스트보다 느리지만 Selenium이나 서버에 배포해서 하는 원격 테스트보다는 훨씬 빠르다고 설명합니다. 그래서 서비스 로직은 단위 테스트로 많이, 컨텍스트가 필요한 부분은 통합 테스트로 적게, 전체 흐름을 보는 E2E는 가장 적게 두는 테스트 피라미드 구성을 보통 씁니다.

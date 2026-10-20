@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://javadoc.io/static/org.mockito/mockito-core/5.23.0/org.mockito/org/mockito/Mockito.html", "https://docs.spring.io/spring-framework/reference/testing/unit.html"]
+concepts: [mocking-junit]
+importance: 3
+links: [{to: "tst-05", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 모두 진짜 협력 객체 대신 쓰는 테스트 더블입니다. 스텁은 호출되면 미리 정한 값을 돌려주는 대역이고, 목은 어떤 메서드가 어떤 인자로 몇 번 호출됐는지 검증하는 데 쓰는 대역입니다. 페이크는 인메모리 저장소처럼 실제로 동작하지만 단순화한 구현체이고, 스파이는 실제 객체를 감싸서 진짜 메서드를 실행하면서 호출 기록도 남깁니다. Mockito에서는 `mock()`으로 만든 객체에 `when().thenReturn()`을 걸면 스텁처럼, `verify()`로 확인하면 목처럼 쓰는 것이고, `spy()`는 실제 객체를 감쌉니다.

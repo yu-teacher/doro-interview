@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/memoize.html", "https://xlinux.nist.gov/dads/HTML/dynamicprog.html", "https://docs.python.org/3/library/functools.html"]
+concepts: [recursion-dp]
+importance: 2
+links: [{to: "alg-12", kind: FOLLOWUP}, {to: "jc-18", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 둘 다 같은 부분문제를 다시 계산하지 않도록 결과를 저장해 동적 계획법을 만드는 방법입니다. 메모이제이션은 재귀 구조를 그대로 두고 계산 결과를 캐시해 두었다가 같은 인자가 오면 꺼내 쓰는 방식이라 구현이 쉽고 실제로 필요한 부분문제만 계산합니다. 타뷸레이션은 작은 문제부터 반복문으로 표를 채워 올라가는 방식이라 재귀 깊이 한계나 호출 오버헤드가 없습니다. 피보나치처럼 지수 시간 재귀가 메모로 선형 시간이 되는 것이 대표적인 효과입니다. 파이썬에서는 functools.cache가 메모이제이션을 한 줄로 붙여 줍니다.

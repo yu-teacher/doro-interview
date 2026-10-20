@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9114.html", "https://www.rfc-editor.org/rfc/rfc9000.html", "https://www.rfc-editor.org/rfc/rfc9204.html"]
+concepts: [http-protocol, tcp]
+importance: 1
+links: [{to: "net-02", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 HTTP/2는 멀티플렉싱을 해도 TCP 한 연결 위에서 도니까, 패킷이 하나 유실되거나 순서가 바뀌면 그 연결의 모든 스트림이 함께 멈춥니다. HTTP/3은 같은 HTTP 의미를 QUIC 위에 올렸습니다. QUIC은 UDP 데이터그램에 실려 가면서 스트림 다중화와 스트림별 흐름 제어, 신뢰성을 자체적으로 제공하므로, 패킷이 유실돼도 그 패킷에 데이터가 들어 있던 스트림만 재전송을 기다리고 나머지는 계속 진행됩니다. QUIC은 TLS 1.3 핸드셰이크를 통합해서 연결 설정 지연이 줄고, 0-RTT로 데이터를 일찍 보내는 옵션도 있습니다. 클라이언트는 Alt-Svc 같은 광고로 h3 지원을 알게 되고, UDP가 막혀 연결이 실패하면 TCP 기반 HTTP를 시도하도록 권고됩니다.

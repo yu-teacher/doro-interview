@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.domainlanguage.com/ddd/reference/"]
+concepts: [ddd]
+importance: 2
+links: [{to: "arc-10", kind: FOLLOWUP}, {to: "dst-03", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 유비쿼터스 언어는 도메인 모델을 중심에 놓고 한 바운디드 컨텍스트 안에서 팀원 모두가 쓰는 공통 언어입니다. Eric Evans는 대화, 문서, 다이어그램, 코드에서 같은 용어를 쓰고, 언어가 바뀌는 것은 모델이 바뀌는 것이므로 클래스와 메서드 이름도 새 모델에 맞게 리팩터링하라고 합니다. 바운디드 컨텍스트는 특정 모델이 정의되고 적용되는 경계로, 팀 조직, 애플리케이션의 사용 영역, 코드베이스나 DB 스키마 같은 물리적 형태로 명시적으로 긋습니다. 큰 프로젝트에는 여러 모델이 불가피하고 표현은 맥락 안에서만 의미를 가지기 때문이며, 컨텍스트 사이의 접점은 컨텍스트 맵으로 정리합니다.

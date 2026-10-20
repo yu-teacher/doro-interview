@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired.html"]
+concepts: [ioc-di]
+importance: 2
+links: [{to: "ioc-04", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 생성자가 하나뿐이면 스프링이 그 생성자를 항상 사용하므로 @Autowired를 생략해도 됩니다. 생성자가 여러 개일 때는 @Autowired로 쓸 생성자를 표시해야 하고, required=true인 생성자는 하나만 허용됩니다. 여러 개를 표시하려면 모두 required=false여야 하고, 그 경우 스프링은 컨테이너의 빈으로 만족시킬 수 있는 의존성이 가장 많은 생성자를 고릅니다. 후보를 하나도 만족시키지 못하거나, 여러 생성자 중 표시된 것이 없을 때는 primary/default 생성자가 있으면 그것을 사용합니다. 표시된 생성자는 public이 아니어도 됩니다.

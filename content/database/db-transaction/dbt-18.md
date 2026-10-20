@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/transaction-iso.html", "https://www.postgresql.org/docs/16/sql-truncate.html", "https://www.postgresql.org/docs/16/functions-sequence.html"]
+concepts: [acid, schema-design]
+importance: 1
+links: [{to: "dbt-01", kind: PREREQ}, {to: "dbd-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 아니요, PostgreSQL 16에서 시퀀스 변경은 롤백되지 않습니다. 시퀀스 값을 가져오는 것은 즉시 다른 모든 트랜잭션에 보이는 변경이라서, 값을 받은 트랜잭션이 롤백되어도 그 값은 되돌아오지 않고 그대로 소모됩니다. serial 컬럼의 카운터도 같습니다. 그래서 INSERT가 롤백되거나 실패하면 그 번호는 건너뛰어져 id에 공백이 생기고, 값이 빈틈없이 이어진다는 가정에 의존하면 안 됩니다. 시퀀스가 보장하는 것은 동시에 호출해도 서로 다른 값을 받는다는 점입니다.

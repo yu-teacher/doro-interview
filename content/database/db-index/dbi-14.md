@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-types.html", "https://www.postgresql.org/docs/16/brin-intro.html", "https://www.postgresql.org/docs/16/gin-intro.html", "https://www.postgresql.org/docs/16/indexes-multicolumn.html"]
+concepts: [index-structure]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 B-tree는 기본값으로 정렬할 수 있는 데이터의 동등, 범위, 정렬 조회에 씁니다. Hash는 32비트 해시 값을 저장해서 동등 비교만 처리합니다. GiST는 기하 타입의 포함이나 가장 가까운 이웃 검색처럼 여러 전략을 구현할 수 있는 틀이고, GIN은 배열이나 문서처럼 여러 요소로 이루어진 값에서 특정 요소가 들어 있는지를 찾는 역색인입니다. BRIN은 테이블의 연속된 블록 범위마다 최솟값과 최댓값 같은 요약만 저장해서, 값이 물리적 저장 순서와 상관관계가 높은 아주 큰 테이블에서 작은 인덱스로 블록을 건너뛰게 합니다. 인덱스 종류마다 지원하는 연산자와 기능이 다릅니다.

@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/tailRecursion.html", "https://docs.python.org/3/library/sys.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackOverflowError.html"]
+concepts: [recursion-dp]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 꼬리 재귀는 함수의 마지막 연산이 자기 호출인 재귀이고, 컴파일러가 원하면 그 호출을 현재 스택 프레임에서 실행해 새 프레임을 만들지 않게 최적화할 수 있습니다. 하지만 이것은 구현이 해 줄 수도 있는 최적화이지 코드를 꼬리 형태로 쓴다고 항상 일어나는 일이 아닙니다. 제가 돌려 본 자바 25와 파이썬 3.14에서는 꼬리 형태로 써도 깊이가 깊으면 각각 StackOverflowError와 RecursionError가 났고, C에서는 최적화 수준에 따라 달랐습니다. 깊이가 큰 입력이면 직접 반복문으로 바꾸는 것이 안전합니다.

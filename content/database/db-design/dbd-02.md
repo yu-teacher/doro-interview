@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/ddl-constraints.html", "https://www.postgresql.org/docs/16/datatype-numeric.html", "https://www.postgresql.org/docs/16/sql-createtable.html"]
+concepts: [schema-design]
+importance: 3
+links: [{to: "dbd-03", kind: FOLLOWUP}, {to: "dbd-07", kind: FOLLOWUP}, {to: "dbs-01", kind: RELATED}, {to: "jpa-10", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 자연키는 이메일처럼 업무 의미가 있는 값이고, 대리키는 의미 없이 시스템이 붙이는 번호입니다. 자연키는 값이 바뀔 수 있다는 게 문제인데, 바뀌면 그 값을 참조하는 외래키 행까지 모두 함께 고쳐야 합니다. 그래서 보통 대리키를 기본키로 두고, 업무상 유일해야 하는 값은 UNIQUE 제약으로 따로 보장합니다. PostgreSQL 16에서는 `GENERATED ALWAYS AS IDENTITY` 컬럼으로 대리키를 만들 수 있고, serial은 시퀀스를 붙여 주는 표기 편의일 뿐입니다. 어느 쪽이든 기본키에는 유니크 인덱스가 자동으로 생깁니다.

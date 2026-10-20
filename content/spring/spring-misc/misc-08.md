@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/integration/rest-clients.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/client/RestClient.html", "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes", "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-6.1-Release-Notes"]
+concepts: [http-protocol]
+importance: 2
+links: [{to: "misc-16", kind: FOLLOWUP}, {to: "mvc-16", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 동기 호출에는 이제 `RestClient`가 권장됩니다. 6.1에서 나온 `RestClient`는 `WebClient`와 비슷한 fluent API를 제공하면서 `RestTemplate`과 인프라를 공유합니다. `RestTemplate`은 7.0 레퍼런스 문서에서 deprecated 되어 향후 제거될 예정이고, `@Deprecated` 표시는 7.1에서 합니다. 기존 코드는 `RestClient.create(restTemplate)`로 점진적으로 옮길 수 있습니다. 비동기, 스트리밍이 필요하면 리액티브 `WebClient`입니다. `@HttpExchange`로 인터페이스에 HTTP 호출을 선언하면 `HttpServiceProxyFactory`가 프록시 구현을 만들어 주고, 실행 엔진은 어댑터로 RestClient, WebClient, RestTemplate 중에서 고릅니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webflux/new-framework.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-async.html"]
+concepts: [thread-pool, io-filesystem]
+importance: 2
+links: [{to: "mvc-17", kind: FOLLOWUP}, {to: "osm-14", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Spring MVC는 Servlet API 위의 명령형 스택으로, 문서는 현재 스레드를 블로킹할 수 있다고 가정해 컨테이너가 큰 스레드 풀로 흡수한다고 설명합니다. WebFlux는 Reactive Streams와 논블로킹 I/O 위에서 작은 고정 스레드로 동시성을 처리하고 back pressure를 지원합니다. 잘 동작하는 MVC 앱은 바꿀 필요가 없고 JPA나 JDBC 같은 블로킹 영속성을 쓰면 MVC가 보통 최선이며, 논블로킹 스택이나 함수형 엔드포인트가 필요할 때 WebFlux를 고려하라고 합니다. 리액티브가 더 빠르게 해 주지는 않고 지연 있는 I/O에서 적은 스레드와 메모리로 확장하는 것이 이점이며, 학습 곡선도 부담입니다. WebFlux에서 Servlet 필터 매핑은 강하게 비권장됩니다.

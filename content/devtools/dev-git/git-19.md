@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/gitglossary", "https://git-scm.com/docs/git-switch", "https://git-scm.com/docs/git-reflog", "https://git-scm.com/docs/git-checkout"]
+concepts: [git-internals, git-branching]
+importance: 1
+links: [{to: "git-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 detached HEAD는 HEAD가 브랜치가 아니라 특정 커밋을 직접 가리키는 상태입니다. 태그나 과거 커밋, origin/main 같은 원격 추적 브랜치를 체크아웃하면 이 상태가 됩니다. 여기서도 커밋은 만들어지지만 어떤 브랜치도 그 커밋을 가리키지 않아서, 다른 브랜치로 이동하면 그 커밋은 어디에도 연결되지 않은 채 남고 경고가 나오며 결국 가비지 컬렉션으로 지워질 수 있습니다. 잃지 않으려면 이동하기 전에 git switch -c 이름이나 git branch 이름 커밋으로 브랜치를 만들어야 하고, 이미 이동했다면 reflog에서 커밋 해시를 찾아 브랜치를 만듭니다.

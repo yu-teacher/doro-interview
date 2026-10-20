@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9112.html", "https://www.rfc-editor.org/rfc/rfc9113.html"]
+concepts: [http-protocol, tcp]
+importance: 2
+links: [{to: "web-12", kind: FOLLOWUP}, {to: "net-20", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 HTTP/1.1은 기본이 지속 연결이라서, Connection: close를 보내지 않으면 응답 뒤에도 TCP 연결을 유지하고 그 위에서 요청을 계속 보냅니다. 파이프라이닝은 응답을 기다리지 않고 요청 여러 개를 연달아 보내는 방식인데, 서버는 응답을 반드시 요청이 들어온 순서대로 보내야 합니다. 그래서 앞 요청 처리가 오래 걸리면 뒤 요청의 응답이 준비돼 있어도 그 뒤에서 기다리는 Head-of-Line 블로킹이 생깁니다. 이를 피하려고 클라이언트가 연결을 여러 개 여는데, 표준은 연결마다 서버 자원을 쓰고 혼잡을 키울 수 있으니 보수적으로 열라고 합니다. 비멱등 메서드 뒤에는 응답을 받기 전까지 파이프라이닝을 하지 말라는 권고도 있습니다.

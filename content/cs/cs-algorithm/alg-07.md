@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/breadthfirst.html", "https://xlinux.nist.gov/dads/HTML/depthfirst.html"]
+concepts: [graph-algorithms]
+importance: 3
+links: [{to: "alg-13", kind: FOLLOWUP}, {to: "alg-15", kind: FOLLOWUP}, {to: "ds-06", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 BFS는 시작 정점에서 가까운 정점부터 층별로 방문하는 탐색이라 보통 큐로 구현하고, DFS는 한 방향으로 끝까지 들어간 뒤 되돌아오는 탐색이라 재귀나 스택으로 구현합니다. 가중치가 없는 그래프에서 간선 수가 가장 적은 경로는 BFS가 보장하고, DFS는 찾은 경로가 최단이라는 보장이 없습니다. 반대로 경로 전체를 훑는 백트래킹이나 사이클 탐색, 위상 정렬 같은 곳에는 DFS가 자연스럽습니다. 인접 리스트를 쓰면 둘 다 정점과 간선을 한 번씩만 보므로 O(V+E)입니다.

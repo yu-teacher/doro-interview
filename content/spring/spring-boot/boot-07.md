@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/features/external-config.html"]
+concepts: [externalized-config]
+importance: 2
+links: [{to: "boot-09", kind: FOLLOWUP}, {to: "boot-17", kind: FOLLOWUP}, {to: "ioc-26", kind: RELATED}, {to: "arc-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Boot는 여러 소스의 설정을 정해진 PropertySource 순서로 합치고, 뒤에 있는 소스가 앞의 값을 덮어씁니다. 낮은 쪽부터 `application.yml` 같은 config data 파일, OS 환경 변수, 자바 시스템 프로퍼티, `SPRING_APPLICATION_JSON`, 명령행 인자 순입니다. 그래서 `--server.port=9000`은 파일 설정보다 강합니다. 환경 변수는 점을 쓸 수 없는 경우가 많아서 relaxed binding 규칙에 따라 `SPRING_CONFIG_NAME`처럼 대문자와 밑줄로 씁니다. 값 안에서는 `${DB_URL}`이나 `${name:기본값}` 플레이스홀더를 쓸 수 있어서, 운영에서는 비밀번호 같은 값을 파일에 두지 않고 환경 변수로 주입합니다.

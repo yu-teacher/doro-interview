@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching", "https://docs.github.com/en/actions/concepts/workflows-and-actions/dependency-caching", "https://docs.github.com/en/actions/tutorials/build-and-test-code/java-with-gradle"]
+concepts: [ci-pipeline]
+importance: 2
+links: [{to: "cic-03", kind: PREREQ}, {to: "bld-21", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `actions/cache`는 `key`가 정확히 일치하는 캐시를 찾아 `path`로 복원하고(cache hit), 없으면(cache miss) job이 성공으로 끝날 때 그 key로 새 캐시를 저장합니다. 한 번 저장된 캐시의 내용은 바꿀 수 없어서 내용이 달라지려면 key가 달라야 합니다. 그래서 key를 OS와 의존성 정의 파일의 해시로 만들어, 의존성이 바뀌면 새 캐시가 생기고 안 바뀌면 재사용되게 합니다. `restore-keys`는 정확히 일치하는 캐시가 없을 때 접두사가 맞는 가장 최근 캐시를 순서대로 찾아 복원해서, 처음부터 전부 내려받는 일을 줄여 줍니다. 캐시는 없어도 job이 동작해야 하고, 비밀값은 절대 담지 않습니다.

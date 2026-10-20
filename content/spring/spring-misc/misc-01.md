@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html"]
+concepts: [bean-lifecycle, race-condition]
+importance: 3
+links: [{to: "misc-13", kind: FOLLOWUP}, {to: "ioc-07", kind: RELATED}, {to: "ioc-06", kind: RELATED}, {to: "pat-02", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 스프링 빈의 기본 스코프는 싱글톤이라서 컨테이너 안에 빈 정의당 인스턴스가 딱 하나만 만들어지고, 동시에 들어온 요청을 처리하는 여러 스레드가 그 하나를 같이 씁니다. 그래서 서비스에 `private int count` 같은 가변 필드가 있으면 요청 간에 값이 섞이고, 한 사용자의 데이터가 다른 사용자에게 보이는 사고까지 날 수 있습니다. 공식 문서도 상태가 있는 빈은 프로토타입, 상태가 없는 빈은 싱글톤으로 쓰라고 안내합니다. 그래서 생성자 주입한 `final` 필드에는 repository 같은 불변 의존성만 두고, 요청별 상태는 지역 변수나 파라미터, 반환값으로만 다룹니다. 꼭 필요하면 `AtomicLong` 같은 동시성 도구를 쓰거나 request 스코프로 분리합니다.

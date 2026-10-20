@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/gitglossary", "https://git-scm.com/book/ko/v2/Git%EC%9D%98-%EB%82%B4%EB%B6%80-Git-%EA%B0%9C%EC%B2%B4"]
+concepts: [git-internals]
+importance: 2
+links: [{to: "git-14", kind: FOLLOWUP}, {to: "git-01", kind: PREREQ}, {to: "git-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 Git은 내용으로 이름을 정하는 객체 데이터베이스입니다. blob은 파일의 내용만 담고 파일 이름은 담지 않으며, tree는 디렉터리에 해당해서 이름과 모드, 그리고 blob이나 하위 tree를 가리키는 참조의 목록입니다. commit은 최상위 tree, 작성자와 커미터, 메시지, 부모 커밋을 담고, 부모 참조로 이어져 방향이 있고 순환이 없는 그래프를 이룹니다. tag 객체는 다른 객체에 이름과 메시지를 붙인 것이고 서명을 담을 수도 있습니다. 객체 이름은 내용에서 계산한 해시라서 내용이 같으면 같은 객체를 공유합니다.

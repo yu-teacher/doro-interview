@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/using/auto-configuration.html", "https://docs.spring.io/spring-boot/reference/features/logging.html", "https://docs.spring.io/spring-boot/reference/actuator/endpoints.html", "https://docs.spring.io/spring-boot/api/rest/actuator/conditions.html"]
+concepts: [auto-configuration, observability]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 `--debug` 옵션이나 `debug=true`로 실행하면 일부 핵심 로거의 디버그 로그가 켜지고 조건 평가 리포트(conditions report)가 콘솔에 출력되어, 어떤 자동 설정이 적용됐고 어떤 조건 때문에 빠졌는지 볼 수 있습니다. 이 옵션은 애플리케이션의 모든 로그를 DEBUG로 바꾸는 게 아니라 임베디드 컨테이너, Hibernate, Spring Boot 같은 일부 핵심 로거만 올립니다. Actuator를 쓰고 있다면 `conditions` 엔드포인트(`/actuator/conditions`)로 같은 조건 평가 정보를 볼 수 있습니다. 원치 않는 자동 설정은 `exclude`로 제외합니다.

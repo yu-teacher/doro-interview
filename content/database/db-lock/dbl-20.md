@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/errcodes-appendix.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-locking-reads.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-deadlocks.html"]
+concepts: [deadlock, db-locking]
+importance: 1
+links: [{to: "dbl-05", kind: PREREQ}, {to: "dbl-11", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 두 트랜잭션이 같은 행에 FOR SHARE를 걸면 공유 락끼리는 충돌하지 않아서 둘 다 성공합니다. 그런데 각자 그 행을 UPDATE하려면 배타 계열 락이 필요한데, 상대가 공유 락을 쥐고 있어서 서로 상대가 락을 풀기를 기다리는 순환이 되고 데드락이 납니다. PostgreSQL 16에서는 둘 중 하나가 40P01로 중단되고, MySQL 8.4 InnoDB 문서도 카운터 읽기 예시에서 같은 이유로 FOR SHARE가 좋은 해법이 아니라고 설명합니다. 읽고 나서 바꿀 값이면 처음부터 FOR UPDATE로 잡아서 두 번째 트랜잭션이 읽기 단계에서 기다리게 하거나, balance = balance + 1처럼 한 문장의 원자적 UPDATE로 바꾸는 편이 낫습니다.

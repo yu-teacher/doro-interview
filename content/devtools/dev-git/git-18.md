@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/git-reflog", "https://git-scm.com/docs/git-config", "https://git-scm.com/book/ko/v2/Git%EC%9D%98-%EB%82%B4%EB%B6%80-%EC%9A%B4%EC%98%81-%EB%B0%8F-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%B3%B5%EA%B5%AC", "https://git-scm.com/docs/git-reset"]
+concepts: [git-undo]
+importance: 2
+links: [{to: "git-06", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 커밋한 작업이라면 대부분 복구됩니다. reflog는 브랜치와 HEAD가 가리킨 위치의 이동 기록을 이 저장소 안에만 남기므로, git reflog에서 날아가기 전 위치를 찾아 git reset --hard HEAD@{1}처럼 되돌리거나 그 커밋에서 새 브랜치를 만들 수 있습니다. 하지만 커밋도 add도 하지 않은 워킹 트리 수정은 reflog에 없어서 reset --hard로 덮어쓰면 되살릴 수 없습니다. 또 reflog 항목은 영구적이지 않아서 기본 90일, 도달할 수 없는 항목은 30일 뒤 정리 대상이 되고, 다른 저장소에는 공유되지 않습니다.

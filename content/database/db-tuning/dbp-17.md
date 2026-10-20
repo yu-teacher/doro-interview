@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/planner-stats.html", "https://www.postgresql.org/docs/16/sql-createstatistics.html"]
+concepts: [query-planner]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 플래너는 기본적으로 WHERE의 여러 조건이 서로 독립이라고 가정하고 각 조건의 선택도를 곱합니다. 그런데 city와 zip처럼 한 컬럼이 다른 컬럼을 결정하는 식으로 종속돼 있으면 실제보다 훨씬 적은 행이 나올 것으로 추정해서 엉뚱한 계획을 고를 수 있습니다. 이때 CREATE STATISTICS로 의존성(dependencies), 고유값 조합(ndistinct), 다변량 MCV 같은 확장 통계를 만들고 ANALYZE하면 추정이 개선됩니다. 다만 의존성 통계는 상수와의 등호 조건 등에만 적용되고 범위 조건에는 쓰이지 않으며, 모든 조합에 자동으로 만들어지지 않으니 문제가 되는 컬럼 조합에만 만듭니다.

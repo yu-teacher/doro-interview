@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/gitignore", "https://git-scm.com/docs/git-rm"]
+concepts: [git-internals]
+importance: 2
+links: [{to: "git-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 .gitignore는 아직 추적되지 않는 파일을 무시하게 하는 장치라서, 이미 커밋되어 추적 중인 파일에는 영향이 없고 변경도 계속 감지됩니다. 추적을 멈추려면 git rm --cached 파일로 index에서만 제거하고 .gitignore에 패턴을 넣은 뒤 커밋합니다. --cached를 쓰면 워킹 트리의 파일은 지워지지 않습니다. 단 과거 커밋에는 그 파일이 그대로 남아 있으므로, 비밀번호 같은 값을 실수로 커밋했다면 추적을 끊는 것만으로는 부족합니다.

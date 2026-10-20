@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-partial.html", "https://www.postgresql.org/docs/16/indexes-types.html", "https://www.postgresql.org/docs/16/indexes-examine.html", "https://www.postgresql.org/docs/16/planner-stats.html"]
+concepts: [index-design, query-planner]
+importance: 2
+links: [{to: "dbi-07", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 무조건 소용없는 것은 아니고, 중요한 것은 고유값 개수가 아니라 쿼리가 고르는 값이 전체 행의 몇 퍼센트인가입니다. 공식 문서는 전체 행의 몇 퍼센트를 넘는 흔한 값은 어차피 인덱스를 쓰지 않는다고 설명합니다. 예를 들어 상태 컬럼이 DONE 95%, PAID 4%, NEW 1%라면 status = 'DONE' 조회에는 인덱스가 쓰이지 않지만 희귀한 NEW 조회에는 쓰일 수 있습니다. 그래서 희귀한 값만 자주 조회한다면 status = 'NEW' 조건의 부분 인덱스로 크기를 크게 줄여서 만드는 편이 낫습니다. 또 B-tree가 고려하는 연산자 목록에 <>가 없고, 실험에서도 일치 행이 적은 <> 조건은 인덱스를 쓰지 못했습니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-requestmapping.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/arguments.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/requestparam.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/requestbody.html"]
+concepts: [mvc-request-flow]
+importance: 3
+links: [{to: "mvc-05", kind: FOLLOWUP}, {to: "mvc-13", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 `@PathVariable`은 `/members/{id}` 같은 URI 템플릿 변수를 받고, 값은 선언한 타입으로 자동 변환됩니다. `@RequestParam`은 쿼리 파라미터나 폼 데이터 같은 Servlet 요청 파라미터를 바인딩하며, 기본은 필수이고 `required=false`나 `Optional`로 선택 사항이 됩니다. `@RequestBody`는 요청 본문을 `HttpMessageConverter`로 읽어 객체로 변환하는 것으로, 보통 JSON 본문을 DTO로 받을 때 씁니다. 어노테이션이 없는 단순 타입 인자는 `@RequestParam`, 그 외 객체는 `@ModelAttribute`로 해석됩니다. 폼 데이터는 `@RequestBody`가 아니라 `@RequestParam`으로 읽어야 합니다.

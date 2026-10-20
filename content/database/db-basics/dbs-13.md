@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/tutorial-window.html", "https://www.postgresql.org/docs/16/functions-window.html"]
+concepts: [sql-aggregation]
+importance: 2
+links: [{to: "dbs-20", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 GROUP BY 집계는 그룹당 한 행으로 줄이지만, 윈도 함수는 OVER 절로 범위를 정해 계산하면서도 각 행을 그대로 남깁니다. PARTITION BY로 그룹을 나누고 윈도 안의 ORDER BY로 순서를 정합니다. 순위 함수는 동점 처리가 다릅니다. RANK는 동점에 같은 순위를 주고 다음 순위를 건너뛰어 1, 1, 3이 되고, DENSE_RANK는 건너뛰지 않아 1, 1, 2가 되며, ROW_NUMBER는 동점이어도 1, 2, 3으로 다른 번호를 줍니다. 윈도 함수는 WHERE에 못 쓰므로 부서별 1등만 뽑으려면 서브쿼리로 감싸 바깥에서 거릅니다. PostgreSQL 16 기준이며 MySQL 8.4에서도 같게 나왔습니다.

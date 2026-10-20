@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://learn.microsoft.com/en-us/azure/architecture/patterns/saga", "https://microservices.io/patterns/data/saga.html", "https://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf"]
+concepts: [distributed-consistency, isolation-level]
+importance: 1
+links: [{to: "dst-09", kind: PREREQ}, {to: "dbt-02", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Saga의 각 로컬 트랜잭션은 이미 커밋되므로, saga가 끝나기 전의 중간 결과를 다른 saga나 트랜잭션이 볼 수 있습니다. 이것이 격리가 없다는 뜻이고, 그래서 갱신 손실, 더티 리드, 반복 불가능 읽기 같은 이상 현상이 생길 수 있습니다. 대응책으로는 진행 중임을 표시하는 시맨틱 락, 순서가 바뀌어도 결과가 같은 교환 가능한 갱신, 갱신이 재시도 가능한 트랜잭션에서 일어나도록 순서를 바꿔 더티 리드를 없애는 비관적 뷰, 갱신 전에 값을 다시 읽어 확인하는 재읽기, 위험도에 따라 동시성 방식을 고르는 방법이 있습니다. 되돌릴 수 없는 분기점인 pivot 트랜잭션 뒤에는 재시도 가능한 단계만 둡니다. 어떤 대응책이 맞는지는 비즈니스 위험을 분석해 골라야 하고, 보상이 항상 성공하지는 않는다는 점도 설계에 넣어야 합니다.

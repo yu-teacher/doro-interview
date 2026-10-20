@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://dev.mysql.com/doc/refman/8.4/en/innodb-locks-set.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-deadlocks-handling.html"]
+concepts: [deadlock, db-locking]
+importance: 1
+links: [{to: "dbl-05", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 MySQL 8.4 InnoDB에서 INSERT가 중복 키 오류를 만나면 그 중복 레코드에 공유 락을 요청합니다. 세션 1이 키 1을 INSERT해 배타 락을 쥐고 있고 세션 2와 3도 같은 키를 INSERT하면, 둘 다 중복 키 오류를 겪고 공유 락을 요청하며 대기합니다. 세션 1이 롤백하면 대기 중이던 두 공유 락이 함께 승인되고, 이제 각자 INSERT를 위해 배타 락이 필요한데 상대의 공유 락 때문에 얻지 못해서 서로 기다리는 데드락이 됩니다. 한쪽이 희생되어 1213 오류를 받으니 재시도해야 합니다. 같은 순서를 PostgreSQL 16에서 실행하면 데드락 없이 차례로 진행했습니다. ON DUPLICATE KEY UPDATE는 배타 락을 걸지만 이번 실험에서는 그 문장도 데드락이 났습니다.

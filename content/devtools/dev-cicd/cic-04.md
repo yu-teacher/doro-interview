@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows", "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"]
+concepts: [ci-pipeline]
+importance: 2
+links: [{to: "cic-17", kind: FOLLOWUP}, {to: "cic-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `push`는 브랜치나 태그에 커밋을 푸시할 때, `pull_request`는 PR을 열거나 갱신하거나 다시 열 때가 기본값이고, `workflow_dispatch`는 화면·API·CLI로 수동 실행할 때, `schedule`은 cron 식으로 주기 실행할 때 동작합니다. `pull_request`는 기본적으로 PR 브랜치를 베이스에 합친 병합 결과를 체크아웃해서 테스트하고, 병합 충돌이 있으면 실행되지 않습니다. `schedule`은 기본 브랜치의 최신 커밋에서만 돌고 기본 시간대는 UTC이며(IANA 시간대 지정도 가능), 부하가 몰리는 매시 정각 무렵에는 지연되거나 일부가 버려질 수 있습니다. `workflow_dispatch`도 워크플로 파일이 기본 브랜치에 있어야 실행 버튼이 나타납니다. `branches`와 `paths` 필터를 같이 쓰면 둘 다 만족해야 실행됩니다.

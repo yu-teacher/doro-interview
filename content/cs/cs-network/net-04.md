@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9293.html"]
+concepts: [tcp]
+importance: 3
+links: [{to: "net-09", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 TCP는 두 방향을 따로 닫습니다. 한쪽이 더 보낼 데이터가 없으면 FIN을 보내고 상대가 ACK로 확인하는데, 이 시점부터는 그 방향만 닫힌 반닫힘 상태라 FIN을 보낸 쪽도 상대가 보내는 데이터를 계속 받을 수 있습니다. 상대도 보낼 것을 다 보내면 자기 FIN을 보내고, 먼저 닫은 쪽이 마지막 ACK를 보낸 뒤 TIME_WAIT에 머물다 닫힙니다. 그래서 FIN, ACK, FIN, ACK 네 번으로 보이는 것입니다. 상대가 FIN을 보냈는데 내 애플리케이션이 close를 하지 않으면 내 쪽은 CLOSE_WAIT에 남아 있으므로 CLOSE_WAIT가 쌓이면 close 누락을 의심합니다.

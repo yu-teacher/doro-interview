@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"]
+concepts: [dirty-checking]
+importance: 3
+links: [{to: "jpa-03", kind: PREREQ}, {to: "jpa-05", kind: PREREQ}, {to: "jpa-09", kind: FOLLOWUP}, {to: "jpa-26", kind: FOLLOWUP}, {to: "tx-06", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Hibernate는 바이트코드 향상을 쓰지 않으면 DB에서 읽거나 DB에 쓴 뒤의 엔티티 상태를 스냅샷으로 보관합니다. flush 때 현재 상태를 스냅샷과 비교해서 달라진 엔티티가 있으면 UPDATE를 만듭니다. 그래서 영속 상태 엔티티는 setter나 도메인 메서드로 값만 바꿔도 `save()` 호출 없이 커밋 때 UPDATE가 나갑니다. 입문서도 영속 엔티티의 변경은 flush 때 자동으로 감지되어 DB에 반영된다고 설명합니다. 바이트코드 향상을 켜면 필드 쓰기를 가로채 변경을 기록하므로 스냅샷 비교 비용을 줄일 수 있지만, 정확도가 조금 떨어질 수 있다는 단서가 붙습니다. 준영속이나 비영속 엔티티는 컨텍스트가 관리하지 않으므로 이 동작이 적용되지 않습니다.

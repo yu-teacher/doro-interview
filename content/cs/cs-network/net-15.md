@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc792.html", "https://www.rfc-editor.org/rfc/rfc791.html", "https://www.rfc-editor.org/rfc/rfc1122.html", "https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml"]
+concepts: [network-layers]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 ICMP는 IP 계층의 오류 보고와 진단에 쓰는 메시지 프로토콜입니다. ping은 ICMP Echo Request를 보내고, 상대가 같은 데이터를 담아 Echo Reply로 돌려주면 왕복 시간을 측정합니다. IP 헤더의 TTL은 라우터를 지날 때마다 줄어드는 수명 값이라 0이 되면 라우터가 패킷을 버리고 보낸 쪽에 Time Exceeded 메시지를 보낼 수 있습니다. traceroute는 TTL을 1, 2, 3으로 늘려 가며 패킷을 보내고 각 홉이 돌려주는 Time Exceeded의 송신 주소로 경로를 알아내며, 목적지에 닿으면 목적지의 응답으로 끝납니다. 라우터가 응답하지 않으면 그 홉은 별표로 보입니다.

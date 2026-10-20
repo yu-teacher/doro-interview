@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9113.html", "https://www.rfc-editor.org/rfc/rfc7541.html"]
+concepts: [http-protocol]
+importance: 2
+links: [{to: "web-13", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 HTTP/2는 하나의 연결 안에서 요청과 응답을 각각 독립된 스트림으로 만들고, 프레임을 서로 끼워 보내는 멀티플렉싱을 합니다. 그래서 느린 응답 하나가 같은 연결의 다른 응답을 막는 애플리케이션 계층의 HOL 블로킹이 풀리고, 클라이언트는 호스트·포트 쌍마다 연결을 하나만 여는 것이 권장됩니다. 메시지는 텍스트가 아니라 바이너리 프레임으로 보내고, 헤더는 HPACK으로 압축해서 반복되는 헤더를 표 인덱스로 줄입니다. 하지만 아래 전송 계층은 여전히 TCP라서 패킷 하나가 유실되면 그 연결의 모든 스트림이 같이 멈추는 TCP 수준의 HOL 블로킹은 해결하지 못한다고 표준이 직접 밝히고 있습니다.

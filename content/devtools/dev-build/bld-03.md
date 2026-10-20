@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.gradle.org/current/userguide/java_plugin.html", "https://docs.gradle.org/current/userguide/java_library_plugin.html"]
+concepts: [dependency-management]
+importance: 2
+links: [{to: "bld-10", kind: FOLLOWUP}, {to: "bld-17", kind: FOLLOWUP}, {to: "bld-01", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `implementation`은 컴파일과 실행에 모두 필요한 일반 의존성입니다. `compileOnly`는 컴파일할 때만 필요하고 런타임 클래스패스에는 들어가지 않으며, `runtimeOnly`는 반대로 컴파일에는 쓰지 않고 실행할 때만 필요한 것, 예를 들어 JDBC 드라이버 같은 것에 씁니다. `testImplementation`은 테스트 코드를 컴파일하고 실행할 때만 필요한 JUnit 같은 라이브러리용이라 운영 결과물에는 들어가지 않습니다. 이 구성들이 모여 `compileClasspath`, `runtimeClasspath` 같은 실제 클래스패스가 만들어집니다.

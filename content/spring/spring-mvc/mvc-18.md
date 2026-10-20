@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc-versioning.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config/api-version.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-requestmapping.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html"]
+concepts: [spring-migration, mvc-request-flow]
+importance: 1
+links: [{to: "boot-15", kind: RELATED}, {to: "misc-17", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Spring Framework 7 MVC는 API 버전 관리를 프레임워크 기능으로 지원합니다. `WebMvcConfigurer`의 `configureApiVersioning`에서 요청 헤더, 요청 파라미터, 경로 세그먼트, 미디어 타입 파라미터 중 버전을 읽을 위치를 정하거나 커스텀 `ApiVersionResolver`를 씁니다. 그러면 `@GetMapping(version = "1.1")`처럼 매핑의 `version` 속성으로 버전별 메서드를 나눌 수 있고, `"1.2+"`는 1.2와 그 이상의 지원 버전에 매칭하는 baseline 표기입니다. 지원하지 않는 버전은 `InvalidApiVersionException`으로 400이고, 기본적으로 버전은 필수라 없으면 400입니다. `Deprecation`, `Sunset` 헤더로 폐기 예고도 보냅니다.

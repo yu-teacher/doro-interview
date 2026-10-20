@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/transaction-iso.html", "https://www.postgresql.org/docs/16/applevel-consistency.html"]
+concepts: [isolation-level, mvcc]
+importance: 2
+links: [{to: "dbl-04", kind: PREREQ}, {to: "dbl-18", kind: FOLLOWUP}, {to: "dbt-17", kind: RELATED}, {to: "dbt-03", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16에서 UPDATE는 먼저 자기 스냅샷에서 대상 행을 찾고, 그 행이 이미 다른 트랜잭션에 의해 수정 중이면 그 트랜잭션이 끝나길 기다립니다. 상대가 롤백하면 원래 행을 그대로 갱신합니다. 상대가 커밋하면 READ COMMITTED에서는 삭제됐으면 건너뛰고, 아니면 갱신된 행 버전에 WHERE 조건을 다시 평가해 맞으면 그 버전에 갱신을 적용합니다. REPEATABLE READ 이상에서는 트랜잭션 시작 뒤에 바뀐 행은 건드릴 수 없어서 could not serialize access due to concurrent update 오류로 중단되고, 애플리케이션이 트랜잭션을 처음부터 재시도해야 합니다. 그래서 READ COMMITTED의 한 문장은 다른 행에 대해서는 일관되지 않은 스냅샷을 볼 수 있습니다.

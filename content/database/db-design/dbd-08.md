@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/runtime-config-connection.html", "https://www.postgresql.org/docs/16/locale.html", "https://www.postgresql.org/docs/16/multibyte.html", "https://www.postgresql.org/docs/16/datatype-datetime.html", "https://dev.mysql.com/doc/refman/8.4/en/charset-server.html", "https://dev.mysql.com/doc/refman/8.4/en/charset-unicode-utf8mb4.html", "https://dev.mysql.com/doc/refman/8.4/en/charset-unicode-utf8mb3.html"]
+concepts: [connection-pool, schema-design]
+importance: 1
+links: [{to: "dbp-21", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16의 max_connections 기본값은 보통 100이고 서버를 시작할 때만 바꿀 수 있으며, 일부 슬롯은 슈퍼유저용으로 예약됩니다. 연결 수를 무작정 늘리기보다 애플리케이션의 커넥션 풀 크기를 맞추는 쪽이 일반적입니다. 인코딩은 initdb가 로케일에 맞춰 클러스터 기본값(UTF8인지 확인)으로 정하고, LC_COLLATE와 LC_CTYPE은 데이터베이스를 만든 뒤에는 바꿀 수 없어서 처음에 정해야 합니다. 타임존은 세션의 TimeZone 설정이 시각 표시와 해석에 영향을 줍니다. MySQL 8.4(InnoDB)에서는 기본 문자셋이 utf8mb4이고, utf8mb3는 이모지 같은 4바이트 문자를 저장하지 못합니다.

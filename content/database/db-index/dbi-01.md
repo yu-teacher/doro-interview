@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-intro.html", "https://www.postgresql.org/docs/16/indexes-types.html", "https://www.postgresql.org/docs/16/indexes-examine.html"]
+concepts: [index-structure]
+importance: 3
+links: [{to: "dbi-02", kind: FOLLOWUP}, {to: "dbi-04", kind: FOLLOWUP}, {to: "dbi-07", kind: FOLLOWUP}, {to: "dbp-04", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 인덱스는 WHERE나 JOIN 조건에 맞는 행을 테이블 전체를 훑지 않고 찾도록 따로 유지하는 자료구조입니다. PostgreSQL 16에서 CREATE INDEX는 따로 지정하지 않으면 B-tree를 만들고, 한번 만들면 테이블이 바뀔 때마다 시스템이 인덱스를 알아서 갱신합니다. 다만 인덱스가 있다고 항상 쓰이지는 않고, 플래너가 통계를 보고 순차 스캔보다 싸다고 판단할 때만 쓰므로 ANALYZE로 통계를 갱신해 줘야 할 수 있습니다. 인덱스는 쓰기 때마다 동기화 비용이 들기 때문에 거의 안 쓰는 인덱스는 지우는 것이 좋습니다.

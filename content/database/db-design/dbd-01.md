@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/ddl-constraints.html"]
+concepts: [schema-design]
+importance: 3
+links: [{to: "dbs-08", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 정규화는 같은 사실을 한 곳에만 저장하도록 테이블을 나누는 것이고, 목적은 중복을 없애 갱신 이상을 막는 것입니다. 고객 이름을 주문 행마다 복사해 두면 이름이 바뀔 때 일부 행만 고쳐져 값이 어긋날 수 있지만, 고객 테이블을 따로 두고 외래키로 참조하면 한 곳만 고치면 됩니다. 반정규화는 읽기 성능을 위해 이 중복을 일부러 허용하는 것이라, 조인 비용이 실제 병목이라고 측정된 뒤에 집계 컬럼처럼 범위를 좁혀서 쓰고 값이 어긋나지 않게 갱신 경로도 함께 설계해야 합니다. 기본은 정규화에서 시작하는 것입니다.

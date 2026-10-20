@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/np.html", "https://xlinux.nist.gov/dads/HTML/npcomplete.html", "https://xlinux.nist.gov/dads/HTML/nphard.html", "https://xlinux.nist.gov/dads/HTML/approximatin.html", "https://xlinux.nist.gov/dads/HTML/travelingSalesman.html", "https://xlinux.nist.gov/dads/HTML/knapsackProblem.html"]
+concepts: [complexity-sorting]
+importance: 1
+links: [{to: "alg-01", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 NP는 답이 주어졌을 때 그 답이 맞는지를 입력 크기의 다항 시간 안에 검사할 수 있는 결정 문제의 집합이고, 빨리 찾을 수 있다는 뜻은 아닙니다. NP-완전은 NP에 속하면서 다른 모든 NP 문제가 이 문제만큼 쉽다고 환원되는 가장 어려운 문제들이어서, 하나라도 빠르게 풀면 NP 전체가 풀립니다. NP-난해는 NP 문제를 푸는 것 이상으로 어려운 문제로, NP-완전인 결정 문제의 최적화 버전인 최단 순회 경로 찾기가 예입니다. 빠른 정확한 해법이 알려지지 않았기에 다항 시간에 최적에 가까운 보장된 해를 구하는 근사 알고리즘을 씁니다.

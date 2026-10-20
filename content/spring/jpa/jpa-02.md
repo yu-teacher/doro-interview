@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html", "https://docs.spring.io/spring-data/jpa/reference/repositories/core-concepts.html", "https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"]
+concepts: [spring-data-jpa]
+importance: 2
+links: [{to: "jpa-03", kind: FOLLOWUP}, {to: "jpa-08", kind: FOLLOWUP}, {to: "jpa-25", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 JPA(Jakarta Persistence)는 자바 ORM의 표준 명세이고, `EntityManager` 같은 API와 매핑 어노테이션을 정의합니다. Hibernate는 이 명세를 구현한 구현체이자 명세보다 많은 고유 기능을 가진 ORM입니다. Spring Data JPA는 그 위에 얹은 편의 계층으로, `JpaRepository` 같은 리포지토리 인터페이스만 선언하면 CRUD 메서드와 메서드 이름에서 만든 쿼리를 제공합니다. 내부적으로는 `EntityManager`를 호출하고, 그 뒤에서 Hibernate가 SQL을 만듭니다. 예컨대 `save()`는 `persist` 또는 `merge`를 호출하므로, Spring Data JPA를 써도 영속성 컨텍스트와 flush 같은 JPA 동작을 알아야 합니다.

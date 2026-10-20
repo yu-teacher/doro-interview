@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://learn.microsoft.com/en-us/azure/architecture/patterns/bulkhead", "https://resilience4j.readme.io/docs/bulkhead", "https://resilience4j.readme.io/docs/circuitbreaker"]
+concepts: [resilience, thread-pool]
+importance: 1
+links: [{to: "dst-13", kind: PREREQ}, {to: "jt-16", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Bulkhead는 선박의 격벽처럼 자원을 칸으로 나눠, 한 의존 대상의 장애가 전체로 번지지 않게 하는 패턴입니다. 호출하는 쪽이 모든 외부 호출을 하나의 스레드 풀이나 연결 풀로 처리하면 느린 서비스 하나가 풀을 다 차지해 다른 서비스 호출까지 막힙니다. 서비스별로 풀이나 동시 호출 수를 따로 두면 느린 서비스 호출만 거절되고 나머지는 계속 동작합니다. Resilience4j는 세마포어 기반과 고정 스레드 풀 기반 두 가지 벌크헤드를 제공합니다. Resilience4j 문서에 따르면 Circuit Breaker는 실패 비율을 보고 차단할 뿐 동시 실행 수를 제한하지 않아서, 동시성 제한은 Bulkhead가 맡고 둘을 함께 쓸 수 있습니다. 칸을 나누면 자원 효율이 떨어지는 대가가 있습니다.

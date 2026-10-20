@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/advice.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/EnableTransactionManagement.html"]
+concepts: [aop]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 같은 Aspect 안에서 같은 조인포인트에 걸린 어드바이스는 종류별 우선순위가 있어서 Around, Before, After, AfterReturning, AfterThrowing 순으로 우선순위가 높습니다. 우선순위가 높은 것이 들어갈 때 먼저, 나올 때 마지막에 실행됩니다. 다만 After는 AspectJ의 finally 의미라서 실제로는 AfterReturning과 AfterThrowing 뒤에 실행됩니다. 같은 종류가 한 Aspect에 둘 이상이면 순서가 정의되어 있지 않아서 하나로 합치거나 Aspect를 나누고 `@Order`를 쓰라고 합니다. Aspect 사이 순서는 `@Order`나 `Ordered`로 정하며 값이 작을수록 우선순위가 높고, 지정하지 않으면 정의되지 않습니다.

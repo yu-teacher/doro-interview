@@ -1,4 +1,154 @@
 concepts:
+  - slug: solid-principles
+    name: "SOLID 원칙"
+    description: "SRP·OCP·LSP·ISP·DIP 등 객체지향 설계 원칙"
+  - slug: layered-architecture
+    name: "계층형·헥사고날 아키텍처"
+    description: "계층 분리와 의존성 방향 규칙(클린·헥사고날·모듈러)"
+  - slug: ddd
+    name: "도메인 주도 설계"
+    description: "엔티티·값 객체·애그리거트·바운디드 컨텍스트"
+  - slug: externalized-config
+    name: "설정 외부화"
+    description: "코드와 설정을 분리하고 환경별로 주입하는 방식(12-Factor, 프로파일)"
+  - slug: gof-patterns
+    name: "GoF 디자인 패턴"
+    description: "싱글톤·팩토리·전략·템플릿 메서드·옵저버 등 자바와 스프링에서 보이는 패턴"
+  - slug: filter-chain
+    name: "필터 체인"
+    description: "요청을 여러 단계로 가로채 처리하는 책임 연쇄(서블릿 필터, 인터셉터, 시큐리티 필터)"
+  - slug: msa-boundary
+    name: "MSA와 서비스 경계"
+    description: "모놀리스·마이크로서비스 선택, 경계 설정, 게이트웨이·로드밸런싱·BFF"
+  - slug: messaging
+    name: "메시징과 이벤트 스트리밍"
+    description: "메시지 큐, Kafka, 비동기 통신, 전달 보장"
+  - slug: distributed-consistency
+    name: "분산 일관성과 분산 트랜잭션"
+    description: "CAP, Saga, Outbox, 2PC, CQRS, 복제 지연 같은 일관성 문제"
+  - slug: idempotency
+    name: "멱등성"
+    description: "같은 요청을 여러 번 보내도 결과가 같은 성질과 재시도 안전성"
+  - slug: resilience
+    name: "장애 격리와 복원력"
+    description: "Circuit Breaker, Bulkhead, 재시도, 타임아웃"
+  - slug: observability
+    name: "관측성"
+    description: "로그·메트릭·트레이싱, Actuator, 슬로우 쿼리 추적"
+  - slug: cache
+    name: "캐시"
+    description: "캐시 전략, 무효화, 일관성, 교체 정책(LRU 등)"
+  - slug: equals-hashcode
+    name: "equals와 hashCode"
+    description: "동등성 정의와 해시 기반 컬렉션과의 계약"
+  - slug: immutability
+    name: "불변 객체"
+    description: "불변 설계, 방어적 복사, record, 불변 컬렉션"
+  - slug: java-collections
+    name: "컬렉션 프레임워크"
+    description: "List·Set·Map·Queue 구현체 선택, 순회 중 수정, 동시성 컬렉션"
+  - slug: string
+    name: "String"
+    description: "불변성, 상수 풀, StringBuilder"
+  - slug: numeric-precision
+    name: "숫자 정밀도와 오버플로"
+    description: "부동소수점 오차, 정수 오버플로, 정밀 계산(BigDecimal, numeric)"
+  - slug: exception-handling
+    name: "예외 처리"
+    description: "checked/unchecked, try-with-resources, finally, 예외 설계"
+  - slug: type-system
+    name: "타입 시스템"
+    description: "기본·참조 타입, 박싱, 제네릭, 타입 추론"
+  - slug: modern-java
+    name: "최신 자바 문법"
+    description: "record, enum, sealed, 패턴 매칭, 텍스트 블록"
+  - slug: oop-polymorphism
+    name: "객체지향과 다형성"
+    description: "추상 클래스·인터페이스, 오버라이딩·오버로딩, 접근 제어"
+  - slug: jvm-execution
+    name: "클래스 로딩과 JVM 실행"
+    description: "클래스 로더, 초기화 순서, 리플렉션, JIT, 모듈"
+  - slug: memory-layout
+    name: "메모리 구조"
+    description: "스택·힙 등 프로세스와 JVM의 메모리 영역, OOM"
+  - slug: garbage-collection
+    name: "가비지 컬렉션"
+    description: "GC 알고리즘, 참조 종류, 메모리 누수"
+  - slug: thread-process
+    name: "스레드와 프로세스"
+    description: "생성·상태·중단, 프로세스와의 차이"
+  - slug: race-condition
+    name: "경쟁 상태와 동기화"
+    description: "임계 구역, synchronized, 락, 스레드 안전성"
+  - slug: memory-model
+    name: "메모리 모델과 가시성"
+    description: "volatile, happens-before, 원자 연산, CAS"
+  - slug: deadlock
+    name: "데드락"
+    description: "발생 조건, 예방·회피·탐지, DB와 OS에서의 데드락"
+  - slug: thread-pool
+    name: "스레드 풀과 비동기 실행"
+    description: "ExecutorService, 풀 크기, CompletableFuture, @Async"
+  - slug: virtual-thread
+    name: "가상 스레드"
+    description: "플랫폼 스레드와 차이, 핀닝, 구조적 동시성"
+  - slug: lambda-stream
+    name: "람다와 스트림"
+    description: "함수형 인터페이스, 스트림 파이프라인, 수집기, 병렬 스트림"
+  - slug: null-handling
+    name: "null 처리"
+    description: "Optional, NPE, SQL NULL, 허용 여부 같은 null의 의미"
+  - slug: ioc-di
+    name: "IoC와 의존성 주입"
+    description: "제어의 역전, 주입 방식, 빈 탐색·등록, 순환 의존"
+  - slug: bean-lifecycle
+    name: "빈 생명주기와 스코프"
+    description: "싱글톤·프로토타입 스코프, 초기화·소멸, 후처리기"
+  - slug: proxy
+    name: "프록시"
+    description: "AOP 프록시 기반 동작과 그 제약(자기 호출, final/private)"
+  - slug: aop
+    name: "AOP"
+    description: "관점 지향 프로그래밍의 용어·어드바이스·실행 순서"
+  - slug: auto-configuration
+    name: "자동 설정"
+    description: "Spring Boot 자동 설정과 조건부 빈 등록, starter"
+  - slug: spring-migration
+    name: "Spring 7·Boot 4 변경점"
+    description: "버전 업그레이드와 API 변경"
+  - slug: mvc-request-flow
+    name: "MVC 요청 처리 흐름"
+    description: "DispatcherServlet, 컨트롤러 바인딩, 메시지 변환, 검증, DTO"
+  - slug: global-exception-handling
+    name: "전역 예외 처리"
+    description: "@ControllerAdvice, ProblemDetail, 예외 처리 경로"
+  - slug: thread-binding
+    name: "스레드 바인딩"
+    description: "트랜잭션·보안 컨텍스트 등이 현재 스레드에 묶이는 방식"
+  - slug: authn-authz
+    name: "인증과 인가"
+    description: "Spring Security의 인증·인가 구조와 필터 체인"
+  - slug: web-security
+    name: "웹 보안"
+    description: "세션·쿠키·JWT, CSRF, CORS, 보안 헤더"
+  - slug: cryptography
+    name: "암호화·해시·TLS"
+    description: "비밀번호 해시, 대칭·비대칭 암호, HTTPS/TLS"
+  - slug: fetch-strategy
+    name: "조회 전략"
+    description: "지연·즉시 로딩, N+1, fetch join, OSIV"
+  - slug: entity-mapping
+    name: "엔티티 매핑"
+    description: "연관관계, 상속, 값 타입, 식별자 전략"
+  - slug: spring-data-jpa
+    name: "Spring Data JPA"
+    description: "리포지토리, 쿼리 방식, 페이징, 프로젝션, 대량 처리"
+  - slug: persistence-context
+    name: "영속성 컨텍스트"
+    description: "JPA가 엔티티를 관리하는 범위와 생명주기, flush"
+  - slug: dirty-checking
+    name: "변경 감지"
+    description: "플러시 때 변경된 엔티티를 UPDATE로 반영하는 동작"
   - slug: acid
     name: "ACID"
     description: "트랜잭션이 보장해야 하는 원자성·일관성·격리성·지속성"
@@ -17,15 +167,117 @@ concepts:
   - slug: rollback-rules
     name: "롤백 규칙"
     description: "어떤 예외에서 롤백하고 어떤 예외에서 커밋하는가"
-  - slug: proxy
-    name: "프록시"
-    description: "AOP 프록시 기반 동작과 그 제약"
-  - slug: thread-binding
-    name: "스레드 바인딩"
-    description: "트랜잭션과 리소스가 현재 스레드에 묶이는 방식"
-  - slug: persistence-context
-    name: "영속성 컨텍스트"
-    description: "JPA가 엔티티를 관리하는 범위"
-  - slug: dirty-checking
-    name: "변경 감지"
-    description: "플러시 때 변경된 엔티티를 UPDATE로 반영하는 동작"
+  - slug: tx-propagation
+    name: "트랜잭션 전파"
+    description: "REQUIRED·REQUIRES_NEW 등 전파 속성과 참여 규칙"
+  - slug: isolation-level
+    name: "격리 수준"
+    description: "이상 현상(dirty/non-repeatable/phantom read)과 격리 수준별 동작"
+  - slug: mvcc
+    name: "MVCC"
+    description: "다중 버전 동시성 제어, 스냅샷, dead tuple과 VACUUM"
+  - slug: db-locking
+    name: "DB 락"
+    description: "행 락·테이블 락, FOR UPDATE, 데드락, SKIP LOCKED, 갭 락"
+  - slug: optimistic-lock
+    name: "낙관적 락"
+    description: "버전 기반 충돌 감지와 갱신 손실 방지"
+  - slug: distributed-lock
+    name: "분산 락"
+    description: "Redis·어드바이저리 락 등 프로세스 사이 상호 배제"
+  - slug: index-structure
+    name: "인덱스 구조"
+    description: "B-tree 등 인덱스 종류와 동작 원리, 쓰기 비용"
+  - slug: index-design
+    name: "인덱스 설계와 활용"
+    description: "복합·커버링·부분 인덱스, 인덱스를 못 타는 조건, 정렬·페이징"
+  - slug: query-planner
+    name: "실행 계획과 통계"
+    description: "EXPLAIN 읽기, 플래너 통계, 스캔 방식 선택"
+  - slug: join-query
+    name: "조인과 쿼리 작성"
+    description: "JOIN 종류·알고리즘, 서브쿼리, 쿼리 패턴"
+  - slug: sql-aggregation
+    name: "SQL 집계와 처리 순서"
+    description: "GROUP BY, 윈도 함수, 처리 순서, 집계 함수"
+  - slug: schema-design
+    name: "스키마 설계"
+    description: "제약조건, 정규화, 키 전략, 컬럼 타입, 소프트 삭제"
+  - slug: db-scaling
+    name: "복제와 파티셔닝"
+    description: "읽기 분산, 복제 지연, 파티셔닝, 백업"
+  - slug: online-schema-change
+    name: "무중단 스키마 변경"
+    description: "운영 중 ALTER·인덱스 생성 시 락과 대응"
+  - slug: connection-pool
+    name: "커넥션 풀과 DB 자원"
+    description: "풀 크기, 커넥션 수, 메모리 설정"
+  - slug: redis
+    name: "Redis"
+    description: "자료구조, 만료·eviction, 영속성, 복제, 원자 연산"
+  - slug: complexity-sorting
+    name: "복잡도와 정렬"
+    description: "빅오, 정렬 알고리즘, 안정성, 탐색"
+  - slug: graph-algorithms
+    name: "그래프 알고리즘"
+    description: "BFS·DFS, 최단 경로, 신장 트리, 위상 정렬"
+  - slug: recursion-dp
+    name: "재귀와 동적 계획법"
+    description: "재귀, 메모이제이션, 그리디"
+  - slug: tree-heap
+    name: "트리와 힙"
+    description: "이진 탐색 트리, B-tree, 트라이, 힙과 우선순위 큐"
+  - slug: linear-structures
+    name: "배열·리스트·스택·큐"
+    description: "선형 자료구조와 동적 배열"
+  - slug: hash-table
+    name: "해시 테이블"
+    description: "해시 충돌, 로드 팩터, 리사이징, HashMap 동작"
+  - slug: network-layers
+    name: "네트워크 계층과 주소"
+    description: "OSI·TCP/IP, IP·NAT, DNS, ARP, 소켓"
+  - slug: tcp
+    name: "TCP"
+    description: "핸드셰이크, 신뢰성, 흐름·혼잡 제어, 연결 종료"
+  - slug: http-protocol
+    name: "HTTP 프로토콜"
+    description: "메서드·상태 코드, 버전별 차이, 웹소켓"
+  - slug: virtual-memory
+    name: "가상 메모리"
+    description: "페이징, TLB, 페이지 폴트, 교체, mmap"
+  - slug: io-filesystem
+    name: "I/O와 파일 시스템"
+    description: "inode, 링크, 블로킹·논블로킹·멀티플렉싱"
+  - slug: process-management
+    name: "프로세스 관리"
+    description: "프로세스 상태, fork, 시스템 콜, IPC, 스케줄링"
+  - slug: git-internals
+    name: "Git 내부 구조"
+    description: "스냅샷 저장, 객체, 브랜치와 HEAD, 영역"
+  - slug: git-undo
+    name: "Git 되돌리기"
+    description: "reset·revert·reflog, 커밋 수정, stash"
+  - slug: git-branching
+    name: "Git 병합과 협업"
+    description: "merge·rebase, 충돌 해결, 원격 브랜치, 브랜치 전략"
+  - slug: build-tool
+    name: "빌드 도구"
+    description: "Gradle·Maven 구조, 태스크·라이프사이클, 실행 가능 jar"
+  - slug: dependency-management
+    name: "의존성 관리"
+    description: "전이 의존성, 버전 충돌, BOM, 의존성 스코프"
+  - slug: ci-pipeline
+    name: "CI/CD 파이프라인"
+    description: "GitHub Actions 구조, 캐시·아티팩트, 비밀값 관리, 배포 제어"
+  - slug: graceful-shutdown
+    name: "무중단 배포와 우아한 종료"
+    description: "graceful shutdown, liveness·readiness, 시그널 처리"
+  - slug: container
+    name: "컨테이너와 Docker"
+    description: "이미지 빌드, Dockerfile, 런타임, 네트워크, Compose"
+  - slug: test-strategy
+    name: "테스트 전략"
+    description: "단위·통합 테스트, 슬라이스 테스트, 컨텍스트 캐싱, 테스트 트랜잭션"
+  - slug: mocking-junit
+    name: "Mock과 JUnit"
+    description: "JUnit 5 기능, Mockito, 단언, 테스트 더블"

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://microservices.io/patterns/data/database-per-service.html", "https://martinfowler.com/articles/microservices.html", "https://learn.microsoft.com/en-us/azure/architecture/patterns/saga"]
+concepts: [msa-boundary, distributed-consistency]
+importance: 3
+links: [{to: "dst-09", kind: FOLLOWUP}, {to: "dst-12", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 서비스마다 자기 데이터를 비공개로 소유하고 다른 서비스는 그 서비스의 API로만 접근하는 방식입니다. 서비스끼리 느슨하게 결합되어 한 서비스의 스키마 변경이 다른 서비스에 번지지 않고, 서비스마다 맞는 종류의 DB를 고를 수 있습니다. 대신 여러 서비스에 걸친 비즈니스 트랜잭션이 단순하지 않고, 여러 서비스의 데이터를 조인하는 조회가 어려우며, 관리할 DB가 늘어납니다. 보통 트랜잭션은 Saga로, 조회는 API 조합이나 CQRS의 조회용 뷰로 풉니다. 이 경우 일관성은 최종 일관성이 되고 실패는 보상 작업으로 처리합니다. 서버를 나누지 않고 스키마나 테이블 단위로 분리하는 방법도 있습니다.

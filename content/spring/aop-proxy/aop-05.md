@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop/introduction-spring-defn.html", "https://docs.spring.io/spring-framework/reference/core/aop/proxying.html", "https://docs.spring.io/spring-framework/reference/core/aop/introduction-defn.html", "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/aspectj-support.html"]
+concepts: [proxy, aop]
+importance: 3
+links: [{to: "aop-06", kind: FOLLOWUP}, {to: "aop-07", kind: FOLLOWUP}, {to: "aop-08", kind: FOLLOWUP}, {to: "aop-10", kind: FOLLOWUP}, {to: "pat-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Spring AOP는 런타임 프록시 기반입니다. 어떤 빈이 Aspect에 의해 어드바이스된다고 판단되면 Spring이 그 빈에 대한 프록시를 자동으로 만들고, 호출자는 프록시를 통해 메서드를 호출합니다. 프록시가 해당 메서드에 관련된 Advice 체인을 실행한 다음 실제 대상 객체(target)를 호출합니다. 그래서 대상 안에서 일어나는 this 호출처럼 프록시를 거치지 않는 호출에는 Advice가 적용되지 않습니다. 순수 자바로 구현되어 별도 컴파일 과정이나 클래스로더 제어가 필요 없다는 점이 장점입니다.

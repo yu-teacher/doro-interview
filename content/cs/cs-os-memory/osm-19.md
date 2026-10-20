@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man3/malloc.3.html", "https://www.kernel.org/doc/html/latest/mm/overcommit-accounting.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html"]
+concepts: [virtual-memory, memory-layout]
+importance: 1
+links: [{to: "dkr-20", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Linux에서 `malloc`이 성공했다는 것은 가상 주소 공간을 예약했다는 뜻이지 그만큼의 물리 메모리가 확보됐다는 뜻이 아닙니다. 물리 페이지는 처음 접근할 때 폴트로 할당되는 지연 할당이고, 기본 오버커밋 정책은 터무니없는 요청만 거절하는 휴리스틱입니다. 그래서 여러 프로세스가 모두 받은 만큼 실제로 쓰기 시작하면 물리 메모리가 모자라고, 커널이 회수하다 안 되면 OOM killer로 프로세스를 죽입니다. 정책을 2로 바꾸면 커밋 한도를 넘는 할당을 미리 거절해 접근 중에 죽는 일을 줄이는 대신 할당 단계에서 실패를 받습니다.

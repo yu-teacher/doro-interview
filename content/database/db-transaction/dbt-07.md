@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-set-transaction.html", "https://www.postgresql.org/docs/16/transaction-iso.html", "https://www.postgresql.org/docs/16/runtime-config-client.html"]
+concepts: [tx-boundary]
+importance: 1
+links: [{to: "tx-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 READ ONLY 트랜잭션은 `BEGIN READ ONLY`나 `SET TRANSACTION READ ONLY`로 여는, 임시 테이블이 아닌 테이블에 쓰지 못하게 하는 트랜잭션입니다. PostgreSQL 16에서 INSERT, UPDATE, DELETE와 CREATE, ALTER, DROP 같은 문장은 에러로 거부되어 조회 전용 코드가 실수로 데이터를 바꾸는 것을 막습니다. 성능 면에서도 쓸모가 있어서, REPEATABLE READ의 읽기 전용 트랜잭션은 직렬화 충돌로 재시도할 일이 없고, SERIALIZABLE에서는 READ ONLY로 선언하면 감시 비용을 줄일 수 있습니다. 긴 보고서나 백업에는 SERIALIZABLE READ ONLY DEFERRABLE을 씁니다.

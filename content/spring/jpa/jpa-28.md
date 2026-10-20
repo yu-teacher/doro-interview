@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://docs.hibernate.org/orm/7.0/introduction/html_single/"]
+concepts: [fetch-strategy]
+importance: 2
+links: [{to: "jpa-11", kind: PREREQ}, {to: "jpa-13", kind: PREREQ}, {to: "jpa-15", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 둘 다 근본 해결이 아닙니다. EAGER는 연관을 항상 가져오겠다는 정적 선언이라 쿼리별로 바꿀 수 없어서, 필요 없는 조회에서도 데이터를 끌어옵니다. JPQL로 조회할 때 EAGER 연관을 JOIN FETCH에서 빠뜨리면 Hibernate가 연관마다 추가 SELECT를 내보내 N+1이 그대로 생깁니다. Hibernate 입문서는 `@ManyToOne`의 EAGER 기본값이 잘못된 기본값이고 컬렉션 EAGER는 성능이 나쁘다고 말합니다. 그래서 기본은 LAZY로 두고, 필요한 쿼리에서만 fetch join이나 EntityGraph로 명시해 가져옵니다. 지연 로딩 예외도 EAGER로 덮기보다 트랜잭션 안에서 필요한 연관을 미리 가져오는 쪽이 맞습니다.

@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/dijkstraalgo.html", "https://xlinux.nist.gov/dads/HTML/bellmanford.html"]
+concepts: [graph-algorithms]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 다익스트라는 우선순위 큐에서 꺼낸 정점의 거리를 확정으로 보는데, 가중치가 모두 음이 아니면 나중에 어떤 경로를 거쳐도 거리가 줄어들 수 없기 때문에 이 가정이 맞습니다. 음수 간선이 있으면 확정한 뒤에 더 짧은 경로가 나올 수 있어 가정이 깨집니다. 예를 들어 S→A가 2, S→B가 3, B→A가 -2이면 A를 2로 확정하지만 실제 최단은 B를 거쳐 1입니다. 모든 간선에 같은 상수를 더해 음수를 없애면 간선 수가 다른 경로끼리의 순위가 바뀌어 역시 틀리므로 이때는 벨만-포드를 씁니다.

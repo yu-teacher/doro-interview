@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/actions/reference/security/secure-use"]
+concepts: [ci-pipeline, web-security]
+importance: 1
+links: [{to: "cic-06", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `${{ }}` 표현식은 셸이 실행되기 전에 값으로 치환되어 스크립트 문자열 자체가 만들어집니다. 그래서 PR 제목에 따옴표와 세미콜론으로 명령을 끼워 넣으면 그 명령이 러너에서 그대로 실행되는 스크립트 인젝션이 가능합니다. PR 제목, 브랜치 이름, 이슈 본문처럼 외부 사람이 정할 수 있는 값은 모두 신뢰할 수 없는 입력입니다. 막는 방법은 값을 먼저 `env:`의 환경 변수에 넣고 스크립트에서는 `"$TITLE"`처럼 변수로 쓰는 것이고, 그러면 값이 코드가 아니라 데이터로만 다뤄집니다. 그 값을 인자로 받는 별도 액션을 쓰는 방법도 문서가 권장합니다. 여기에 `GITHUB_TOKEN` 권한을 최소로 줄이면 뚫려도 피해가 작아집니다.

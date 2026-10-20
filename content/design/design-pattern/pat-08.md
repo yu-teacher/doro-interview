@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://martinfowler.com/bliki/InversionOfControl.html", "https://gameprogrammingpatterns.com/subclass-sandbox.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html", "https://docs.spring.io/spring-framework/reference/data-access/transaction/programmatic.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/support/TransactionTemplate.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/support/AbstractPlatformTransactionManager.html"]
+concepts: [gof-patterns, programmatic-tx]
+importance: 2
+links: [{to: "tx-02", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 템플릿 메서드는 상위 클래스가 처리 흐름을 정하고 서브클래스가 일부 단계를 오버라이드해 채우는 패턴이고, Fowler는 이를 제어의 역전의 쉬운 예로 듭니다. 그런데 `JdbcTemplate`과 `TransactionTemplate`은 서브클래스가 아니라 콜백 객체를 넘기는 방식입니다. 스프링 문서는 이 템플릿들이 자원 획득과 해제 같은 반복 흐름을 맡고 개발자는 콜백 인터페이스만 구현하면 되며, `JdbcTemplate`은 서브클래싱할 필요가 없다고 합니다. 반대로 `AbstractPlatformTransactionManager`는 서브클래스가 구현할 템플릿 메서드를 두는 상속 방식입니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://www.kernel.org/doc/html/latest/mm/page_tables.html"]
+concepts: [virtual-memory]
+importance: 2
+links: [{to: "osm-04", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 TLB는 가상 주소에서 물리 주소로의 변환 결과를 담아 두는 CPU 쪽의 작은 캐시입니다. 메모리 접근마다 변환이 필요한데 페이지 테이블은 여러 단계라 변환에 메모리 접근이 여러 번 필요하므로 매번 하면 너무 느립니다. TLB에 변환이 있으면 바로 쓰고, 없으면 MMU가 페이지 테이블을 따라가는 페이지 워크로 변환을 구해 채웁니다. 작업 집합이 큰 프로그램은 TLB가 모자라 미스가 잦아지는데, x86에서 2MB나 1GB 같은 huge page는 항목 하나가 훨씬 넓은 영역을 덮어 TLB 압박을 줄여 줍니다.

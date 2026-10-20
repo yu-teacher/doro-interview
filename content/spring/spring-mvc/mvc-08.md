@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/filters.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/handlermapping-interceptor.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config/interceptors.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/HandlerInterceptor.html", "https://docs.spring.io/spring-boot/reference/web/servlet.html"]
+concepts: [filter-chain, aop]
+importance: 3
+links: [{to: "mvc-09", kind: FOLLOWUP}, {to: "mvc-21", kind: FOLLOWUP}, {to: "misc-12", kind: RELATED}, {to: "pat-19", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 셋은 끼어드는 층이 다릅니다. Servlet `Filter`는 필터 체인과 대상 Servlet의 앞뒤에서 동작해 DispatcherServlet 앞에서 요청 전체를 감쌉니다. 어떤 컨트롤러가 처리할지는 모르고, CORS, 프록시 헤더 처리, 보안(Spring Security) 같은 MVC 이전의 공통 처리에 씁니다. `HandlerInterceptor`는 HandlerMapping이 핸들러를 정한 뒤 실행 전후에 끼어들고, `preHandle`이 선택된 핸들러를 인자로 받으며 경로 패턴으로 범위를 정합니다. AOP는 Servlet·MVC와 무관하게 빈 메서드 호출을 프록시로 감싸 트랜잭션 같은 횡단 관심사에 씁니다. 순서는 Filter, DispatcherServlet, Interceptor, 컨트롤러, 서비스입니다.

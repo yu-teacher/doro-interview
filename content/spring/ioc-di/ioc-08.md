@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html"]
+concepts: [bean-lifecycle]
+importance: 3
+links: [{to: "ioc-13", kind: FOLLOWUP}, {to: "ioc-21", kind: FOLLOWUP}, {to: "ioc-22", kind: FOLLOWUP}, {to: "ioc-23", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 컨테이너가 빈 정의를 바탕으로 인스턴스를 생성하고, 의존성을 주입한 뒤, 초기화 콜백을 호출합니다. 초기화 콜백은 @PostConstruct, InitializingBean의 afterPropertiesSet, 설정한 커스텀 init 메서드 순서입니다. 이후 빈은 사용 가능 상태가 되고, 컨테이너가 종료될 때 소멸 콜백이 같은 순서로 @PreDestroy, DisposableBean의 destroy, 커스텀 destroy 메서드 순으로 호출됩니다. 스프링 API에 결합되지 않는 @PostConstruct/@PreDestroy를 쓰는 것이 권장됩니다. 비웹 애플리케이션은 종료 훅을 등록해야 소멸 콜백이 실행됩니다.

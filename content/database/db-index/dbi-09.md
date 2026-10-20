@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-index-only-scans.html", "https://www.postgresql.org/docs/16/storage-vm.html"]
+concepts: [index-design, mvcc]
+importance: 1
+links: [{to: "dbi-03", kind: PREREQ}, {to: "dbi-08", kind: PREREQ}, {to: "dbp-10", kind: RELATED}, {to: "dbt-10", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL에서 MVCC 가시성 정보는 인덱스 항목이 아니라 힙 튜플에만 있기 때문입니다. Index Only Scan은 후보 항목을 인덱스에서 찾은 뒤 해당 힙 페이지의 visibility map 비트를 확인해서, 페이지가 all-visible, 즉 모든 행이 모든 트랜잭션에게 보이는 상태면 힙을 읽지 않고 값을 돌려줍니다. 비트가 꺼져 있으면 힙에서 가시성을 확인해야 하는데 이 접근이 EXPLAIN의 Heap Fetches로 보입니다. 이 비트는 VACUUM이 켜고 그 페이지에 쓰기가 일어나면 꺼지므로, 자주 바뀌는 테이블에서는 index-only의 이점이 줄고 autovacuum이 얼마나 따라가는지가 중요합니다.

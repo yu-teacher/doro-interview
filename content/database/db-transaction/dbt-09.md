@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/transaction-iso.html", "https://www.postgresql.org/docs/16/mvcc-serialization-failure-handling.html"]
+concepts: [isolation-level]
+importance: 1
+links: [{to: "dbl-17", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16의 SERIALIZABLE은 REPEATABLE READ와 똑같이 스냅샷으로 동작하면서, 동시 트랜잭션들의 읽기·쓰기 의존 관계를 감시해 어떤 직렬 실행 순서와도 맞지 않는 결과가 나올 조건을 찾으면 한쪽을 실패시키는 Serializable Snapshot Isolation입니다. 두 트랜잭션이 각자 읽은 것을 근거로 서로 다른 행을 고쳐 둘 다 커밋되는 write skew 같은 현상도 막습니다. 추가 블로킹은 만들지 않는 대신 감시 오버헤드가 있고 SQLSTATE 40001로 실패할 수 있어서, 애플리케이션은 일반적인 재시도 처리를 갖추고 트랜잭션 전체를 다시 실행해야 합니다.

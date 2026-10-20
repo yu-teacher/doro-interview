@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/build/cache/optimize/", "https://docs.docker.com/build/building/multi-stage/", "https://docs.docker.com/build/building/best-practices/", "https://docs.spring.io/spring-boot/reference/packaging/container-images/dockerfiles.html"]
+concepts: [container, ci-pipeline]
+importance: 2
+links: [{to: "dkr-08", kind: RELATED}, {to: "dkr-09", kind: RELATED}, {to: "bld-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Docker는 빌드 단계마다 캐시를 확인해서, 명령이나 그 명령이 쓰는 파일이 바뀌면 그 단계와 뒤 단계를 모두 다시 빌드합니다. 그래서 잘 안 바뀌는 의존성 정의 파일을 먼저 복사해 의존성 설치 레이어가 캐시에 남게 하고, 자주 바뀌는 소스는 나중에 복사합니다. 멀티스테이지 빌드는 빌드용 단계에서 결과물을 만든 뒤 실행 단계로는 필요한 파일만 `COPY --from`으로 가져가서, 컴파일러 같은 빌드 도구가 최종 이미지에 남지 않게 합니다. Spring Boot는 `jarmode` 도구로 JAR를 의존성과 애플리케이션 같은 레이어로 풀어 넣게 해서, 코드만 바뀌면 작은 레이어만 새로 만들어지게 합니다. 빌드에 필요 없는 파일은 `.dockerignore`로 빼서 컨텍스트를 작게 유지합니다.

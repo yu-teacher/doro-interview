@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc826.html", "https://www.rfc-editor.org/rfc/rfc4861.html"]
+concepts: [network-layers]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 이더넷에서 프레임을 보내려면 상대의 48비트 MAC 주소가 필요한데 상위 계층이 아는 것은 IP 주소뿐입니다. 그래서 변환표에 없으면 ARP 요청을 같은 링크의 모든 장치에 브로드캐스트해서 이 IP를 가진 장치는 MAC 주소를 알려 달라고 묻고, 해당 IP의 주인이 자기 MAC 주소를 담아 응답합니다. 요청을 보낸 쪽은 응답을 변환표(ARP 캐시)에 저장해 이후에는 묻지 않습니다. 목적지가 다른 네트워크라면 최종 목적지가 아니라 다음에 거칠 장치, 보통 기본 게이트웨이의 IP에 대해 ARP를 하며, ARP는 같은 링크 안에서만 쓰입니다. IPv6에서는 ARP 대신 Neighbor Discovery가 그 역할을 합니다.

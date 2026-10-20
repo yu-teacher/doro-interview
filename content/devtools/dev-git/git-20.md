@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/git-revert"]
+concepts: [git-branching, git-undo]
+importance: 1
+links: [{to: "git-09", kind: PREREQ}, {to: "git-11", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 merge 커밋은 부모가 둘이라 어느 쪽을 기준으로 되돌릴지 모르기 때문에, git revert -m 1처럼 mainline이 될 부모 번호를 지정해야 합니다. 보통 1번은 merge를 받은 쪽 브랜치입니다. 중요한 함정은 merge 커밋을 revert하면 그 merge로 들어온 변경을 앞으로 원하지 않는다고 선언한 것이 되어, 나중에 같은 브랜치를 다시 merge해도 이전 커밋의 변경은 돌아오지 않고 그 뒤에 새로 생긴 커밋의 변경만 들어온다는 점입니다. 원래 내용을 다시 가져오려면 그 revert 커밋을 다시 revert하는 방법이 있습니다.

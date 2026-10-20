@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://gameprogrammingpatterns.com/prototype.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Cloneable.html", "https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/BeanFactory.html"]
+concepts: [gof-patterns, bean-lifecycle]
+importance: 1
+links: [{to: "jo-15", kind: RELATED}, {to: "ioc-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 프로토타입은 기존 객체를 본보기 삼아 자기와 비슷한 객체를 복제해 만드는 패턴입니다. 자바에서는 `Cloneable`과 `Object.clone()`이 그 용도지만 `Object.clone`은 필드를 그대로 대입하는 얕은 복사라서, 가변 객체를 참조하는 필드는 원본과 복제본이 함께 씁니다. Nystrom도 깊은 복사인지 얕은 복사인지가 올바른 `clone`을 짜기 까다롭게 한다고 지적합니다. 한편 스프링의 prototype 스코프는 복제가 아니라 요청할 때마다 빈 정의로 새 인스턴스를 만드는 것이고, 컨테이너가 생성 이후 생명주기를 관리하지 않아 소멸 콜백이 호출되지 않습니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/orm/jpa/JpaDialect.html", "https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html"]
+concepts: [declarative-tx, dirty-checking]
+importance: 2
+links: [{to: "jpa-06", kind: PREREQ}, {to: "jpa-24", kind: PREREQ}, {to: "tx-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 조회 전용 메서드에서 더티 체킹 비용을 줄이고, 실수로 엔티티를 바꿔도 UPDATE가 나가지 않게 하려는 것입니다. Hibernate는 엔티티를 읽은 뒤 스냅샷을 보관했다가 flush 때 현재 상태와 비교해 변경을 찾는데, 공식 문서는 이 스냅샷 유지가 성능에 영향을 주고 flush가 모든 엔티티를 더티 체크하는 비싼 작업이라고 설명합니다. Spring은 readOnly 플래그를 flush 모드에 반영할 수 있고, Hibernate에서는 MANUAL(자동 flush 안 함)이 되어 변경이 UPDATE로 나가지 않는 것으로 알려져 있습니다(보충). 다만 이는 DB가 쓰기를 거부한다는 뜻이 아니고, 메서드 안의 명시적 `flush()`는 동작이 달라질 수 있습니다(보충). 쓰기 서비스가 부르는 하위 조회는 바깥 트랜잭션 설정이 우선합니다.

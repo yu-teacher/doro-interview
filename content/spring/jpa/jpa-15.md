@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html"]
+concepts: [fetch-strategy]
+importance: 3
+links: [{to: "jpa-11", kind: PREREQ}, {to: "jpa-16", kind: FOLLOWUP}, {to: "jpa-17", kind: FOLLOWUP}, {to: "jpa-28", kind: FOLLOWUP}, {to: "dbp-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 목록 쿼리 한 번으로 N개 행을 가져온 뒤, 각 행의 연관 엔티티를 접근할 때마다 쿼리가 한 번씩 추가로 나가 총 N+1번이 되는 문제입니다. Hibernate 입문서는 이를 성능 저하의 가장 흔한 원인이라고 설명합니다. 해결책은 세 가지입니다. 첫째, 조인으로 한 번에 가져오는 fetch join이나 `@EntityGraph`로, 입문서는 조인이 가장 올바른 해법이라고 합니다. 둘째, batch fetching으로 `hibernate.default_batch_fetch_size`나 `@BatchSize`를 쓰면 여러 키를 묶어 조회해 쿼리 수를 줄입니다. 셋째, 서브쿼리로 한 번에 가져오는 subselect fetching입니다. 연관을 EAGER로 바꾸는 것은 해결책이 아니고, EAGER 연관에서 JOIN FETCH를 빼먹으면 오히려 추가 select로 N+1이 생깁니다.

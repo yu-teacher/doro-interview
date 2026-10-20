@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/reference/dockerfile/", "https://docs.docker.com/build/building/best-practices/"]
+concepts: [container, externalized-config]
+importance: 2
+links: [{to: "cic-06", kind: RELATED}, {to: "arc-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 ARG는 `docker build --build-arg` 로 넘기는 빌드 시점 변수로, 최종 이미지와 컨테이너 환경에는 남지 않습니다. ENV는 이미지에 기록되어 컨테이너를 실행할 때도 환경 변수로 존재하고 `docker run -e` 로 덮어쓸 수 있습니다. 둘 다 비밀번호나 토큰 같은 비밀을 넣는 용도로는 쓰면 안 됩니다. ARG 값은 `docker history` 에서 보이고, ENV도 이미지에 그대로 남아 `docker inspect` 로 조회되기 때문입니다. 빌드 중 필요한 비밀은 `RUN --mount=type=secret` 을 쓰라고 공식 문서가 안내합니다.

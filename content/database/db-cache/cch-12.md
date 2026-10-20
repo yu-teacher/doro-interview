@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/operate/oss_and_stack/management/replication/", "https://redis.io/docs/latest/commands/expire/", "https://redis.io/docs/latest/commands/wait/"]
+concepts: [redis, distributed-consistency]
+importance: 2
+links: [{to: "cch-13", kind: FOLLOWUP}, {to: "cch-19", kind: FOLLOWUP}, {to: "dbd-11", kind: RELATED}, {to: "dst-23", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Redis 복제는 기본적으로 비동기입니다. 마스터는 쓰기를 처리하고 복제본의 처리를 기다리지 않고 명령 스트림을 보내므로, 복제본에 전달되기 전에 마스터가 죽고 그 복제본이 승격되면 클라이언트가 성공 응답을 받은 쓰기도 사라질 수 있습니다. 클라이언트가 `WAIT`로 지정한 수의 복제본이 받았음을 확인할 때까지 기다릴 수 있지만, 문서는 이것이 강한 일관성을 가진 CP 시스템을 만들어 주지는 않고 유실 가능성을 크게 낮출 뿐이라고 합니다. 복제본은 기본적으로 읽기 전용이라 읽기 부하를 나누는 데 쓰고, 키 만료는 복제본이 독자적으로 하지 않고 마스터가 보내는 DEL을 따릅니다.

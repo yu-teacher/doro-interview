@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/populate.html", "https://www.postgresql.org/docs/16/sql-copy.html", "https://dev.mysql.com/doc/refman/8.4/en/optimizing-innodb-bulk-data-loading.html", "https://dev.mysql.com/doc/refman/8.4/en/insert-optimization.html"]
+concepts: [index-structure, schema-design]
+importance: 1
+links: [{to: "jpa-30", kind: RELATED}, {to: "dbi-05", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 행마다 INSERT를 자동 커밋으로 보내면 문장마다 파싱과 네트워크 왕복, 커밋 처리가 반복됩니다. PostgreSQL 16 기준으로 일단 한 트랜잭션으로 묶고, 여러 행을 한 INSERT에 담고, 가장 효율적으로는 COPY로 한 번에 적재하는 게 좋습니다. 공식 문서는 COPY가 INSERT보다 오버헤드가 훨씬 적고 PREPARE와 배치를 써도 COPY가 거의 항상 빠르다고 합니다. 큰 적재에서는 인덱스와 외래 키를 지웠다가 적재 뒤에 다시 만들고, 끝나면 ANALYZE를 돌리라고 합니다. MySQL 8.4(InnoDB)에서는 자동 커밋을 끄고 다중 행 INSERT나 LOAD DATA를 쓰는 것이 같은 맥락입니다.

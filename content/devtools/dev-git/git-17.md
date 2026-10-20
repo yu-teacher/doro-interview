@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/git-push"]
+concepts: [git-branching]
+importance: 1
+links: [{to: "git-16", kind: PREREQ}, {to: "git-21", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 git push --force는 원격 브랜치가 내 커밋의 조상이 아니어도 무조건 덮어써서 다른 사람이 올린 커밋을 잃게 만들 수 있습니다. --force-with-lease는 원격 브랜치가 내가 마지막으로 본 값과 같을 때만 덮어쓰고, 그 사이 누가 push했다면 거부합니다. 여기서 내가 본 값은 로컬의 원격 추적 브랜치 기록입니다. 그래서 fetch가 백그라운드에서 돌거나 내가 새 커밋을 확인하지 않고 fetch만 하면 기록이 갱신되어 보호가 무력화되며, 이때는 --force-with-lease=브랜치:기대커밋으로 기대 값을 직접 적습니다.

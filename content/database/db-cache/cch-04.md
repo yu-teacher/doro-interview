@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/develop/reference/eviction/"]
+concepts: [redis, cache]
+importance: 3
+links: [{to: "cch-11", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 maxmemory는 캐시 데이터에 쓸 메모리 상한이고 0이면 제한이 없습니다. 상한을 넘으면 maxmemory-policy가 동작을 정합니다. noeviction은 키를 지우지 않고 새 데이터를 추가하는 명령에 오류를 돌려주며 읽기는 계속 됩니다. allkeys-lru는 모든 키 중 가장 오래 쓰이지 않은 키부터, allkeys-lfu는 가장 적게 쓰인 키부터 지우고, volatile 계열은 TTL이 있는 키만 대상으로 합니다. 접근이 일부 키에 몰리는 흔한 캐시라면 문서가 allkeys-lru를 좋은 기본 선택지로 권하고, 정책이 잘 맞는지는 `INFO`의 `keyspace_hits`, `keyspace_misses`, `evicted_keys`를 보고 점검합니다.

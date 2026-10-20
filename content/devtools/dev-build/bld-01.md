@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html", "https://docs.gradle.org/current/userguide/build_lifecycle.html", "https://docs.gradle.org/current/userguide/dependency_resolution.html", "https://docs.gradle.org/current/userguide/java_plugin.html"]
+concepts: [build-tool, dependency-management]
+importance: 3
+links: [{to: "bld-02", kind: FOLLOWUP}, {to: "bld-05", kind: FOLLOWUP}, {to: "cic-02", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 빌드 도구는 소스를 컴파일하고 테스트를 돌리고 jar 같은 배포 결과물로 패키징하는 과정을 정해진 절차로 자동화합니다. 또 하나의 큰 역할이 의존성 관리인데, 프로젝트가 선언한 라이브러리를 저장소에서 내려받고 그 라이브러리가 다시 필요로 하는 것까지 계산해 클래스패스를 만들어 줍니다. Maven은 validate부터 deploy까지 단계를 미리 정해 두었고, Gradle은 task들을 의존 관계 그래프로 엮어 요청된 task와 그 선행 task만 실행합니다. 그래서 어디서든 같은 명령 하나로 같은 절차를 돌릴 수 있습니다.

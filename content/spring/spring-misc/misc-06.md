@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/dao/DataIntegrityViolationException.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Isolation.html", "https://docs.spring.io/spring-framework/reference/data-access/dao.html"]
+concepts: [race-condition, schema-design, isolation-level]
+importance: 3
+links: [{to: "misc-14", kind: FOLLOWUP}, {to: "dbs-01", kind: RELATED}, {to: "dbl-19", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 check-then-act 패턴이 대표적입니다. 가입 메서드가 `existsByEmail`로 이메일 중복을 확인하고 `save`로 저장한다면, 두 요청이 거의 동시에 들어올 때 둘 다 "없음"을 확인한 뒤 둘 다 insert를 시도합니다. 확인과 저장이 원자적이지 않아서 `@Transactional`을 붙이고 기본 격리 수준을 써도 막히지 않을 수 있습니다. 해결은 애플리케이션의 `if`가 아니라 DB의 UNIQUE 제약에 맡기는 것입니다. 이메일 컬럼에 유니크 제약을 걸고, 위반 시 던져지는 `DataIntegrityViolationException`을 잡아 "이미 사용 중인 이메일"로 변환하는 방식이 가장 단순하고 확실합니다. 사전 `exists` 체크는 친절한 메시지를 위한 빠른 경로로만 남깁니다.

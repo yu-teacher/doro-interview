@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/bigOnotation.html", "https://xlinux.nist.gov/dads/HTML/asymptoticTimeComplexity.html"]
+concepts: [complexity-sorting]
+importance: 3
+links: [{to: "ds-05", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 빅오는 입력 크기 n이 커질 때 알고리즘의 시간이나 메모리가 어떤 함수의 상수 배수 이하로 억제된다는 점근적 상한입니다. 정의는 양의 상수 c와 k가 있어서 n이 k 이상이면 f(n)이 c·g(n) 이하라는 것이라 계수와 낮은 차수 항은 버립니다. 상한이라서 3n+4도 엄밀히는 O(n²)이고, 같은 차수라는 의미는 Θ로 따로 씁니다. 또 무엇을 세는지(비교 횟수, 메모리, 메시지 수)에 따라 값이 달라지므로 계산 모델을 함께 밝혀야 합니다. n이 충분히 크면 상수 배수보다 증가 차수가 더 중요해집니다.

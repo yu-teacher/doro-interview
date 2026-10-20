@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man5/proc_pid_maps.5.html", "https://man7.org/linux/man-pages/man2/brk.2.html", "https://man7.org/linux/man-pages/man3/malloc.3.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html"]
+concepts: [memory-layout]
+importance: 3
+links: [{to: "osm-03", kind: FOLLOWUP}, {to: "jv-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 프로세스의 가상 주소 공간은 보통 실행 코드가 있는 텍스트 영역, 초기값이 있는 전역 변수가 있는 데이터 영역, 초기화되지 않은 전역 변수를 위한 BSS, 동적 할당을 위한 힙, 함수 호출과 지역 변수를 위한 스택으로 나뉩니다. 힙은 낮은 주소 쪽에서 필요할 때 늘려 가며 쓰고 스택은 높은 주소 쪽에서 함수 호출마다 사용하는 식으로 배치되는 것이 일반적입니다. 여기에 공유 라이브러리와 `mmap` 영역이 더해집니다. 정확한 주소는 실행할 때마다 달라질 수 있으니 순서 같은 일반 구조만 기억하면 됩니다.

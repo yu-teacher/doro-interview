@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/runtime-config-logging.html", "https://www.postgresql.org/docs/16/pgstatstatements.html", "https://dev.mysql.com/doc/refman/8.4/en/slow-query-log.html", "https://dev.mysql.com/doc/refman/8.4/en/performance-schema-statement-summary-tables.html"]
+concepts: [observability]
+importance: 2
+links: [{to: "dbp-01", kind: RELATED}, {to: "dbp-08", kind: RELATED}, {to: "dbp-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 두 가지를 함께 씁니다. log_min_duration_statement를 설정하면 지정한 시간 이상 걸린 문장이 서버 로그에 남고, pg_stat_statements 확장은 정규화한 쿼리별로 호출 수, 총·평균 실행 시간, 블록 접근 통계를 모아 줍니다. pg_stat_statements는 shared_preload_libraries에 넣고 서버를 재시작해야 하고 CREATE EXTENSION도 해야 합니다. 개별로는 빠르지만 호출이 아주 많은 쿼리는 로그 임계값에 안 걸리므로 total_exec_time 순으로 보는 게 유용합니다. 찾은 쿼리는 EXPLAIN (ANALYZE, BUFFERS)로 원인을 봅니다. MySQL 8.4에서는 slow query log와 Performance Schema의 다이제스트 요약 테이블이 같은 역할을 합니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html", "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html", "http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod"]
+concepts: [solid-principles, ioc-di]
+importance: 3
+links: [{to: "arc-08", kind: FOLLOWUP}, {to: "arc-14", kind: FOLLOWUP}, {to: "ioc-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 DIP는 고수준 모듈이 저수준 세부에 의존하지 말고 추상화 쪽으로 의존하라는 원칙입니다. 역전되는 것은 소스 코드 의존의 방향입니다. 제어 흐름은 컨트롤러에서 유스케이스를 거쳐 프레젠터를 호출하는 쪽으로 흐르지만, 유스케이스가 안쪽에 인터페이스를 두고 바깥 구현체가 그것을 구현하면 소스 코드 의존은 바깥에서 안쪽으로 향합니다. Robert Martin은 아키텍처 경계를 넘는 의존성이 고수준 추상화를 향하게 해서, SQL이나 서식 같은 세부가 돈을 버는 계산 로직을 오염시키지 않게 하라고 설명합니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/planner-stats.html", "https://www.postgresql.org/docs/16/indexes-index-only-scans.html", "https://dev.mysql.com/doc/refman/8.4/en/aggregate-functions.html"]
+concepts: [sql-aggregation, mvcc]
+importance: 2
+links: [{to: "dbs-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 SELECT `count(*)`는 미리 저장해 둔 행 수를 읽지 않고 조건에 맞는 행을 실제로 세기 때문에, 큰 테이블에서는 테이블이나 인덱스를 훑는 비용이 듭니다. 인덱스가 있으면 인덱스만 훑는 Index Only Scan으로 셀 수 있지만 가시성 맵 상태에 따라 힙을 읽을 수도 있습니다. MySQL 8.4(InnoDB)도 공식 문서가 밝히듯 동시 트랜잭션마다 보이는 행 수가 달라서 내부 행 수 카운터를 두지 않고, `COUNT(*)`를 가장 작은 보조 인덱스를 훑어 셉니다. 정확한 값이 꼭 필요하지 않으면 통계의 추정치를 쓰거나, 쓰기 경합을 감수하고 카운터 테이블을 따로 둘 수 있습니다.

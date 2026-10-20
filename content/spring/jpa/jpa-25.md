@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-data/commons/reference/repositories/create-instances.html", "https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/core/support/RepositoryFactorySupport.html", "https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/support/SimpleJpaRepository.html", "https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/support/JpaRepositoryFactory.html", "https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/JpaRepository.html", "https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/PagingAndSortingRepository.html", "https://docs.spring.io/spring-data/commons/reference/repositories/query-methods-details.html", "https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html"]
+concepts: [spring-data-jpa, proxy]
+importance: 2
+links: [{to: "jpa-02", kind: PREREQ}, {to: "jpa-24", kind: RELATED}, {to: "aop-05", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 시작 시 Spring Data가 `Repository`를 상속한 인터페이스를 스캔해 인터페이스마다 FactoryBean이 만든 프록시를 빈으로 등록합니다. 팩토리(JPA는 `JpaRepositoryFactory`)가 만든 프록시의 호출은 `QueryExecutorMethodInterceptor`로 넘어갑니다. CRUD는 기본 구현체 `SimpleJpaRepository`가 처리하고 `@Transactional`도 여기에 선언되어 있습니다. 쿼리 메서드는 기본 전략(CREATE_IF_NOT_FOUND)에 따라 `@Query` 같은 선언된 쿼리를 먼저 찾고, 없으면 메서드 이름을 파싱합니다. `JpaRepository`는 `ListCrudRepository` 등을 상속하고 `PagingAndSortingRepository`는 `Repository`를 상속합니다.

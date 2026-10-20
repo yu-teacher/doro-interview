@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/aspectj-support.html", "https://docs.spring.io/spring-framework/reference/core/aop-api/autoproxy.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/aop/framework/autoproxy/AbstractAutoProxyCreator.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/aop/aspectj/annotation/AnnotationAwareAspectJAutoProxyCreator.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/EnableAspectJAutoProxy.html", "https://docs.spring.io/spring-boot/reference/features/aop.html"]
+concepts: [proxy, bean-lifecycle]
+importance: 2
+links: [{to: "aop-17", kind: FOLLOWUP}, {to: "ioc-23", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `@EnableAspectJAutoProxy`를 켜면(Boot는 AspectJ가 클래스패스에 있을 때 자동 설정) auto-proxy creator가 컨테이너에 등록되어 동작합니다. auto-proxy creator는 BeanPostProcessor라서 빈 생성 과정에 끼어들고, 빈이 초기화된 뒤(`postProcessAfterInitialization`) 그 빈에 적용될 Advisor가 있다고 판단되면 원본 대신 프록시를 만들어 반환합니다. 적용 대상이 없으면 원본을 그대로 돌려줍니다. 그래서 다른 빈이 주입받는 것은 원본이 아니라 프록시입니다. 문서도 어떤 빈이 하나 이상의 Aspect에 의해 어드바이스된다고 판단되면 자동으로 프록시를 만들어 메서드 호출을 가로챈다고 설명합니다.

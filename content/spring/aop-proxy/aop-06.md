@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop/proxying.html", "https://docs.spring.io/spring-framework/reference/core/aop/introduction-proxies.html", "https://docs.spring.io/spring-boot/reference/features/aop.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Proxyable.html"]
+concepts: [proxy]
+importance: 3
+links: [{to: "aop-11", kind: FOLLOWUP}, {to: "aop-12", kind: FOLLOWUP}, {to: "aop-16", kind: FOLLOWUP}, {to: "aop-19", kind: FOLLOWUP}, {to: "pat-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 JDK 동적 프록시는 JDK에 내장된 기능으로 인터페이스를 구현한 프록시를 만들고, CGLIB은 대상 클래스를 상속한 서브클래스를 런타임에 생성합니다. Spring Framework의 기본 규칙은 대상이 인터페이스를 하나라도 구현하면 JDK 프록시, 구현하는 인터페이스가 없으면 CGLIB입니다. `proxyTargetClass=true`로 CGLIB을 강제할 수 있습니다. Spring Boot는 자동 설정에서 기본적으로 CGLIB 프록시를 쓰고, `spring.aop.proxy-target-class=false`로 JDK 프록시로 바꿀 수 있습니다. 7.0부터는 `@Proxyable`로 빈 단위로 프록시 타입을 지정할 수도 있습니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config/content-negotiation.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-requestmapping.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/config/annotation/ContentNegotiationConfigurer.html"]
+concepts: [mvc-request-flow, http-protocol]
+importance: 1
+links: [{to: "web-19", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Content Negotiation은 요청이 원하는 응답 미디어 타입을 정하는 과정입니다. Spring MVC는 기본적으로 `Accept` 헤더만 확인하고, `ContentNegotiationConfigurer`로 방식을 바꿀 수 있습니다. 쿼리 파라미터 방식은 `favorParameter`를 켜고 `mediaType`으로 키와 미디어 타입을 매핑해야 하며 기본 파라미터 이름은 `format`입니다. URL 기반 해석이 꼭 필요하면 경로 확장자보다 쿼리 파라미터 방식을 쓰라고 문서가 권합니다. 매핑에서는 `consumes`가 요청 `Content-Type`, `produces`가 `Accept`로 매핑을 좁히므로, 같은 URL이라도 `Accept`에 따라 다른 메서드로 갈 수 있습니다.

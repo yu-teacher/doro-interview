@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html"]
+concepts: [web-security]
+importance: 3
+links: [{to: "sec-16", kind: FOLLOWUP}, {to: "web-05", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 CSRF 방어는 기본으로 켜져 있고 POST 같은 안전하지 않은 메서드에 적용됩니다. 동기화 토큰 패턴을 쓰는데, 토큰은 브라우저가 자동으로 붙이지 않는 위치, 즉 폼 파라미터나 헤더로 보내야 하므로 쿠키에만 의존할 수 없습니다. CsrfFilter가 CsrfTokenRepository에 저장된 토큰과 요청 값을 비교하며, 기본 저장소는 HttpSessionCsrfTokenRepository라 세션에 저장합니다. 토큰이 없거나 틀리면 AccessDeniedException(예: InvalidCsrfTokenException)이 AccessDeniedHandler로 넘어갑니다. Thymeleaf 같은 뷰는 폼에 토큰을 자동으로 넣어 주고 로그인 요청도 위조 방지를 위해 CSRF 검사를 받습니다. 브라우저 트래픽이 없는 백엔드는 비활성화를 고려할 수 있다고 합니다.

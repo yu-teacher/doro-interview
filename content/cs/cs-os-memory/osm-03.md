@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man2/getrlimit.2.html", "https://man7.org/linux/man-pages/man3/malloc.3.html", "https://man7.org/linux/man-pages/man2/brk.2.html"]
+concepts: [memory-layout]
+importance: 3
+links: [{to: "jv-02", kind: RELATED}, {to: "jv-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 스택은 함수가 호출될 때 지역 변수와 복귀 정보를 담은 프레임이 쌓이고 함수가 끝나면 자동으로 없어지는 영역이고, 힙은 프로그램이 `malloc`이나 `new`로 직접 요청해서 쓰고 직접 해제하는 영역입니다. 스택은 할당과 해제가 호출과 반환에 묶여 있어 빠르고 단순하지만 크기 상한이 정해져 있어 재귀가 너무 깊거나 큰 지역 배열을 두면 스택 오버플로가 납니다. 힙은 수명을 자유롭게 정할 수 있는 대신 해제를 잊으면 누수가 되고, 할당과 해제를 반복하면 단편화가 생길 수 있습니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-multicolumn.html", "https://www.postgresql.org/docs/16/indexes-ordering.html", "https://www.postgresql.org/docs/current/indexes-multicolumn.html"]
+concepts: [index-design]
+importance: 2
+links: [{to: "dbi-04", kind: RELATED}, {to: "dbi-18", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 B-tree 복합 인덱스는 왼쪽 컬럼부터 차례로 쓰입니다. 앞 컬럼에 등치 조건이 있고, 그 다음 컬럼에 부등호 조건이 있으면 그 범위까지가 인덱스에서 스캔할 범위를 좁히고, 그보다 오른쪽 컬럼 조건은 인덱스 안에서 검사만 합니다. 그래서 (a, b) 인덱스는 a만 있거나 a와 b가 함께 있는 조건에는 잘 쓰이지만 b만 있는 조건에는 인덱스 전체를 훑어야 해서 보통 순차 스캔이 선택됩니다. 보통 등치로 자주 비교하는 컬럼을 앞에, 범위나 정렬에 쓰는 컬럼을 뒤에 둡니다. 예를 들어 WHERE customer_id = ? ORDER BY created_at DESC LIMIT 5는 (customer_id, created_at) 인덱스로 별도 정렬 없이 처리됩니다.

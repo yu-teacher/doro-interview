@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/using-explain.html", "https://www.postgresql.org/docs/16/indexes-bitmap-scans.html", "https://www.postgresql.org/docs/16/view-pg-stats.html", "https://www.postgresql.org/docs/16/runtime-config-query.html"]
+concepts: [index-structure, query-planner]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 Index Scan은 인덱스 순서대로 힙 행을 하나씩 가져오므로, 행의 물리적 위치가 인덱스 순서와 비슷하면 가까운 페이지를 이어서 읽어 싸고, 흩어져 있으면 임의 접근이 늘어 비쌉니다. 그 정도를 pg_stats의 correlation(-1에서 +1, 0에 가까우면 흩어짐)이 알려 줍니다. Bitmap Scan은 일치하는 위치를 먼저 모아 물리 순서로 읽기 때문에 같은 페이지를 여러 번 오가지 않아, 흩어진 데이터에서 중간 정도 선택도에 유리하지만 인덱스의 정렬 순서는 잃습니다. 그래서 같은 5천 행 조회라도 정렬된 컬럼은 Index Scan, 뒤섞인 컬럼은 Bitmap Scan이 나올 수 있습니다.

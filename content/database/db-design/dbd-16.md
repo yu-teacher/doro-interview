@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-createindex.html"]
+concepts: [online-schema-change, index-structure]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 일반 CREATE INDEX는 인덱스를 만드는 동안 해당 테이블의 쓰기를 막고 읽기만 허용합니다. CONCURRENTLY를 붙이면 쓰기를 막지 않고 만들 수 있지만 테이블을 두 번 스캔하고 기존 트랜잭션이 끝나기를 기다려서 전체 작업은 더 오래 걸립니다. 주의점이 몇 가지 있는데, 트랜잭션 블록 안에서는 실행할 수 없고, 도중에 실패하면 INVALID 상태의 인덱스가 남아 조회에는 안 쓰이면서 갱신 부담만 주므로 지우고 다시 만들어야 합니다. 유니크 인덱스는 빌드가 실패해도 다른 트랜잭션에는 유일성 검사가 먼저 적용될 수 있고, 한 테이블에서 동시에 하나만 만들 수 있습니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/using-explain.html", "https://www.postgresql.org/docs/16/runtime-config-query.html", "https://dev.mysql.com/doc/refman/8.4/en/nested-loop-joins.html", "https://dev.mysql.com/doc/refman/8.4/en/hash-joins.html"]
+concepts: [join-query, query-planner]
+importance: 3
+links: [{to: "dbs-03", kind: RELATED}, {to: "dbs-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Nested Loop는 바깥 테이블의 행마다 안쪽 테이블을 한 번씩 찾는 방식이라, 바깥 행이 적고 안쪽에 조인 키 인덱스가 있을 때 좋습니다. Hash Join은 한쪽을 해시 테이블로 만들고 다른 쪽을 읽으며 맞는 행을 찾는 방식으로 등가 조인에서 쓰이고 두 쪽이 모두 큰 경우에 흔합니다. Merge Join은 양쪽을 조인 키로 정렬한 뒤 한 번씩 훑으며 합치는 방식이라 이미 정렬돼 있거나 인덱스로 순서를 얻을 수 있을 때 유리합니다. PostgreSQL 16은 이 셋을 모두 두고 비용으로 고르고, MySQL 8.4(InnoDB)는 인덱스를 쓰는 중첩 루프와, 인덱스가 없는 조인에는 해시 조인을 씁니다.

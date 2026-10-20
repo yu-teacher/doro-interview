@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/appendix/application-properties/index.html", "https://docs.spring.io/spring-boot/reference/data/sql.html", "https://raw.githubusercontent.com/brettwooldridge/HikariCP/dev/README.md", "https://docs.spring.io/spring-framework/reference/data-access/transaction/tx-resource-synchronization.html"]
+concepts: [connection-pool, thread-pool]
+importance: 2
+links: [{to: "dbp-21", kind: RELATED}, {to: "tx-17", kind: RELATED}, {to: "jpa-14", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 톰캣 요청 처리 스레드는 기본 최대 200개인데, HikariCP의 기본 `maximumPoolSize`는 10개입니다. 요청이 모두 DB를 쓴다면 동시 요청이 100개 들어와도 커넥션은 10개뿐이라 나머지는 커넥션을 얻으려고 대기하고, `connectionTimeout`(기본 30초) 안에 얻지 못하면 예외가 납니다. 특히 `@Transactional` 메서드 안에서 외부 API 호출처럼 오래 걸리는 작업을 하면 커넥션을 오래 점유해서 풀이 금방 고갈됩니다. 그래서 트랜잭션은 짧게 유지하고 외부 호출은 트랜잭션 밖으로 빼며, 풀 크기는 "크게"가 아니라 DB가 감당할 수 있는 동시성에 맞춰 측정으로 정합니다.

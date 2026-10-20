@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html"]
+concepts: [persistence-context, spring-data-jpa]
+importance: 1
+links: [{to: "jpa-05", kind: PREREQ}, {to: "jpa-10", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 첫째, 영속성 컨텍스트에 엔티티가 계속 쌓이면 메모리와 더티 체킹 비용이 커지므로 주기적으로 `flush()` 후 `clear()`로 비웁니다. 공식 문서는 한꺼번에 많이 넣으면 메모리 부족 위험이 있다고 설명합니다. 둘째, IDENTITY는 INSERT 배치가 꺼지므로 대량 INSERT에는 SEQUENCE와 JDBC 배치 설정(`hibernate.jdbc.batch_size`)을 씁니다. 셋째, 대량 수정과 삭제는 엔티티를 하나씩 바꾸지 말고 `@Modifying` 벌크 쿼리를 쓰되, 벌크 쿼리는 영속성 컨텍스트에 반영되지 않으니 `clearAutomatically`로 컨텍스트를 비우는 걸 고려합니다. Spring Data 문서에 따르면 파생 delete 쿼리는 엔티티를 하나씩 로딩해 삭제하지만 `@Query` 벌크 delete는 단일 쿼리이고 생명주기 콜백이 호출되지 않습니다.

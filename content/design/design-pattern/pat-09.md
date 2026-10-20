@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://gameprogrammingpatterns.com/state.html"]
+concepts: [gof-patterns]
+importance: 1
+links: [{to: "jo-05", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 상태 패턴은 객체의 상태에 따라 행동이 바뀌도록, 상태별 동작을 상태 객체에 두고 현재 상태 객체에 위임하는 패턴입니다. 상태를 바꾸는 일은 위임 대상 참조를 다른 상태 객체로 바꾸는 것입니다. Nystrom은 전략이나 타입 객체와 구조가 같지만 의도가 다르다고 합니다. 전략은 주 클래스를 동작 일부에서 떼어 내는 것이 목적이고, 상태는 위임 대상을 갈아 끼워 주 객체의 행동을 바꾸는 것이 목적입니다. 그는 `if`나 `enum` 분기로 충분할 때도 있다고 하며, 상태가 필드를 갖지 않으면 인스턴스 하나를 여러 곳에서 공유할 수 있다고 합니다.

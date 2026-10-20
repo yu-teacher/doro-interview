@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/transaction-iso.html", "https://www.postgresql.org/docs/16/explicit-locking.html"]
+concepts: [isolation-level, db-locking]
+importance: 2
+links: [{to: "dbt-03", kind: PREREQ}, {to: "dbl-04", kind: RELATED}, {to: "jpa-23", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16의 READ COMMITTED에서 UPDATE는 대상 행을 다른 트랜잭션이 먼저 수정 중이면 그 트랜잭션이 끝나기를 기다립니다. 먼저 한 쪽이 커밋하면 갱신된 버전에 WHERE 조건을 다시 평가해 맞으면 그 버전에 적용합니다. 그래서 balance = balance + 100 같은 한 문장짜리 증가는 동시에 실행해도 둘 다 반영됩니다. 하지만 애플리케이션이 SELECT로 값을 읽어 계산한 뒤 UPDATE로 쓰면 읽은 값이 이미 낡아서 다른 트랜잭션의 변경을 덮어쓰는 lost update가 납니다. 이럴 때는 SELECT FOR UPDATE로 읽거나 상위 격리 수준과 재시도를 씁니다.

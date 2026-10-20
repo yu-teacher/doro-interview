@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc6265.html"]
+concepts: [web-security]
+importance: 3
+links: [{to: "web-18", kind: FOLLOWUP}, {to: "sec-10", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 서버가 Set-Cookie로 쿠키를 내려 주면 브라우저가 이후 요청의 Cookie 헤더에 담아 돌려보냅니다. Secure는 HTTPS 같은 보안 채널로 가는 요청에만 쿠키를 포함하게 하는 속성이고, HttpOnly는 쿠키를 스크립트가 쓰는 API에는 노출하지 않고 HTTP 요청에만 쓰게 하는 속성입니다. Domain은 쿠키를 보낼 호스트 범위를, Path는 보낼 경로 범위를 정하는데, Domain을 생략하면 쿠키를 내려 준 서버에만 돌려줍니다. Max-Age와 Expires는 수명을 정하며 둘이 같이 있으면 Max-Age가 우선입니다. 다만 Secure는 기밀성만 지켜 줄 뿐이고 Path를 보안 경계로 믿으면 안 된다고 표준에 적혀 있습니다.

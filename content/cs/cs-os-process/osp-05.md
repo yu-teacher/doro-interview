@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html", "https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html"]
+concepts: [race-condition]
+importance: 3
+links: [{to: "osp-06", kind: FOLLOWUP}, {to: "osp-19", kind: FOLLOWUP}, {to: "jt-04", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 경쟁 상태는 여러 실행 흐름이 같은 데이터를 동시에 접근하고 그중 적어도 하나가 쓰기라서, 결과가 실행 순서에 따라 달라지는 문제입니다. count++도 읽기, 더하기, 쓰기의 세 단계라서 두 스레드가 겹치면 한쪽 갱신이 사라집니다. 이렇게 공유 데이터를 건드리는 코드 구간이 임계 구역이고, 한 번에 한 흐름만 들어가도록 뮤텍스로 상호 배제를 하거나 원자 연산으로 바꿔서 막습니다. 임계 구역은 가능한 짧게 유지하는 것이 좋고, 이 문제는 실행 순서가 운 나쁘게 겹칠 때만 드러나서 재현하기 어렵습니다.

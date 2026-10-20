@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/gradle-plugin/managing-dependencies.html", "https://docs.spring.io/spring-boot/gradle-plugin/reacting.html", "https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html", "https://docs.gradle.org/current/userguide/platforms.html"]
+concepts: [dependency-management]
+importance: 2
+links: [{to: "bld-18", kind: FOLLOWUP}, {to: "bld-05", kind: PREREQ}, {to: "boot-06", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 BOM은 관련된 여러 라이브러리의 버전을 한곳에 모아 둔 POM입니다. 스프링 부트는 `spring-boot-dependencies`라는 BOM으로 각 부트 릴리스에서 함께 검증한 서드파티 버전을 정해 두고, Gradle에서는 `io.spring.dependency-management` 플러그인을 적용하거나 Gradle 자체의 `platform` 기능으로 이 BOM을 가져옵니다. 그러면 `spring-boot-starter-web` 같은 의존성을 버전 없이 선언할 수 있습니다. Maven에서는 `dependencyManagement`에서 `import` 스코프로 BOM을 가져오는 방식이 같은 역할을 합니다.

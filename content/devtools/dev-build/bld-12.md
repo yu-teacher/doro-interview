@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.gradle.org/current/userguide/graph_resolution.html", "https://docs.gradle.org/current/userguide/dependency_versions.html", "https://docs.gradle.org/current/userguide/resolution_rules.html", "https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html"]
+concepts: [dependency-management]
+importance: 2
+links: [{to: "bld-16", kind: FOLLOWUP}, {to: "bld-05", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 Gradle은 의존성 그래프에서 요청된 버전들 가운데 기본으로 가장 높은 버전을 고릅니다. 예를 들어 한쪽이 D 1.0을, 다른 쪽이 D 2.0을 끌고 오면 2.0이 선택되고, 왜 그렇게 되었는지는 `dependencyInsight`에서 conflict resolution으로 표시됩니다. Maven은 이른바 nearest definition으로 의존성 트리에서 내 프로젝트에 더 가까운 선언의 버전을 쓰고, 깊이가 같으면 먼저 선언한 쪽이 이깁니다. 그래서 같은 그래프라도 두 도구가 다른 버전을 고를 수 있고, Gradle은 `failOnVersionConflict()`로 충돌 시 빌드를 실패시킬 수도 있습니다.

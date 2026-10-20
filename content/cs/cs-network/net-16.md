@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc791.html", "https://www.rfc-editor.org/rfc/rfc792.html", "https://www.rfc-editor.org/rfc/rfc1191.html", "https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc8200.html", "https://www.rfc-editor.org/rfc/rfc8085.html"]
+concepts: [network-layers, tcp]
+importance: 1
+links: [{to: "net-15", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 MTU는 링크가 한 번에 보낼 수 있는 IP 패킷의 최대 크기이고, MSS는 TCP가 한 세그먼트에 담는 데이터의 최대량으로 대략 MTU에서 IP·TCP 헤더 40바이트를 뺀 값입니다. 패킷이 경로상 어느 링크의 MTU보다 크면 IPv4는 라우터가 단편화할 수 있지만 DF 비트가 켜져 있으면 라우터가 버리고 단편화가 필요하다는 ICMP를 돌려줍니다. 경로 MTU 탐색(PMTUD)은 DF를 켜 보내며 이 ICMP로 경로의 MTU를 알아내는 방식이고, IPv6는 라우터가 단편화하지 않고 출발지만 합니다. 그런데 방화벽이 이 ICMP를 막으면 작은 패킷은 통과하는데 큰 패킷만 조용히 사라지는 문제가 생깁니다.

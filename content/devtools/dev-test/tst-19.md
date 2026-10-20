@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://javadoc.io/static/org.mockito/mockito-core/5.23.0/org.mockito/org/mockito/Mockito.html"]
+concepts: [mocking-junit]
+importance: 1
+links: [{to: "tst-04", kind: PREREQ}, {to: "tst-20", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Mockito 5.0부터 인라인 모의 생성기가 기본이라서 `final` 클래스와 메서드도 모킹할 수 있고, `mockStatic`으로 static 메서드도 모킹할 수 있습니다. 다만 `mockStatic`은 현재 스레드와 정한 범위 안에서만 유효해서 try-with-resources로 범위를 닫아야 하고, 다른 스레드에서 부른 static 호출에는 적용되지 않습니다. 더 근본적으로는 시간이나 외부 호출이 static 호출이나 `new`로 코드에 박혀 있어서 모킹이 필요해진 설계일 수 있으니, `Clock` 같은 협력 객체를 생성자로 주입받게 바꾸면 모킹 없이 고정 값으로 테스트할 수 있습니다. Java 21 이상에서는 인라인 모킹이 에이전트 부착 경고를 낼 수 있습니다.

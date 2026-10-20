@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-savepoint.html", "https://dev.mysql.com/doc/refman/8.4/en/savepoint.html"]
+concepts: [db-locking, tx-boundary]
+importance: 1
+links: [{to: "dbt-05", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16에서는 행 수준 락이 트랜잭션이 끝날 때뿐 아니라 savepoint로 롤백할 때도 해제됩니다. 그래서 세이브포인트 이후에 잡았던 락은 ROLLBACK TO 직후 다른 세션이 쓸 수 있게 됩니다. MySQL 8.4(InnoDB)는 다릅니다. ROLLBACK TO SAVEPOINT가 변경은 되돌리지만 세이브포인트 이후에 메모리에 저장된 행 락은 해제하지 않아서, 되돌린 행도 트랜잭션이 끝날 때까지 다른 세션이 기다려야 합니다. 새로 삽입한 행의 락은 undo로 해제됩니다.

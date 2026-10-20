@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-rest-exceptions.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/ProblemDetail.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/server/ResponseStatusException.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/mvc/method/annotation/ResponseEntityExceptionHandler.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html"]
+concepts: [global-exception-handling]
+importance: 2
+links: [{to: "mvc-10", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `ProblemDetail`은 RFC 9457 문제 상세의 표현으로, 표준 필드(type, title, status, detail, instance)와 비표준 필드를 담습니다. `@ExceptionHandler`나 컨트롤러 메서드가 `ProblemDetail`이나 `ErrorResponse`를 반환하면 status가 HTTP 상태가 되고 `application/problem+json`으로 응답합니다. 모든 Spring MVC 예외는 `ErrorResponse`를 구현하므로 `ResponseEntityExceptionHandler`를 확장한 `@ControllerAdvice`가 처리하고, Boot는 `spring.mvc.problemdetails.enabled`로 자동 구성합니다. `ResponseStatusException`은 상태 코드와 사유를 받는 하위 클래스입니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://martinfowler.com/eaaDev/EventSourcing.html", "https://martinfowler.com/articles/201701-event-driven.html", "https://microservices.io/patterns/data/event-sourcing.html"]
+concepts: [distributed-consistency, ddd]
+importance: 1
+links: [{to: "dst-12", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 Event Sourcing은 상태가 바뀔 때마다 그 변화를 이벤트로 기록하고, 현재 상태는 이벤트를 재생해 얻는 방식입니다. 이벤트 로그가 원천 데이터가 되므로 감사 추적, 과거 시점의 상태 복원, 오류 이벤트를 고쳐 재생하는 일이 가능합니다. 하지만 주의점이 많습니다. 재생할 때 외부 시스템에 알림이나 결제 요청이 다시 나가면 안 되어서 게이트웨이로 감싸 재생 중에는 끄는 처리가 필요하고, 이벤트 스키마가 시간이 지나며 바뀌는 문제도 다뤄야 합니다. Richardson은 이벤트 저장소가 질의하기 어려워 CQRS를 함께 써야 한다고 하지만, Fowler는 둘이 별개 패턴이고 필수 조합이 아니라며 어느 쪽이 문제였는지 혼동하기 쉽다고 지적합니다.

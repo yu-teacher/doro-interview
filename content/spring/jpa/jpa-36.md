@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-data/jpa/reference/repositories/projections.html"]
+concepts: [spring-data-jpa]
+importance: 1
+links: [{to: "jpa-22", kind: PREREQ}, {to: "jpa-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 엔티티 전체가 아니라 필요한 속성만 읽는 기능입니다. 인터페이스 프로젝션은 getter만 선언하면 Spring Data가 프록시를 만들어 줍니다. 모든 접근자가 엔티티 속성과 일치하는 클로즈드 프로젝션이면 필요한 속성을 모두 알 수 있어 쿼리 실행을 최적화할 수 있습니다. 반대로 @Value와 SpEL을 쓰는 오픈 프로젝션은 어떤 속성을 쓸지 알 수 없어 최적화가 안 됩니다. DTO 방식은 프록시 없이 클래스나 record를 쓰며 중첩 프로젝션은 지원하지 않습니다. 호출 시점에 타입을 고르려면 Class 파라미터를 받는 동적 프로젝션을 씁니다. JPA에서는 인터페이스 프로젝션이 Tuple 쿼리로, 직접 쓴 JPQL의 DTO는 생성자 표현식으로 동작합니다. 파생 쿼리에서 조인으로 풀리는 중첩 속성은 중첩 엔티티 전체를 가져온다는 점도 주의해야 합니다.

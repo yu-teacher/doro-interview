@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-an-image/", "https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/", "https://docs.docker.com/engine/storage/", "https://docs.docker.com/get-started/docker-overview/"]
+concepts: [container]
+importance: 3
+links: [{to: "dkr-08", kind: FOLLOWUP}, {to: "dkr-19", kind: FOLLOWUP}, {to: "dkr-01", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 이미지는 컨테이너 실행에 필요한 파일, 바이너리, 설정을 묶어 둔 불변의 패키지이고, 컨테이너는 그 이미지로 실행한 인스턴스입니다. 이미지는 파일 시스템의 추가·수정·삭제 변경분을 담은 읽기 전용 레이어가 쌓인 구조입니다. 컨테이너를 만들면 그 위에 컨테이너 전용의 쓰기 가능한 레이어가 하나 생겨서 컨테이너 안에서 만든 파일은 거기에 저장되고, 원본 이미지 레이어는 그대로입니다. 그래서 같은 이미지로 컨테이너를 여러 개 띄울 수 있고, 컨테이너를 삭제하면 쓰기 레이어의 데이터도 함께 사라집니다.

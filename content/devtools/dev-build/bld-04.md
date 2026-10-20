@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.gradle.org/current/userguide/gradle_wrapper.html"]
+concepts: [build-tool]
+importance: 2
+links: [{to: "bld-02", kind: PREREQ}, {to: "cic-02", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Gradle Wrapper는 프로젝트에 `gradlew` 스크립트와 설정 파일을 함께 두어, 컴퓨터에 설치된 Gradle이 아니라 프로젝트가 정한 버전의 Gradle로 빌드하게 하는 장치입니다. 공식 문서는 이렇게 하면 프로젝트가 특정 Gradle 버전에 고정되어 빌드가 더 믿을 만해지고, 개발자 PC와 IDE, CI 서버의 Gradle 버전을 wrapper 정의 한 곳만 바꿔 맞출 수 있다고 설명합니다. 그래서 wrapper의 jar까지 포함해 버전 관리에 올립니다. 만들거나 올릴 때는 `gradle wrapper` 명령을 씁니다.

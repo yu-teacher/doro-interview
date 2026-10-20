@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man7/pthreads.7.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/fork.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_create.html", "https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html", "https://man7.org/linux/man-pages/man2/fork.2.html"]
+concepts: [thread-process]
+importance: 3
+links: [{to: "osp-15", kind: FOLLOWUP}, {to: "jt-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 프로세스는 독립된 주소 공간과 그 실행에 필요한 자원을 묶은 단위이고, 스레드는 그 프로세스 안에서 실행되는 하나의 제어 흐름입니다. 같은 프로세스의 스레드들은 전역 변수와 힙, 열린 파일 디스크립터, 프로세스 ID를 공유하고, 스택과 스레드 ID, 시그널 마스크, errno는 스레드마다 따로 가집니다. 그래서 스레드끼리는 메모리로 바로 데이터를 주고받지만 동기화가 필요하고, 프로세스끼리는 메모리가 격리되어 IPC가 필요합니다. 생성 비용도 보통 스레드가 훨씬 작습니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/tx.html", "https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html", "https://docs.spring.io/spring-framework/reference/testing/integration.html"]
+concepts: [test-strategy, tx-boundary]
+importance: 2
+links: [{to: "tst-15", kind: PREREQ}, {to: "tx-24", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 테스트 메서드나 클래스에 `@Transactional`을 붙이면 테스트가 트랜잭션 안에서 실행되고 끝나면 기본적으로 롤백되어, DB를 따로 정리하지 않아도 됩니다. 함정은 먼저 `RANDOM_PORT`처럼 실제 서버를 띄운 경우입니다. HTTP 요청이 서버 스레드의 별도 트랜잭션에서 처리되어서 롤백되지 않고 그대로 커밋됩니다. `assertTimeoutPreemptively`처럼 다른 스레드에서 테스트를 실행하는 선점형 타임아웃도 같은 이유로 롤백이 안 됩니다. 또 JPA나 하이버네이트에서는 flush를 하지 않으면 SQL 오류가 가려진 채 테스트가 통과하는 거짓 양성이 생길 수 있어서, 직접 flush가 필요합니다. 서비스의 트랜잭션 전파가 `REQUIRED`나 `SUPPORTS`가 아닌 경우도 조심해야 합니다.

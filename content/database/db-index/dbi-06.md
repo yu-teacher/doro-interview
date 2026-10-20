@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-unique.html", "https://www.postgresql.org/docs/16/ddl-constraints.html", "https://www.postgresql.org/docs/16/indexes-partial.html", "https://dev.mysql.com/doc/refman/8.4/en/create-index.html"]
+concepts: [index-structure, schema-design]
+importance: 2
+links: [{to: "dbs-01", kind: RELATED}, {to: "dbs-02", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16에서는 기본 키나 UNIQUE 제약을 정의하면 해당 컬럼, 복합이면 여러 컬럼에 대한 유니크 B-tree 인덱스가 자동으로 생기고, 그 인덱스가 제약을 강제하는 수단입니다. 그래서 같은 컬럼에 인덱스를 직접 또 만들면 중복입니다. UNIQUE에서 NULL은 기본적으로 서로 같지 않다고 보아 여러 개 들어갈 수 있고, NULLS NOT DISTINCT 옵션을 주면 NULL도 중복으로 취급합니다. 반면 외래 키를 선언해도 참조하는 쪽 컬럼에는 인덱스가 자동으로 생기지 않으니, 부모 행 삭제나 수정 때 자식 테이블 검색이 필요하면 직접 만들어야 합니다.

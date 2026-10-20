@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/using-explain.html", "https://www.postgresql.org/docs/16/indexes-bitmap-scans.html", "https://www.postgresql.org/docs/16/indexes-index-only-scans.html", "https://www.postgresql.org/docs/16/sql-explain.html"]
+concepts: [query-planner]
+importance: 2
+links: [{to: "dbi-09", kind: FOLLOWUP}, {to: "dbp-03", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Seq Scan은 테이블 전체를 순서대로 읽으면서 WHERE 조건을 필터로 적용합니다. Index Scan은 인덱스에서 조건에 맞는 항목을 찾고 항목마다 테이블, 즉 힙에서 행을 가져옵니다. Bitmap Index Scan과 Bitmap Heap Scan은 인덱스로 맞는 행의 위치를 먼저 모은 뒤 물리 순서로 정렬해서 힙을 읽어, 힙 접근이 흩어지는 비용을 줄이는 중간 방식입니다. Index Only Scan은 필요한 컬럼이 모두 인덱스에 있고 가시성 조건을 만족하면 힙을 읽지 않습니다. 어느 것을 쓸지는 플래너가 예상 행 수와 비용을 비교해 정하므로, 같은 인덱스라도 조건에 맞는 행 수에 따라 계획이 달라집니다.

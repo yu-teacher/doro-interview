@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/mmap.html"]
+concepts: [virtual-memory]
+importance: 2
+links: [{to: "osm-04", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 내부 단편화는 할당 단위가 요청보다 커서 할당된 블록 안쪽에 남는 낭비이고, 외부 단편화는 빈 공간의 총량은 충분한데 조각나서 큰 연속 공간을 못 내주는 상황입니다. 페이징은 메모리를 고정 크기 페이지로 다뤄서 가상 주소 공간에서는 흩어진 물리 페이지를 연속된 것처럼 보여 주므로 외부 단편화 문제를 크게 줄입니다. 대신 요청 크기가 페이지 크기의 배수가 아니면 마지막 페이지가 남아 내부 단편화가 생깁니다. 물리적으로 연속된 큰 영역이 꼭 필요하면 커널은 페이지를 옮겨 빈 곳을 모으는 압축(compaction)을 씁니다.

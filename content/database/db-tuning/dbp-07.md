@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-prepare.html", "https://www.postgresql.org/docs/16/functions-comparisons.html", "https://www.postgresql.org/docs/16/using-explain.html"]
+concepts: [fetch-strategy, join-query]
+importance: 3
+links: [{to: "jpa-15", kind: RELATED}, {to: "jpa-16", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 N+1은 목록을 한 번 조회한 뒤 그 행마다 연관 데이터를 가져오는 쿼리가 N번 더 나가는 패턴입니다. 데이터베이스 쪽에서 보면 쿼리마다 파싱과 계획, 네트워크 왕복, 트랜잭션 처리가 반복되고, 개별 쿼리는 인덱스를 타서 빨라 보이기 때문에 슬로우 쿼리로는 잘 안 잡힙니다. PostgreSQL 16 기준으로 JOIN 한 번이나 WHERE customer_id = ANY(...), IN으로 묶어 가져오면 플래너가 해시 조인 같은 집합 연산을 고를 수 있어 왕복이 줄어듭니다. 다만 한 번에 너무 많은 값을 넣으면 쿼리와 결과가 커지므로 적당한 크기로 나누는 균형이 필요합니다.

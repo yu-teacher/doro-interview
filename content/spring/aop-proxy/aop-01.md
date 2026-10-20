@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop.html", "https://docs.spring.io/spring-framework/reference/core/aop/introduction-defn.html"]
+concepts: [aop]
+importance: 3
+links: [{to: "aop-02", kind: FOLLOWUP}, {to: "aop-05", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 AOP는 OOP를 보완하는 프로그래밍 방식입니다. OOP의 모듈 단위가 클래스라면 AOP의 모듈 단위는 Aspect이고, 트랜잭션 관리처럼 여러 타입과 객체에 걸쳐 있는 횡단 관심사를 하나의 모듈로 묶습니다. 포인트컷으로 적용 대상을 클래스 계층과 무관하게 고를 수 있어서, 서비스 계층의 모든 비즈니스 메서드에 선언적 트랜잭션 같은 동작을 비즈니스 코드를 건드리지 않고 적용할 수 있습니다. Spring은 AOP로 선언적 엔터프라이즈 서비스를 제공하고, 그중 가장 중요한 것이 선언적 트랜잭션 관리입니다. 개발자가 직접 Aspect를 만들 수도 있습니다. 참고로 IoC 컨테이너는 AOP에 의존하지 않아서 AOP 없이도 Spring을 쓸 수 있습니다.

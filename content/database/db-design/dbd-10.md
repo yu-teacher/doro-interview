@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/ddl-partitioning.html", "https://www.postgresql.org/docs/16/sql-altertable.html"]
+concepts: [db-scaling]
+importance: 2
+links: [{to: "dbd-18", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 대표적인 이점은 오래된 데이터를 DROP이나 DETACH PARTITION으로 빠르게 지울 수 있다는 점과, 파티션 키 조건이 있는 쿼리에서 불필요한 파티션을 건너뛰는 파티션 프루닝입니다. 하지만 쿼리에 파티션 키 조건이 없으면 모든 파티션을 훑고, 파티션이 너무 많으면 쿼리 계획 시간과 메모리 사용이 늘어납니다. 공식 문서도 이런 이득은 보통 테이블이 매우 클 때 의미가 있고, 파티션이 많을수록 좋다고 가정하지 말라고 합니다. 그래서 가장 자주 쓰는 WHERE 조건과 삭제 단위에 맞춰 키를 고르고 파티션 수는 절제해서 정합니다.

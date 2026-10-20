@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/functions-comparison.html", "https://www.postgresql.org/docs/16/queries-table-expressions.html"]
+concepts: [null-handling]
+importance: 3
+links: [{to: "dbs-17", kind: FOLLOWUP}, {to: "dbs-21", kind: FOLLOWUP}, {to: "dbs-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 NULL은 값이 없다는 뜻이 아니라 알 수 없는 값이어서, 일반 비교 연산자에 NULL이 들어가면 결과가 true도 false도 아닌 NULL(unknown)이 됩니다. 그래서 `x = NULL`이나 `x <> NULL`은 항상 NULL이고, WHERE는 true인 행만 통과시키므로 어떤 행도 나오지 않습니다. NULL인지 검사하려면 `IS NULL`, `IS NOT NULL`을 써야 합니다. PostgreSQL 16 기준으로 NULL을 보통 값처럼 비교하고 싶으면 `IS DISTINCT FROM`을 쓰면 됩니다. 같은 이유로 `bonus <> 100` 조건은 bonus가 NULL인 행도 걸러냅니다.

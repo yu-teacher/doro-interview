@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Arrays.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collections.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html", "https://docs.python.org/3/howto/sorting.html", "https://docs.python.org/3/library/stdtypes.html", "https://github.com/python/cpython/blob/main/Objects/listsort.txt"]
+concepts: [complexity-sorting]
+importance: 2
+links: [{to: "jc-05", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 자바에서 int[] 같은 기본형 배열의 Arrays.sort는 듀얼 피벗 퀵 정렬이고, 객체 배열과 List.sort, Collections.sort는 Tim Peters의 파이썬 리스트 정렬에서 따온 안정적이고 적응형인 반복 병합 정렬입니다. 그래서 객체 정렬은 안정성이 문서로 보장되고, 거의 정렬된 입력이면 비교가 약 n번까지 줄지만 임시 공간을 최대 n/2 참조까지 씁니다. 파이썬의 sort와 sorted도 Timsort를 쓰고 안정성이 보장됩니다. 다만 알고리즘 이름은 구현 노트라 JDK나 CPython 버전에 따라 바뀔 수 있고 약속된 것은 안정성입니다.

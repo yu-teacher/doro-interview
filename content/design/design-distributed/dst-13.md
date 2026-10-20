@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://martinfowler.com/bliki/CircuitBreaker.html", "https://learn.microsoft.com/en-us/azure/architecture/patterns/circuit-breaker", "https://resilience4j.readme.io/docs/circuitbreaker", "https://microservices.io/patterns/reliability/circuit-breaker.html", "https://docs.spring.io/spring-cloud-circuitbreaker/reference/"]
+concepts: [resilience]
+importance: 2
+links: [{to: "dst-14", kind: FOLLOWUP}, {to: "dst-19", kind: FOLLOWUP}, {to: "dst-04", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 Circuit Breaker는 원격 호출을 감싸 장애가 호출자로 번지는 것을 막는 프록시입니다. 평소에는 닫힘(CLOSED) 상태로 호출을 통과시키며 실패를 세다가, 실패율이나 횟수가 임계값을 넘으면 열림(`OPEN`) 상태가 되어 일정 시간 동안 호출하지 않고 곧바로 실패시킵니다. 응답 없는 서비스를 기다리다 스레드와 연결이 고갈되는 연쇄 장애를 막고, 장애 서비스가 회복할 틈도 줍니다. 대기 시간이 지나면 반열림(`HALF_OPEN`)이 되어 제한된 수의 시험 호출만 보내고, 성공하면 닫히고 실패하면 다시 열립니다. 다만 Richardson은 오탐 없이 지연도 과하지 않게 타임아웃 값을 고르기가 어렵다고 지적합니다.

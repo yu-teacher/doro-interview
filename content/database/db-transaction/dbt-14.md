@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/sql-prepare-transaction.html", "https://www.postgresql.org/docs/16/transaction-id.html", "https://www.postgresql.org/docs/16/sql-commit-prepared.html", "https://www.postgresql.org/docs/16/runtime-config-resource.html"]
+concepts: [distributed-consistency]
+importance: 2
+links: [{to: "dst-09", kind: RELATED}, {to: "dst-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 2PC는 여러 데이터베이스나 자원에 걸친 트랜잭션을 원자적으로 커밋하려고 외부 트랜잭션 매니저가 쓰는 방식입니다. PostgreSQL 16의 PREPARE TRANSACTION은 현재 트랜잭션의 상태를 디스크에 완전히 저장하고 세션에서 분리해, 장애가 나도 높은 확률로 커밋할 수 있게 해 둡니다. 이후 COMMIT PREPARED나 ROLLBACK PREPARED를 다른 세션에서도 실행할 수 있습니다. 문서는 트랜잭션 매니저를 만드는 게 아니라면 쓰지 말라고 하는데, 준비된 트랜잭션이 방치되면 락을 계속 쥐고 VACUUM을 방해하며, 그래서 관리 체계가 없으면 `max_prepared_transactions`를 0으로 두라고 합니다.

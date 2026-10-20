@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/integration/cache/annotations.html", "https://docs.spring.io/spring-framework/reference/integration/cache/strategies.html", "https://docs.spring.io/spring-data/redis/reference/redis/redis-cache.html"]
+concepts: [cache, race-condition]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 항상 그렇지는 않습니다. 기본 캐시 추상화는 아무것도 잠그지 않아서 같은 인자의 호출이 동시에 미스를 만나면 값을 여러 번 계산합니다. `sync = true`는 캐시 공급자에게 항목을 잠근 채 계산하도록 요청하는 선택 기능이라 공급자가 지원해야 하고, 문서는 핵심 프레임워크가 제공하는 CacheManager들, 예컨대 ConcurrentMap 기반은 지원한다고 말합니다. Spring Data Redis의 `RedisCacheManager`는 기본이 락 없는 라이터라 처리량은 좋지만 여러 명령이 겹칠 수 있고, 락이 필요하면 `lockingRedisCacheWriter`를 직접 골라야 합니다. 이 락은 항목별이 아니라 캐시 단위로 걸리고 요청이 더 늘어나는 비용이 있습니다.

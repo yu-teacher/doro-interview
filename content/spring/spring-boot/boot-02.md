@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/using/using-the-springbootapplication-annotation.html", "https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html", "https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html"]
+concepts: [auto-configuration, ioc-di]
+importance: 2
+links: [{to: "boot-16", kind: FOLLOWUP}, {to: "ioc-10", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `@SpringBootApplication`은 세 기능을 한 번에 켜는 편의 어노테이션입니다. `@SpringBootConfiguration`은 컨텍스트에 추가 빈을 등록하거나 다른 설정 클래스를 import하게 해 주는, 표준 `@Configuration`의 대안이고 통합 테스트에서 설정 탐지를 돕습니다. `@EnableAutoConfiguration`은 자동 설정을 켜고, `@ComponentScan`은 애플리케이션이 위치한 패키지에서 `@Component`를 스캔합니다. 그래서 메인 클래스는 보통 다른 클래스들보다 위의 루트 패키지에 둡니다. 세 기능 모두 필수는 아니어서, 스캔 없이 `@Import`로 설정을 명시하는 구성도 가능합니다.

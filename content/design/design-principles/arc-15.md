@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://martinfowler.com/bliki/AnemicDomainModel.html", "https://www.domainlanguage.com/ddd/reference/"]
+concepts: [ddd]
+importance: 1
+links: [{to: "arc-10", kind: PREREQ}, {to: "arc-05", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 빈약한 도메인 모델은 도메인 객체가 이름만 도메인 명사일 뿐 getter와 setter만 가진 데이터 주머니이고, 모든 도메인 로직이 서비스 객체에 몰려 있는 구조입니다. Martin Fowler는 이것이 데이터와 처리를 합친다는 객체지향의 기본 취지에 어긋나는 절차적 설계이며, 도메인 모델의 비용인 O/R 매핑은 다 치르면서 이점은 얻지 못한다고 비판합니다. 다만 그는 도메인 모델이 항상 최선의 도구는 아니라고도 말하고, 서비스 계층 자체는 문제가 아니라 얇게 유지하며 풍부한 도메인 모델과 함께 써야 한다고 합니다. 로직이 서비스에 많을수록 모델의 이점을 잃기 쉽다는 것이 요지입니다.

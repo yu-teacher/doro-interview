@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/actuator/endpoints.html", "https://docs.spring.io/spring-boot/reference/web/graceful-shutdown.html"]
+concepts: [graceful-shutdown, observability]
+importance: 2
+links: [{to: "cic-14", kind: PREREQ}, {to: "boot-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 liveness는 애플리케이션이 살아 있는지를 나타내서, 고장 나면 오케스트레이터가 인스턴스를 재시작하게 하는 신호입니다. readiness는 지금 트래픽을 받을 준비가 되었는지를 나타내서, 준비가 안 됐으면 재시작 없이 트래픽만 끊습니다. Actuator는 `/actuator/health/liveness`와 `/actuator/health/readiness`를 제공하고, readiness는 시작 중과 graceful shutdown 중에는 트래픽 거부 상태가 됩니다. 문서는 liveness가 DB나 외부 API 같은 외부 시스템에 의존하면 외부 장애 때 모든 인스턴스가 재시작되는 연쇄 장애가 날 수 있다고 경고하고, readiness에 외부 시스템을 넣을지도 신중히 판단하라고 합니다. 시작이 오래 걸리면 `startupProbe`를 고려합니다.

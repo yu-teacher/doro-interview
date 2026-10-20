@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/BeanFactory.html"]
+concepts: [gof-patterns, bean-lifecycle]
+importance: 3
+links: [{to: "pat-24", kind: FOLLOWUP}, {to: "ioc-06", kind: RELATED}, {to: "misc-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 아닙니다. 스프링 문서가 직접 둘은 다르다고 밝힙니다. GoF 싱글톤은 클래스 코드에 인스턴스 수를 못 박아 클래스로더당 하나만 만들어지는 반면, 스프링 싱글톤은 컨테이너 하나, 빈 정의 하나당 인스턴스가 하나입니다. 그래서 스코프는 클래스에 박혀 있지 않고 설정으로 고를 수 있고, 같은 클래스도 스코프를 프로토타입으로 바꾸면 요청마다 새 인스턴스가 만들어집니다. 문서는 상태를 가진 빈에는 프로토타입, 상태 없는 빈에는 싱글톤을 쓰는 것을 일반 규칙으로 안내합니다.

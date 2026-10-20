@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Release-Notes", "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide"]
+concepts: [spring-migration]
+importance: 1
+links: [{to: "boot-21", kind: FOLLOWUP}, {to: "misc-17", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 크게 세 가지입니다. 첫째, Spring Framework 7 기반으로 Spring Security 7, Batch 6 등이 함께 올라갔고 Java 17 이상, Jakarta EE 11이 기준입니다. 둘째, 모듈이 작게 나뉘어 starter가 `spring-boot-starter-<기술>`로 정리되고 기술마다 `-test` starter가 있으며, `spring-boot-starter-web`은 deprecated 되어 `spring-boot-starter-webmvc`를 씁니다. 셋째, Jackson 3가 기본이 되어 패키지가 `tools.jackson`으로 바뀌고 JSON용 `JsonMapper`가 자동 구성됩니다. 테스트에서는 `@MockBean`이 제거되고 `@MockitoBean`을 씁니다.

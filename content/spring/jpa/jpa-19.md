@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html", "https://docs.hibernate.org/orm/7.0/userguide/html_single/"]
+concepts: [entity-mapping, ddd]
+importance: 2
+links: [{to: "jpa-18", kind: PREREQ}, {to: "jpa-31", kind: FOLLOWUP}, {to: "jpa-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 cascade는 부모에 적용한 상태 전이를 연관된 자식에게 전파하는 옵션입니다. `CascadeType.ALL`이면 부모를 persist하거나 remove할 때 자식에게도 같은 연산이 적용됩니다. orphanRemoval은 부모 컬렉션에서 자식을 제거하면 고아가 된 자식에 remove가 적용되어 flush 시점에 삭제되는 옵션입니다. 사양은 이것이 부모가 단독으로 소유하는 자식을 위한 기능이라고 하므로, 자식을 다른 엔티티도 참조하거나 독립 생명주기를 가지면 쓰면 안 되고 주문-주문항목처럼 부모가 생명주기를 전부 책임질 때만 씁니다. 또 컬렉션 참조를 통째로 교체하면 문제가 생길 수 있어 add/remove로 다루는 게 안전합니다(보충).

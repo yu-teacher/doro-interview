@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html", "https://maven.apache.org/guides/introduction/introduction-to-the-pom.html", "https://docs.gradle.org/current/userguide/build_lifecycle.html", "https://docs.gradle.org/current/userguide/incremental_build.html", "https://docs.gradle.org/current/userguide/build_cache.html", "https://docs.gradle.org/current/userguide/gradle_daemon.html"]
+concepts: [build-tool]
+importance: 3
+links: [{to: "bld-06", kind: FOLLOWUP}, {to: "bld-08", kind: FOLLOWUP}, {to: "bld-01", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 Maven은 `pom.xml`에 프로젝트 정보를 XML로 선언하고, 미리 정해진 라이프사이클 단계에 플러그인 goal이 묶여 순서대로 실행되는 방식입니다. Gradle은 `settings.gradle`과 `build.gradle` 같은 빌드 스크립트를 실제로 실행해 task를 등록하고, task 사이의 의존 관계로 그래프를 만들어 필요한 것만 실행합니다. 그래서 Gradle 문서에는 입출력이 바뀌지 않은 task를 건너뛰는 증분 빌드, 다른 빌드의 결과를 재사용하는 빌드 캐시, 빌드 사이에 살아 있는 데몬 같은 속도 기능이 따로 정리되어 있습니다.

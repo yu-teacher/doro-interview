@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/current/userguide/html_single/", "https://docs.spring.io/spring-framework/reference/core/aop/introduction-proxies.html"]
+concepts: [proxy, fetch-strategy]
+importance: 2
+links: [{to: "jpa-12", kind: RELATED}, {to: "jpa-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 이름만 같고 별개입니다. Spring AOP 프록시는 빈에 횡단 관심사(트랜잭션 등)를 붙이려고 컨테이너가 만드는 프록시입니다. Hibernate 프록시는 지연 로딩을 위해 만드는 런타임 대리 객체로, 엔티티 클래스가 final이 아니면 그 클래스를 상속하고 실제 데이터가 필요해지는 시점에 DB를 조회해 초기화합니다. 영속성 컨텍스트(세션)가 닫힌 뒤 초기화되지 않은 지연 연관에 접근하면 `LazyInitializationException`이 납니다. 필요한 연관은 영속성 컨텍스트가 닫히기 전에 가져와야 하고, 이 문제는 AOP 프록시가 아니라 세션 수명의 문제입니다.

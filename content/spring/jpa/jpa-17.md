@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://docs.hibernate.org/orm/7.0/introduction/html_single/"]
+concepts: [fetch-strategy, spring-data-jpa]
+importance: 2
+links: [{to: "jpa-15", kind: PREREQ}, {to: "jpa-16", kind: PREREQ}, {to: "jpa-35", kind: FOLLOWUP}, {to: "dbp-06", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 1:N 컬렉션을 fetch join하면 부모 행이 자식 수만큼 늘어나서, DB 레벨의 `limit`을 걸면 부모 기준이 아니라 늘어난 행 기준으로 잘립니다. 그래서 Hibernate는 SQL에 limit을 붙이지 않고 조건에 맞는 결과를 모두 가져온 뒤 메모리에서 페이징합니다. 공식 문서는 이를 성능이 매우 나쁠 수 있으니 피하라고 경고합니다. 해결은 ToOne 연관만 fetch join하고 컬렉션은 지연 로딩에 batch size를 두거나, 부모 id를 먼저 페이징 조회한 뒤 IN으로 자식을 가져오는 두 단계 조회입니다(보충).

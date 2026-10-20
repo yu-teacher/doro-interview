@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://gameprogrammingpatterns.com/singleton.html", "https://gameprogrammingpatterns.com/observer.html", "https://gameprogrammingpatterns.com/state.html", "https://gameprogrammingpatterns.com/prototype.html", "https://gameprogrammingpatterns.com/design-patterns-revisited.html"]
+concepts: [gof-patterns]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 아니요, 패턴은 문제를 풀 때 쓰는 도구이지 많이 쓸수록 좋은 목표가 아닙니다. 원저자급 자료에서도 경고가 나옵니다. Nystrom은 싱글톤을 쓰지 말아야 할 예로 다루며 득보다 해가 많다고 주장하고, 옵저버는 양쪽을 함께 이해해야 하는 관계에 쓰면 흐름 추적이 어려워진다고 하며, 상태 패턴에 대해서는 때로는 `if` 하나면 충분하다고 말합니다. 프로토타입은 자신이 최선의 답이라고 느낀 사례를 찾지 못했다고도 씁니다. 그래서 패턴 이름이 아니라 해결하려는 문제와 의도를 기준으로 판단해야 합니다.

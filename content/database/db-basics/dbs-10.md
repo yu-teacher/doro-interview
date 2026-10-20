@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/queries-table-expressions.html"]
+concepts: [join-query]
+importance: 2
+links: [{to: "dbs-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 LEFT JOIN에서 ON 조건은 어떤 행끼리 짝이 맞는지를 정하는 조건이고, 짝이 없으면 왼쪽 행은 오른쪽 컬럼이 NULL인 채로 남습니다. 반면 WHERE는 조인이 끝난 결과에서 행을 거르는데, 오른쪽 컬럼에 건 조건은 NULL로 채워진 행을 거짓으로 만들어 지워 버려서 결과가 사실상 INNER JOIN이 됩니다. 그래서 오른쪽 테이블만 필터링하면서 왼쪽 행을 모두 유지하려면 조건을 ON에 둡니다. 반대로 짝이 없는 행만 찾는 안티 조인은 LEFT JOIN 뒤에 오른쪽 키 IS NULL을 WHERE에 씁니다. PostgreSQL 16 기준이고 MySQL 8.4에서도 같게 나왔습니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-select.html", "https://www.postgresql.org/docs/16/applevel-consistency.html"]
+concepts: [db-locking]
+importance: 3
+links: [{to: "dbl-06", kind: FOLLOWUP}, {to: "dbl-08", kind: FOLLOWUP}, {to: "jpa-23", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 FOR UPDATE는 SELECT가 돌려주는 행에 행 락을 걸어서, 다른 트랜잭션이 그 행을 UPDATE나 DELETE하거나 FOR UPDATE, FOR SHARE로 잠그지 못하게 합니다. 락은 트랜잭션이 끝날 때까지 유지되고 일반 SELECT는 막지 않습니다. 값을 읽고 그 값을 바탕으로 같은 행을 바꿀 때 사이에 다른 트랜잭션이 끼어들지 못하게 하는, 비관적 락의 기본 도구입니다. 락이 걸린 행을 만나면 기본은 풀릴 때까지 기다리고, 기다린 뒤에는 갱신된 최신 행을 잠가서 돌려줍니다. 집계 함수와는 같이 쓸 수 없고 대상 테이블에 UPDATE 권한이 필요합니다. 자동 커밋 상태에서는 문장이 끝나면 곧바로 락이 풀리니 BEGIN으로 묶어야 의미가 있습니다.

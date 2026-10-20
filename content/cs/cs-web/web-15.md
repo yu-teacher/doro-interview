@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://fetch.spec.whatwg.org/"]
+concepts: [web-security, http-protocol]
+importance: 3
+links: [{to: "web-18", kind: FOLLOWUP}, {to: "sec-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 교차 출처 요청이 안전 목록 메서드(GET, HEAD, POST)이고 헤더도 안전 목록 헤더뿐이고 Content-Type이 form-urlencoded, multipart/form-data, text/plain 중 하나면 preflight 없이 나갑니다. 아니면, 예컨대 PUT·DELETE이거나 Authorization 헤더나 application/json이 있으면 브라우저가 먼저 OPTIONS preflight를 보냅니다. 여기에 Origin, Access-Control-Request-Method, 필요하면 Request-Headers가 담기고, 서버가 ok 상태로 Access-Control-Allow-Origin과 필요한 Allow-Methods·Allow-Headers를 답해야 본 요청이 나갑니다. 결과는 Access-Control-Max-Age 동안 캐시되며 기본은 5초입니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9110.html", "https://www.rfc-editor.org/rfc/rfc6585.html"]
+concepts: [http-protocol, resilience]
+importance: 2
+links: [{to: "dst-19", kind: RELATED}, {to: "dst-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 429 Too Many Requests는 사용자가 정해진 시간에 요청을 너무 많이 보냈다는 속도 제한 응답으로 RFC 6585에 정의돼 있고, 누구를 어떻게 세는지는 서버 재량이라서 사용자별이든 리소스별이든 서버 전체든 상관없습니다. 503 Service Unavailable은 서버가 일시적인 과부하나 점검 때문에 지금 요청을 처리할 수 없고 곧 나아질 것이라는 뜻으로 RFC 9110에 있습니다. 둘 다 Retry-After 헤더로 기다릴 시간을 초 단위 숫자나 날짜로 알려 줄 수 있지만 필수는 아니고 선택입니다. 429 응답은 캐시가 저장하면 안 되고, 서버가 과부하일 때 꼭 503을 써야 하는 것도 아니라서 연결을 그냥 거절하는 서버도 있습니다.

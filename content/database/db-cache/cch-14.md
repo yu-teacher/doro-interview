@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-data/redis/reference/redis/redis-cache.html"]
+concepts: [redis, cache]
+importance: 2
+links: [{to: "cch-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 기본 `RedisCacheConfiguration`은 만료 시간이 없어서 `entryTtl`을 주지 않으면 항목이 영원히 남습니다. 값 직렬화는 기본이 JDK 직렬화라 객체가 `Serializable`이어야 하고 사람이 읽기도 어려워서 보통 다른 직렬화기로 바꿉니다. 키에는 기본적으로 캐시 이름과 콜론 두 개가 접두사로 붙고, null 값도 기본으로 캐시합니다. 캐시를 비우는 `clear`는 기본이 `KEYS`로 키를 찾아 지우는 방식이라 키가 많으면 성능 문제가 될 수 있어 배치 전략을 `SCAN`으로 바꿀 수 있습니다. TTL은 쓰기 때만 갱신되며 Redis 자체는 읽을 때 만료가 연장되는 TTI를 지원하지 않습니다.

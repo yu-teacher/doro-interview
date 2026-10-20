@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/ddl-constraints.html"]
+concepts: [schema-design]
+importance: 3
+links: [{to: "dbs-01", kind: PREREQ}, {to: "dbi-06", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 외래키는 자식 테이블의 값이 부모 테이블에 실제로 있는 값이거나 NULL임을 보장하는 참조 무결성 제약입니다. 참조 대상은 기본키이거나 유니크 제약이 걸린 컬럼이어야 합니다. 부모 행을 지울 때의 동작은 ON DELETE로 정하는데, PostgreSQL 16 기준 기본값인 NO ACTION은 자식이 남아 있으면 오류를 내고, RESTRICT도 막지만 NO ACTION만 검사를 트랜잭션 끝으로 미룰 수 있습니다(DEFERRABLE로 선언한 경우). CASCADE는 자식 행도 함께 지우고, SET NULL과 SET DEFAULT도 있습니다. 부모 삭제 때 자식 테이블을 찾아봐야 하므로 참조하는 컬럼에 인덱스를 두는 것이 좋습니다.

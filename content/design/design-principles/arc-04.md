@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://12factor.net/", "https://12factor.net/build-release-run", "https://12factor.net/logs"]
+concepts: [externalized-config]
+importance: 2
+links: [{to: "arc-12", kind: FOLLOWUP}, {to: "boot-07", kind: RELATED}, {to: "cic-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 12-Factor는 서비스형 소프트웨어를 만들 때 쓰는 방법론으로, 특정 언어나 백엔드 서비스 조합에 묶이지 않고 클라우드 배포와 확장을 쉽게 하려는 열두 가지 요소입니다. 코드베이스는 하나에 여러 배포, 의존성은 명시하고 격리, 설정은 환경에 저장, 백엔드 서비스는 붙였다 뗄 수 있는 자원으로 취급, 빌드·릴리스·실행 단계 분리, 프로세스는 무상태, 포트 바인딩으로 서비스 노출, 프로세스 모델로 수평 확장, 빠른 시작과 우아한 종료, 개발과 운영의 유사성 유지, 로그는 이벤트 스트림, 관리 작업은 일회성 프로세스로 실행합니다.

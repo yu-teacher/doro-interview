@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/ddl-constraints.html"]
+concepts: [schema-design]
+importance: 3
+links: [{to: "dbd-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 정규화는 한 사실을 한 곳에만 저장하도록 테이블을 나눠 중복과 그에 따른 갱신, 삽입, 삭제 이상을 줄이는 설계 과정입니다. 1NF는 컬럼이 더 쪼갤 수 없는 값 하나만 갖고 반복되는 컬럼 그룹이 없는 상태입니다. 2NF는 복합키일 때 키의 일부에만 종속된 컬럼을 분리한 상태이고, 3NF는 키가 아닌 컬럼이 다른 키가 아닌 컬럼에 종속되는 이행 종속까지 분리한 상태입니다. 예를 들어 주문 행마다 고객 도시를 적으면 한 곳만 고쳤을 때 값이 어긋나므로 고객 테이블로 뺍니다. 조회 성능 때문에 일부러 정규화를 풀기도 하는데 이를 반정규화라 하며, 그 대신 중복 관리 책임이 생깁니다.

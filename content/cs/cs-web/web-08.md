@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9110.html", "https://www.rfc-editor.org/rfc/rfc5789.html"]
+concepts: [http-protocol, idempotency]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 PUT은 요청 본문을 대상 리소스의 새 상태 전체로 보고 생성하거나 교체하는 메서드라서, 같은 요청을 반복해도 결과가 같은 멱등입니다. PATCH는 본문이 전체 상태가 아니라 현재 리소스를 어떻게 바꿀지 적은 변경 명세이고, RFC 5789 정의상 안전하지도 멱등하지도 않지만 멱등하게 보낼 수는 있습니다. 예를 들어 값을 끝에 덧붙이는 패치는 두 번 보내면 결과가 달라집니다. POST는 대상 리소스가 자기 규칙대로 본문을 처리하는 가장 일반적인 방식이고, 서버가 URI를 골라 주는 생성은 PUT이 아니라 POST로 구현하라고 표준이 말합니다. 기준 상태가 필요한 패치는 ETag와 If-Match로 충돌을 막도록 권고됩니다.

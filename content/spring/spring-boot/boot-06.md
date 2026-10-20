@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/using/build-systems.html", "https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html", "https://docs.spring.io/spring-boot/gradle-plugin/managing-dependencies.html", "https://docs.spring.io/spring-boot/appendix/dependency-versions/properties.html"]
+concepts: [dependency-management, build-tool]
+importance: 2
+links: [{to: "bld-13", kind: RELATED}, {to: "bld-18", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 starter는 특정 기능에 필요한 의존성 묶음을 한 번에 가져오는 의존성 디스크립터입니다. 공식 starter는 `spring-boot-starter-*` 이름을 쓰고, 예를 들어 `spring-boot-starter-data-jpa`를 추가하면 JPA 접근에 필요한 것들이 들어옵니다. 버전은 Boot 릴리스마다 큐레이션된 목록인 `spring-boot-dependencies` BOM이 관리해서 보통 버전을 적지 않고, Boot를 올리면 일관되게 같이 올라갑니다. 공식 문서는 기반 Spring Framework 버전을 직접 지정하지 말라고 권장합니다. 서드파티 starter는 `spring-boot`로 시작하면 안 되고 프로젝트 이름을 앞에 붙입니다.

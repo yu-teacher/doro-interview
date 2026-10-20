@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collections.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html"]
+concepts: [immutability, java-collections]
+importance: 2
+links: [{to: "jc-12", kind: RELATED}, {to: "jo-14", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 불변 리스트가 아니라 원본에 대한 읽기 전용 뷰입니다. 문서에 따르면 조회는 원본으로 read through 되므로 원본을 바꾸면 뷰에도 그대로 보이고, 뷰를 통해 수정하려는 시도만 `UnsupportedOperationException`을 던집니다. 반면 `List.of`와 `List.copyOf`로 만든 리스트는 요소를 추가·삭제·교체할 수 없고 null을 허용하지 않습니다. 다만 요소 자체가 가변이면 리스트 내용이 바뀌어 보일 수 있다고 문서가 알려 줍니다. 원본과 분리된 값이 필요하면 `List.copyOf`를 쓰는 편이 안전합니다.

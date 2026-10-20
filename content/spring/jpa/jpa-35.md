@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html"]
+concepts: [spring-data-jpa]
+importance: 2
+links: [{to: "jpa-22", kind: PREREQ}, {to: "dbp-06", kind: RELATED}, {to: "dbi-20", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Pageable을 받는 메서드의 반환 타입에 따라 달라집니다. Page는 전체 요소 수와 페이지 수를 알려 주기 위해 별도의 count 쿼리를 실행하고, 저장소에 따라 이 비용이 클 수 있다고 공식 문서가 말합니다. Slice는 요청한 크기보다 한 건 더 조회해서 다음 조각이 있는지만 알려 주기 때문에 count 쿼리가 나가지 않지만 전체 개수는 모릅니다. Pageable을 받고 List를 반환하면 해당 범위만 가져오고 메타데이터도 만들지 않습니다. 무한 스크롤처럼 총 개수가 필요 없으면 Slice가 적합합니다. 또 Page와 Slice는 offset 기반이라 offset이 커지면 DB가 전체 결과를 만들어야 해서 비효율적이라고 문서가 적습니다. 대안으로 문서 표에는 키셋 기반 Window가 있고, 이 방식은 적절한 인덱스가 필요하다고 합니다.

@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/ddl-rowsecurity.html", "https://www.postgresql.org/docs/16/ddl-schemas.html"]
+concepts: [schema-design]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 크게 세 가지입니다. 하나의 테이블에 tenant_id 컬럼을 두고 모든 테넌트가 공유하는 방식은 관리가 가장 단순하지만 격리를 쿼리와 정책에 의존합니다. 테넌트마다 스키마를 나누는 방식은 같은 테이블 이름을 스키마별로 두고 search_path로 고르며 테이블 수가 테넌트 수만큼 늘어 마이그레이션이 번거롭습니다. 테넌트마다 데이터베이스를 두면 격리는 가장 강하지만 연결과 운영 단위가 늘어납니다. 공유 테이블 방식에서는 RLS 정책으로 tenant_id가 맞는 행만 보이게 하면 애플리케이션 실수에 대한 안전장치가 되지만, 테이블 소유자와 슈퍼유저는 기본적으로 RLS를 우회합니다.

@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop/proxying.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Proxyable.html"]
+concepts: [proxy]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 `@EnableAspectJAutoProxy`, `@EnableTransactionManagement` 같은 설정 애노테이션과 XML의 `<aop:config>`, `<tx:annotation-driven/>`, `<aop:aspectj-autoproxy/>`는 런타임에 하나의 통합 auto-proxy creator로 합쳐지고 가장 강한 설정이 적용됩니다. 그래서 XML에서 하나라도 `proxy-target-class="true"`면 세 요소 모두 CGLIB이 되고, 애노테이션도 `proxyTargetClass` 설정이 합쳐져 가장 강한 값이 적용됩니다. 7.0부터는 `@EnableAsync` 같은 개별 프록시 프로세서도 통합된 전역 기본값에 참여합니다. 특정 빈만 다르게 하고 싶다면 7.0의 `@Proxyable`로 전역 기본값을 재정의할 수 있습니다.

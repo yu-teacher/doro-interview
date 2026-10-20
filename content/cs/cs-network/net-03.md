@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9293.html"]
+concepts: [tcp]
+importance: 3
+links: [{to: "net-04", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 클라이언트가 SYN을 보내며 자기 초기 순번을 알리고, 서버가 SYN과 ACK를 한 세그먼트에 담아 자기 초기 순번과 함께 응답하고, 클라이언트가 그 SYN을 확인하는 ACK를 보내면 양쪽이 ESTABLISHED 상태가 됩니다. 원래는 양방향 각각 SYN과 ACK로 네 번이 필요한데 서버의 ACK와 SYN을 합쳐서 세 번이 됩니다. 순번이 전역 시계에 묶여 있지 않아서 받는 쪽은 SYN이 오래된 것인지 알 수 없고, 그래서 상대에게 확인을 받아야 오래된 중복 SYN이 새 연결로 오인되는 것을 막을 수 있습니다. 오래된 SYN에 서버가 응답해도 클라이언트가 RST로 거부해 서버는 대기 상태로 돌아갑니다. 연결 설정은 커널이 처리하므로 accept를 호출하기 전에도 클라이언트의 connect는 성공할 수 있습니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html", "https://docs.gradle.org/current/userguide/graph_resolution.html", "https://docs.gradle.org/current/userguide/java_library_plugin.html"]
+concepts: [dependency-management]
+importance: 3
+links: [{to: "bld-12", kind: FOLLOWUP}, {to: "bld-01", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 전이 의존성은 내가 선언한 라이브러리가 다시 필요로 하는 라이브러리를 말합니다. Maven과 Gradle 모두 라이브러리의 POM 같은 메타데이터를 읽어 이런 의존성을 자동으로 끌어오기 때문에 일일이 찾아 적지 않아도 됩니다. 다만 그래프가 금방 커지고 버전이 겹치면 충돌도 생기므로, 무엇이 들어왔는지는 Gradle에서 `dependencies` task, Maven에서 `mvn dependency:tree`로 확인합니다. 또 소스에서 직접 쓰는 라이브러리는 전이로 들어오는 것에 기대지 말고 직접 선언하는 것이 안전합니다.

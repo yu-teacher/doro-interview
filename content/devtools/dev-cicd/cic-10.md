@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts", "https://docs.github.com/en/actions/concepts/workflows-and-actions/dependency-caching", "https://docs.github.com/en/actions/tutorials/store-and-share-data", "https://docs.github.com/en/actions/get-started/understand-github-actions"]
+concepts: [ci-pipeline]
+importance: 2
+links: [{to: "cic-05", kind: PREREQ}, {to: "cic-08", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 캐시는 의존성처럼 자주 안 바뀌고 다시 만들 수 있는 파일을 실행 사이에 재사용해 속도를 높이는 용도라서, 캐시가 없어도 job은 동작해야 합니다. 아티팩트는 job이 만든 JAR, 테스트 결과, 로그 같은 파일을 실행이 끝난 뒤에도 보관하거나 같은 워크플로의 다른 job에 넘기는 용도입니다. job마다 별도 가상 머신에서 돌기 때문에 빌드 job에서 `actions/upload-artifact`로 올리고, 배포 job에서 `needs`로 순서를 건 뒤 `actions/download-artifact`로 받습니다. 보존 기간은 `retention-days`로 정하되 저장소나 조직 한도를 넘을 수 없습니다. 이렇게 하면 테스트를 통과한 바로 그 JAR를 배포할 수 있습니다.

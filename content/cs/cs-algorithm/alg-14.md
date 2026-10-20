@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/minimumSpanningTree.html", "https://xlinux.nist.gov/dads/HTML/kruskalsalgo.html", "https://xlinux.nist.gov/dads/HTML/primJarnik.html", "https://xlinux.nist.gov/dads/HTML/greedyalgo.html"]
+concepts: [graph-algorithms]
+importance: 1
+links: [{to: "alg-19", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 최소 신장 트리는 가중 그래프의 모든 정점을 잇는 가중치 합 최소의 트리이고 간선은 V-1개입니다. 크루스칼은 간선을 가중치가 작은 순으로 보면서 두 끝점이 서로 다른 부분 트리에 속할 때만 추가하고, 사이클 여부는 서로소 집합으로 빠르게 판정합니다. 프림은 아무 정점에서 시작해 현재 트리와 바깥 정점을 잇는 가장 가벼운 간선을 하나씩 더해 트리를 키웁니다. 둘 다 그때그때 가장 가벼운 선택을 하는 그리디인데 이 문제에서는 전역 최적해를 보장합니다.

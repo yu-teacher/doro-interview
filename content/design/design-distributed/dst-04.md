@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://learn.microsoft.com/en-us/azure/architecture/microservices/design/interservice-communication", "https://microservices.io/patterns/communication-style/messaging.html", "https://microservices.io/patterns/communication-style/rpi.html", "https://martinfowler.com/articles/microservices.html"]
+concepts: [messaging, msa-boundary]
+importance: 3
+links: [{to: "dst-07", kind: FOLLOWUP}, {to: "dst-13", kind: FOLLOWUP}, {to: "dst-17", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 동기 호출은 HTTP나 gRPC로 요청하고 응답을 기다리는 방식입니다. 단순하고 익숙하지만 호출 대상이 떠 있어야 하고, 호출이 여러 서비스로 이어지면 지연이 쌓이고, Fowler와 Lewis의 표현으로는 시스템 다운타임이 각 구성 요소 다운타임의 곱이 됩니다. 비동기 메시징은 보내는 쪽이 받는 쪽을 몰라도 되고 받는 쪽이 잠깐 죽어도 메시지가 남아 장애가 격리됩니다. 대신 브로커 운영, 지연, 중복 메시지 처리, 요청-응답 구현의 복잡도가 생깁니다. 그래서 응답이 바로 필요한 조회나 검증은 동기로, 상태 변화 알림과 긴 워크플로는 비동기로 섞어 쓰는 경우가 많습니다. HTTP는 클라이언트가 비동기 I/O를 써도 동기 프로토콜입니다.

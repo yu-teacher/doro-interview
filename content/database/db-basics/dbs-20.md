@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/tutorial-window.html", "https://www.postgresql.org/docs/16/sql-expressions.html"]
+concepts: [sql-aggregation]
+importance: 1
+links: [{to: "dbs-13", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 윈도 프레임을 따로 지정하지 않으면, OVER에 ORDER BY가 있을 때 기본 프레임은 파티션 처음부터 현재 행까지에 현재 행과 정렬 값이 같은 뒤쪽 행까지 포함한 범위입니다. 그래서 sum이 누적합으로 나오지만 정렬 값이 같은 행들은 같은 프레임을 보게 되어 같은 누적값이 찍힙니다. ORDER BY가 없으면 기본 프레임이 파티션 전체라서 모든 행에 같은 합계가 나옵니다. 동점이어도 한 행씩 누적하려면 정렬 키에 id 같은 고유 컬럼을 더하거나 ROWS 프레임을 명시합니다. PostgreSQL 16 기준이고 MySQL 8.4에서도 같게 나왔습니다.

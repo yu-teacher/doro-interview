@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/features/profiles.html"]
+concepts: [externalized-config]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 `active`는 활성 프로파일 목록 자체를 지정하는 것이라 다른 프로퍼티와 같은 우선순위 규칙을 따르고, 파일에 적어도 명령행 스위치로 대체할 수 있습니다. `include`는 `active`로 켠 프로파일 위에 추가로 얹는 프로파일이라, `--spring.profiles.active`를 따로 줘도 include한 공통 프로파일은 활성화되고 `active` 프로파일보다 먼저 추가됩니다. 여러 프로파일을 한 이름으로 묶고 싶으면 `spring.profiles.group`을 쓰는데, 예를 들어 `production` 하나를 켜면 `proddb`, `prodmq`가 함께 켜집니다. 셋 다 프로파일 전용 문서 안에서는 쓸 수 없습니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/stream/Stream.Builder.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StringBuilder.html", "https://martinfowler.com/bliki/FluentInterface.html"]
+concepts: [gof-patterns, string]
+importance: 2
+links: [{to: "jl-05", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 빌더는 값을 하나씩 채워 가며 조립한 뒤 완성된 객체를 만들어 내는 가변 객체입니다. `Stream.Builder` 문서는 원소를 하나씩 넣으면서 `ArrayList` 같은 임시 버퍼의 복사 비용을 피할 수 있고, 빌딩 단계 다음에 `build()`로 빌트 단계로 넘어가면 더는 원소를 추가할 수 없는 생명주기를 가진다고 설명합니다. `StringBuilder`도 가변이라 단일 스레드에서 쓰도록 안내되어 있고 동기화를 보장하지 않습니다. 메서드 체이닝 빌더는 Fowler가 말한 플루언트 인터페이스에서 문맥 안에서만 쓰는 보조 객체로 거론됩니다.

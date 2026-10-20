@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide", "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Release-Notes"]
+concepts: [spring-migration, dependency-management]
+links: [{to: "misc-17", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 마이그레이션 가이드는 먼저 최신 3.5.x로 올려 deprecated 호출을 정리하고, Java 17 이상과 Spring Framework 7을 맞추라고 합니다. 그다음 starter 이름을 점검해 `starter-web`은 `starter-webmvc`로 바꾸고, Flyway나 Liquibase는 전용 starter를 추가합니다. Jackson 3로 패키지가 `tools.jackson`으로 바뀌어서 `ObjectMapper` 설정은 `JsonMapper`로, `@JsonComponent`는 `@JacksonComponent`로 바꾸고, 테스트의 `@MockBean`은 `@MockitoBean`으로 교체합니다. 한 번에 어려우면 classic starter나 `spring-boot-jackson2`를 임시 단계로 쓰되 오래 두지 않습니다.

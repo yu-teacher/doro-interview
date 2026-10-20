@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/mvcc-intro.html", "https://www.postgresql.org/docs/16/routine-vacuuming.html", "https://www.postgresql.org/docs/16/transaction-iso.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-multi-versioning.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-consistent-read.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html"]
+concepts: [mvcc, isolation-level]
+importance: 2
+links: [{to: "dbt-16", kind: FOLLOWUP}, {to: "dbt-19", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 기본 격리 수준부터 다릅니다. PostgreSQL 16은 READ COMMITTED이고 MySQL 8.4(InnoDB)는 REPEATABLE READ입니다. 옛 버전 보관 방식도 다릅니다. PostgreSQL은 UPDATE마다 새 행 버전을 같은 테이블에 만들고 옛 버전은 dead tuple로 남겨 두었다가 VACUUM이 치웁니다. InnoDB는 클러스터형 인덱스의 행을 제자리에서 갱신하고 이전 내용은 undo 로그(롤백 세그먼트)에 두며, 어떤 스냅샷도 필요로 하지 않게 된 undo 로그를 purge가 폐기하면서 삭제된 행도 물리적으로 지웁니다. 두 DB 모두 오래 열린 트랜잭션이 정리를 막습니다.

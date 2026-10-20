@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-intro.html", "https://www.postgresql.org/docs/16/indexes-expressional.html"]
+concepts: [index-design]
+importance: 3
+links: [{to: "dbi-02", kind: PREREQ}, {to: "dbi-11", kind: PREREQ}, {to: "dbp-04", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 인덱스는 컬럼 값 자체, 또는 인덱스를 정의할 때 쓴 식에 대해 정렬되어 있습니다. PostgreSQL 16 문서에 따르면 인덱스를 쓰려면 조건이 인덱스 컬럼, 인덱스 연산자 클래스에 속한 연산자, 비교값 형태여야 합니다. created_at::date = '2026-06-01'이나 amount + 1 = 500처럼 컬럼 쪽에 변환을 씌우면 인덱스에 저장된 값과 바로 비교할 수 없어서 못 씁니다. 해법은 변환을 상수 쪽으로 옮겨 amount = 499로 쓰거나 하루치 범위 조건으로 바꾸는 것이고, 꼭 필요하면 그 식 자체로 표현식 인덱스를 만듭니다. int 컬럼을 numeric 상수와 비교해 컬럼에 암묵적 형 변환이 붙는 경우도 같습니다. MySQL 8.4(InnoDB)도 실험에서는 DATE(created_at) 조건이 인덱스를 못 썼습니다.

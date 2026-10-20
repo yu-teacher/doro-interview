@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/integration/cache.html", "https://docs.spring.io/spring-framework/reference/integration/cache/strategies.html", "https://docs.spring.io/spring-framework/reference/integration/cache/annotations.html", "https://docs.spring.io/spring-framework/reference/integration/cache/store-configuration.html", "https://docs.spring.io/spring-data/redis/reference/redis/redis-cache.html"]
+concepts: [cache, proxy]
+importance: 3
+links: [{to: "cch-14", kind: FOLLOWUP}, {to: "cch-15", kind: FOLLOWUP}, {to: "cch-17", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 `@Cacheable`은 같은 인자로 호출한 결과가 캐시에 있으면 메서드를 실행하지 않고 그 값을 돌려주고, 없으면 실행한 뒤 결과를 저장합니다. `@CachePut`은 메서드를 항상 실행하고 그 결과로 캐시를 갱신하며, `@CacheEvict`는 키에 해당하는 항목 하나나 `allEntries`로 전체를 지웁니다. 어노테이션만 붙인다고 동작하지는 않고 설정 클래스에 `@EnableCaching`을 켜야 합니다. 또 스프링의 캐시는 저장소가 아니라 추상화라서 `CacheManager` 빈으로 ConcurrentMap, Caffeine, Redis 같은 실제 구현을 골라 등록해야 합니다. 같은 입력에 항상 같은 결과를 내는 메서드에 적합합니다.

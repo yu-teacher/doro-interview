@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/warm-standby.html", "https://www.postgresql.org/docs/16/hot-standby.html"]
+concepts: [db-scaling, distributed-consistency]
+importance: 3
+links: [{to: "dst-12", kind: RELATED}, {to: "dst-23", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 복제가 비동기이면 쓰기 직후 replica에서 읽을 때 방금 쓴 데이터가 안 보일 수 있습니다. 그래서 쓴 직후의 읽기는 primary로 보내고 지연이 허용되는 조회만 replica로 보내는 식으로 라우팅합니다. PostgreSQL 16에서는 synchronous_commit을 remote_apply로 두면 standby가 재생을 마칠 때까지 커밋이 기다려서 인과 일관성을 얻을 수 있지만 쓰기 지연이 늘어납니다. 또 standby의 긴 쿼리는 primary의 vacuum 정리 같은 WAL 재생과 충돌해 취소될 수 있습니다. 대응으로 max_standby_streaming_delay를 늘려 재생을 더 미루거나(복제 지연이 커짐) hot_standby_feedback을 켤 수 있는데, 후자는 primary에 dead row가 쌓일 수 있습니다.

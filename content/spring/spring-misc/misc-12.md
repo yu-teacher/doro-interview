@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-security/reference/servlet/architecture.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/sequence.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/handlermapping-interceptor.html", "https://docs.spring.io/spring-boot/reference/web/servlet.html"]
+concepts: [filter-chain, mvc-request-flow]
+importance: 2
+links: [{to: "mvc-08", kind: RELATED}, {to: "mvc-01", kind: RELATED}, {to: "sec-03", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 요청은 톰캣 같은 서블릿 컨테이너가 받고, 컨테이너가 요청 URI에 맞는 필터들과 서블릿으로 `FilterChain`을 만들어 실행합니다. 필터는 컨테이너가 자기 방식으로 등록해서 스프링 빈을 모르고, Spring Security도 `DelegatingFilterProxy`로 이 자리에 끼어듭니다. 체인 끝의 서블릿이 `DispatcherServlet`이고 여기서부터가 스프링 MVC입니다. 핸들러 매핑으로 컨트롤러를 찾으면 그 앞뒤로 `HandlerInterceptor`의 `preHandle`, `postHandle`, `afterCompletion`이 호출됩니다. 그래서 인증 같은 서블릿 수준 처리는 필터에서, 컨트롤러 단위의 공통 처리는 인터셉터에서 합니다. 공식 문서는 인터셉터를 보안 계층으로 쓰기보다 필터 체인 기반 보안을 권합니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/ddl-constraints.html", "https://www.postgresql.org/docs/16/indexes-unique.html", "https://dev.mysql.com/doc/refman/8.4/en/create-index.html"]
+concepts: [null-handling, schema-design]
+importance: 1
+links: [{to: "dbs-01", kind: PREREQ}, {to: "dbs-04", kind: PREREQ}, {to: "dbi-06", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 기본은 가능합니다. 유니크 제약은 NULL끼리를 서로 같다고 보지 않아서 NULL이 들어 있는 행은 몇 개든 중복으로 취급되지 않습니다. 이 동작을 바꾸려면 `UNIQUE NULLS NOT DISTINCT`를 지정하면 NULL도 같은 값으로 보고 하나만 허용합니다. 공식 문서는 유니크 제약의 NULL 처리가 SQL 표준에서 구현 정의라 DB마다 다를 수 있으니 이식성에 주의하라고 합니다. MySQL 8.4 매뉴얼도 UNIQUE 인덱스가 NULL 가능 컬럼에 여러 NULL을 허용한다고 하고, 실험(InnoDB)에서도 그랬습니다. 일부 행에만 유일성을 걸고 싶으면 PostgreSQL의 부분 유니크 인덱스를 씁니다.

@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/engine/network/", "https://docs.docker.com/engine/network/drivers/bridge/", "https://docs.docker.com/compose/how-tos/networking/"]
+concepts: [container]
+importance: 2
+links: [{to: "dkr-12", kind: FOLLOWUP}, {to: "dkr-06", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `--network` 없이 띄운 컨테이너는 기본 bridge 네트워크에 붙는데, 여기서는 컨테이너끼리 IP 주소로만 통신할 수 있고 이름으로는 찾지 못합니다. `docker network create` 로 만든 사용자 정의 bridge 네트워크에 붙이면 Docker가 컨테이너 이름이나 별칭을 IP로 풀어 주는 DNS를 제공합니다. 그래서 웹 컨테이너가 DB에 `db:5432` 처럼 이름으로 접속할 수 있고, IP는 컨테이너가 다시 만들어질 때 바뀔 수 있으므로 이름을 쓰는 게 맞습니다. 사용자 정의 네트워크는 같은 네트워크의 컨테이너끼리만 통신해서 격리도 더 낫습니다.

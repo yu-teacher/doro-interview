@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://xlinux.nist.gov/dads/HTML/greedyalgo.html", "https://xlinux.nist.gov/dads/HTML/fractionalKnapsack.html", "https://xlinux.nist.gov/dads/HTML/knapsackProblem.html", "https://xlinux.nist.gov/dads/HTML/dynamicprog.html"]
+concepts: [recursion-dp]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 그리디는 매 순간 가장 좋아 보이는 지역 선택을 하는 알고리즘이고, 그 지역 선택이 전체 최적해로 이어진다는 것이 증명되는 문제에서만 최적입니다. 최소 신장 트리나 쪼갤 수 있는 배낭은 그렇지만, 동전이 {1, 3, 4}원일 때 6원을 만들면 그리디는 4+1+1로 3개를 쓰고 최적은 3+3의 2개라서 틀립니다. 그래서 그리디를 쓰려면 반례를 찾아보거나 증명을 해야 하고, 통하지 않으면 부분문제를 모두 따지는 동적 계획법이나 탐색을 씁니다. 활동 선택 문제에서는 끝나는 시간이 빠른 순으로 고르는 그리디가 제 실험에서 최적이었습니다.

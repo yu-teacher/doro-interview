@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html", "https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html"]
+concepts: [bean-lifecycle, race-condition]
+importance: 3
+links: [{to: "misc-01", kind: RELATED}, {to: "misc-13", kind: RELATED}, {to: "jt-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 컨테이너가 보장하는 것은 싱글톤 인스턴스를 안전하게 게시하는 것까지이고, 스레드 안전한 설계까지 해 주지는 않습니다. 하나의 인스턴스를 여러 요청 스레드가 동시에 공유하기 때문에, 인스턴스 필드에 요청별 상태를 담으면 데이터가 섞입니다. 그래서 싱글톤은 stateless로 설계해야 합니다. 의존성은 final 필드로 두고, 요청별 값은 메서드 파라미터와 지역 변수로 처리합니다. 상태가 꼭 필요하면 그 빈은 prototype이나 request 스코프로 두거나, 초기화 이후 바뀌는 상태는 volatile이나 락으로 보호해야 합니다. 공식 문서도 상태 있는 빈에는 prototype, 상태 없는 빈에는 singleton을 권합니다.

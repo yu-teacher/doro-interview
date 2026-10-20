@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc6455.html", "https://www.rfc-editor.org/rfc/rfc9931.html"]
+concepts: [http-protocol, web-security]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 폴링은 클라이언트가 주기적으로 HTTP 요청을 보내 변화를 묻는 방식이라 요청마다 HTTP 헤더가 붙고 서버가 클라이언트별로 여러 TCP 연결을 써야 합니다. 웹소켓은 일반 HTTP GET으로 시작해 Upgrade: websocket 헤더와 Sec-WebSocket-Key를 보내고, 서버가 101 Switching Protocols와 그 키로 계산한 Sec-WebSocket-Accept로 답하면 같은 TCP 연결이 양방향 메시지 통로로 바뀝니다. 이후에는 프레임 단위로 양쪽이 아무 때나 보낼 수 있고, Ping과 Pong으로 연결이 살아 있는지 확인할 수 있습니다. 중요한 점은 브라우저가 Origin 헤더를 실어 보낼 뿐이고 교차 출처를 받아줄지는 서버가 판단해야 한다는 것으로, 원치 않는 출처는 403으로 거절하라고 표준이 권고합니다.

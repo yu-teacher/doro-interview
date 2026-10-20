@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.junit.org/5.14.4/writing-tests/exception-handling.html", "https://docs.junit.org/5.14.4/writing-tests/assertions.html", "https://assertj.github.io/doc/"]
+concepts: [mocking-junit, exception-handling]
+importance: 2
+links: [{to: "tst-07", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `assertThrows(타입, 실행코드)`는 코드를 실행해서 그 타입이나 하위 타입의 예외가 던져졌는지 검사하고, 던져진 예외를 돌려주기 때문에 메시지나 원인을 이어서 검증할 수 있습니다. 예외가 아예 안 나오거나 다른 타입이 나오면 테스트가 실패합니다. `assertThrowsExactly`는 하위 타입을 허용하지 않고 정확히 그 타입만 인정합니다. AssertJ의 `assertThatThrownBy(() -> ...)`는 같은 검증을 `isInstanceOf(...).hasMessageContaining(...)`처럼 체이닝으로 쓰게 하고, 예외가 안 나오면 즉시 단언 오류를 냅니다. 어느 쪽이든 `try-catch`에 `fail()`을 넣는 방식보다 의도가 분명합니다.

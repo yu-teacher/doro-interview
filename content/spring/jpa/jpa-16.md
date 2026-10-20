@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html"]
+concepts: [fetch-strategy, spring-data-jpa]
+importance: 2
+links: [{to: "jpa-15", kind: PREREQ}, {to: "jpa-17", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 Hibernate 문서는 외부 조인 fetching이 보통 가장 효율적이라고 합니다. 다만 컬렉션 두 개를 한 쿼리에서 함께 조인하면 카테시안 곱으로 결과가 커져서, 하나는 조인하고 나머지는 subselect 같은 후속 쿼리로 가져오라고 권합니다. 그래서 저는 ToOne 연관은 fetch join이나 `@EntityGraph`로 가져오고, 컬렉션은 batch size로 보완하는 구성을 기본으로 삼습니다. `@EntityGraph`는 Spring Data 쿼리 메서드에 붙이기만 하면 되어 간편하고, 복잡한 조건은 `@Query`의 `join fetch`가 더 명시적입니다. Spring Data 문서상 `@EntityGraph`는 `attributePaths`로 임시 그래프를 만들거나 `@NamedEntityGraph`를 이름으로 참조할 수 있고, type은 FETCH와 LOAD가 있습니다.

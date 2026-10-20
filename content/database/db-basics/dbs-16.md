@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/datatype-datetime.html", "https://dev.mysql.com/doc/refman/8.4/en/datetime.html"]
+concepts: [schema-design]
+importance: 1
+links: [{to: "dbd-06", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16의 timestamp(without time zone)는 입력에 붙은 시간대를 무시하고 날짜와 시각 값을 그대로 저장합니다. timestamptz(with time zone)는 입력을 UTC로 환산해 저장하고 출력할 때 현재 세션의 TimeZone 설정으로 바꿔 보여 주기 때문에, 같은 순간을 세션마다 다른 시각으로 봅니다. 시각 자체가 의미 있는 이벤트 시간에는 보통 timestamptz가 더 안전합니다. MySQL 8.4에서는 TIMESTAMP가 이와 비슷하게 UTC로 저장하고 연결의 시간대로 변환해 돌려주며, DATETIME은 저장한 값을 시간대 변환 없이 그대로 보여 줍니다. 다만 TIMESTAMP는 2038년까지만 표현합니다.

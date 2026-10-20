@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/operate/oss_and_stack/management/sentinel/", "https://redis.io/docs/latest/operate/oss_and_stack/management/scaling/", "https://redis.io/docs/latest/develop/using-commands/keyspace/"]
+concepts: [redis, db-scaling]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 Sentinel은 복제로 구성한 비클러스터 Redis의 고가용성을 위한 별도 프로세스입니다. 마스터와 복제본을 감시하다가 여러 센티널이 마스터 장애에 동의하면 복제본을 마스터로 승격하고 클라이언트에 새 주소를 알려 주며, 안정적으로 쓰려면 센티널을 최소 세 대 둡니다. Cluster는 데이터를 여러 노드에 자동으로 나누는 수평 확장 방식으로, 키의 CRC16을 16384로 나눈 나머지인 해시 슬롯에 배정하고 노드가 슬롯 일부를 맡습니다. 여러 키를 한 명령으로 다루려면 모두 같은 슬롯이어야 해서 키 이름에 해시 태그를 씁니다. 둘 다 비동기 복제라 확인된 쓰기가 유실될 수 있습니다.

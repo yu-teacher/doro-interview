@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://gameprogrammingpatterns.com/command.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/Executor.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Runnable.html"]
+concepts: [gof-patterns]
+importance: 1
+links: [{to: "jt-13", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 Nystrom은 커맨드를 메서드 호출을 객체로 만든 "reified method call"이라고 요약하고, GoF가 커맨드를 콜백의 객체지향적 대체라고도 했다고 소개합니다. 호출이 객체가 되면 변수에 담고, 큐에 쌓았다 나중에 실행하고, 기록할 수 있으며, 실행의 반대 연산인 `undo()`를 추가해 되돌리기를 만들 수 있습니다. JDK에서는 `Runnable` 작업을 `Executor`에 제출해 작업 제출과 실행 방식을 분리하는 모양이 비슷하지만, `Runnable`에는 `undo`가 없으므로 되돌리기가 필요하면 별도의 커맨드 인터페이스를 설계해야 합니다.

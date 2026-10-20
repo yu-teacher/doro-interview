@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://man7.org/linux/man-pages/man7/pthreads.7.html", "https://man7.org/linux/man-pages/man7/nptl.7.html", "https://man7.org/linux/man-pages/man2/wait.2.html", "https://man7.org/linux/man-pages/man2/futex.2.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_attr_getscope.html", "https://man7.org/linux/man-pages/man3/pthread_attr_setscope.3.html", "https://www.kernel.org/doc/html/latest/locking/rt-mutex.html"]
+concepts: [thread-process]
+importance: 1
+links: [{to: "osp-01", kind: PREREQ}, {to: "jt-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 리눅스의 pthread 구현인 NPTL은 1:1 모델이라서 스레드 하나가 커널이 스케줄링하는 엔티티 하나에 대응하고 clone으로 만들어집니다. 그래서 스레드들이 여러 코어에서 동시에 실행될 수 있고, 한 스레드가 블로킹 I/O로 잠들어도 다른 스레드는 계속 돕니다. 사용자 수준 스레드는 라이브러리가 사용자 공간에서 스케줄링하는 방식이라 전환은 가볍지만 커널은 하나의 흐름으로 봅니다. 뮤텍스는 NPTL에서 futex를 써서 구현되고, futex 방식의 락은 경쟁이 없으면 원자 명령만으로 사용자 공간에서 잠그고 풀며, 이미 잠겨 있어 기다려야 할 때만 futex 시스템 콜로 커널에 들어갑니다.

@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/requestbody.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/responsebody.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config/message-converters.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/exceptionhandlers.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/converter/HttpMessageConverter.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/mvc/support/DefaultHandlerExceptionResolver.html"]
+concepts: [mvc-request-flow]
+importance: 3
+links: [{to: "mvc-06", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 `HttpMessageConverter`는 HTTP 본문과 자바 객체 사이를 변환하는 전략 인터페이스입니다. `@RequestBody` 인자는 요청 본문을 객체로 읽을 때, `@ResponseBody`나 `ResponseEntity` 반환값은 객체를 응답 본문에 쓸 때 컨버터를 거칩니다. 컨버터는 `canRead`, `canWrite`로 자바 타입과 미디어 타입 지원 여부를 알려 주므로, 요청 `Content-Type`과 응답 `Accept`·반환 타입에 맞는 컨버터가 쓰입니다. JSON은 Spring 7에서 Jackson 기반 `JacksonJsonHttpMessageConverter`가 맡습니다. 지원하지 않는 본문 타입은 415, 만들 수 없는 응답 형식은 406으로 매핑됩니다. `configureMessageConverters`로 컨버터를 설정할 수 있습니다.

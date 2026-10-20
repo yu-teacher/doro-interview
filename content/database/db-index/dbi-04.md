@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-multicolumn.html", "https://www.postgresql.org/docs/16/indexes-ordering.html"]
+concepts: [index-design]
+importance: 3
+links: [{to: "dbi-18", kind: FOLLOWUP}, {to: "dbi-20", kind: FOLLOWUP}, {to: "dbp-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 다중 컬럼 B-tree 인덱스는 왼쪽, 즉 선두 컬럼부터 정렬되어 있어서, 선두 컬럼들의 등호 조건과 그다음 첫 번째 범위 조건까지가 인덱스에서 훑는 구간을 좁혀 줍니다. 그래서 보통 등호로 비교하는 컬럼을 앞에, 범위 조건이나 정렬에 쓰는 컬럼을 뒤에 둡니다. user_id가 같고 created_at이 범위인 조회라면 (user_id, created_at)입니다. 이 인덱스는 user_id 조건에 created_at 정렬과 LIMIT이 붙은 쿼리도 별도 정렬 없이 처리할 수 있습니다. 공식 문서는 컬럼이 세 개를 넘는 인덱스는 테이블 사용 방식이 매우 정형화되어 있지 않으면 도움이 되기 어렵다고 하니 신중히 만들어야 합니다.

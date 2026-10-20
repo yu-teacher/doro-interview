@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-ordering.html", "https://www.postgresql.org/docs/16/indexes-multicolumn.html", "https://dev.mysql.com/doc/refman/8.4/en/descending-indexes.html"]
+concepts: [index-design]
+importance: 2
+links: [{to: "dbi-04", kind: PREREQ}, {to: "dbp-06", kind: RELATED}, {to: "dbs-21", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 B-tree 인덱스는 정렬되어 저장되므로 ORDER BY와 순서가 맞으면 별도 정렬 없이 앞에서부터 n행만 읽고 멈출 수 있어서, ORDER BY와 LIMIT이 함께 있을 때 가장 큰 이득이 있습니다. PostgreSQL 16의 기본 인덱스는 오름차순 NULLS LAST로 저장되고 역방향 스캔으로 DESC도 처리하므로, 같은 방향이거나 전부 반대 방향이면 인덱스를 따로 만들 필요가 없습니다. 하지만 ORDER BY x ASC, y DESC처럼 컬럼마다 방향이 섞이면 (x ASC, y DESC) 인덱스가 필요합니다. 많은 행을 읽어야 하면 정렬이 더 빠를 수도 있어서 계획을 확인합니다. MySQL 8.4(InnoDB)도 DESC 인덱스를 지원합니다.

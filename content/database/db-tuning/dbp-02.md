@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/using-explain.html", "https://www.postgresql.org/docs/16/runtime-config-query.html"]
+concepts: [query-planner]
+importance: 2
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16 기준으로 `cost=0.00..11819.00 rows=500000 width=72`에서 앞 숫자는 첫 행을 내보내기 전까지의 시작 비용이고 뒤 숫자는 모든 행을 가져올 때까지의 총 비용입니다. rows는 그 노드가 내보낼 것으로 추정한 행 수이고 width는 행의 평균 바이트 수입니다. 비용은 밀리초가 아니라 플래너 비용 파라미터로 정해지는 임의 단위라서 시간과 직접 비교할 수 없고 같은 쿼리의 후보 계획끼리 비교하는 데 쓰입니다. 상위 노드의 비용은 자식 노드 비용을 포함하며, rows는 스캔한 행이 아니라 필터를 통과해 나가는 행입니다. 실제로 맞는지는 ANALYZE의 actual 값과 견줘 봐야 합니다.

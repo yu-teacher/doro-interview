@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://martinfowler.com/articles/microservices.html", "https://microservices.io/patterns/monolithic.html"]
+concepts: [msa-boundary]
+importance: 3
+links: [{to: "dst-02", kind: FOLLOWUP}, {to: "dst-03", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 모놀리스는 서버 쪽 애플리케이션 전체가 하나의 단위로 빌드되고 배포되는 구조입니다. 마이크로서비스는 하나의 애플리케이션을 작은 서비스 여러 개로 나눈 방식으로, 서비스마다 자기 프로세스에서 돌고 HTTP API 같은 가벼운 수단으로 통신하며, 비즈니스 기능 단위로 나뉘어 자동화된 배포로 독립 배포됩니다. 모놀리스는 작은 변경에도 전체를 다시 배포하고 확장도 전체 단위로 해야 해서 불편해지기 쉽습니다. 마이크로서비스는 독립 배포와 뚜렷한 모듈 경계를 얻는 대신 원격 호출 비용, 장애 처리, 최종 일관성 같은 분산 시스템의 복잡도를 떠안습니다.

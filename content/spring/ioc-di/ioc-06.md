@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html"]
+concepts: [bean-lifecycle]
+importance: 3
+links: [{to: "ioc-07", kind: FOLLOWUP}, {to: "ioc-13", kind: FOLLOWUP}, {to: "ioc-14", kind: FOLLOWUP}, {to: "pat-02", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 기본은 singleton으로, 컨테이너당 빈 정의 하나에 인스턴스 하나를 만들어 캐시하고 모든 주입과 조회에 같은 객체를 돌려줍니다. prototype은 요청할 때마다 새 인스턴스를 만듭니다. 웹 환경에서는 request(HTTP 요청마다 새 인스턴스), session, application, websocket 스코프가 추가로 있고, 이들은 웹 인식 ApplicationContext가 필요합니다. 스프링 MVC에서는 DispatcherServlet이 요청 정보를 노출해 주므로 추가 설정이 필요 없습니다.

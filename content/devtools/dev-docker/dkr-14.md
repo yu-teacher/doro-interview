@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/build/building/context/", "https://docs.docker.com/build/building/best-practices/"]
+concepts: [container]
+importance: 1
+links: [{to: "dkr-08", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 `.dockerignore` 는 `docker build` 에 넘기는 빌드 컨텍스트에서 제외할 파일의 패턴을 적는 파일로, 컨텍스트의 루트 디렉터리에 둡니다. 패턴에 맞는 파일은 빌더로 보내기 전에 컨텍스트에서 빠지기 때문에, 의존성 디렉터리나 빌드 산출물처럼 큰 것을 빼면 전송량이 줄어 빌드가 빨라집니다. `COPY . .` 를 써도 제외된 파일은 이미지에 들어가지 않아서 `.env` 같은 비밀 파일이 실수로 담기는 것도 막을 수 있습니다. `!` 로 제외의 예외를 줄 수 있고 `**` 는 여러 단계의 디렉터리에 매칭됩니다.

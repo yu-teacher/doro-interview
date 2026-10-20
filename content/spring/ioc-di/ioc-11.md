@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/classpath-scanning.html", "https://docs.spring.io/spring-framework/reference/core/beans/java/basic-concepts.html", "https://docs.spring.io/spring-framework/reference/core/beans/java/configuration-annotation.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Bean.html"]
+concepts: [ioc-di]
+importance: 3
+links: [{to: "ioc-12", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 @Component는 클래스에 붙이며 컴포넌트 스캔이 그 클래스를 찾아 빈으로 등록합니다. 반면 @Bean은 메서드에 붙이며, 메서드가 인스턴스를 만들고 설정하고 초기화해 반환한 객체를 빈으로 등록합니다. 내가 소스를 수정할 수 있는 클래스는 @Component 계열로 간단히 등록하고, 외부 라이브러리 클래스처럼 애노테이션을 달 수 없는 것, 또는 생성 과정에 조건과 로직이 필요한 객체는 @Bean으로 직접 생성해 등록합니다. 또한 @Bean 메서드는 @Configuration뿐 아니라 일반 @Component 안에도 선언할 수 있지만 동작 모드가 다릅니다.

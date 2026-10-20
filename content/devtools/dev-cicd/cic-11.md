@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments", "https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments", "https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/control-deployments"]
+concepts: [ci-pipeline]
+importance: 2
+links: [{to: "cic-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 environment는 staging, production 같은 배포 대상을 GitHub에 등록해 보호 규칙과 시크릿을 붙이는 기능입니다. job에 `environment: production`을 적으면 그 환경의 보호 규칙을 모두 통과해야 job이 시작됩니다. 수동 승인은 required reviewers로 걸고, 최대 6명까지 지정하며 한 명만 승인해도 진행됩니다. 이 밖에 일정 시간 기다리게 하는 wait timer, 배포할 수 있는 브랜치나 태그를 제한하는 규칙, 배포를 시작한 사람이 직접 승인하지 못하게 하는 설정이 있습니다. 환경 시크릿은 그 환경을 쓰는 job에서만 보이고, 승인이 나기 전에는 접근할 수 없습니다. 승인을 기다리는 job이 30일 안에 승인되지 않으면 실패합니다.

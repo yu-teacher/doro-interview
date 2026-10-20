@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"]
+concepts: [equals-hashcode, entity-mapping]
+importance: 2
+links: [{to: "jpa-20", kind: PREREQ}, {to: "jl-09", kind: RELATED}, {to: "ds-16", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 같은 영속성 컨텍스트 안에서는 식별자마다 인스턴스가 하나뿐이라 기본 `Object` 구현으로 충분할 때도 있습니다. 하지만 Hibernate 입문서는 특히 연관을 `Set`으로 표현할 때 `equals`/`hashCode`를 재정의하라고 하고, 준영속 객체를 비교할 때도 필요합니다. 입문서의 권장은 데이터 모델상 인스턴스를 유일하게 식별하는 자연 키(`@NaturalId`, 예: email)를 기준으로 삼는 것입니다. 변경 가능한 필드와 DB가 생성하는 값은 hashCode에 넣지 말라고 합니다. 생성된 id 기반도 조심하면 가능하지만 id는 영속화된 뒤에야 채워지니 그 전에 해시 컬렉션에 넣으면 안 됩니다. 프록시가 올 수 있으므로 `getClass()` 대신 `instanceof`로 비교하고 필드 대신 getter로 접근합니다.

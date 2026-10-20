@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://microservices.io/patterns/observability/distributed-tracing.html", "https://sre.google/sre-book/monitoring-distributed-systems/", "https://martinfowler.com/articles/microservices.html", "https://martinfowler.com/bliki/MicroservicePrerequisites.html"]
+concepts: [observability, msa-boundary]
+importance: 2
+links: [{to: "boot-11", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 요청 하나가 여러 서비스를 지나가기 때문에, 서비스별 로그와 지표만으로는 어디서 느려지고 어디서 실패했는지 알기 어렵습니다. 분산 추적은 외부 요청마다 고유한 요청 ID를 부여해 관여하는 모든 서비스에 전달하고, 모든 로그 메시지에 그 ID를 넣고, 각 서비스에서 한 작업의 시작과 종료 시각 같은 정보를 중앙 서비스에 기록하는 방식입니다. 그러면 로그 집계에서 ID로 한 요청의 로그를 모아 보고 지연이 생긴 구간을 찾을 수 있습니다. 모니터링의 기본 지표로는 지연, 트래픽, 오류, 포화 네 가지 골든 시그널을 봅니다. 대신 추적 데이터를 모으고 저장할 인프라가 필요합니다.

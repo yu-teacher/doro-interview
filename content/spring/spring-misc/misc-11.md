@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html", "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html", "https://docs.spring.io/spring-framework/reference/core/aop/proxying.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/support/TransactionSynchronizationManager.html"]
+concepts: [declarative-tx, proxy]
+importance: 3
+links: [{to: "tx-15", kind: RELATED}, {to: "tx-16", kind: RELATED}, {to: "aop-10", kind: RELATED}, {to: "tx-08", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `@Transactional`은 프록시 기반 AOP라서 프록시를 거치지 않는 호출에는 적용되지 않습니다. 그래서 순서대로 점검합니다. 첫째, 같은 클래스 안에서 `this.method()`로 부르는 self-invocation인지. 둘째, 빈이 아니라 `new`로 만든 객체인지. 셋째, private 메서드나 final 메서드·클래스라 프록시가 가로채지 못하는지, 인터페이스 기반 프록시에서 public이 아닌 메서드인지. 넷째, 예외를 catch로 삼켰거나 checked 예외라서 롤백 규칙이 발동하지 않았는지. 다섯째, `readOnly=true`나 `REQUIRES_NEW` 같은 속성이 의도와 다른지. 마지막으로 트랜잭션 로그를 켜고 `TransactionSynchronizationManager.isActualTransactionActive()`로 실제 활성 여부를 찍어 봅니다.

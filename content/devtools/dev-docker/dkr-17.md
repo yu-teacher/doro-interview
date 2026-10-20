@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/engine/security/", "https://docs.docker.com/build/building/best-practices/", "https://docs.docker.com/reference/dockerfile/", "https://docs.docker.com/engine/security/rootless/"]
+concepts: [container]
+importance: 1
+links: [{to: "dkr-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 컨테이너의 프로세스는 기본적으로 root로 실행됩니다. 공식 문서는 Docker가 기본으로 capability를 제한해서 컨테이너 안의 root도 호스트의 진짜 root보다 권한이 훨씬 적다고 하지만, 서비스가 권한 없이 돌 수 있으면 비루트 사용자로 실행하는 것이 안전하다고 안내합니다. Dockerfile에서 사용자를 만든 뒤 `USER` 로 전환하면 이후의 `RUN` 과 실행 시 ENTRYPOINT·CMD가 그 사용자로 동작하고, 필요하면 UID와 GID를 명시합니다. 1024 미만 포트를 쓰려는 정도라면 root 대신 필요한 capability만 주는 방법이 있습니다.

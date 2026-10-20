@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/data/sql.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/orm/jpa/support/OpenEntityManagerInViewInterceptor.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/orm/jpa/support/OpenEntityManagerInViewFilter.html"]
+concepts: [fetch-strategy, connection-pool]
+importance: 2
+links: [{to: "jpa-13", kind: PREREQ}, {to: "misc-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 OSIV(Open EntityManager in View)는 JPA `EntityManager`를 웹 요청 처리 전체 동안 스레드에 묶어 두어, 원래 트랜잭션이 끝난 뒤에도 뷰나 컨트롤러에서 지연 로딩이 되게 하는 패턴입니다. Spring Boot는 웹 애플리케이션이면 기본으로 `OpenEntityManagerInViewInterceptor`를 등록하고, `spring.jpa.open-in-view`의 기본값은 true입니다. 켜 두면 `LazyInitializationException`이 줄어드는 대신, 트랜잭션 밖에서 지연 로딩 쿼리가 몰래 나가 성능 문제를 숨기고 요청 내내 DB 커넥션을 붙들 수 있다고 알려져 있습니다. 그래서 `false`로 끄고 서비스 계층 트랜잭션 안에서 필요한 데이터를 모두 가져와 DTO로 만들어 반환하는 구조를 선호합니다.

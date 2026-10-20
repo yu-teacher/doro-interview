@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.gradle.org/current/userguide/multi_project_builds.html", "https://maven.apache.org/guides/mini/guide-multiple-modules.html", "https://maven.apache.org/guides/introduction/introduction-to-the-pom.html"]
+concepts: [build-tool]
+importance: 2
+links: [{to: "bld-02", kind: PREREQ}, {to: "bld-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 Gradle 멀티 프로젝트는 루트의 `settings.gradle`에서 `include 'lib', 'app'`처럼 서브프로젝트를 선언하고, 각 서브프로젝트 디렉터리에 자기 `build.gradle`을 두어 플러그인과 의존성을 따로 정합니다. 모듈 사이 의존은 `implementation project(':lib')`처럼 project 의존성으로 선언하고, Gradle이 그에 맞춰 빌드 순서를 정합니다. Maven은 부모 POM이 `modules`로 하위 모듈을 모으는 집합(aggregation) 방식이고, reactor가 모듈들을 의존 관계에 맞게 정렬해 순서대로 빌드합니다. 루트 프로젝트 이름은 settings 파일에서 정해 두는 것이 안전합니다.

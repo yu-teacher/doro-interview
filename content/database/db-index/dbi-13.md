@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/indexes-types.html", "https://www.postgresql.org/docs/16/indexes-opclass.html", "https://www.postgresql.org/docs/16/pgtrgm.html", "https://dev.mysql.com/doc/refman/8.4/en/index-btree-hash.html"]
+concepts: [index-design]
+importance: 2
+links: [{to: "dbi-02", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 B-tree는 값이 정렬되어 있어서, 패턴이 상수이고 앞부분이 고정된 LIKE 'foo%'는 foo로 시작하는 구간이라는 범위 조건으로 바꿔 찾을 수 있지만, 앞에 와일드카드가 오면 정렬 순서로 구간을 좁힐 수 없습니다. 주의할 점은 PostgreSQL 16에서 데이터베이스가 C 로케일이 아니면 기본 연산자 클래스의 B-tree는 LIKE에 쓸 수 없어서, text_pattern_ops 같은 연산자 클래스로 인덱스를 따로 만들어야 한다는 것입니다. '%abc%'처럼 양쪽에 와일드카드가 있는 검색은 pg_trgm 확장의 GIN 또는 GiST 트라이그램 인덱스가 처리합니다. MySQL 8.4(InnoDB)에서는 패턴이 상수이고 와일드카드로 시작하지 않으면 B-tree를 쓰는 점이 같습니다.

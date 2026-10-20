@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/fork.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/exec.html", "https://man7.org/linux/man-pages/man2/fork.2.html", "https://man7.org/linux/man-pages/man2/execve.2.html"]
+concepts: [process-management]
+importance: 2
+links: [{to: "osp-08", kind: FOLLOWUP}, {to: "osp-16", kind: FOLLOWUP}, {to: "osm-18", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 fork는 호출한 프로세스를 복제해 새 프로세스를 만듭니다. 자식은 부모 주소 공간의 복사본과 열린 파일 디스크립터를 이어받고, fork의 반환값은 자식에서는 0, 부모에서는 자식의 PID입니다. exec 계열은 새 프로세스를 만들지 않고 현재 프로세스의 이미지를 다른 프로그램으로 통째로 바꾸며, 성공하면 돌아오지 않습니다. PID는 그대로이고 FD_CLOEXEC가 없는 파일 디스크립터는 열린 채 유지됩니다. 둘이 나뉘어 있어서 fork와 exec 사이에 자식에서 리다이렉션 같은 설정을 할 수 있습니다.

@@ -9,6 +9,8 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc5681.html", "https://www.rfc-editor.org/rfc/rfc6928.html", "https://www.rfc-editor.org/rfc/rfc9293.html"]
+concepts: [tcp]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 연결 초기에는 cwnd를 작게 시작해 ACK가 올 때마다 늘리는 slow start로 RTT마다 대략 두 배씩 키우다가 ssthresh에 닿으면 congestion avoidance로 넘어가 RTT당 약 한 세그먼트씩 선형으로 늘립니다. 손실은 혼잡 신호로 보고, 중복 ACK 세 개로 감지하면 ssthresh를 비행 중 데이터의 절반으로 줄이고 cwnd를 그 근처로 낮춰 계속 보내는 빠른 재전송·회복을 하며, 재전송 타이머가 만료되면 cwnd를 한 세그먼트로 줄여 slow start부터 다시 합니다. 늘릴 때는 더하고 줄일 때는 곱으로 줄이는 이 방식을 AIMD라고 합니다. 초기 윈도우 크기는 표준과 구현에 따라 다릅니다.

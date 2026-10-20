@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.docker.com/build/building/best-practices/", "https://docs.docker.com/build/building/multi-stage/", "https://docs.docker.com/build/building/context/"]
+concepts: [container]
+importance: 2
+links: [{to: "dkr-19", kind: FOLLOWUP}, {to: "dkr-09", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 먼저 요구 사항에 맞는 작은 베이스 이미지를 고르고, 멀티 스테이지 빌드로 컴파일러 같은 빌드 도구를 최종 이미지에서 뺍니다. 공식 문서는 있으면 좋을 것 같다는 이유로 불필요한 패키지를 설치하지 말라고 하고, `apt-get` 캐시는 설치와 같은 `RUN` 안에서 지우라고 합니다. 레이어에 한번 들어간 파일은 나중 명령에서 지워도 이미지 크기가 줄지 않기 때문입니다. `.dockerignore` 로 빌드 컨텍스트에서 필요 없는 파일을 빼면 `COPY . .` 로 이미지에 딸려 들어가는 것도 줄일 수 있습니다.

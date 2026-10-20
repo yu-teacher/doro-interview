@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/FactoryBean.html", "https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html"]
+concepts: [gof-patterns, ioc-di]
+importance: 1
+links: [{to: "ioc-24", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `FactoryBean`은 그 자체가 빈 인스턴스로 노출되는 것이 아니라, 다른 객체를 만들어 내는 팩토리 역할을 하는 빈이기 때문입니다. 이 빈 이름으로 요청하면 컨테이너는 `getObject()`가 돌려주는 객체를 줍니다. `FactoryBean` 자신이 필요하면 이름 앞에 `&`를 붙여 `getBean("&myBean")`으로 꺼냅니다. 컨테이너는 `FactoryBean` 인스턴스의 생명주기만 관리하고 만들어진 객체의 소멸까지 책임지지 않으므로, 닫아야 하는 자원은 `DisposableBean`으로 직접 정리해야 합니다.

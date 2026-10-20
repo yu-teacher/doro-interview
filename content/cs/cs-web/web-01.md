@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9110.html"]
+concepts: [http-protocol, idempotency]
+importance: 3
+links: [{to: "web-08", kind: FOLLOWUP}, {to: "web-17", kind: FOLLOWUP}, {to: "web-21", kind: FOLLOWUP}, {to: "dst-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 안전하다는 건 클라이언트가 서버 상태 변경을 요청하지도 기대하지도 않는 읽기 전용 의미라는 뜻이고, GET이 여기에 속합니다. 멱등하다는 건 같은 요청을 여러 번 보냈을 때 서버에 미치는 의도된 효과가 한 번 보냈을 때와 같다는 뜻이고, 표준이 정의한 메서드 중에서는 PUT, DELETE와 안전한 메서드가 멱등입니다. POST는 그 목록에 없어서 같은 요청을 반복하면 주문이 두 건 생기는 식으로 효과가 쌓일 수 있습니다. 이 구분이 중요한 이유는 연결이 끊겨 응답을 못 받았을 때, 멱등한 요청은 자동으로 다시 보내도 되지만 비멱등 요청은 자동 재시도하지 말라고 권고되기 때문입니다.

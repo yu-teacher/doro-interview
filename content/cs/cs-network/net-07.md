@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc6335.html", "https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml"]
+concepts: [network-layers, tcp]
+importance: 2
+links: [{to: "osm-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 포트는 한 호스트 안에서 어느 응용 서비스로 보낼지 구분하는 16비트 번호이고, TCP와 UDP가 각각 따로 가집니다. 소켓은 IP 주소와 포트를 합친 통신 끝점이고, TCP 연결은 양쪽 소켓의 쌍, 즉 출발지 IP·포트와 목적지 IP·포트로 식별됩니다. 그래서 서버가 80번 포트 하나에서 대기해도 클라이언트마다 IP나 출발지 포트가 달라 연결이 서로 구분되고, accept가 돌려주는 연결 소켓은 서버 포트가 같아도 서로 다른 연결입니다. 포트는 0~1023 시스템(Well-known), 1024~49151 사용자(등록), 49152 이상 동적(임시) 포트로 나뉘고 클라이언트의 출발지 포트는 보통 동적 범위에서 정해집니다.

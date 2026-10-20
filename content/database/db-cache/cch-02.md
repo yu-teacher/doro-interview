@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://redis.io/docs/latest/develop/data-types/", "https://redis.io/docs/latest/develop/data-types/compare-data-types/"]
+concepts: [redis]
+importance: 3
 ---
 **모범 답변 (30~60초)**
 String은 텍스트나 바이너리 값 하나를 저장하고 카운터로도 씁니다. List는 문자열의 순서 있는 시퀀스로 양 끝에서 넣고 빼는 것이 효율적이라 큐나 스택에 맞습니다. Hash는 필드와 값 쌍을 모아 필드가 많지 않은 객체를 저장할 때 쓰고, Set은 중복 없는 문자열 집합으로 포함 여부 확인과 교집합, 합집합에 씁니다. Sorted Set은 원소마다 점수를 붙여 점수나 순위 범위로 조회할 수 있어 우선순위 큐나 점수 순으로 정렬된 컬렉션에 맞습니다. 용도가 일부 겹치기 때문에 문서도 고르는 기준을 엄격한 규칙이 아닌 경험칙이라고 하고, 필요한 연산이 무엇인지를 보고 선택합니다.

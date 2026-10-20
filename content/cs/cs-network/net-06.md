@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.rfc-editor.org/rfc/rfc1918.html", "https://www.rfc-editor.org/rfc/rfc3022.html", "https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml"]
+concepts: [network-layers]
+importance: 2
+links: [{to: "dkr-06", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 사설 주소는 인터넷 전체가 아니라 각 조직 내부에서만 유일하면 되는 주소로, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 세 대역이 예약되어 있어 등록 없이 쓸 수 있습니다. 이 주소는 조직 밖으로 라우팅하지 않기로 되어 있어서 바깥과 통신하려면 NAT가 필요합니다. 흔히 쓰는 NAPT는 공유기 같은 장치가 안쪽의 사설 IP와 포트를 공인 IP와 새로 할당한 포트로 바꿔 매핑표에 기록하고, 돌아오는 응답을 표를 보고 되돌려 줍니다. 그래서 여러 호스트가 공인 주소 하나를 공유하지만, 세션은 안쪽에서 바깥으로 시작하는 것이 기본이라 바깥에서 안쪽으로 먼저 연결하려면 별도 매핑이 필요하고 IP 주소를 페이로드에 담는 프로토콜은 추가 처리가 필요합니다.

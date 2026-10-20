@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/return-types.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-async.html", "https://docs.spring.io/spring-framework/reference/web/webflux/new-framework.html", "https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html"]
+concepts: [thread-pool, thread-process]
+importance: 2
+links: [{to: "mvc-16", kind: FOLLOWUP}, {to: "mvc-17", kind: FOLLOWUP}, {to: "mvc-23", kind: FOLLOWUP}, {to: "misc-01", kind: RELATED}, {to: "misc-07", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 전통적인 Spring MVC는 Tomcat 같은 Servlet 컨테이너 위에서 동작합니다. 문서는 애플리케이션이 현재 스레드를 블로킹할 수 있다고 가정해 컨테이너가 큰 스레드 풀로 흡수한다고 설명하며, 요청 하나를 스레드 하나가 필터부터 DB 호출까지 동기 블로킹으로 처리하는 것이 흔히 thread-per-request라 부르는 모델입니다. Tomcat 스레드 풀은 컨테이너 설정이고 Boot에서 `server.tomcat.threads.max` 기본값은 200입니다. Spring은 `Callable`, `DeferredResult`, `CompletableFuture` 같은 비동기 반환 타입으로 요청 스레드를 일찍 풀어 줄 뿐입니다. 빈은 기본이 싱글톤이라 여러 요청 스레드가 공유하므로 상태 필드는 스레드 안전하지 않습니다.

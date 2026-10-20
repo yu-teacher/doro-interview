@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/ddl-constraints.html", "https://www.postgresql.org/docs/16/ddl-default.html", "https://dev.mysql.com/doc/refman/8.4/en/create-table-check-constraints.html"]
+concepts: [schema-design, null-handling]
+importance: 2
+links: [{to: "dbs-04", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 NOT NULL은 컬럼에 NULL이 들어가는 것을 막고, DEFAULT는 INSERT에서 그 컬럼을 생략하거나 DEFAULT 키워드를 썼을 때 채울 값을 정하며, CHECK는 행이 만족해야 하는 조건식입니다. 가장 흔한 함정은 CHECK가 조건이 true일 때뿐 아니라 NULL일 때도 통과한다는 점이라 `CHECK (price > 0)`만으로는 NULL이 막히지 않고 NOT NULL을 따로 줘야 합니다. DEFAULT는 값을 생략했을 때만 쓰이고 NULL을 직접 넣으면 그대로 NULL이 들어가 NOT NULL에 걸립니다. PostgreSQL 16 기준으로 CHECK는 새로 쓰는 그 행의 값만 볼 수 있어 다른 행이나 테이블을 조회하는 조건은 쓸 수 없습니다. MySQL 8.4(InnoDB)에서도 CHECK가 강제됩니다.

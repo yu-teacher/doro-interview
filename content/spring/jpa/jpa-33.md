@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/"]
+concepts: [entity-mapping, ddd]
+importance: 2
+links: [{to: "jpa-32", kind: RELATED}, {to: "jpa-21", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 @Embeddable은 속성은 있지만 식별자(@Id)가 없는 값 타입입니다. 엔티티의 속성으로만 영속화될 수 있어서 생명주기가 소유 엔티티를 따르고, 보통 소유 엔티티 테이블의 컬럼으로 펼쳐 저장되며 다른 엔티티와 공유할 수 없습니다. 엔티티 쪽에서는 @Embedded를 쓰는데 선택 사항이라 생략하는 경우가 많습니다. 주소나 이름처럼 의미 있는 묶음을 객체로 표현할 때 유용합니다. 같은 임베더블 타입을 한 엔티티에서 두 번 쓰면 기본 컬럼 이름이 겹치므로 @AttributeOverride로 컬럼 이름을 바꿔 주어야 합니다. 입문 가이드는 기본 생성자가 필요하다고 하되 record에는 완화된다고 설명합니다.

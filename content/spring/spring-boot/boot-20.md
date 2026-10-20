@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/using/devtools.html", "https://docs.spring.io/spring-boot/gradle-plugin/packaging.html", "https://docs.spring.io/spring-boot/reference/actuator/endpoints.html", "https://docs.spring.io/spring-boot/reference/features/logging.html", "https://docs.spring.io/spring-boot/reference/features/external-config.html", "https://docs.spring.io/spring-boot/how-to/data-initialization.html"]
+concepts: [externalized-config, observability]
+importance: 2
+links: [{to: "boot-08", kind: PREREQ}, {to: "boot-11", kind: PREREQ}, {to: "boot-13", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 DevTools는 `developmentOnly`로 선언해 실행 가능 jar에서 빠지고, 패키징된 앱에서는 자동 비활성화되어 운영에 영향이 없게 둡니다. Actuator는 기본이 `health`만 노출이니 필요한 엔드포인트만 `include`로 열고, health 상세는 `when-authorized`로 제한하며, Spring Security나 방화벽으로 보호합니다. 로깅은 프로파일별로 나눠서 운영에서는 기본 INFO를 유지하고 SQL 같은 상세 DEBUG 로그는 개발 프로파일에만 둡니다. 접속 정보 같은 환경별 값은 환경 변수로 주입하고, 스키마는 `ddl-auto`를 `validate`로 둡니다.

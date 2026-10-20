@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://maven.apache.org/guides/getting-started/index.html", "https://maven.apache.org/guides/introduction/introduction-to-repositories.html", "https://docs.gradle.org/current/userguide/dependency_caching.html", "https://docs.gradle.org/current/userguide/dependency_versions.html"]
+concepts: [dependency-management]
+importance: 2
+links: [{to: "bld-20", kind: FOLLOWUP}]
 ---
 **모범 답변 (30~60초)**
 SNAPSHOT은 개발 브랜치의 최신 코드를 가리키는 버전으로, 안정적이거나 바뀌지 않는다는 보장이 없습니다. 반대로 SNAPSHOT 접미사가 없는 릴리스 버전의 내용은 바뀌지 않습니다. 릴리스할 때 `1.0-SNAPSHOT`은 `1.0`이 되고 다음 개발 버전은 `1.1-SNAPSHOT`이 됩니다. 같은 버전 이름인데 내용이 바뀔 수 있어서 Gradle은 SNAPSHOT을 changing 의존성으로 보고 기본적으로 24시간 동안 캐시하며, Maven은 원격 저장소에 더 새로운 것이 있으면 다시 내려받습니다. 그래서 운영에 나가는 릴리스는 SNAPSHOT에 의존하지 않도록 합니다.

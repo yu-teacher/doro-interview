@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/return-types.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/exceptionhandlers.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/ResponseStatus.html"]
+concepts: [global-exception-handling, mvc-request-flow]
+importance: 2
+links: [{to: "mvc-12", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 `ResponseEntity`는 상태 코드, 헤더, 본문 전체를 코드로 지정할 때 쓰고, 조건에 따라 상태 코드나 헤더가 달라지는 경우에 적합합니다. `@ResponseStatus`는 메서드나 예외 클래스에 고정 상태 코드를 선언적으로 지정합니다. `void` 반환에 `@ResponseStatus`가 있으면 응답이 완전히 처리된 것으로 간주되고, 오류용 `@ResponseStatus` 예외는 `ResponseStatusExceptionResolver`가 상태 코드로 매핑합니다. 다만 Javadoc에 따르면 `reason`을 주면 `sendError`가 쓰여 컨테이너가 HTML 에러 페이지를 쓸 수 있어, REST API에서는 `ResponseEntity`를 반환하고 `@ResponseStatus`를 피하라고 합니다.

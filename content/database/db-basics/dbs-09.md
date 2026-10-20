@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/queries-table-expressions.html", "https://www.postgresql.org/docs/16/queries-select-lists.html", "https://www.postgresql.org/docs/16/queries-order.html", "https://www.postgresql.org/docs/16/tutorial-window.html", "https://www.postgresql.org/docs/16/sql-select.html", "https://dev.mysql.com/doc/refman/8.4/en/problems-with-alias.html", "https://dev.mysql.com/doc/refman/8.4/en/select.html"]
+concepts: [sql-aggregation]
+importance: 2
+links: [{to: "dbs-05", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 논리적으로는 FROM과 JOIN으로 행을 만들고, WHERE로 행을 거르고, GROUP BY로 묶고, HAVING으로 그룹을 거른 다음 SELECT 목록을 계산하고, 이어서 DISTINCT, ORDER BY, LIMIT을 적용한다고 이해합니다. SELECT 목록이 WHERE보다 뒤라서 PostgreSQL 16 기준으로 WHERE에서 SELECT 별칭을 쓰면 그런 컬럼이 없다는 오류가 나고, ORDER BY는 SELECT 뒤라 별칭을 쓸 수 있습니다. 같은 이유로 집계 함수와 윈도 함수는 WHERE에 쓸 수 없습니다. 다만 이는 의미상의 순서이고 실제 실행 계획은 결과가 같은 범위에서 다르게 짤 수 있으며, MySQL 8.4는 HAVING에서 별칭을 허용하는 등 확장이 있습니다.

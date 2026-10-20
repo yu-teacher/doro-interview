@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/git-fetch", "https://git-scm.com/docs/git-pull/2.50.0", "https://git-scm.com/docs/git-pull", "https://git-scm.com/book/ko/v2/Git-%EB%B8%8C%EB%9E%9C%EC%B9%98-%EB%A6%AC%EB%AA%A8%ED%8A%B8-%EB%B8%8C%EB%9E%9C%EC%B9%98"]
+concepts: [git-branching]
+importance: 3
+links: [{to: "git-07", kind: FOLLOWUP}, {to: "git-21", kind: FOLLOWUP}, {to: "git-03", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 git fetch는 원격의 새 커밋을 받아 origin/main 같은 원격 추적 브랜치만 갱신하고, 내 로컬 브랜치와 워킹 트리는 건드리지 않습니다. git pull은 fetch를 한 뒤 그 결과를 현재 브랜치에 merge나 rebase로 통합하는 명령입니다. 내 브랜치가 단순히 뒤처진 경우에는 fast-forward로 따라가지만, 로컬과 원격에 서로 다른 커밋이 생겨 갈라졌다면 Git 2.50에서는 합치는 방법을 정하라며 중단합니다. 그래서 --rebase, --no-rebase, --ff-only 중 하나를 지정하거나 pull.rebase 설정을 둡니다.

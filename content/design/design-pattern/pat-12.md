@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/aop/proxying.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/reflect/Proxy.html"]
+concepts: [proxy, aop]
+importance: 3
+links: [{to: "aop-10", kind: RELATED}, {to: "tx-15", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 프록시를 거치지 않기 때문입니다. 클라이언트는 프록시 참조를 들고 있어서 첫 호출은 프록시를 통과해 어드바이스가 실행되지만, 호출이 타깃 객체에 도달한 뒤에는 타깃이 자기 `this`로 다른 메서드를 부르므로 프록시를 우회합니다. 스프링 문서는 명시적이든 암시적이든 `this`를 통한 자기 호출은 어드바이스를 건너뛴다고 설명하고, 가장 덜 침습적인 해법으로 자기 호출이 생기지 않도록 코드를 리팩터링하라고 합니다. 대안으로 자기 참조를 주입받아 프록시를 통해 호출할 수 있고, `AopContext.currentProxy()`는 스프링 AOP에 코드를 묶으므로 강하게 비권장입니다.

@@ -9,6 +9,8 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/using/devtools.html", "https://docs.spring.io/spring-boot/gradle-plugin/packaging.html", "https://docs.spring.io/spring-boot/gradle-plugin/reacting.html", "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide"]
+concepts: [build-tool, jvm-execution]
+importance: 1
 ---
 **모범 답변 (30~60초)**
 DevTools는 개발 편의 기능 모음입니다. 캐시를 끄는 등 개발에 맞는 프로퍼티 기본값을 자동으로 적용하고, 클래스패스의 파일이 바뀌면 애플리케이션을 자동으로 재시작합니다. 재시작이 빠른 이유는 클래스로더를 둘로 나눠서, 서드파티 jar처럼 바뀌지 않는 클래스는 base 클래스로더에 두고 개발 중인 클래스만 restart 클래스로더에 로드해 재시작 때 그것만 버리기 때문입니다. 운영에서 실행하는 것은 보안 위험이라서 Gradle에서는 `developmentOnly`로 선언하고, `java -jar`로 실행되는 패키징된 앱에서는 자동으로 비활성화됩니다.

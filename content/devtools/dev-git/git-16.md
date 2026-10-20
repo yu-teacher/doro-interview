@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/git-rebase", "https://git-scm.com/book/ko/v2/Git-%EB%B8%8C%EB%9E%9C%EC%B9%98-Rebase-%ED%95%98%EA%B8%B0", "https://git-scm.com/docs/git-push"]
+concepts: [git-branching]
+importance: 2
+links: [{to: "git-17", kind: FOLLOWUP}, {to: "git-10", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 rebase는 커밋을 옮기는 것이 아니라 내용은 같고 해시가 다른 새 커밋을 만들어 대체합니다. 이미 push한 브랜치를 rebase하면 원격 히스토리를 덮어쓰려고 force push가 필요한데, 그 사이 그 브랜치 위에 작업한 동료의 로컬에는 옛 커밋이 남아 있습니다. 동료가 기본 방식으로 pull하면 옛 커밋과 새 커밋이 둘 다 들어와 같은 변경이 중복되고 불필요한 merge 커밋도 생깁니다. 충돌 해결이나 squash로 내용이 달라졌다면 동료가 히스토리를 수동으로 고쳐야 합니다. 그래서 push 전에 정리하거나 나만 쓰는 브랜치에서만 rebase합니다.

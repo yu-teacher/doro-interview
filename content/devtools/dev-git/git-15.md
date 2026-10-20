@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://git-scm.com/docs/git-commit", "https://git-scm.com/docs/git-rebase", "https://git-scm.com/docs/gitworkflows", "https://git-scm.com/book/ko/v2/Git-%EB%8F%84%EA%B5%AC-%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC-%EB%8B%A8%EC%9E%A5%ED%95%98%EA%B8%B0"]
+concepts: [git-undo, git-branching]
+importance: 2
+links: [{to: "git-16", kind: FOLLOWUP}, {to: "git-10", kind: PREREQ}]
 ---
 **모범 답변 (30~60초)**
 가장 최근 커밋은 git commit --amend로 내용이나 메시지를 고칩니다. 여러 커밋을 정리하려면 git rebase -i 커밋을 실행해 목록에서 pick을 reword, squash, fixup, drop 등으로 바꿔 메시지 수정, 합치기, 버리기, 순서 바꾸기를 합니다. 두 방법 모두 기존 커밋을 고치는 것이 아니라 새 커밋으로 바꿔치기하는 것이므로 해시가 바뀌고, 이미 push한 커밋에 쓰면 협업자에게 문제가 됩니다. 메시지는 필수는 아니지만 50자 이내의 짧은 요약 한 줄, 빈 줄, 자세한 설명 순서를 권합니다.

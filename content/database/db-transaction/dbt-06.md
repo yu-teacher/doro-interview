@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/mvcc-intro.html", "https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/ddl-system-columns.html"]
+concepts: [mvcc]
+importance: 3
+links: [{to: "dbt-10", kind: FOLLOWUP}, {to: "dbt-11", kind: FOLLOWUP}, {to: "dbt-12", kind: FOLLOWUP}, {to: "dbl-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 MVCC는 한 행의 여러 버전을 유지하면서 각 트랜잭션이나 문장이 자기 스냅샷에 맞는 버전을 보게 하는 방식입니다. PostgreSQL 16에서는 UPDATE가 기존 행을 덮어쓰지 않고 새 행 버전을 만들기 때문에, 읽는 쪽은 자기 스냅샷에 해당하는 옛 버전을 그대로 읽습니다. 그래서 읽기를 위한 잠금이 쓰기 잠금과 충돌하지 않아 읽기는 쓰기를 막지 않고 쓰기도 읽기를 막지 않습니다. 다만 같은 행을 동시에 수정하려는 쓰기끼리는 먼저 수정한 트랜잭션이 끝날 때까지 기다립니다.

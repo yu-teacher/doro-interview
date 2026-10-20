@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-insert.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-locking.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-locks-set.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html"]
+concepts: [db-locking, race-condition]
+importance: 1
+links: [{to: "dbl-02", kind: PREREQ}, {to: "dbl-13", kind: PREREQ}, {to: "misc-14", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 PostgreSQL 16에서는 막을 수 없습니다. 행 락은 SELECT가 가져온 행에 걸리므로, 없는 id에 FOR UPDATE를 걸면 0행이 나오고 아무것도 잠기지 않아서 다른 세션이 그 id를 INSERT해 커밋할 수 있습니다. 그러면 처음 세션이 이어서 INSERT할 때 유니크 위반으로 실패합니다. 이런 경쟁은 유니크 제약을 최종 방어선으로 두고 ON CONFLICT로 처리하거나, 키에 어드바이저리 락을 거는 식으로 풉니다. MySQL 8.4 InnoDB의 REPEATABLE READ에서는 이번 실험에서 없는 키의 잠금 읽기가 그 키가 속한 갭에 락을 걸어 같은 갭에 삽입하려는 세션이 기다렸습니다. 하지만 READ COMMITTED에서는 갭 락이 꺼져 막지 못하므로 같은 코드가 격리 수준에 따라 다르게 동작합니다.

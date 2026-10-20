@@ -9,6 +9,9 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://docs.hibernate.org/orm/7.0/introduction/html_single/"]
+concepts: [entity-mapping, persistence-context]
+importance: 2
+links: [{to: "jpa-05", kind: PREREQ}, {to: "jpa-30", kind: FOLLOWUP}, {to: "dbd-07", kind: RELATED}, {to: "dbd-02", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 IDENTITY는 DB의 auto-increment 컬럼을, SEQUENCE는 DB 시퀀스를 씁니다. IDENTITY는 id를 INSERT를 실행해야 알 수 있기 때문에 `persist` 직후에 바로 INSERT가 실행되어, 쓰기 지연이 깨집니다. SEQUENCE는 시퀀스에서 id를 먼저 받아 컨텍스트에 올리고 INSERT는 flush나 커밋 때 보내므로 쓰기 지연이 유지됩니다. 또 Hibernate는 IDENTITY 생성기를 쓰는 엔티티의 INSERT를 JDBC 배치로 묶지 못하지만, SEQUENCE는 가능합니다. SEQUENCE는 `allocationSize`만큼 id 블록을 한 번에 확보해서 시퀀스 호출을 줄이고, 그 대신 id가 연속적이지 않을 수 있습니다.

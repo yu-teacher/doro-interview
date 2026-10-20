@@ -9,6 +9,9 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Isolation.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/dao/DataIntegrityViolationException.html"]
+concepts: [race-condition, db-locking, schema-design]
+importance: 1
+links: [{to: "cch-18", kind: RELATED}, {to: "dbl-17", kind: RELATED}, {to: "dbs-01", kind: RELATED}]
 ---
 **모범 답변 (30~60초)**
 방법은 있지만 이 경우에는 UNIQUE 제약이 가장 낫습니다. 격리 수준을 SERIALIZABLE로 올리면 팬텀 읽기까지 막지만 동시성이 크게 떨어지고 데드락과 재시도 부담이 생깁니다. 비관적 락은 아직 없는 행을 대상으로 잡기 어려워서 DB와 쿼리 방식에 의존하게 됩니다. 애플리케이션 `synchronized`는 한 JVM 안에서만 유효해서 서버가 여러 대면 무의미하고, 분산 락은 가능하지만 구성이 복잡해집니다. 결국 모든 인스턴스가 공유하는 유일한 지점인 DB 제약을 최종 방어선으로 두고, 위반 시 던져지는 예외를 변환해 응답하는 설계가 단순하고 확실합니다.
