@@ -20,11 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ContentIntegrityTest {
 
-    private static final int QUESTIONS = 311;
-    private static final int TOPICS = 14;
-    private static final int TRICKY = 75;
+    private static final int QUESTIONS = 435;
+    private static final int TOPICS = 20;
+    private static final int TRICKY = 105;
     /** 검수 배치를 커밋할 때마다 올린다(B4: tx-01~25). */
-    private static final int REVIEWED = 311;
+    private static final int REVIEWED = 435;
 
     private static ContentSet content;
 
@@ -40,7 +40,7 @@ class ContentIntegrityTest {
 
     @Test
     void 질문_주제_꼬리_질문_수가_기대와_같다() {
-        assertThat(content.categories()).hasSize(2);
+        assertThat(content.categories()).hasSize(3);
         assertThat(content.topics()).hasSize(TOPICS);
         assertThat(content.questions()).hasSize(QUESTIONS);
         assertThat(content.questions().stream().filter(q -> q.tier().equals("TRICKY")).count()).isEqualTo(TRICKY);
@@ -55,7 +55,9 @@ class ContentIntegrityTest {
                 Map.entry("spring-mvc", 23L), Map.entry("jpa", 37L), Map.entry("spring-boot", 21L),
                 Map.entry("spring-misc", 17L), Map.entry("spring-security", 18L),
                 Map.entry("java-lang", 21L), Map.entry("java-oop", 20L), Map.entry("java-collections", 20L),
-                Map.entry("java-stream", 21L), Map.entry("java-concurrency", 21L), Map.entry("java-jvm", 20L)));
+                Map.entry("java-stream", 21L), Map.entry("java-concurrency", 21L), Map.entry("java-jvm", 20L),
+                Map.entry("db-basics", 21L), Map.entry("db-index", 20L), Map.entry("db-transaction", 20L),
+                Map.entry("db-lock", 20L), Map.entry("db-tuning", 21L), Map.entry("db-design", 22L)));
     }
 
     @Test
