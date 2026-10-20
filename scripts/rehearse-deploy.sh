@@ -108,9 +108,10 @@ assert_eq "$(shasum "$SETUP_DIR/.env" | cut -d' ' -f1)" "$before" "두 번째 ap
 cp "$SETUP_DIR/.env" "$WORK/compose.env"
 
 # 프리빌트 모드에서 앱 컨테이너를 띄운다(이름·네트워크·별칭은 운영 compose 와 같다)
-run_api() { # 프로파일 노출여부
+run_api() { # 프로파일 노출여부 [콘텐츠: unpublished(검수 전 모형)|기본은 jar 안의 실제 콘텐츠]
   docker rm -f doro-interview-api >/dev/null 2>&1 || true
-  docker run -d --name doro-interview-api --network "$NET" \
+  local content=(); [ "${3:-}" = unpublished ] && content=(-e INTERVIEW_CONTENT_LOCATION=file:/rehearse-content/ -v "$REPO/scripts/rehearse/content-unpublished:/rehearse-content:ro")
+  docker run -d --name doro-interview-api --network "$NET" ${content[@]+"${content[@]}"} \
     -e SPRING_PROFILES_ACTIVE="$1" -e INTERVIEW_CATALOG_EXPOSE_UNPUBLISHED="$2" \
     -e DB_HOST=postgres -e DB_PORT=5432 -e DB_NAME=service_interview -e DB_USER="$PG_USER" -e DB_PASSWORD="$PG_PASS" \
     -v "$JAR:/app/app.jar:ro" "$JAVA_IMAGE" java -jar /app/app.jar >/dev/null
@@ -133,7 +134,9 @@ apply_gw() { GATEWAY_CONF="$GWCONF" GATEWAY_CONTAINER="$GW" CHECK_BASE="http://1
 hdr() { curl -sI "http://127.0.0.1:$GW_PORT$1" | tr -d '\r'; }
 
 # ---------------------------------------------------------------- 1) 운영 설정으로 첫 배포
-log "== 1) 첫 배포(운영 설정: prod 프로파일, 비공개 노출 꺼짐) =="
+log "== 1) 첫 배포(운영 설정: prod 프로파일, 비공개 노출 꺼짐, 콘텐츠는 검수 전 모형) =="
+# 실제 콘텐츠는 이미 공개돼 있어서 "공개된 것이 없을 때" 를 보려면 검수 전 모형(scripts/rehearse/content-unpublished)을 준다
+export REHEARSE_CONTENT_LOCATION=file:/rehearse-content/
 if [ "$MODE" = full ]; then
   out="$(deploy --dry-run)"
   assert_contains "$out" "--dry-run: 여기서 종료" "deploy dry-run 은 계획만 보여 준다"
@@ -151,7 +154,7 @@ if [ "$MODE" = full ]; then
 
 else
   log "  (프리빌트 모드: Dockerfile 빌드·deploy-on-server.sh 는 확인하지 않는다)"
-  run_api prod false; run_web
+  run_api prod false unpublished; run_web
   assert_eq "$(docker exec doro-interview-api curl -fs http://localhost:8088/api/v1/categories | grep -c '"data":\[\]')" 1 "공개 주제가 없으면 빈 목록이다(prod 프로파일)"
 fi
 
@@ -196,7 +199,7 @@ log "-- 실제 브라우저: 공개 주제가 없을 때의 화면(게이트웨�
 
 # ---------------------------------------------------------------- 2) 두 번째 배포 + 통합 e2e
 log "== 2) 두 번째 배포 + 통합 e2e =="
-export REHEARSE_PROFILE=rehearse REHEARSE_EXPOSE=true   # 검수 전이라 공개 주제가 없어서, 화면을 시험하려면 개발용 노출이 필요하다
+export REHEARSE_PROFILE=rehearse REHEARSE_EXPOSE=true REHEARSE_CONTENT_LOCATION=classpath:content/   # 검수 전이라 공개 주제가 없어서, 화면을 시험하려면 개발용 노출이 필요하다
 if [ "$MODE" = full ]; then
   out="$(deploy --apply)" || { echo "$out" | tail -30; die "두 번째 배포 실패"; }
   echo "$out" | tail -6 | sed 's/^/    /'

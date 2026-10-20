@@ -1,0 +1,11 @@
+slug: "transaction"
+category: "spring"
+name: "트랜잭션"
+sort: 30
+slug_prefix: "tx"
+description: "배포 리허설용 비공개 주제(검수 전 상태를 흉내 낸다)"
+base_version: "v1"
+default_evidence: UNKNOWN
+published: false
+sources:
+  - url: "https://example.com/doc"

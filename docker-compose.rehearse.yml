@@ -1,4 +1,5 @@
 # 배포 리허설 전용(scripts/rehearse-deploy.sh): 운영 compose 에 얹어 호스트 포트를 없애고 격리 네트워크를 쓴다. 운영에는 쓰지 않는다.
+# scripts/rehearse/content-unpublished 는 검수 전 콘텐츠 모형(주제 published:false, 질문 DRAFT)이다. 로더가 이 디렉터리의 모든 파일을 콘텐츠로 읽으므로 설명 파일(README)을 두지 않는다.
 #   docker compose -f docker-compose.prod.yml -f docker-compose.rehearse.yml ...
 services:
   interview-api:
@@ -7,6 +8,10 @@ services:
       # 기본은 운영 그대로(prod 프로파일, 비공개 노출 꺼짐). 리허설 2단계에서만 켠다(검수 전이라 공개 주제가 없어서 화면을 시험할 수 없다).
       SPRING_PROFILES_ACTIVE: ${REHEARSE_PROFILE:-prod}
       INTERVIEW_CATALOG_EXPOSE_UNPUBLISHED: ${REHEARSE_EXPOSE:-false}
+      # 1단계는 검수 전 모형 콘텐츠(공개된 것이 없다), 2단계부터는 이미지에 들어 있는 실제 콘텐츠
+      INTERVIEW_CONTENT_LOCATION: ${REHEARSE_CONTENT_LOCATION:-classpath:content/}
+    volumes:
+      - ./scripts/rehearse/content-unpublished:/rehearse-content:ro
   interview-web:
     ports: !reset []
 

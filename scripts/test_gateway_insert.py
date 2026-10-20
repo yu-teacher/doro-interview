@@ -227,8 +227,14 @@ class InsertTest(unittest.TestCase):
         self.assertIn("proxy_hide_header Content-Security-Policy;", web)
 
     @unittest.skipUnless(REAL.exists(), "../Doro/gateway/nginx.conf 가 없다")
-    def test_실제_게이트웨이_기준_설정에도_들어간다(self):
+    def test_실제_게이트웨이_기준_설정과_호환된다(self):
         real = REAL.read_text(encoding="utf-8")
+        if gi.UPSTREAM_MARK in real:
+            # Doro 의 참고 사본에 이미 반영돼 있다(로그인 연결 PR 머지 뒤): 같은 조각을 다시 넣어도 아무것도 바꾸지 않고, 블록이 한 번씩만 있다
+            self.assertEqual(gi.insert_piece(real, PIECE)[0], "already")
+            self.assertEqual(real.count("upstream interview_web_upstream"), 1)
+            self.assertEqual(real.count("location /interview/api/ {"), 1)
+            return
         state, out = gi.insert_piece(real, PIECE)
         self.assertEqual(state, "changed")
         self.assertTrue(added_only(real, out))
