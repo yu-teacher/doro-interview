@@ -3,7 +3,7 @@ import { expect, test, type APIRequestContext, type BrowserContext, type Page } 
 /**
  * 게이트웨이(실제 조각·CSP 강제) + 가짜 Doro(BFF·JWKS) + 실제 백엔드·DB·브라우저로 로그인 흐름을 확인한다(docs/M2-PLAN.md S8).
  * scripts/e2e-test.sh 가 E2E_BFF=1 로 돌린다. 가짜 Doro 는 우리가 읽은 BFF 규격을 흉내 낸 것이라, 진짜 로그인(PKCE·IAM 화면)은 여기서 확인되지 않는다.
- * 데스크톱 프로젝트에서만 돌린다: 마지막 시나리오가 가짜 Doro 를 멈춘다(그 뒤의 다른 시험은 쿠키 없는 읽기만 하므로 영향이 없다).
+ * 데스크톱 프로젝트에서만 돌린다(휴대폰 화면의 로그인 상태 레이아웃은 모바일 감사가 따로 잰다).
  */
 test.skip(process.env.E2E_BFF !== '1', 'E2E_BFF=1 (scripts/e2e-test.sh) 에서만 돌린다');
 test.beforeEach(({ browserName: _b }, info) => {
@@ -222,19 +222,22 @@ test('위조·직접 Bearer: 쿠키가 없으면 클라이언트 값이 통과�
   void playwright;
 });
 
-test('가짜 Doro 가 멈추면 쿠키 있는 요청은 503, 쿠키 없는 읽기는 정상이다', async ({ page, context, request }) => {
+test('BFF 가 장애일 때 쿠키 있는 요청은 503, 쿠키 없는 읽기는 정상이고 복구되면 돌아온다', async ({ page, context, request }) => {
   await newUser(context);
   await page.goto('/interview/'); await login(page);
-  expect((await request.post(`${DORO}/dev/shutdown`)).status()).toBe(200);
-  await expect.poll(async () => (await fetch(`${DORO}/health`).catch(() => null))?.status ?? 0, { timeout: 10_000 }).toBe(0);
+  expect((await request.post(`${DORO}/dev/outage?on=1`)).status()).toBe(200);
+  try {
+    const res = await context.request.get('/interview/api/v1/bff/session');
+    expect(res.status()).toBe(503);
+    const body = (await res.json()) as { code: string };
+    expect(body.code).toBe('AUTH-503-02');
+    expect(res.headers()['retry-after']).toBe('5');
 
-  const res = await context.request.get('/interview/api/v1/bff/session');
-  expect(res.status()).toBe(503);
-  const body = (await res.json()) as { code: string };
-  expect(body.code).toBe('AUTH-503-02');
-  expect(res.headers()['retry-after']).toBe('5');
-
-  // 쿠키가 없는 공개 읽기는 BFF 가 죽어 있어도 그대로다
-  expect((await request.get('/interview/api/v1/categories')).status()).toBe(200);
-  expect(await sessionOf(request)).toEqual({ authenticated: false });
+    // 쿠키가 없는 공개 읽기는 BFF 가 죽어 있어도 그대로다
+    expect((await request.get('/interview/api/v1/categories')).status()).toBe(200);
+    expect(await sessionOf(request)).toEqual({ authenticated: false });
+  } finally {
+    await request.post(`${DORO}/dev/outage?on=0`);
+  }
+  expect((await sessionOf(context.request)).authenticated).toBe(true); // 복구되면 같은 쿠키로 다시 로그인 상태다
 });

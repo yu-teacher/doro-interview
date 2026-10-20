@@ -49,7 +49,14 @@ printf '%s' "${FAKE_CURL_CODE:-200}"
 SHIM
 # ---- 가짜 sleep: 시험이 오래 걸리지 않게
 printf '#!/usr/bin/env bash\nexit 0\n' > "$BIN/sleep"
-chmod +x "$BIN/docker" "$BIN/curl" "$BIN/sleep"
+# ---- 가짜 서비스 워커 점검 스크립트: 호출을 기록하고 FAKE_SW_FAIL=pre|post 이면 그 단계에서 실패한다
+cat > "$BIN/sw-check" <<'SHIM'
+#!/usr/bin/env bash
+echo "swcheck $*" >> "$FAKE_LOG"
+[ "${FAKE_SW_FAIL:-}" = "$3" ] && exit 1
+exit 0
+SHIM
+chmod +x "$BIN/docker" "$BIN/curl" "$BIN/sleep" "$BIN/sw-check"
 
 mkdir -p "$WORK/Doro/sdk"   # 가짜 Doro 체크아웃(sdk 디렉터리만 있으면 된다)
 ENV_OK="$WORK/ok.env"; printf 'DB_USER=u\nDB_PASSWORD=p\n' > "$ENV_OK"
@@ -63,7 +70,7 @@ run() {
   shift
   : > "$LOG"
   set +e
-  OUT="$(env PATH="$BIN:$PATH" FAKE_LOG="$LOG" INTERVIEW_ENV_FILE="$envfile" INTERVIEW_HEALTH_TIMEOUT=2 DORO_DIR="$WORK/Doro" ${vars[@]+"${vars[@]}"} "$REPO/scripts/deploy-on-server.sh" "$@" 2>&1)"
+  OUT="$(env PATH="$BIN:$PATH" FAKE_LOG="$LOG" INTERVIEW_ENV_FILE="$envfile" INTERVIEW_HEALTH_TIMEOUT=2 DORO_DIR="$WORK/Doro" INTERVIEW_SW_CHECK="$BIN/sw-check" ${vars[@]+"${vars[@]}"} "$REPO/scripts/deploy-on-server.sh" "$@" 2>&1)"
   RC=$?
   set -e
   CALLS="$(cat "$LOG")"
@@ -110,6 +117,20 @@ check "게이트웨이 nginx -t 후 reload" "$([ "$(grep -n 'nginx -t' <<<"$CALL
 check "reload 는 컨테이너 기동 뒤다" "$([ "$(grep -n 'up -d' <<<"$CALLS" | head -1 | cut -d: -f1)" -lt "$(grep -n 'nginx -s reload' <<<"$CALLS" | head -1 | cut -d: -f1)" ]; echo $?)"
 check "게이트웨이 경유 확인 줄" "$(has '확인: /interview/=200 (200 기대), /interview/api/v1/categories=200' "$OUT")"
 check "성공하면 롤백하지 않는다" "$(lacks '롤백한다' "$OUT")"
+
+echo "== 서비스 워커 미리 캐시 점검 =="
+check "배포 전 점검은 빌드 뒤 컨테이너 기동 전에 한다" "$([ "$(grep -n ' build' <<<"$CALLS" | head -1 | cut -d: -f1)" -lt "$(grep -n 'swcheck .* pre' <<<"$CALLS" | head -1 | cut -d: -f1)" ] && [ "$(grep -n 'swcheck .* pre' <<<"$CALLS" | head -1 | cut -d: -f1)" -lt "$(grep -n 'up -d' <<<"$CALLS" | head -1 | cut -d: -f1)" ]; echo $?)"
+check "배포 후 점검은 게이트웨이 경유 확인 뒤에 한다" "$([ "$(grep -n 'nginx -s reload' <<<"$CALLS" | head -1 | cut -d: -f1)" -lt "$(grep -n 'swcheck .* post' <<<"$CALLS" | head -1 | cut -d: -f1)" ]; echo $?)"
+check "새 웹 이미지의 dist 를 /interview/ 접두로 점검한다" "$(has 'swcheck image:doro-interview-web:latest:/usr/share/nginx/html/interview /interview/ pre' "$CALLS")"
+run swpre "$ENV_OK" FAKE_SW_FAIL=pre -- --apply
+check "배포 전 점검이 실패하면 배포를 실패 처리한다" "$([ $RC = 1 ]; echo $?)"
+check "새 컨테이너를 올리지 않고 롤백한다" "$(lacks 'up -d --no-deps interview-api interview-web' "$(grep -v 'no-build' <<<"$CALLS")")"
+check "롤백했다고 알린다" "$(has '롤백한다' "$OUT")"
+run swpost "$ENV_OK" FAKE_SW_FAIL=post -- --apply
+check "배포 후 점검이 실패하면 배포를 실패 처리한다" "$([ $RC = 1 ]; echo $?)"
+check "롤백한다" "$(has '롤백한다' "$OUT")"
+run swnogw "$ENV_OK" -- --apply --no-gateway
+check "게이트웨이 없이(첫 배포)는 점검하지 않는다" "$(lacks 'swcheck' "$CALLS")"
 
 echo "== 헬스 실패 → 롤백 =="
 run unhealthy "$ENV_OK" FAKE_HEALTH=unhealthy -- --apply

@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import './index.css';
+import { registerServiceWorker } from './pwa/register';
 
 const root = document.getElementById('root');
 if (root === null) {
@@ -12,3 +13,5 @@ createRoot(root).render(
     <App />
   </StrictMode>,
 );
+
+void registerServiceWorker();

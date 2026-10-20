@@ -98,7 +98,7 @@ describe('질문 화면: 내 노트', () => {
     expect(hasDirtyDrafts()).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: '저장' }));
     await screen.findByText('저장했습니다.');
-    expect(hasDirtyDrafts()).toBe(false);
+    await waitFor(() => expect(hasDirtyDrafts()).toBe(false)); // 효과 정리는 화면 갱신 뒤에 돈다
   });
 
   it('쓰다가 화면을 떠나도(언마운트) 등록부가 비워진다', async () => {

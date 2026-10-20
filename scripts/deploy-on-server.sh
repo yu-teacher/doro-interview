@@ -11,7 +11,9 @@
 #   2) 빌드 → 컨테이너 재생성 → healthy 대기.
 #   3) 게이트웨이 nginx -t + reload (nginx 는 upstream IP 를 시작·reload 때만 찾으므로 컨테이너가 새로 만들어지면 502 가 날 수 있다).
 #   4) 게이트웨이 경유 확인(짧게 재시도: 재생성 직후 잠깐 연결이 거부될 수 있다). 실패하면 롤백 태그를 되살려 다시 만들고 reload.
-# 환경변수: DORO_DIR(Doro 체크아웃, 기본 ../Doro). 리허설·점검용(기본값은 운영): INTERVIEW_PROJECT, INTERVIEW_COMPOSE_FILES, INTERVIEW_ENV_FILE, INTERVIEW_HEALTH_TIMEOUT(초, 기본 180), GATEWAY_CONTAINER, CHECK_BASE, CHECK_CURL_ARGS
+#   서비스 워커 미리 캐시 점검(scripts/check-sw-precache.sh, 게이트웨이 반영 뒤의 배포에서만): 빌드 직후 **배포 전**(새 해시 파일은 200 또는 404 허용, 이동·5xx 는 실패)과
+#   게이트웨이 경유 확인 뒤 **배포 후**(전부 200, 정적 파일이 HTML 로 오면 실패)에 이미지 안의 dist 를 기준으로 돌린다. 실패하면 롤백.
+# 환경변수: DORO_DIR(Doro 체크아웃, 기본 ../Doro). 리허설·점검용(기본값은 운영): INTERVIEW_PROJECT, INTERVIEW_COMPOSE_FILES, INTERVIEW_ENV_FILE, INTERVIEW_HEALTH_TIMEOUT(초, 기본 180), GATEWAY_CONTAINER, CHECK_BASE, CHECK_CURL_ARGS, INTERVIEW_SW_CHECK
 set -Eeuo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -23,6 +25,8 @@ ENV_FILE_ARG=()
 GATEWAY="${GATEWAY_CONTAINER:-doro-gateway}"
 CHECK_BASE="${CHECK_BASE:-https://localhost}"
 CHECK_CURL_ARGS="${CHECK_CURL_ARGS:--sk --resolve localhost:443:127.0.0.1}"
+SW_CHECK="${INTERVIEW_SW_CHECK:-$HERE/check-sw-precache.sh}"
+WEB_DIST_SPEC="image:doro-interview-web:latest:/usr/share/nginx/html/interview"
 API_CONTAINER=doro-interview-api; WEB_CONTAINER=doro-interview-web
 API_IMAGE=doro-interview-api; WEB_IMAGE=doro-interview-web
 APPLY=false; USE_GATEWAY=true
@@ -93,6 +97,10 @@ rollback() {
 # 2) 빌드 → 재생성 → healthy
 log "빌드(이미지 안에서 gradle·npm 빌드: 처음에는 몇 분 걸린다)"
 compose build || { rollback; exit 1; }
+if [ "$USE_GATEWAY" = true ]; then
+  log "서비스 워커 미리 캐시 점검(배포 전)"
+  GATEWAY_URL="$CHECK_BASE" "$SW_CHECK" "$WEB_DIST_SPEC" /interview/ pre || { log "ERROR: 미리 캐시 점검(배포 전) 실패: 새 이미지를 올리지 않는다"; rollback; exit 1; }
+fi
 compose up -d --no-deps interview-api interview-web || { rollback; exit 1; }
 wait_healthy "$API_CONTAINER" || { log "ERROR: $API_CONTAINER 가 제한 시간 안에 healthy 가 되지 않았다"; docker logs --tail 25 "$API_CONTAINER" 2>&1 | sed 's/^/    /'; rollback; exit 1; }
 wait_healthy "$WEB_CONTAINER" || { log "ERROR: $WEB_CONTAINER 가 healthy 가 되지 않았다"; rollback; exit 1; }
@@ -111,6 +119,8 @@ if [ "$USE_GATEWAY" = true ]; then
   done
   log "확인: /interview/=$web (200 기대), /interview/api/v1/categories=$api (200 기대)"
   [ "$ok" = true ] || { rollback; exit 1; }
+  log "서비스 워커 미리 캐시 점검(배포 후)"
+  GATEWAY_URL="$CHECK_BASE" "$SW_CHECK" "$WEB_DIST_SPEC" /interview/ post || { log "ERROR: 미리 캐시 점검(배포 후) 실패"; rollback; exit 1; }
 else
   # 게이트웨이 없이: 컨테이너 안에서 직접 확인한다
   docker exec "$API_CONTAINER" wget -qO- http://localhost:8088/api/v1/categories | grep -q '"success":true' || { log "ERROR: API 가 정상 응답을 주지 않는다"; rollback; exit 1; }

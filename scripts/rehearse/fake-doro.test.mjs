@@ -133,6 +133,20 @@ describe('내부 API: 탈퇴 목록', () => {
   });
 });
 
+describe('장애 흉내(/dev/outage)', () => {
+  const auth = (cookie) => get('/internal/auth', { 'x-doro-service': 'interview', 'x-original-method': 'GET', ...(cookie ? { cookie } : {}) });
+  it('켜면 /internal/auth 가 500 이고 끄면 복구되며, JWKS 는 영향이 없다', async () => {
+    const { sid } = await login();
+    const cookie = `${COOKIE}=${sid}`;
+    assert.equal((await auth(cookie)).status, 204);
+    assert.equal((await fetch(`${base}/dev/outage?on=1`, { method: 'POST' })).status, 200);
+    assert.equal((await auth(cookie)).status, 500);
+    assert.equal((await get('/.well-known/jwks.json')).status, 200);
+    await fetch(`${base}/dev/outage?on=0`, { method: 'POST' });
+    assert.equal((await auth(cookie)).status, 204);
+  });
+});
+
 it('모르는 경로는 404', async () => {
   assert.equal((await get('/nope')).status, 404);
 });

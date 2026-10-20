@@ -10,6 +10,7 @@
 //                                          쿠키가 있고 쓰기 요청인데 CSRF 헤더가 없으면 403
 //   GET  /internal/v1/deleted-users        IAM 내부 API(서비스 토큰 필요)
 //   POST /dev/deleted?user=<uuid>          탈퇴 목록에 사용자를 넣는다(시험 조작용)
+//   POST /dev/outage?on=1|0                BFF 장애를 흉내 낸다(켜면 /internal/auth 가 500)
 //
 // 로그인할 사용자는 쿠키 fake_user=<uuid>(없으면 고정 사용자)로 고른다. 실제 서비스 이름·쿠키 이름은 이 서비스의 것이다.
 import { createServer as createHttpServer } from 'node:http';
@@ -40,6 +41,7 @@ export function createFakeDoro({ internalToken = INTERNAL_TOKEN } = {}) {
   const jwk = { ...publicKey.export({ format: 'jwk' }), kid: KID, use: 'sig', alg: 'RS256' };
   const sessions = new Map(); // sid → userId
   const deleted = []; // {userId, deletedAt}
+  let outage = false;
 
   function token(userId, { expiresInSec = 900, clientId = CLIENT_ID } = {}) {
     const now = Math.floor(Date.now() / 1000);
@@ -103,6 +105,9 @@ export function createFakeDoro({ internalToken = INTERNAL_TOKEN } = {}) {
       return json(res, 200, { success: true, data: null }, { 'Set-Cookie': `${COOKIE}=; Path=/${SERVICE}; HttpOnly; Max-Age=0; SameSite=Lax` });
     }
     if (path === '/internal/auth') {
+      if (outage) {
+        return json(res, 500, { success: false, code: 'OUTAGE' });
+      }
       if (req.headers['x-doro-service'] !== SERVICE) {
         return json(res, 400, { success: false, code: 'BAD_SERVICE' });
       }
@@ -127,10 +132,10 @@ export function createFakeDoro({ internalToken = INTERNAL_TOKEN } = {}) {
       const nextSince = items.length ? items[items.length - 1].deletedAt : new Date().toISOString();
       return json(res, 200, { success: true, data: { items, nextSince } });
     }
-    if (path === '/dev/shutdown' && req.method === 'POST' && process.env.FAKE_DORO_ALLOW_SHUTDOWN === '1') {
-      // IAM·BFF 장애 시나리오(게이트웨이가 503 을 내는지)용: 시험이 스텁을 멈춘다
-      json(res, 200, { success: true });
-      return setImmediate(() => process.exit(0));
+    if (path === '/dev/outage' && req.method === 'POST') {
+      // BFF 장애 시나리오(게이트웨이가 503 을 내는지)용: 켜면 auth_request 대상(/internal/auth)이 500 을 준다. 끄면 복구된다.
+      outage = url.searchParams.get('on') === '1';
+      return json(res, 200, { success: true, outage });
     }
     if (path === '/dev/deleted' && req.method === 'POST') {
       const user = url.searchParams.get('user') ?? '';
@@ -152,7 +157,7 @@ export function createFakeDoro({ internalToken = INTERNAL_TOKEN } = {}) {
   };
 }
 
-// 직접 실행: node fake-doro.mjs [포트]   (환경: FAKE_DORO_HOST 기본 127.0.0.1, FAKE_DORO_ALLOW_SHUTDOWN=1 이면 POST /dev/shutdown 이 프로세스를 끝낸다)
+// 직접 실행: node fake-doro.mjs [포트]   (환경: FAKE_DORO_HOST 기본 127.0.0.1)
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const port = Number(process.argv[2] ?? process.env.FAKE_DORO_PORT ?? 18085);
   const doro = createFakeDoro({ internalToken: process.env.FAKE_DORO_INTERNAL_TOKEN ?? INTERNAL_TOKEN });
