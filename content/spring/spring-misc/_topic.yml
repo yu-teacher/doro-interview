@@ -1,0 +1,26 @@
+slug: "spring-misc"
+category: "spring"
+name: "기타와 버전 변화"
+sort: 70
+slug_prefix: "misc"
+description: "싱글톤 동시성, 커넥션 풀, 가상 스레드, 3 → 7 변화"
+base_version: "Spring Framework 7 / Boot 4"
+default_evidence: UNKNOWN
+published: false
+sources:
+  - url: "https://github.com/spring-projects/spring-framework/wiki/What%27s-New-in-Spring-Framework-7.x"
+    note: "링크 목록만 확인"
+  - url: "https://github.com/spring-projects/spring-framework/wiki/What%27s-New-in-Spring-Framework-6.x"
+    note: "링크 목록만 확인"
+  - url: "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes"
+  - url: "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-6.0-Release-Notes"
+  - url: "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-6.1-Release-Notes"
+  - url: "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-5.0-Release-Notes"
+  - url: "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-Versions"
+  - url: "https://docs.spring.io/spring-framework/docs/4.3.x/spring-framework-reference/html/new-in-4.0.html"
+  - url: "https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/new-in-3.1.html"
+  - url: "https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/new-in-3.0.html"
+  - url: "https://docs.spring.io/spring-framework/reference/integration/rest-clients.html"
+  - url: "https://docs.spring.io/spring-security/reference/servlet/architecture.html"
+  - url: "https://docs.spring.io/spring-boot/reference/features/spring-application.html"
+  - url: "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Release-Notes"

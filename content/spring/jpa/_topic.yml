@@ -1,0 +1,18 @@
+slug: "jpa"
+category: "spring"
+name: "JPA"
+sort: 50
+slug_prefix: "jpa"
+description: "영속성 컨텍스트, 더티 체킹, 지연 로딩, N+1"
+base_version: "Spring Framework 7 / Boot 4"
+default_evidence: UNKNOWN
+published: false
+sources:
+  - url: "https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html"
+  - url: "https://docs.spring.io/spring-data/jpa/reference/repositories/core-concepts.html"
+  - url: "https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html"
+  - url: "https://docs.spring.io/spring-data/jpa/reference/jpa/entity-persistence.html"
+  - url: "https://docs.hibernate.org/orm/7.0/userguide/html_single/"
+    note: "일부 구간만 읽음"
+  - url: "https://docs.hibernate.org/orm/7.0/introduction/html_single/"
+    note: "일부 구간만 읽음"

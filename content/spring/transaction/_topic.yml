@@ -1,0 +1,19 @@
+slug: "transaction"
+category: "spring"
+name: "트랜잭션"
+sort: 30
+slug_prefix: "tx"
+description: "전파·격리·롤백 규칙, readOnly, UnexpectedRollbackException"
+base_version: "Spring Framework 7 / Boot 4"
+default_evidence: UNKNOWN
+published: false
+sources:
+  - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction.html"
+  - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/strategies.html"
+  - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/tx-resource-synchronization.html"
+  - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-decl-explained.html"
+  - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html"
+  - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html"
+  - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html"
+  - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/programmatic.html"
+  - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html"

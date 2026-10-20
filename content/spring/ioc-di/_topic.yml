@@ -1,0 +1,23 @@
+slug: "ioc-di"
+category: "spring"
+name: "IoC / DI"
+sort: 10
+slug_prefix: "ioc"
+description: "제어의 역전, 의존성 주입, 빈 스코프·생명주기, 순환 참조"
+base_version: "Spring Framework 7 / Boot 4"
+default_evidence: UNKNOWN
+published: false
+sources:
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/introduction.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/beanfactory.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/classpath-scanning.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired-primary.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired-qualifiers.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/java.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/java/basic-concepts.html"
+  - url: "https://docs.spring.io/spring-framework/reference/core/beans/java/configuration-annotation.html"
