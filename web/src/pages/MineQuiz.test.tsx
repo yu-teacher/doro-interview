@@ -102,7 +102,8 @@ describe('후보·현황의 내 질문 링크', () => {
     renderApp('/stats');
     const missed = await screen.findByRole('region', { name: '자주 틀린 질문' });
     expect(within(missed).getByRole('link', { name: '강사님 질문' }).getAttribute('href')).toBe(`/mine/${MID}`);
-    const candidates = screen.getByRole('heading', { name: /다시 공부 후보/ }).closest('section') as HTMLElement;
+    // 후보는 통계와 따로 받아 조금 늦게 나올 수 있다
+    const candidates = (await screen.findByRole('heading', { name: /다시 공부 후보/ })).closest('section') as HTMLElement;
     expect(within(candidates).getByRole('link', { name: '강사님 질문' }).getAttribute('href')).toBe(`/mine/${MID}`);
   });
 });
