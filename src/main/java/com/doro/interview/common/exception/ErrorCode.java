@@ -7,6 +7,9 @@ public enum ErrorCode {
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "COMMON-400-01", "잘못된 입력값입니다."),
     INVALID_SEARCH_QUERY(HttpStatus.BAD_REQUEST, "SEARCH-400-01", "검색어가 올바르지 않습니다."),
 
+    // 401 Unauthorized
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-401-01", "로그인이 필요합니다."),
+
     // 404 Not Found: 비공개 주제·닫힌 질문·없는 주소는 모두 같은 응답이다(존재 여부를 드러내지 않는다)
     NOT_FOUND(HttpStatus.NOT_FOUND, "COMMON-404-01", "요청한 리소스를 찾을 수 없습니다."),
 
