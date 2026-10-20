@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import type { MatchedIn, QuestionSummary } from '../api/types';
 import { MATCHED_LABEL } from '../lib/labels';
 import { questionPath } from '../routes';
-import { ExtraFlag, ImportanceBadge, TierBadge } from './Chips';
+import { ExtraFlag, ImportanceBadge, ReviewBadge, TierBadge } from './Chips';
 import { LearnedCheckbox } from './LearnedCheckbox';
 
 interface Props {
@@ -30,6 +30,7 @@ export function QuestionCard({ question, topicName, matchedIn, learned }: Props)
           <TierBadge tier={question.tier} />
           <ImportanceBadge importance={question.importance} />
           {question.hasExtra && <ExtraFlag />}
+          {question.reviewCandidate === true && (learned ? learned.checked : true) && <ReviewBadge />}
           {!learned && question.learned === true && (
             <span className="inline-flex items-center rounded-full border border-[var(--color-official)] px-2.5 text-sm leading-6 text-[var(--color-official)]">
               ✓ 학습함

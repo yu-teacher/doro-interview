@@ -25,6 +25,11 @@ export function ExtraFlag() {
   return <span className={`${PILL} text-[var(--color-extra)] border-[var(--color-extra)]`}>보충 있음</span>;
 }
 
+/** "다시 공부 후보": 체크했는데 최근 시험에서 틀린 질문. 색뿐 아니라 글자로도 알린다. */
+export function ReviewBadge() {
+  return <span className={`${PILL} border-[var(--color-extra)] font-semibold text-[var(--color-extra)]`}>다시 공부 후보</span>;
+}
+
 export function KeywordList({ keywords }: { keywords: string[] }) {
   if (keywords.length === 0) {
     return null;

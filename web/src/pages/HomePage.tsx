@@ -4,6 +4,7 @@ import { fetchProgressSummary } from '../api/progress';
 import type { ProgressSummary } from '../api/types';
 import { AsyncView } from '../components/AsyncView';
 import { ProgressBar } from '../components/ProgressBar';
+import { ReviewList } from '../components/ReviewList';
 import { useApi } from '../hooks/useApi';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { TIER_LABEL } from '../lib/labels';
@@ -29,6 +30,16 @@ export function HomePage() {
         ) : (
           <div className="space-y-8">
             <h1 className="sr-only">주제 목록</h1>
+            {session.authenticated && (
+              <>
+                <ReviewList limit={5} />
+                <p className="text-sm">
+                  <Link to="/stats" className="inline-flex min-h-11 items-center">
+                    내 현황 보기
+                  </Link>
+                </p>
+              </>
+            )}
             {session.ready && !session.authenticated && (
               <p className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-3 text-sm">
                 로그인하면 완전히 학습한 질문을 체크하고 진도를 볼 수 있습니다.{' '}

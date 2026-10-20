@@ -3,7 +3,7 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { fetchQuestion } from '../api/catalog';
 import type { QuestionDetail } from '../api/types';
 import { AsyncView } from '../components/AsyncView';
-import { ConceptList, ExtraFlag, ImportanceBadge, KeywordList, TierBadge } from '../components/Chips';
+import { ConceptList, ExtraFlag, ImportanceBadge, KeywordList, ReviewBadge, TierBadge } from '../components/Chips';
 import { LearnedCheckbox } from '../components/LearnedCheckbox';
 import { NoteEditor } from '../components/NoteEditor';
 import { RefList } from '../components/RefList';
@@ -40,6 +40,7 @@ function QuestionContent({ q }: { q: QuestionDetail }) {
         <TierBadge tier={q.tier} />
         <ImportanceBadge importance={q.importance} />
         {q.hasExtra && <ExtraFlag />}
+        {q.reviewCandidate === true && learned.isLearned(q.slug) && <ReviewBadge />}
       </div>
 
       <div className="mt-3">
@@ -56,6 +57,12 @@ function QuestionContent({ q }: { q: QuestionDetail }) {
           </p>
         )}
       </div>
+
+      {q.reviewCandidate === true && learned.isLearned(q.slug) && (
+        <p role="note" className="mt-4 rounded-md border border-[var(--color-extra)] p-3 text-[var(--color-extra)]">
+          최근 시험에서 이 질문을 틀렸습니다. 다시 공부한 뒤 체크를 유지하거나, 아직 아니라면 체크를 해제하세요.
+        </p>
+      )}
 
       {q.status === 'DRAFT' && (
         <p role="note" className="mt-4 rounded-md border border-[var(--color-extra)] p-3 text-[var(--color-extra)]">

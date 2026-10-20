@@ -10,6 +10,7 @@ import { QuestionPage } from './pages/QuestionPage';
 import { QuizPage } from './pages/QuizPage';
 import { QuizStartPage } from './pages/QuizStartPage';
 import { SearchPage } from './pages/SearchPage';
+import { StatsPage } from './pages/StatsPage';
 import { TopicPage } from './pages/TopicPage';
 import { BASE_PATH } from './config';
 import { APP_ROUTE_PATHS, type AppRoutePath } from './routes';
@@ -25,6 +26,7 @@ const PAGES: Record<AppRoutePath, ReactElement> = {
   '/search': <SearchPage />,
   '/quiz': <QuizStartPage />,
   '/quiz/:id': <QuizPage />,
+  '/stats': <StatsPage />,
 };
 
 /** 경로 정의. 시험에서는 MemoryRouter 안에 이것만 넣는다. */
