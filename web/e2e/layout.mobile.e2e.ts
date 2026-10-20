@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { installApi, QUIZ_ACTIVE_ID, QUIZ_DONE_ID, type SessionMode } from './fixtures';
+import { installApi, MINE_ID, QUIZ_ACTIVE_ID, QUIZ_DONE_ID, type SessionMode } from './fixtures';
 import { auditAxe, auditLayout } from './mobileAudit';
 
 /** 화면 8종(+오류)을 라이트·다크 모드로 열어 레이아웃과 접근성(색 대비 포함)을 실제 브라우저에서 잰다. */
@@ -54,6 +54,44 @@ const PAGES: Case[] = [
   { name: '내 현황', path: '/stats', session: 'authenticated', ready: (p) => p.getByRole('region', { name: '자주 틀린 질문' }).waitFor() },
   { name: '훑기 주제 선택', path: '/skim', ready: (p) => p.getByRole('link', { name: 'JPA' }).waitFor() },
   { name: '훑기(키워드 공개)', path: '/skim/transaction', ready: (p) => p.getByRole('button', { name: '키워드 보기' }).waitFor(), act: (p) => p.getByRole('button', { name: '키워드 보기' }).click() },
+  // M4: 내 질문
+  { name: '내 질문(목록)', path: '/mine', session: 'authenticated', ready: (p) => p.getByRole('link', { name: '강사님이 짚어 준 질문 1', exact: true }).waitFor() },
+  { name: '내 질문(비로그인)', path: '/mine', ready: (p) => p.getByRole('link', { name: '로그인' }).first().waitFor() },
+  {
+    name: '내 질문(추가 폼)', path: '/mine', session: 'authenticated',
+    ready: (p) => p.getByRole('button', { name: '질문 추가' }).waitFor(),
+    act: async (p) => {
+      await p.getByRole('button', { name: '질문 추가' }).click();
+      await p.getByRole('region', { name: '질문 추가' }).getByLabel('질문').fill('긴 질문입니다 '.repeat(35));
+      await p.getByRole('button', { name: '추가', exact: true }).click();
+      await p.getByRole('alert').first().waitFor();
+    },
+  },
+  {
+    name: '내 질문(일괄 추가)', path: '/mine', session: 'authenticated',
+    ready: (p) => p.getByRole('button', { name: '여러 개 한 번에 추가' }).waitFor(),
+    act: async (p) => {
+      await p.getByRole('button', { name: '여러 개 한 번에 추가' }).click();
+      await p.getByLabel('질문 목록').fill(Array.from({ length: 8 }, (_, i) => `질문 ${i + 1}`).join('\n'));
+    },
+  },
+  { name: '내 질문(상세)', path: `/mine/${MINE_ID}`, session: 'authenticated', ready: (p) => p.getByRole('heading', { level: 1 }).waitFor() },
+  {
+    name: '내 질문(수정 폼)', path: `/mine/${MINE_ID}`, session: 'authenticated',
+    ready: (p) => p.getByRole('button', { name: '수정' }).waitFor(),
+    act: async (p) => {
+      await p.getByRole('button', { name: '수정' }).click();
+      await p.getByRole('region', { name: '질문 수정' }).waitFor();
+    },
+  },
+  {
+    name: '내 질문(삭제 확인창)', path: `/mine/${MINE_ID}`, session: 'authenticated',
+    ready: (p) => p.getByRole('button', { name: '삭제' }).waitFor(),
+    act: async (p) => {
+      await p.getByRole('button', { name: '삭제' }).click();
+      await p.getByRole('dialog').waitFor();
+    },
+  },
   { name: '질문 상세(로그인·노트)', path: '/q/tx-04', session: 'authenticated', ready: (p) => p.getByRole('textbox', { name: '이 질문에 대한 내 노트' }).waitFor() },
 ];
 

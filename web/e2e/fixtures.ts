@@ -67,6 +67,7 @@ const progressSummary = {
 };
 
 export const QUIZ_ACTIVE_ID = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
+export const MINE_ID = 'cccccccc-cccc-4ccc-8ccc-cccccccccccc';
 export const QUIZ_DONE_ID = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
 const ACTIVE_ID = QUIZ_ACTIVE_ID;
 const DONE_ID = QUIZ_DONE_ID;
@@ -83,6 +84,16 @@ const doneSession = quizSession(
   [quizItem(1, { result: 'CORRECT', seconds: 40 }), quizItem(2, { result: 'WRONG', seconds: 95, answerText: LONG_NOTE_SHORT }), quizItem(3, { result: 'SKIPPED', seconds: 3 })],
   '2026-10-20T00:10:00Z',
 );
+const mineItem = (i: number, over: Record<string, unknown> = {}) => ({
+  id: i === 1 ? MINE_ID : `cccccccc-cccc-4ccc-8ccc-${String(i).padStart(12, '0')}`, slug: '', title: i % 2 === 1 ? `강사님이 짚어 준 질문 ${i}` : LONG_TITLE,
+  answerText: i % 3 === 1 ? '' : `${LONG_TOKEN} 가 하는 일을 내 말로 정리한 답입니다.\n${'길게 이어지는 설명 문장입니다. '.repeat(10)}`,
+  keywords: ['AOP 프록시', LONG_TOKEN, 'ThreadLocal'], tier: tiers[i % 3], sourceLabel: i % 2 === 1 ? '강사 추천' : null,
+  createdAt: '2026-10-20T00:00:00Z', updatedAt: '2026-10-20T00:00:00Z', learned: i % 3 !== 0, reviewCandidate: i === 4, ...over,
+});
+const mineList = Array.from({ length: 12 }, (_, i) => {
+  const item = mineItem(i + 1);
+  return { ...item, slug: `my-${item.id}` };
+});
 const stats = {
   askedLast30Days: 24, correctLast30Days: 11, wrongLast30Days: 9, skippedLast30Days: 4, sessionsLast30Days: 3,
   mostMissed: [1, 2, 3].map((i) => ({ questionSlug: `tx-0${i}`, title: i % 2 === 0 ? LONG_TITLE : `질문 ${i}`, tier: tiers[i % 3], topicSlug: 'transaction', topicName: topicSummary.name, missCount: 4 - i, askCount: 5 })),
@@ -115,6 +126,12 @@ export async function installApi(page: Page, session: SessionMode = 'anonymous')
         return route.fulfill(ok({ slug: path.split('/').pop(), body: LONG_NOTE, updatedAt: '2026-10-20T00:00:00Z' }));
       case path.startsWith('/v1/notes/') && method === 'PUT':
         return route.fulfill(ok({ slug: path.split('/').pop(), body: LONG_NOTE, updatedAt: '2026-10-20T01:00:00Z' }));
+      case path === '/v1/mine' && method === 'GET':
+        return route.fulfill(authenticated ? ok(mineList) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
+      case path === `/v1/mine/${MINE_ID}` && method === 'GET':
+        return route.fulfill(authenticated ? ok(mineList[0]) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
+      case path.startsWith('/v1/mine') && method === 'PUT':
+        return route.fulfill(ok(mineList[0]));
       case path === '/v1/me/prefs':
         return route.fulfill(authenticated ? ok({ includeUnlearnedDefault: false }) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
       case path === '/v1/me/stats':
