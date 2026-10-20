@@ -31,6 +31,9 @@ public interface MyQuestionReader {
     /** 이 사용자의 모든 질문(시험 풀 후보). */
     List<PoolEntry> poolEntries(UUID userId);
 
+    /** 이 사용자의 질문이면 내가 적은 답(없으면 빈 문자열), 아니면 비어 있음. */
+    java.util.Optional<String> answerText(UUID userId, String slug);
+
     /** 주어진 slug 중 이 사용자의 질문만 제목과 함께. */
     Map<String, Heading> headings(UUID userId, Collection<String> slugs);
 }

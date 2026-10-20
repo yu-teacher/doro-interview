@@ -57,7 +57,8 @@ class CatalogSchemaV3Test {
         insertQuestion("v3-a", null);
         insertQuestion("v3-b", null);
         jdbc.update("insert into question_link (from_id, to_id, kind) select a.id, b.id, 'PREREQ' from question a, question b where a.slug = 'v3-a' and b.slug = 'v3-b'");
-        assertThat(jdbc.queryForObject("select count(*) from question_link where kind = 'PREREQ'", Integer.class)).isEqualTo(1);
+        // 실제 콘텐츠(content/)가 이미 PREREQ 연결을 갖고 있으므로 이 시험이 만든 질문의 연결만 센다
+        assertThat(jdbc.queryForObject("select count(*) from question_link l join question q on q.id = l.from_id where l.kind = 'PREREQ' and q.slug like 'v3-%'", Integer.class)).isEqualTo(1);
     }
 
     @Test

@@ -60,6 +60,16 @@ interview:
     location: classpath:content/
     # true: 콘텐츠 파일이 깨져 있으면 기동을 막는다(반쯤 반영된 콘텐츠로 뜨지 않게). 급할 때만 false.
     fail-fast: ${INTERVIEW_CONTENT_FAIL_FAST:true}
+  # AI 피드백(선택 기능, docs/M6-PLAN.md): 기본 꺼짐. 켜려면 INTERVIEW_AI_ENABLED=true 와 ANTHROPIC_API_KEY 가 모두 필요하다(키는 환경변수로만).
+  ai:
+    enabled: ${INTERVIEW_AI_ENABLED:false}
+    api-key: ${ANTHROPIC_API_KEY:}
+    base-url: ${INTERVIEW_AI_BASE_URL:https://api.anthropic.com}
+    model: ${INTERVIEW_AI_MODEL:claude-haiku-5-5}
+    per-user-per-day: ${INTERVIEW_AI_PER_USER_PER_DAY:20}
+    global-per-day: ${INTERVIEW_AI_GLOBAL_PER_DAY:200}
+    timeout: ${INTERVIEW_AI_TIMEOUT:PT20S}
+    max-output-tokens: ${INTERVIEW_AI_MAX_OUTPUT_TOKENS:500}
   # Doro 에서 영구 탈퇴한 사용자의 학습 기록(체크·노트)을 주기적으로 지운다. IAM 내부 API 를 조회하므로 서비스 토큰이 필요하다
   # (DORO_IAM_INTERNAL_TOKEN, IAM 의 DORO_IAM_INTERNAL_TOKENS 에 'interview:<토큰>' 으로 등록). 토큰이 없으면 호출이 거절되어 경고가 남는다.
   deleted-sync:

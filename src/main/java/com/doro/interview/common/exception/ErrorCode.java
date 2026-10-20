@@ -21,6 +21,10 @@ public enum ErrorCode {
     QUIZ_FINISHED(HttpStatus.CONFLICT, "QUIZ-409-02", "이미 끝난 시험입니다."),
     MINE_LIMIT(HttpStatus.CONFLICT, "MINE-409-01", "내 질문은 300개까지 만들 수 있습니다."),
 
+    // 429 / 503: AI 피드백(선택 기능, docs/M6-PLAN.md)
+    AI_LIMIT(HttpStatus.TOO_MANY_REQUESTS, "AI-429-01", "AI 피드백 한도를 모두 썼습니다. 잠시 뒤에 다시 시도해 주세요."),
+    AI_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "AI-503-01", "지금은 AI 피드백을 받을 수 없습니다. 시험은 그대로 계속할 수 있습니다."),
+
     // 405
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "COMMON-405-01", "지원하지 않는 HTTP 메서드입니다."),
 

@@ -42,6 +42,15 @@ class JdbcMyQuestionReader implements MyQuestionReader {
     }
 
     @Override
+    public java.util.Optional<String> answerText(UUID userId, String slug) {
+        UUID id = idOf(slug);
+        if (id == null) {
+            return java.util.Optional.empty();
+        }
+        return jdbc.queryForList("SELECT answer_text FROM my_question WHERE id = ? AND user_id = ?", String.class, id, userId).stream().findFirst();
+    }
+
+    @Override
     public List<PoolEntry> poolEntries(UUID userId) {
         return jdbc.query("SELECT id, tier FROM my_question WHERE user_id = ? ORDER BY created_at, id",
                 (rs, n) -> new PoolEntry(SLUG_PREFIX + rs.getObject("id", UUID.class), rs.getString("tier")), userId);
