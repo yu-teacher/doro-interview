@@ -24,7 +24,28 @@ public final class CatalogViews {
     public record CategoryView(String slug, String name, List<TopicSummary> topics) {
     }
 
-    public record QuestionSummary(String slug, String tier, int difficulty, String title, List<String> keywords, boolean hasExtra) {
+    /** 개념 칩: 사전의 slug 와 이름. */
+    public record ConceptRef(String slug, String name) {
+    }
+
+    /** 다른 질문으로 가는 연결의 표시용 정보. */
+    public record QuestionRef(String slug, String title, String tier, String topicSlug) {
+    }
+
+    /**
+     * 목록용 요약. {@code importance} 는 1~3 이고 판단하지 않았으면 {@code null}(미분류).
+     * {@code concepts} 는 개념 slug(사전 순서)다.
+     */
+    public record QuestionSummary(String slug, String topicSlug, String tier, int difficulty, String title, List<String> keywords,
+                                  boolean hasExtra, Integer importance, List<String> concepts) {
+    }
+
+    /** 개념 목록의 한 줄. {@code questionCount} 는 보이는 질문 수다. */
+    public record ConceptView(String slug, String name, String description, int questionCount) {
+    }
+
+    /** 개념 상세: 그 개념의 보이는 질문(카테고리·주제·tier·번호 순). */
+    public record ConceptDetail(ConceptView concept, List<QuestionSummary> questions) {
     }
 
     public record TopicView(TopicSummary summary, String categorySlug, String categoryName, List<SourceView> sources,
@@ -34,12 +55,14 @@ public final class CatalogViews {
     /**
      * 질문 상세. {@code spokenAnswer}(말로 하는 모범 답변)와 {@code detailMd}(근거·코드·실험 설명, 마크다운)로 나뉜다.
      * {@code sources} 는 이 질문을 검수하며 대조한 출처, {@code topicSources} 는 주제(문서) 전체 출처다.
+     * {@code followups}/{@code prerequisites}/{@code related} 는 보이는 질문만 담는다(RELATED 는 양쪽 방향).
      * {@code contentHash} 는 ETag 용이며 응답 본문에는 싣지 않는다.
      */
     public record QuestionView(String slug, String topicSlug, String topicName, String categorySlug, String tier, int difficulty,
                                String title, List<String> keywords, boolean hasExtra, String spokenAnswer, String detailMd,
                                String status, Instant reviewedAt, boolean needsReview, String baseVersion,
                                List<String> sources, List<SourceView> topicSources, String prevSlug, String nextSlug,
-                               String contentHash) {
+                               String contentHash, Integer importance, List<ConceptRef> concepts, List<QuestionRef> followups,
+                               List<QuestionRef> prerequisites, List<QuestionRef> related) {
     }
 }

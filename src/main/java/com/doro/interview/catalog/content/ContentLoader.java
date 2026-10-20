@@ -1,7 +1,9 @@
 package com.doro.interview.catalog.content;
 
 import com.doro.interview.catalog.content.ContentModels.CategoryDoc;
+import com.doro.interview.catalog.content.ContentModels.ConceptDoc;
 import com.doro.interview.catalog.content.ContentModels.ContentSet;
+import com.doro.interview.catalog.content.ContentModels.LinkDoc;
 import com.doro.interview.catalog.content.ContentModels.QuestionDoc;
 import com.doro.interview.catalog.content.ContentModels.SourceDoc;
 import com.doro.interview.catalog.content.ContentModels.TopicDoc;
@@ -21,7 +23,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.sql.Types;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * 시작할 때 content/ 를 DB 에 반영한다(docs/M0-PLAN.md S4).
@@ -30,6 +35,8 @@ import java.util.List;
  *   <li>slug 기준 upsert. 같은 콘텐츠를 다시 반영해도 결과가 같다(멱등).</li>
  *   <li>파일에서 사라진 질문은 지우지 않고 {@code retired_at} 으로 닫는다. 다시 나타나면 되살린다.</li>
  *   <li>검수(REVIEWED)한 질문의 내용이 바뀌면 {@code needs_review} 를 올린다. 검수일(reviewed_at)을 갱신하면 내린다.</li>
+ *   <li>개념 사전·질문별 개념·연결·필수도는 파일이 원본이다: 질문마다 통째로 교체하고, 파일에서 사라진 개념은 지운다. 이 메타데이터는
+ *       해시·needs_review·updated_at 에 영향을 주지 않는다.</li>
  *   <li>한 트랜잭션으로 반영한다. 중간에 실패하면 전부 되돌린다.</li>
  *   <li>검증에 실패하면 DB 를 건드리지 않는다. fail-fast 가 켜져 있으면 기동을 멈춘다.</li>
  * </ul>
@@ -100,9 +107,16 @@ public class ContentLoader implements ApplicationRunner {
                     """, t.slug(), t.category(), t.name(), t.sort(), t.description(), sourcesJson(t.sources()),
                     t.baseVersion(), t.defaultEvidence(), t.published());
         }
+        for (ConceptDoc c : set.concepts()) {
+            jdbc.update("""
+                    INSERT INTO concept (slug, name, description, sort) VALUES (?, ?, ?, ?)
+                    ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name, description = EXCLUDED.description, sort = EXCLUDED.sort
+                    """, c.slug(), c.name(), c.description(), c.sort());
+        }
         for (QuestionDoc q : set.questions()) {
             upsertQuestion(q);
         }
+        relink(set);
         String[] slugs = set.questions().stream().map(QuestionDoc::slug).toArray(String[]::new);
         // 파일에 없는 질문만 닫는다. 이미 닫힌 질문은 닫힌 시각을 유지한다.
         int retired = jdbc.update(con -> {
@@ -110,7 +124,41 @@ public class ContentLoader implements ApplicationRunner {
             ps.setArray(1, con.createArrayOf("text", slugs));
             return ps;
         });
+        // 닫힌 질문은 개념·연결 소속을 갖지 않는다(되살아나면 파일 값으로 다시 생긴다)
+        jdbc.update("DELETE FROM question_concept qc USING question q WHERE qc.question_id = q.id AND q.retired_at IS NOT NULL");
+        jdbc.update("DELETE FROM question_link l USING question q WHERE l.from_id = q.id AND q.retired_at IS NOT NULL");
+        // 사전에서 사라진 개념 삭제(위에서 참조를 모두 정리했으므로 외래키 위반이 없다)
+        String[] conceptSlugs = set.concepts().stream().map(ConceptDoc::slug).toArray(String[]::new);
+        jdbc.update(con -> {
+            var ps = con.prepareStatement("DELETE FROM concept WHERE NOT (slug = ANY (?))");
+            ps.setArray(1, con.createArrayOf("text", conceptSlugs));
+            return ps;
+        });
         return new LoadResult(set.categories().size(), set.topics().size(), set.questions().size(), retired);
+    }
+
+    /** 질문별 개념·연결을 파일 내용으로 통째로 교체한다. 모든 질문이 upsert 된 뒤에 호출한다(연결 대상 id 를 찾아야 한다). */
+    private void relink(ContentSet set) {
+        Map<String, UUID> ids = new HashMap<>();
+        String[] slugs = set.questions().stream().map(QuestionDoc::slug).toArray(String[]::new);
+        jdbc.query(con -> {
+            var ps = con.prepareStatement("SELECT slug, id FROM question WHERE slug = ANY (?)");
+            ps.setArray(1, con.createArrayOf("text", slugs));
+            return ps;
+        }, rs -> {
+            ids.put(rs.getString("slug"), rs.getObject("id", UUID.class));
+        });
+        for (QuestionDoc q : set.questions()) {
+            UUID id = ids.get(q.slug());
+            jdbc.update("DELETE FROM question_concept WHERE question_id = ?", id);
+            for (String concept : q.concepts()) {
+                jdbc.update("INSERT INTO question_concept (question_id, concept_slug) VALUES (?, ?)", id, concept);
+            }
+            jdbc.update("DELETE FROM question_link WHERE from_id = ?", id);
+            for (LinkDoc link : q.links()) {
+                jdbc.update("INSERT INTO question_link (from_id, to_id, kind) VALUES (?, ?, ?)", id, ids.get(link.to()), link.kind());
+            }
+        }
     }
 
     private void upsertQuestion(QuestionDoc q) {
@@ -119,14 +167,14 @@ public class ContentLoader implements ApplicationRunner {
         jdbc.update(con -> {
             var ps = con.prepareStatement("""
                     INSERT INTO question (slug, topic_slug, sort, tier, difficulty, title, answer_md, keywords, has_extra,
-                                          content_hash, status, reviewed_at, sources, needs_review)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::jsonb, FALSE)
+                                          content_hash, status, reviewed_at, sources, importance, needs_review)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::jsonb, ?, FALSE)
                     ON CONFLICT (slug) DO UPDATE SET
                         topic_slug = EXCLUDED.topic_slug, sort = EXCLUDED.sort, tier = EXCLUDED.tier,
                         difficulty = EXCLUDED.difficulty, title = EXCLUDED.title, answer_md = EXCLUDED.answer_md,
                         keywords = EXCLUDED.keywords, has_extra = EXCLUDED.has_extra,
                         status = EXCLUDED.status, reviewed_at = EXCLUDED.reviewed_at,
-                        sources = EXCLUDED.sources,
+                        sources = EXCLUDED.sources, importance = EXCLUDED.importance,
                         needs_review = CASE
                             WHEN EXCLUDED.status <> 'REVIEWED' THEN FALSE
                             WHEN EXCLUDED.reviewed_at IS DISTINCT FROM question.reviewed_at THEN FALSE
@@ -154,6 +202,11 @@ public class ContentLoader implements ApplicationRunner {
                 ps.setObject(12, reviewedAt);
             }
             ps.setString(13, jsonStringArray(q.sources()));
+            if (q.importance() == null) {
+                ps.setNull(14, Types.SMALLINT);
+            } else {
+                ps.setInt(14, q.importance());
+            }
             return ps;
         });
     }

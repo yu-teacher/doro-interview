@@ -1,6 +1,8 @@
 package com.doro.interview.catalog;
 
 import com.doro.interview.catalog.CatalogViews.CategoryView;
+import com.doro.interview.catalog.CatalogViews.ConceptDetail;
+import com.doro.interview.catalog.CatalogViews.ConceptView;
 import com.doro.interview.catalog.CatalogViews.QuestionView;
 import com.doro.interview.catalog.CatalogViews.TopicView;
 
@@ -19,4 +21,10 @@ public interface CatalogReader {
     Optional<TopicView> topic(String slug);
 
     Optional<QuestionView> question(String slug);
+
+    /** 보이는 질문이 하나라도 있는 개념만(비공개 질문에만 붙은 개념은 나타나지 않는다). 사전 순서. */
+    List<ConceptView> concepts();
+
+    /** 보이는 질문이 없는 개념은 없는 것과 같다. */
+    Optional<ConceptDetail> concept(String slug);
 }

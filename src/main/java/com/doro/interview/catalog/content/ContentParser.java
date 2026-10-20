@@ -1,7 +1,9 @@
 package com.doro.interview.catalog.content;
 
 import com.doro.interview.catalog.content.ContentModels.CategoryDoc;
+import com.doro.interview.catalog.content.ContentModels.ConceptDoc;
 import com.doro.interview.catalog.content.ContentModels.ContentSet;
+import com.doro.interview.catalog.content.ContentModels.LinkDoc;
 import com.doro.interview.catalog.content.ContentModels.QuestionDoc;
 import com.doro.interview.catalog.content.ContentModels.SourceDoc;
 import com.doro.interview.catalog.content.ContentModels.TopicDoc;
@@ -51,6 +53,7 @@ public class ContentParser {
         List<CategoryDoc> categories = new ArrayList<>();
         List<TopicDoc> topics = new ArrayList<>();
         List<QuestionDoc> questions = new ArrayList<>();
+        List<ConceptDoc> concepts = new ArrayList<>();
 
         Resource[] resources;
         try {
@@ -70,6 +73,8 @@ public class ContentParser {
                     categories.add(category(resource, path));
                 } else if (name.equals("_topic.yml")) {
                     topics.add(topic(resource, path));
+                } else if (name.equals("_concepts.yml")) {
+                    concepts.addAll(concepts(resource, path));
                 } else if (name.endsWith(".md")) {
                     questions.add(question(resource, path));
                 }
@@ -82,7 +87,7 @@ public class ContentParser {
         if (!problems.isEmpty()) {
             throw new ContentException(problems);
         }
-        return new ContentSet(categories, topics, questions);
+        return new ContentSet(categories, topics, questions, concepts);
     }
 
     // ------------------------------------------------------------------ 파일 종류별
@@ -92,6 +97,25 @@ public class ContentParser {
         String slug = str(map, "slug", path);
         requireDir(path, 1, slug, "slug");
         return new CategoryDoc(slug, str(map, "name", path), intOr(map, "sort", 0, path), path);
+    }
+
+    /** content/_concepts.yml: 최상위 `concepts:` 목록(slug·name·description). 파일 안의 순서가 정렬 순서다. */
+    private List<ConceptDoc> concepts(Resource resource, String path) throws IOException {
+        Map<String, Object> map = yamlMap(read(resource), path);
+        if (!(map.get("concepts") instanceof List<?> list)) {
+            throw new ContentException(path + ": 최상위 'concepts' 목록이 없다");
+        }
+        List<ConceptDoc> result = new ArrayList<>();
+        int sort = 0;
+        for (Object item : list) {
+            if (!(item instanceof Map<?, ?> m) || !(m.get("slug") instanceof String slug) || !(m.get("name") instanceof String name)) {
+                throw new ContentException(path + ": concepts 항목은 slug·name 문자열이 있는 객체여야 한다");
+            }
+            String description = m.get("description") instanceof String d ? d : "";
+            sort += 10;
+            result.add(new ConceptDoc(slug, name, description, sort, path));
+        }
+        return result;
     }
 
     private TopicDoc topic(Resource resource, String path) throws IOException {
@@ -153,9 +177,38 @@ public class ContentParser {
         } else if (rawSources != null) {
             throw new ContentException(path + ": sources 는 URL 문자열 목록이어야 한다");
         }
+        List<String> concepts = new ArrayList<>();
+        Object rawConcepts = map.get("concepts");
+        if (rawConcepts instanceof List<?> conceptList) {
+            for (Object c : conceptList) {
+                if (!(c instanceof String slug)) {
+                    throw new ContentException(path + ": concepts 에 문자열(slug)이 아닌 값이 있다");
+                }
+                concepts.add(slug);
+            }
+        } else if (rawConcepts != null) {
+            throw new ContentException(path + ": concepts 는 개념 slug 문자열 목록이어야 한다");
+        }
+        Object rawImportance = map.get("importance");
+        if (rawImportance != null && !(rawImportance instanceof Integer)) {
+            throw new ContentException(path + ": importance 는 정수(1~3)여야 한다");
+        }
+        List<LinkDoc> links = new ArrayList<>();
+        Object rawLinks = map.get("links");
+        if (rawLinks instanceof List<?> linkList) {
+            for (Object l : linkList) {
+                if (!(l instanceof Map<?, ?> lm) || !(lm.get("to") instanceof String to) || !(lm.get("kind") instanceof String kind)) {
+                    throw new ContentException(path + ": links 항목은 to·kind 문자열이 있는 객체여야 한다");
+                }
+                links.add(new LinkDoc(to, kind));
+            }
+        } else if (rawLinks != null) {
+            throw new ContentException(path + ": links 는 {to, kind} 객체 목록이어야 한다");
+        }
         return new QuestionDoc(str(map, "slug", path), topic, str(map, "tier", path), intOr(map, "difficulty", -1, path),
                 str(map, "title", path), List.copyOf(keywords), bool(map, "has_extra", false, path),
-                strOr(map, "status", "DRAFT", path), instantOrNull(map.get("reviewed_at"), path), body, List.copyOf(sources), path);
+                strOr(map, "status", "DRAFT", path), instantOrNull(map.get("reviewed_at"), path), body, List.copyOf(sources),
+                List.copyOf(concepts), (Integer) rawImportance, List.copyOf(links), path);
     }
 
     // ------------------------------------------------------------------ 도우미
