@@ -134,6 +134,8 @@ scripts/deploy-on-server.sh --apply
 
 현재 이미지에 롤백 태그를 붙이고(이미지 **이름으로**) → 빌드 → **서비스 워커 미리 캐시 점검(배포 전)** → 재생성 → healthy 대기 → 게이트웨이 `nginx -t` + reload → 게이트웨이 경유 확인(짧게 재시도) → **미리 캐시 점검(배포 후)**. 어느 단계든 실패하면 롤백 태그를 되살려 다시 만들고 reload 한다. 서버의 compose 파일은 배포가 덮어쓰지 않는 기준 사본이다(저장소의 `docker-compose.prod.yml` 은 참고본).
 
+성공한 배포는 끝에 롤백 태그를 이미지마다 최근 3개(`INTERVIEW_KEEP_ROLLBACKS`)만 남기고 지운다. 실패해 롤백한 배포는 아무것도 지우지 않는다.
+
 수동 롤백: `docker tag doro-interview-api:rollback-<시각> doro-interview-api:latest` (웹도 같게) 후
 `docker compose -p interview -f docker-compose.prod.yml up -d --no-build --no-deps --force-recreate interview-api interview-web`, 이어서 `docker exec doro-gateway nginx -s reload`.
 

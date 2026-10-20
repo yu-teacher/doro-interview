@@ -22,6 +22,7 @@ case "$1" in
   image)   # docker image inspect <name>
     [ "${FAKE_IMAGES_EXIST:-1}" = 1 ] && exit 0 || exit 1 ;;
   tag) exit 0 ;;
+  images) printf '%s\n' ${FAKE_TAGS:-latest} ;;
   compose)
     case " $* " in
       *" config "*) exit 0 ;;
@@ -114,6 +115,18 @@ check "토큰이 없으면 경고하지만 배포는 계속한다" "$([ $RC = 0 
 run withtoken "$ENV_TOKEN" -- --apply --no-gateway
 check "토큰이 있으면 경고하지 않는다" "$([ $RC = 0 ] && ! grep -qF 'DORO_IAM_INTERNAL_TOKEN 이 없다' <<<"$OUT"; echo $?)"
 check "토큰 값은 어디에도 출력하지 않는다" "$(lacks 'super-secret-token-value' "$OUT$CALLS")"
+
+echo "== 롤백 태그 정리(최근 3개만 남긴다) =="
+TAGS="latest rollback-20260101-000001 rollback-20260101-000002 rollback-20260101-000003 rollback-20260101-000004 rollback-20260101-000005"
+run prune "$ENV_OK" FAKE_TAGS="$TAGS" -- --apply
+check "성공하면 0" "$([ $RC = 0 ]; echo $?)"
+check "가장 오래된 태그부터 지운다(이미지마다 2개씩, 모두 4번)" "$([ "$(grep -c 'docker image rm' <<<"$CALLS")" = 4 ]; echo $?)"
+check "000001·000002 를 지운다" "$([ "$(grep -c 'rollback-20260101-00000[12]' <<<"$(grep 'docker image rm' <<<"$CALLS")")" = 4 ]; echo $?)"
+check "최근 3개(000003~000005)와 latest 는 남긴다" "$(lacks 'rollback-20260101-000003' "$(grep 'docker image rm' <<<"$CALLS")")"
+run keepall "$ENV_OK" FAKE_TAGS="$TAGS" INTERVIEW_KEEP_ROLLBACKS=10 -- --apply
+check "개수 한도 안이면 아무것도 지우지 않는다" "$(lacks 'docker image rm' "$CALLS")"
+run prunefail "$ENV_OK" FAKE_TAGS="$TAGS" FAKE_HEALTH=unhealthy -- --apply
+check "배포가 실패해 롤백할 때는 태그를 지우지 않는다" "$(lacks 'docker image rm' "$CALLS")"
 
 echo "== 성공(게이트웨이 경유) =="
 run good "$ENV_OK" -- --apply

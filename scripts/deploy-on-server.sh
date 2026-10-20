@@ -129,4 +129,12 @@ else
   docker exec "$WEB_CONTAINER" wget -qO- http://127.0.0.1/interview/ | grep -q '<div id="root">' || { log "ERROR: 웹이 앱 셸을 주지 않는다"; rollback; exit 1; }
   log "직접 확인 통과(게이트웨이는 아직 반영 전이다: scripts/apply-gateway-interview.sh)"
 fi
-log "완료. 롤백 태그 rollback-$TS 는 며칠 뒤 정리한다: docker image rm $API_IMAGE:rollback-$TS $WEB_IMAGE:rollback-$TS"
+# 롤백 태그는 이미지마다 최근 N개(기본 3)만 남긴다. 이번 배포의 태그는 항상 남긴다. 지우지 못해도 배포 결과에는 영향이 없다.
+KEEP_ROLLBACKS="${INTERVIEW_KEEP_ROLLBACKS:-3}"
+for img in "$API_IMAGE" "$WEB_IMAGE"; do
+  { docker images --format '{{.Tag}}' "$img" 2>/dev/null || true; } | { grep '^rollback-' || true; } | sort -r | tail -n +"$((KEEP_ROLLBACKS + 1))" | while read -r old; do
+    [ "$old" = "rollback-$TS" ] && continue
+    docker image rm "$img:$old" >/dev/null 2>&1 && log "오래된 롤백 태그를 지웠다: $img:$old" || true
+  done
+done
+log "완료. 롤백 태그 rollback-$TS 는 유지한다(최근 $KEEP_ROLLBACKS 개만 남기고 자동 정리)."
