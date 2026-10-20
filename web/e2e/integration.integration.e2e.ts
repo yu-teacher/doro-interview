@@ -1,6 +1,9 @@
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
 import { auditAxe, auditLayout } from './mobileAudit';
 
+// 배포 리허설의 1단계(운영 설정: 공개 주제가 없다)에서는 이 파일 대신 empty.integration.e2e.ts 를 돌린다
+test.skip(process.env.E2E_PHASE === 'empty', 'E2E_PHASE=empty 에서는 건너뛴다');
+
 /**
  * 실제 백엔드·DB·브라우저로 읽기 경로 전체를 확인한다. 특정 질문 내용을 못 박지 않고 **API 가 돌려준 데이터를 기준**으로 삼아
  * 콘텐츠가 늘거나 검수가 진행돼도 깨지지 않게 한다(스크립트는 개발용 스위치를 켠 서버를 띄우므로 비공개 주제도 보인다).

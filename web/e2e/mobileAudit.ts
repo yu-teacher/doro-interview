@@ -1,8 +1,9 @@
+import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import type { Page } from '@playwright/test';
 
 const require = createRequire(import.meta.url);
-const AXE_PATH = require.resolve('axe-core/axe.min.js');
+const AXE_SOURCE = readFileSync(require.resolve('axe-core/axe.min.js'), 'utf-8');
 
 /**
  * 실제 브라우저에서 레이아웃 문제를 잰다. 문제가 없으면 빈 배열. 규칙:
@@ -94,7 +95,11 @@ export async function auditLayout(page: Page): Promise<string[]> {
 
 /** 실제 브라우저에서 axe(색 대비 포함 전체 규칙)를 돌려 위반을 문자열로 돌려준다. */
 export async function auditAxe(page: Page): Promise<string[]> {
-  await page.addScriptTag({ path: AXE_PATH });
+  // addScriptTag 는 인라인 스크립트라 CSP(script-src 'self')에 막힌다. CSP 를 우회(bypassCSP)하면 CSP 시험의 의미가 없어지므로,
+  // 개발자 도구 프로토콜의 평가(CSP 대상이 아니다)로 axe 소스를 한 번 실행해 전역 axe 를 만든다.
+  if (!(await page.evaluate(() => 'axe' in window))) {
+    await page.evaluate(AXE_SOURCE);
+  }
   return page.evaluate(async () => {
     const axe = (window as unknown as { axe: { run: (ctx: Document, opts: object) => Promise<{ violations: { id: string; help: string; nodes: { target: string[] }[] }[] }> } }).axe;
     const result = await axe.run(document, {});

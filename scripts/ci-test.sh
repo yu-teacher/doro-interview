@@ -6,6 +6,7 @@
 #   scripts/ci-test.sh web        # 프런트만 (스택 불필요): 린트·타입·단위·빌드·번들 예산
 #   scripts/ci-test.sh mobile     # 모바일 레이아웃·접근성(실제 Chromium 헤드리스, 서버 불필요)
 #   scripts/ci-test.sh e2e        # 통합 e2e(격리 DB + 백엔드 jar + 웹 + 실제 Chromium) — scripts/e2e-test.sh
+#   scripts/ci-test.sh rehearse   # 배포 리허설(실제 이미지 빌드·배포 스크립트·게이트웨이·롤백) — scripts/rehearse-deploy.sh (도커 레지스트리 필요)
 #   CI_PROJECT=interview-ci-b CI_DB_PORT=25434 scripts/ci-test.sh backend   # 다른 실행과 겹치지 않게
 #
 # 필요: Docker, Java 25, Node 24, Python 3, Playwright 내장 Chromium(없으면 web/ 에서 npx playwright install chromium).
@@ -41,9 +42,16 @@ run_e2e() {
   scripts/e2e-test.sh
 }
 
+run_rehearse() {
+  log "== 배포 리허설 =="
+  REHEARSE_MODE="${REHEARSE_MODE:-full}" scripts/rehearse-deploy.sh
+}
+
 run_backend() {
-  log "== 변환기 단위 테스트 =="
-  if ls scripts/test_*.py >/dev/null 2>&1; then python3 -I -m unittest discover -s scripts -p 'test_*.py'; else log "변환기 테스트 없음 — 건너뜀"; fi
+  log "== 스크립트 단위 테스트(변환기·게이트웨이 삽입) =="
+  if ls scripts/test_*.py >/dev/null 2>&1; then python3 -I -m unittest discover -s scripts -p 'test_*.py'; else log "파이썬 테스트 없음 — 건너뜀"; fi
+  log "== 배포 스크립트 시나리오 시험(가짜 docker·curl) =="
+  scripts/test-deploy-on-server.sh
   log "== 백엔드: 격리 Postgres(포트 $CI_DB_PORT) =="
   "${COMPOSE[@]}" up -d --wait --wait-timeout "$STACK_TIMEOUT_SEC" || die "Postgres 가 준비되지 않았다"
   trap '"${COMPOSE[@]}" down -v --remove-orphans >/dev/null 2>&1 || true' EXIT
@@ -55,7 +63,8 @@ case "$TARGET" in
   web) run_web ;;
   mobile) run_mobile ;;
   e2e) run_e2e ;;
-  all) run_backend; run_web; run_mobile; run_e2e ;;
-  *) die "알 수 없는 대상: $TARGET (backend|web|mobile|e2e|all)" ;;
+  rehearse) run_rehearse ;;
+  all) run_backend; run_web; run_mobile; run_e2e; run_rehearse ;;
+  *) die "알 수 없는 대상: $TARGET (backend|web|mobile|e2e|rehearse|all)" ;;
 esac
 log "OK"

@@ -1,0 +1,16 @@
+# 배포 리허설 전용(scripts/rehearse-deploy.sh): 운영 compose 에 얹어 호스트 포트를 없애고 격리 네트워크를 쓴다. 운영에는 쓰지 않는다.
+#   docker compose -f docker-compose.prod.yml -f docker-compose.rehearse.yml ...
+services:
+  interview-api:
+    ports: !reset []
+    environment:
+      # 기본은 운영 그대로(prod 프로파일, 비공개 노출 꺼짐). 리허설 2단계에서만 켠다(검수 전이라 공개 주제가 없어서 화면을 시험할 수 없다).
+      SPRING_PROFILES_ACTIVE: ${REHEARSE_PROFILE:-prod}
+      INTERVIEW_CATALOG_EXPOSE_UNPUBLISHED: ${REHEARSE_EXPOSE:-false}
+  interview-web:
+    ports: !reset []
+
+networks:
+  doro-network: !override
+    external: true
+    name: ${REHEARSE_NETWORK:-interview-rehearse-net}

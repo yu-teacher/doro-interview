@@ -3,7 +3,8 @@
 자바·스프링·네트워크·DB 등 개발 면접 질문을 종합적으로 모아 두고, 내가 "완전히 학습했다"고 체크한 질문만 랜덤으로 받아 점검하는 면접 준비 서비스. [Doro](https://github.com/yu-teacher) 플랫폼의 서브 서비스(`/interview/`)입니다.
 
 - 설계: [docs/DESIGN.md](docs/DESIGN.md)
-- 착수 계획(M0): [docs/M0-PLAN.md](docs/M0-PLAN.md)
+- 착수 계획: [M0](docs/M0-PLAN.md) · [M1](docs/M1-PLAN.md) · 검수 트랙: [docs/REVIEW-TRACK.md](docs/REVIEW-TRACK.md)
+- 배포: [docs/DEPLOY.md](docs/DEPLOY.md) (배포 리허설: `scripts/rehearse-deploy.sh`)
 
 ## 구조
 - `src/` Spring Boot 백엔드. 모듈: `catalog`(사전) · `progress`(학습 진도) · `quiz`(시험) · `account`(사용자 사본) · `api`(합성). 의존 방향은 아키텍처 테스트가 강제한다.
@@ -17,6 +18,7 @@ scripts/ci-test.sh backend   # 격리 Postgres 를 올려 백엔드 테스트 �
 scripts/ci-test.sh web       # 프런트 린트·타입·단위 테스트·빌드·번들 예산
 scripts/ci-test.sh mobile    # 모바일 레이아웃·접근성(실제 Chromium 헤드리스)
 scripts/ci-test.sh e2e       # 통합 e2e(격리 DB + 백엔드 jar + 웹 + 실제 Chromium)
+scripts/ci-test.sh rehearse  # 배포 리허설(실제 이미지·배포 스크립트·게이트웨이 CSP·롤백, 도커 레지스트리 필요)
 ```
 필요: Docker, Java 25, Node 24, Python 3, Playwright 내장 Chromium(없으면 `web/` 에서 `npx playwright install chromium`; 시스템 Chrome 은 쓰지 않는다).
 
