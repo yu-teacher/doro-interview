@@ -4,6 +4,8 @@ import com.doro.interview.catalog.CatalogReader;
 import com.doro.interview.catalog.CatalogViews.QuestionIndexEntry;
 import com.doro.interview.common.exception.ErrorCode;
 import com.doro.interview.common.exception.InterviewException;
+import com.doro.interview.mine.read.MyQuestionReader;
+import com.doro.interview.mine.read.MyQuestionReader.PoolEntry;
 import com.doro.interview.progress.read.ProgressReader;
 import com.doro.interview.quiz.QuizPicker.Mode;
 import com.doro.interview.quiz.QuizPicker.Stat;
@@ -54,6 +56,15 @@ public class QuizService {
             return new Scope(List.of(), List.of(), List.of());
         }
 
+        /**
+         * 내 질문(docs/M4-PLAN.md D6): 주제·카테고리를 고르지 않았으면(전부) 들어가고, 고른 경우에는 가짜 주제 {@code @mine} 를
+         * 골랐을 때만 들어간다. 난이도 필터는 내 질문의 난이도에 그대로 적용한다.
+         */
+        boolean acceptsMine(PoolEntry e) {
+            boolean placeOk = (categories.isEmpty() && topics.isEmpty()) || topics.contains(MyQuestionReader.PSEUDO_TOPIC);
+            return placeOk && (tiers.isEmpty() || tiers.contains(e.tier()));
+        }
+
         boolean accepts(QuestionIndexEntry e) {
             return (categories.isEmpty() || categories.contains(e.categorySlug()))
                     && (topics.isEmpty() || topics.contains(e.topicSlug()))
@@ -71,20 +82,22 @@ public class QuizService {
     private final JdbcTemplate jdbc;
     private final CatalogReader catalog;
     private final ProgressReader progress;
+    private final MyQuestionReader mine;
     private final ObjectMapper json;
     private final RandomGenerator rng;
     private final Clock clock;
 
     @Autowired
-    QuizService(JdbcTemplate jdbc, CatalogReader catalog, ProgressReader progress, ObjectMapper json) {
-        this(jdbc, catalog, progress, json, RandomGenerator.getDefault(), Clock.systemUTC());
+    QuizService(JdbcTemplate jdbc, CatalogReader catalog, ProgressReader progress, MyQuestionReader mine, ObjectMapper json) {
+        this(jdbc, catalog, progress, mine, json, RandomGenerator.getDefault(), Clock.systemUTC());
     }
 
     /** 시험용: 난수와 시계를 정한다. */
-    QuizService(JdbcTemplate jdbc, CatalogReader catalog, ProgressReader progress, ObjectMapper json, RandomGenerator rng, Clock clock) {
+    QuizService(JdbcTemplate jdbc, CatalogReader catalog, ProgressReader progress, MyQuestionReader mine, ObjectMapper json, RandomGenerator rng, Clock clock) {
         this.jdbc = jdbc;
         this.catalog = catalog;
         this.progress = progress;
+        this.mine = mine;
         this.json = json;
         this.rng = rng;
         this.clock = clock;
@@ -107,11 +120,17 @@ public class QuizService {
         }
 
         Set<String> learned = includeUnlearned ? null : progress.learnedSlugs(userId);
-        List<String> pool = catalog.visibleQuestionIndex().stream()
+        List<String> pool = new ArrayList<>(catalog.visibleQuestionIndex().stream()
                 .filter(scope::accepts)
                 .map(QuestionIndexEntry::slug)
                 .filter(slug -> learned == null || learned.contains(slug))
-                .toList();
+                .toList());
+        // 내 질문도 같은 규칙(체크한 것만, 미학습 포함이면 전부)으로 풀에 더한다
+        mine.poolEntries(userId).stream()
+                .filter(scope::acceptsMine)
+                .map(PoolEntry::slug)
+                .filter(slug -> learned == null || learned.contains(slug))
+                .forEach(pool::add);
         if (pool.isEmpty()) {
             throw new InterviewException(ErrorCode.QUIZ_POOL_EMPTY);
         }

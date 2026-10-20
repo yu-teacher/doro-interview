@@ -1,9 +1,9 @@
 package com.doro.interview.api;
 
 import com.doro.interview.account.CurrentUser;
-import com.doro.interview.catalog.CatalogReader;
 import com.doro.interview.catalog.CatalogViews.QuestionHeading;
 import com.doro.interview.common.exception.ErrorCode;
+import com.doro.interview.mine.read.MyQuestionReader;
 import com.doro.interview.common.exception.InterviewException;
 import com.doro.interview.common.response.ApiResponse;
 import com.doro.interview.quiz.QuizPicker.Mode;
@@ -45,12 +45,12 @@ public class QuizController {
 
     private final CurrentUser currentUser;
     private final QuizService quiz;
-    private final CatalogReader catalog;
+    private final QuestionHeadings headings;
 
-    public QuizController(CurrentUser currentUser, QuizService quiz, CatalogReader catalog) {
+    public QuizController(CurrentUser currentUser, QuizService quiz, QuestionHeadings headings) {
         this.currentUser = currentUser;
         this.quiz = quiz;
-        this.catalog = catalog;
+        this.headings = headings;
     }
 
     public record ItemResponse(int seq, String questionSlug, String title, String tier, String topicSlug, String topicName, Result result,
@@ -69,19 +69,19 @@ public class QuizController {
         if (!(request.get("includeUnlearned") instanceof Boolean includeUnlearned)) {
             throw invalid();
         }
-        Scope scope = new Scope(slugList(request.get("categories")), slugList(request.get("topics")), tierList(request.get("tiers")));
+        Scope scope = new Scope(slugList(request.get("categories"), false), slugList(request.get("topics"), true), tierList(request.get("tiers")));
         Mode mode = Mode.WEIGHTED;
         if (request.containsKey("mode")) {
             mode = request.get("mode") instanceof String m && (m.equals("WEIGHTED") || m.equals("RANDOM")) ? Mode.valueOf(m) : fail();
         }
         UUID id = sessionUuid(sessionId);
-        return noStore(ApiResponse.success(respond(quiz.start(user, id, scope, includeUnlearned, count, mode))));
+        return noStore(ApiResponse.success(respond(user, quiz.start(user, id, scope, includeUnlearned, count, mode))));
     }
 
     @GetMapping("/{sessionId}")
     public ResponseEntity<ApiResponse<SessionResponse>> get(@PathVariable String sessionId) {
         UUID user = currentUser.require();
-        return noStore(ApiResponse.success(respond(quiz.get(user, sessionUuid(sessionId)))));
+        return noStore(ApiResponse.success(respond(user, quiz.get(user, sessionUuid(sessionId)))));
     }
 
     @PutMapping("/{sessionId}/items/{seq}")
@@ -100,7 +100,7 @@ public class QuizController {
         }
         UUID id = sessionUuid(sessionId);
         quiz.record(user, id, seqNumber(seq), result, seconds, answer);
-        return noStore(ApiResponse.success(respond(quiz.get(user, id))));
+        return noStore(ApiResponse.success(respond(user, quiz.get(user, id))));
     }
 
     @PutMapping("/{sessionId}/finish")
@@ -112,14 +112,14 @@ public class QuizController {
         }
         UUID id = sessionUuid(sessionId);
         quiz.finish(user, id);
-        return noStore(ApiResponse.success(respond(quiz.get(user, id))));
+        return noStore(ApiResponse.success(respond(user, quiz.get(user, id))));
     }
 
     // ------------------------------------------------------------------ 응답 조립
 
     /** 문항에 제목·tier·주제를 붙인다(모범 답변은 없다). 그 사이 닫혔거나 비공개가 된 질문은 제목 없이 slug 만 나간다. */
-    private SessionResponse respond(SessionView view) {
-        Map<String, QuestionHeading> headings = catalog.visibleQuestionHeadings(view.items().stream().map(ItemView::questionSlug).toList());
+    private SessionResponse respond(UUID user, SessionView view) {
+        Map<String, QuestionHeading> headings = this.headings.of(user, view.items().stream().map(ItemView::questionSlug).toList());
         List<ItemResponse> items = new ArrayList<>();
         for (ItemView i : view.items()) {
             QuestionHeading h = headings.get(i.questionSlug());
@@ -170,7 +170,8 @@ public class QuizController {
         throw invalid();
     }
 
-    private static List<String> slugList(Object value) {
+    /** {@code allowMine}: 주제 목록에서만 가짜 주제 {@code @mine}(내 질문)을 받는다. */
+    private static List<String> slugList(Object value, boolean allowMine) {
         if (value == null) {
             return List.of();
         }
@@ -179,16 +180,17 @@ public class QuizController {
         }
         List<String> out = new ArrayList<>();
         for (Object o : list) {
-            if (!(o instanceof String s) || s.length() > MAX_SLUG_LENGTH || !SLUG.matcher(s).matches()) {
+            boolean mine = allowMine && o instanceof String m && m.equals(MyQuestionReader.PSEUDO_TOPIC);
+            if (!mine && (!(o instanceof String s) || s.length() > MAX_SLUG_LENGTH || !SLUG.matcher(s).matches())) {
                 throw invalid();
             }
-            out.add(s);
+            out.add((String) o);
         }
         return out;
     }
 
     private static List<String> tierList(Object value) {
-        List<String> tiers = slugList(value == null ? null : (value instanceof List<?> l ? l.stream().map(o -> o instanceof String s ? s.toLowerCase() : o).toList() : value));
+        List<String> tiers = slugList(value == null ? null : (value instanceof List<?> l ? l.stream().map(o -> o instanceof String s ? s.toLowerCase() : o).toList() : value), false);
         List<String> upper = tiers.stream().map(String::toUpperCase).toList();
         if (!TIERS.containsAll(upper)) {
             throw invalid();

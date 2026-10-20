@@ -3,6 +3,7 @@ package com.doro.interview.progress;
 import com.doro.interview.catalog.CatalogReader;
 import com.doro.interview.common.exception.ErrorCode;
 import com.doro.interview.common.exception.InterviewException;
+import com.doro.interview.mine.read.MyQuestionReader;
 import com.doro.interview.progress.read.ProgressReader;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -24,17 +25,22 @@ public class ProgressService {
     private final JdbcTemplate jdbc;
     private final CatalogReader catalog;
     private final ProgressReader reader;
+    private final MyQuestionReader mine;
 
-    ProgressService(JdbcTemplate jdbc, CatalogReader catalog, ProgressReader reader) {
+    ProgressService(JdbcTemplate jdbc, CatalogReader catalog, ProgressReader reader, MyQuestionReader mine) {
         this.jdbc = jdbc;
         this.catalog = catalog;
         this.reader = reader;
+        this.mine = mine;
     }
 
-    /** 멱등: 체크는 이미 있으면 그대로(처음 체크한 시각 유지), 해제는 없어도 오류가 아니다. */
+    /**
+     * 멱등: 체크는 이미 있으면 그대로(처음 체크한 시각 유지), 해제는 없어도 오류가 아니다. 공용 질문(보이는 것)이거나 **내 질문**
+     * (내 것인 {@code my-…} slug, docs/M4-PLAN.md D5)이면 받는다. 남의 내 질문·없는 질문은 404.
+     */
     @Transactional
     public void setLearned(UUID userId, String questionSlug, boolean learned) {
-        if (!catalog.isVisibleQuestion(questionSlug)) {
+        if (!catalog.isVisibleQuestion(questionSlug) && !mine.exists(userId, questionSlug)) {
             throw new InterviewException(ErrorCode.NOT_FOUND);
         }
         apply(userId, List.of(questionSlug), learned);

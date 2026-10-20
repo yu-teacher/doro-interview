@@ -9,6 +9,7 @@ import com.doro.interview.mine.MyQuestionService.BatchItem;
 import com.doro.interview.mine.MyQuestionService.Draft;
 import com.doro.interview.mine.MyQuestionService.Question;
 import com.doro.interview.progress.read.ProgressReader;
+import com.doro.interview.quiz.read.QuizStatsReader;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -41,19 +42,30 @@ public class MineController {
     private final CurrentUser currentUser;
     private final MyQuestionService questions;
     private final ProgressReader progress;
+    private final QuizStatsReader quizStats;
 
-    public MineController(CurrentUser currentUser, MyQuestionService questions, ProgressReader progress) {
+    public MineController(CurrentUser currentUser, MyQuestionService questions, ProgressReader progress, QuizStatsReader quizStats) {
         this.currentUser = currentUser;
         this.questions = questions;
         this.progress = progress;
+        this.quizStats = quizStats;
+    }
+
+    private List<MineResponse> respond(UUID user, List<Question> list) {
+        List<String> slugs = list.stream().map(Question::slug).toList();
+        Set<String> learned = progress.learnedAmong(user, slugs);
+        Set<String> wrong = quizStats.lastWrongAmong(user, slugs);
+        return list.stream().map(q -> MineResponse.of(q, learned, wrong)).toList();
     }
 
     @JsonInclude(JsonInclude.Include.ALWAYS)
     public record MineResponse(UUID id, String slug, String title, String answerText, List<String> keywords, String tier,
-                               String sourceLabel, Instant createdAt, Instant updatedAt, boolean learned) {
-        static MineResponse of(Question q, Set<String> learned) {
+                               String sourceLabel, Instant createdAt, Instant updatedAt, boolean learned, boolean reviewCandidate) {
+        /** 다시 공부 후보 = 체크했고 마지막 시험 결과가 틀림(공용 질문과 같은 규칙). */
+        static MineResponse of(Question q, Set<String> learned, Set<String> wrong) {
+            boolean checked = learned.contains(q.slug());
             return new MineResponse(q.id(), q.slug(), q.title(), q.answerText(), q.keywords(), q.tier(), q.sourceLabel(),
-                    q.createdAt(), q.updatedAt(), learned.contains(q.slug()));
+                    q.createdAt(), q.updatedAt(), checked, checked && wrong.contains(q.slug()));
         }
     }
 
@@ -63,16 +75,14 @@ public class MineController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<MineResponse>>> list() {
         UUID user = currentUser.require();
-        List<Question> all = questions.list(user);
-        Set<String> learned = progress.learnedAmong(user, all.stream().map(Question::slug).toList());
-        return noStore(ApiResponse.success(all.stream().map(q -> MineResponse.of(q, learned)).toList()));
+        return noStore(ApiResponse.success(respond(user, questions.list(user))));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<MineResponse>> get(@PathVariable String id) {
         UUID user = currentUser.require();
         Question q = questions.get(user, uuid(id)).orElseThrow(() -> new InterviewException(ErrorCode.NOT_FOUND));
-        return noStore(ApiResponse.success(MineResponse.of(q, progress.learnedAmong(user, List.of(q.slug())))));
+        return noStore(ApiResponse.success(respond(user, List.of(q)).get(0)));
     }
 
     @PutMapping("/{id}")
@@ -81,7 +91,7 @@ public class MineController {
         Draft draft = draft(request);
         UUID parsed = uuid(id);
         Question q = questions.put(user, parsed, draft);
-        return noStore(ApiResponse.success(MineResponse.of(q, progress.learnedAmong(user, List.of(q.slug())))));
+        return noStore(ApiResponse.success(respond(user, List.of(q)).get(0)));
     }
 
     /** 일괄 추가: {@code {"items":[{"id":…, 제목 등}, …]}}. 전부 저장되거나 아무것도 저장되지 않는다. */
@@ -102,9 +112,7 @@ public class MineController {
             }
             items.add(new BatchItem(uuidOrInvalid(id), draft(item)));
         }
-        List<Question> saved = questions.putAll(user, items);
-        Set<String> learned = progress.learnedAmong(user, saved.stream().map(Question::slug).toList());
-        return noStore(ApiResponse.success(saved.stream().map(q -> MineResponse.of(q, learned)).toList()));
+        return noStore(ApiResponse.success(respond(user, questions.putAll(user, items))));
     }
 
     /** 삭제도 PUT 이다(게이트웨이가 DELETE 를 막는다). 이미 없거나 남의 것이면 404 — 화면은 404 도 "이미 없음" 으로 본다. */

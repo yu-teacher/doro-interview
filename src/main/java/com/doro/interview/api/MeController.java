@@ -1,7 +1,6 @@
 package com.doro.interview.api;
 
 import com.doro.interview.account.CurrentUser;
-import com.doro.interview.catalog.CatalogReader;
 import com.doro.interview.catalog.CatalogViews.QuestionHeading;
 import com.doro.interview.common.exception.ErrorCode;
 import com.doro.interview.common.exception.InterviewException;
@@ -36,14 +35,14 @@ public class MeController {
     private final QuizService quiz;
     private final QuizStatsReader quizStats;
     private final ProgressReader progress;
-    private final CatalogReader catalog;
+    private final QuestionHeadings headings;
 
-    public MeController(CurrentUser currentUser, QuizService quiz, QuizStatsReader quizStats, ProgressReader progress, CatalogReader catalog) {
+    public MeController(CurrentUser currentUser, QuizService quiz, QuizStatsReader quizStats, ProgressReader progress, QuestionHeadings headings) {
         this.currentUser = currentUser;
         this.quiz = quiz;
         this.quizStats = quizStats;
         this.progress = progress;
-        this.catalog = catalog;
+        this.headings = headings;
     }
 
     public record MissedResponse(String questionSlug, String title, String tier, String topicSlug, String topicName, int missCount, int askCount) {
@@ -63,10 +62,10 @@ public class MeController {
     public ResponseEntity<ApiResponse<StatsResponse>> stats() {
         UUID user = currentUser.require();
         QuizService.Stats s = quiz.stats(user);
-        Map<String, QuestionHeading> headings = catalog.visibleQuestionHeadings(s.mostMissed().stream().map(MissedQuestion::questionSlug).toList());
+        Map<String, QuestionHeading> found = this.headings.of(user, s.mostMissed().stream().map(MissedQuestion::questionSlug).toList());
         List<MissedResponse> missed = new ArrayList<>();
         for (MissedQuestion m : s.mostMissed()) {
-            QuestionHeading h = headings.get(m.questionSlug());
+            QuestionHeading h = found.get(m.questionSlug());
             if (h != null) { // 닫히거나 비공개가 된 질문은 보여 주지 않는다
                 missed.add(new MissedResponse(m.questionSlug(), h.title(), h.tier(), h.topicSlug(), h.topicName(), m.missCount(), m.askCount()));
             }
@@ -80,8 +79,8 @@ public class MeController {
         UUID user = currentUser.require();
         Set<String> wrong = quizStats.lastWrong(user);
         Set<String> candidates = progress.learnedAmong(user, wrong);
-        Map<String, QuestionHeading> headings = catalog.visibleQuestionHeadings(candidates);
-        List<CandidateResponse> list = headings.values().stream()
+        Map<String, QuestionHeading> found = this.headings.of(user, candidates);
+        List<CandidateResponse> list = found.values().stream()
                 .sorted(java.util.Comparator.comparing(QuestionHeading::topicSlug).thenComparing(QuestionHeading::slug))
                 .map(h -> new CandidateResponse(h.slug(), h.title(), h.tier(), h.topicSlug(), h.topicName()))
                 .toList();
