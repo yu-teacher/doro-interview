@@ -13,7 +13,7 @@ import { TierBadge } from './Chips';
  * 다시 공부 후보(체크했는데 마지막 시험에서 틀린 질문) 목록. 후보는 틀려도 **자동으로 체크가 풀리지 않고**, 여기서 사용자가 직접 해제한다
  * (DESIGN 결정 3). 후보를 못 불러와도 화면의 나머지는 그대로다(보조 정보).
  */
-export function ReviewList({ limit, heading = '다시 공부 후보' }: { limit?: number; heading?: string }) {
+export function ReviewList({ limit, heading = '다시 공부 후보', onReleased }: { limit?: number; heading?: string; onReleased?: () => void }) {
   const session = useSessionKey();
   const { markAnonymous } = useSession();
   const { state } = useApi(`review:${session.key}`, (signal) => fetchReviewCandidates(signal), session.authenticated);
@@ -36,6 +36,7 @@ export function ReviewList({ limit, heading = '다시 공부 후보' }: { limit?
     try {
       await putLearned(candidate.slug, false);
       setReleased((prev) => new Set(prev).add(candidate.slug));
+      onReleased?.(); // 체크가 줄었으니 진도 막대·숫자를 다시 받는다
     } catch (e) {
       if (e instanceof ApiError && e.isUnauthorized) {
         markAnonymous();

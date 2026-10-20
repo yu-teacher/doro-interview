@@ -69,6 +69,8 @@ describe('내 현황 화면', () => {
     await waitFor(() => expect(screen.queryByRole('button', { name: /체크 해제/ })).toBeNull());
     const put = requests.find((r) => r.method === 'PUT' && r.path.endsWith('/progress/tx-04')) as unknown as { body: unknown };
     expect(put.body).toEqual({ learned: false });
+    // 체크 수가 줄었으니 진도 요약을 다시 받는다(헤더의 n/m 이 낡지 않게)
+    await waitFor(() => expect(requests.filter((r) => r.path.endsWith('/progress/summary')).length).toBeGreaterThanOrEqual(2));
   });
 
   it('해제가 실패하면 목록을 그대로 두고 알린다', async () => {

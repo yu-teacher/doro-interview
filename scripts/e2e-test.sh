@@ -107,6 +107,13 @@ wait_http "http://127.0.0.1:$GW_PORT/nginx-health" "게이트웨이"
 wait_http "http://127.0.0.1:$GW_PORT/interview/" "웹(게이트웨이 경유)"
 curl -fs -o /dev/null "http://127.0.0.1:$GW_PORT/interview/api/v1/categories" || die "게이트웨이 경유 API 가 응답하지 않는다"
 
+if [ "${E2E_HOLD:-}" = 1 ]; then
+  # 수동 확인용: 시험은 돌리지 않고 스택을 띄운 채로 둔다. 끝내려면 `rm /tmp/e2e-hold`(그러면 평소처럼 정리하고 끝난다).
+  touch /tmp/e2e-hold
+  log "스택을 유지한다: http://127.0.0.1:$GW_PORT/interview/  (가짜 Doro 로그인, 끝내려면 rm /tmp/e2e-hold)"
+  while [ -e /tmp/e2e-hold ]; do sleep 2; done
+  exit 0
+fi
 log "== Playwright(내장 Chromium 헤드리스, 게이트웨이 경유) =="
 E2E_PG_CONTAINER="$("${COMPOSE[@]}" ps -q postgres)"; export E2E_PG_CONTAINER
 (cd web && E2E_BFF=1 E2E_PWA=1 E2E_DORO_URL="http://127.0.0.1:$DORO_PORT" E2E_BASE_URL="http://127.0.0.1:$GW_PORT" \

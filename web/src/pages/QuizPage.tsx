@@ -230,7 +230,7 @@ function Result({ session }: { session: QuizSession }) {
       )}
 
       <div className="mt-6 flex flex-wrap gap-2">
-        <Link to={quizStartPath()} className={`inline-flex items-center no-underline ${PRIMARY}`}>
+        <Link to={quizStartPath()} className={`inline-flex items-center no-underline !text-[var(--color-accent-contrast)] ${PRIMARY}`}>
           다시 시험 보기
         </Link>
         <Link to="/" className={`inline-flex items-center no-underline ${BUTTON}`}>

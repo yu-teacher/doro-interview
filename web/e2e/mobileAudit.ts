@@ -141,6 +141,20 @@ export async function auditAxe(page: Page): Promise<string[]> {
           problems.push(`non-text-contrast: 진도 막대 채움과 바탕의 대비 ${ratio.toFixed(2)}:1 < 3:1 (${bar.getAttribute('aria-label')})`);
         }
       }
+      // 배경색이 있는 버튼·링크의 글자 대비(4.5:1). 전역 `a { color }` 규칙이 유틸리티를 이겨 링크 버튼의 글자가 배경과 같은 색이 된 적이 있다.
+      for (const el of Array.from(document.querySelectorAll('a[href], button'))) {
+        const cs = getComputedStyle(el);
+        const bg = rgb(cs.backgroundColor);
+        const fg = rgb(cs.color);
+        if (!bg || !fg || cs.backgroundColor.endsWith(', 0)') || (el.textContent ?? '').trim() === '') {
+          continue;
+        }
+        const [a, b] = [lum(bg), lum(fg)];
+        const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+        if (ratio < 4.5) {
+          problems.push(`button-text-contrast: 배경이 있는 요소의 글자 대비 ${ratio.toFixed(2)}:1 < 4.5:1 (${(el.textContent ?? '').trim().slice(0, 20)})`);
+        }
+      }
       return problems;
     }
   });

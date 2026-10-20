@@ -157,13 +157,14 @@ function Loaded() {
   const stats = useApi('stats', (signal) => fetchStats(signal));
   const categories = useApi('categories', (signal) => fetchCategories(signal));
   const summary = useApi('summary-stats', (signal) => fetchProgressSummary(signal));
+  const onReleased = summary.reload;
   return (
     <div className="space-y-8">
       <AsyncView state={stats.state} reload={stats.reload}>
         {(s) => (
           <>
             <Last30Days stats={s} />
-            <ReviewList />
+            <ReviewList onReleased={onReleased} />
             <MostMissed stats={s} />
           </>
         )}

@@ -32,7 +32,7 @@ export function HomePage() {
             <h1 className="sr-only">주제 목록</h1>
             {session.authenticated && (
               <>
-                <ReviewList limit={5} />
+                <ReviewList limit={5} onReleased={summary.reload} />
                 <p className="text-sm">
                   <Link to="/stats" className="inline-flex min-h-11 items-center">
                     내 현황 보기
