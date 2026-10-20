@@ -1,6 +1,7 @@
 # 운영(mini) 참고용 compose. **서버에 있는 실제 파일이 기준이고 배포가 덮어쓰지 않는다**(doro-games·party 와 같은 규칙).
 # 서버의 ~/doro-interview/.env 에 DB_USER, DB_PASSWORD 가 있어야 한다(서비스 전용 DB 역할: Doro/scripts/split-db-accounts.sh).
-# M1 은 읽기 전용이라 로그인(BFF)·Guard·IAM 설정이 없다(M2 에서 추가).
+# 로그인은 서비스 밖의 BFF(doro-bff)가 맡고 서비스는 게이트웨이가 붙인 Bearer 를 JWKS 로 검증한다. 탈퇴 동기화를 쓰려면 .env 에
+# DORO_IAM_INTERNAL_TOKEN 도 있어야 한다(값은 Doro/scripts/enable-deleted-sync.sh 가 발급하는 한 곳뿐이다). Guard 는 M4 에서 붙인다.
 services:
   interview-api:
     build:
@@ -25,6 +26,8 @@ services:
       IAM_HOST: auth-api
       IAM_PORT: 8080
       INTERVIEW_OAUTH_CLIENT_ID: ${INTERVIEW_OAUTH_CLIENT_ID:-doro-interview}
+      # IAM 내부 API(탈퇴 사용자 목록) 호출자 토큰. IAM 의 DORO_IAM_INTERNAL_TOKENS 에 'interview:<토큰>' 으로 등록한 값이다. 비어 있으면 호출이 거절된다(경고).
+      DORO_IAM_INTERNAL_TOKEN: ${DORO_IAM_INTERNAL_TOKEN:-}
       # 검수 전 콘텐츠 노출 스위치는 운영에서 켜지 않는다(prod 프로파일에서 켜면 기동이 거부된다)
     networks:
       - doro-network

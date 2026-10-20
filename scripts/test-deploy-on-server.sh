@@ -60,6 +60,7 @@ chmod +x "$BIN/docker" "$BIN/curl" "$BIN/sleep" "$BIN/sw-check"
 
 mkdir -p "$WORK/Doro/sdk"   # 가짜 Doro 체크아웃(sdk 디렉터리만 있으면 된다)
 ENV_OK="$WORK/ok.env"; printf 'DB_USER=u\nDB_PASSWORD=p\n' > "$ENV_OK"
+ENV_TOKEN="$WORK/token.env"; printf 'DB_USER=u\nDB_PASSWORD=p\nDORO_IAM_INTERNAL_TOKEN=super-secret-token-value\n' > "$ENV_TOKEN"
 ENV_NOPASS="$WORK/nopass.env"; printf 'DB_USER=u\nDB_PASSWORD=\n' > "$ENV_NOPASS"
 
 # run <시나리오 이름> <env 파일> [VAR=값 ...] -- <deploy 인자...>   → OUT, RC 에 결과를 남긴다
@@ -106,6 +107,13 @@ run nodoro "$ENV_OK" DORO_DIR="$WORK/none" -- --apply
 check "Doro 체크아웃이 없으면 실패한다" "$([ $RC != 0 ]; echo $?)"
 check "Doro 경로 안내를 한다" "$(has 'DORO_DIR=<Doro 체크아웃 경로>' "$OUT")"
 check "Doro 가 없으면 아무것도 건드리지 않는다" "$(lacks 'docker tag' "$CALLS")"
+
+echo "== 탈퇴 동기화 서비스 토큰 점검 =="
+run notoken "$ENV_OK" -- --apply --no-gateway
+check "토큰이 없으면 경고하지만 배포는 계속한다" "$([ $RC = 0 ] && grep -qF '경고: ' <<<"$OUT" && grep -qF 'DORO_IAM_INTERNAL_TOKEN 이 없다' <<<"$OUT"; echo $?)"
+run withtoken "$ENV_TOKEN" -- --apply --no-gateway
+check "토큰이 있으면 경고하지 않는다" "$([ $RC = 0 ] && ! grep -qF 'DORO_IAM_INTERNAL_TOKEN 이 없다' <<<"$OUT"; echo $?)"
+check "토큰 값은 어디에도 출력하지 않는다" "$(lacks 'super-secret-token-value' "$OUT$CALLS")"
 
 echo "== 성공(게이트웨이 경유) =="
 run good "$ENV_OK" -- --apply

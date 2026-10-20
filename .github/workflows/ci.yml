@@ -1,6 +1,6 @@
 name: CI
 
-# main 푸시와 PR 마다 린트·타입·테스트를 돌린다. 배포는 하지 않는다(배포 파이프라인은 M2 에서 붙인다).
+# main 푸시와 PR 마다 린트·타입·테스트를 돌린다. 이 워크플로는 배포하지 않는다(CI 가 main 에서 통과한 뒤의 배포는 deploy.yml 이 맡는다).
 on:
   push:
     branches: [main]
@@ -57,6 +57,11 @@ jobs:
           distribution: temurin
           java-version: 25
       - uses: gradle/actions/setup-gradle@v4
+      # 스크립트 시험이 쓰는 도구: 가짜 Doro 스텁(node --test), 워크플로 정책 시험(PyYAML)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: python3 -m pip install --quiet pyyaml
       # 변환기 단위 테스트 → 격리 Postgres 기동 → gradle test(마이그레이션·로더·콘텐츠 정합성·모듈 의존 규칙) → 정리
       - run: scripts/ci-test.sh backend
         working-directory: doro-interview

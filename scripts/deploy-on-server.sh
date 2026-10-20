@@ -55,6 +55,8 @@ docker info >/dev/null 2>&1 || die "docker 를 사용할 수 없다"
 ENV_PATH="${INTERVIEW_ENV_FILE:-.env}"
 [ -f "$ENV_PATH" ] || die "$ENV_PATH 가 없다. 먼저 scripts/setup-interview-server.sh --apply"
 env_has "$ENV_PATH" DB_USER && env_has "$ENV_PATH" DB_PASSWORD || die "$ENV_PATH 에 DB_USER/DB_PASSWORD 가 비어 있다"
+# 탈퇴 동기화용 서비스 토큰: 없어도 서비스는 뜬다(호출이 거절되고 경고가 남는다). 값은 읽어 출력하지 않고 있는지만 알린다.
+env_has "$ENV_PATH" DORO_IAM_INTERNAL_TOKEN || log "경고: $ENV_PATH 에 DORO_IAM_INTERNAL_TOKEN 이 없다 — 탈퇴한 사용자의 학습 기록이 정리되지 않는다(Doro/scripts/enable-deleted-sync.sh 에 interview 를 더해 발급)"
 # 이미지 빌드가 Doro SDK 소스를 쓴다(settings.gradle 의 includeBuild, compose 의 additional_contexts). 기본은 저장소의 형제 디렉터리 Doro.
 DORO_DIR="${DORO_DIR:-$(cd .. && pwd)/Doro}"
 [ -d "$DORO_DIR/sdk" ] || die "Doro 체크아웃(sdk 디렉터리)이 없다: $DORO_DIR — DORO_DIR=<Doro 체크아웃 경로> 로 지정한다(서버에서는 CI 러너의 Doro 체크아웃을 쓸 수 있다)"
