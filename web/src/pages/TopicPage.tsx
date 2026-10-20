@@ -6,8 +6,11 @@ import { putTopicLearned } from '../api/progress';
 import type { TopicView } from '../api/types';
 import { AsyncView } from '../components/AsyncView';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { FilterIcon } from '../components/icons';
 import { ProgressBar } from '../components/ProgressBar';
 import { QuestionCard } from '../components/QuestionCard';
+import { Segmented } from '../components/Segmented';
+import { Sheet } from '../components/Sheet';
 import { TopicSources } from '../components/Sources';
 import { useApi } from '../hooks/useApi';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
@@ -53,6 +56,22 @@ function TopicContent({ view, conceptNames, reopenBulk, onBulkConflict, onReopen
   const learnedCount = questions.filter(isLearned).length;
 
   // 주제 일괄 체크/해제: 확인창(취소가 기본 포커스)을 거쳐, 확인창에 보여 준 개수를 서버에 함께 보낸다
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const filterButton = useRef<HTMLButtonElement>(null);
+  // 시트 밖에서 한눈에 보이는 "적용한 필터"(난이도·검색어는 이미 화면에 있으니 제외). 누르면 그 필터만 푼다
+  const activeChips: { key: string; label: string; clear: () => void }[] = [];
+  if (filters.importance !== 'all') {
+    activeChips.push({ key: 'imp', label: { all: '', '3': '꼭 나와요만', ge2: '자주 나와요 이상', none: '필수도 미분류' }[filters.importance], clear: () => update({ importance: 'all' }) });
+  }
+  if (filters.extraOnly) {
+    activeChips.push({ key: 'extra', label: '공식 문서 밖 설명', clear: () => update({ extraOnly: false }) });
+  }
+  if (filters.concept) {
+    activeChips.push({ key: 'concept', label: `개념: ${conceptNames.get(filters.concept) ?? filters.concept}`, clear: () => update({ concept: '' }) });
+  }
+  if (session.authenticated && filters.learned !== 'all') {
+    activeChips.push({ key: 'ls', label: filters.learned === 'yes' ? '학습함' : '아직 안 함', clear: () => update({ learned: 'all' }) });
+  }
   const [bulk, setBulk] = useState<boolean | null>(null);
   const [bulkMessage, setBulkMessage] = useState<string | null>(null);
   const [bulkBusy, setBulkBusy] = useState(false);
@@ -132,30 +151,73 @@ function TopicContent({ view, conceptNames, reopenBulk, onBulkConflict, onReopen
       )}
 
       <section aria-label="필터" className="mt-5 space-y-3">
-        <div role="group" aria-label="난이도 구분" className="flex flex-wrap gap-2">
-          <button type="button" aria-pressed={filters.tier === 'ALL'} onClick={() => update({ tier: 'ALL' })} className={toggleClass(filters.tier === 'ALL')}>
-            전체 ({counts.ALL})
+        <Segmented
+          label="난이도 구분"
+          value={filters.tier}
+          onChange={(tier) => update({ tier })}
+          options={[{ value: 'ALL' as const, label: '전체', count: counts.ALL }, ...TIERS.map((t) => ({ value: t, label: TIER_LABEL[t], count: counts[t] }))]}
+        />
+        <div className="flex gap-2">
+          <label className="min-w-0 flex-1">
+            <span className="sr-only">이 주제에서 찾기</span>
+            <input
+              type="search"
+              value={filters.text}
+              onChange={(e) => update({ text: e.target.value })}
+              maxLength={100}
+              autoComplete="off"
+              placeholder="이 주제에서 찾기"
+              className={`${FIELD} w-full`}
+            />
+          </label>
+          <button
+            ref={filterButton}
+            type="button"
+            onClick={() => setSheetOpen(true)}
+            className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3"
+          >
+            <FilterIcon />
+            <span>필터{activeChips.length > 0 ? ` ${activeChips.length}` : ''}</span>
           </button>
-          {TIERS.map((t) => (
-            <button key={t} type="button" aria-pressed={filters.tier === t} onClick={() => update({ tier: t })} className={toggleClass(filters.tier === t)}>
-              {TIER_LABEL[t]} ({counts[t]})
-            </button>
-          ))}
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <label className="flex min-h-11 items-center gap-2">
-            <span>필수도</span>
+        {activeChips.length > 0 && (
+          <ul aria-label="적용한 필터" className="flex flex-wrap items-center gap-2">
+            {activeChips.map((chip) => (
+              <li key={chip.key}>
+                <button
+                  type="button"
+                  aria-label={`필터 해제: ${chip.label}`}
+                  onClick={chip.clear}
+                  className="inline-flex min-h-11 items-center gap-1 rounded-full border border-[var(--color-accent)] px-3 text-sm text-[var(--color-accent)]"
+                >
+                  {chip.label} <span aria-hidden="true">✕</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        {isFiltered(filters) && (
+          <button type="button" onClick={() => setParams(toSearchParams(EMPTY_FILTERS), { replace: true })} className="min-h-11 underline">
+            필터 초기화
+          </button>
+        )}
+      </section>
+
+      <Sheet open={sheetOpen} title="필터" onClose={() => setSheetOpen(false)} returnFocusTo={filterButton}>
+        <div className="space-y-4">
+          <label className="flex flex-col gap-1">
+            <span className="font-semibold">필수도</span>
             <select value={filters.importance} onChange={(e) => update({ importance: e.target.value as ImportanceFilter })} className={FIELD}>
               <option value="all">전체</option>
-              <option value="3">필수만 (3)</option>
-              <option value="ge2">자주 이상 (2~3)</option>
+              <option value="3">꼭 나와요만 (3)</option>
+              <option value="ge2">자주 나와요 이상 (2~3)</option>
               <option value="none">미분류</option>
             </select>
           </label>
           {session.authenticated && (
-            <label className="flex min-h-11 items-center gap-2">
-              <span>내 체크 상태</span>
+            <label className="flex flex-col gap-1">
+              <span className="font-semibold">내 체크 상태</span>
               <select value={filters.learned} onChange={(e) => update({ learned: e.target.value as LearnedFilter })} className={FIELD}>
                 <option value="all">전체</option>
                 <option value="yes">학습함</option>
@@ -165,37 +227,38 @@ function TopicContent({ view, conceptNames, reopenBulk, onBulkConflict, onReopen
           )}
           <label className="flex min-h-11 items-center gap-2">
             <input type="checkbox" checked={filters.extraOnly} onChange={(e) => update({ extraOnly: e.target.checked })} className="size-5" />
-            <span>보충이 있는 질문만</span>
+            <span>공식 문서 밖 설명이 있는 질문만</span>
           </label>
-        </div>
-
-        {concepts.length > 0 && (
-          <div role="group" aria-label="개념" className="flex flex-wrap gap-2">
-            {concepts.map((c) => (
-              <button
-                key={c}
-                type="button"
-                aria-pressed={filters.concept === c}
-                onClick={() => update({ concept: filters.concept === c ? '' : c })}
-                className={toggleClass(filters.concept === c)}
-              >
-                {conceptNames.get(c) ?? c}
+          {concepts.length > 0 && (
+            <div role="group" aria-label="개념" className="space-y-2">
+              <p className="font-semibold">개념</p>
+              <div className="flex flex-wrap gap-2">
+                {concepts.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    aria-pressed={filters.concept === c}
+                    onClick={() => update({ concept: filters.concept === c ? '' : c })}
+                    className={toggleClass(filters.concept === c)}
+                  >
+                    {conceptNames.get(c) ?? c}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          <div className="flex flex-wrap gap-2 pt-2">
+            <button type="button" onClick={() => setSheetOpen(false)} className="min-h-11 rounded-md bg-[var(--color-accent)] px-5 font-semibold text-[var(--color-accent-contrast)]">
+              질문 {shown.length}개 보기
+            </button>
+            {isFiltered(filters) && (
+              <button type="button" onClick={() => setParams(toSearchParams(EMPTY_FILTERS), { replace: true })} className="min-h-11 rounded-md border border-[var(--color-border)] px-4">
+                모두 초기화
               </button>
-            ))}
+            )}
           </div>
-        )}
-
-        <label className="flex flex-col gap-1">
-          <span>이 주제에서 찾기</span>
-          <input type="search" value={filters.text} onChange={(e) => update({ text: e.target.value })} maxLength={100} autoComplete="off" className={`${FIELD} w-full`} />
-        </label>
-
-        {isFiltered(filters) && (
-          <button type="button" onClick={() => setParams(toSearchParams(EMPTY_FILTERS), { replace: true })} className="min-h-11 underline">
-            필터 초기화
-          </button>
-        )}
-      </section>
+        </div>
+      </Sheet>
 
       <p role="status" aria-live="polite" className="mt-4 text-sm text-[var(--color-muted)]">
         질문 {shown.length}개{isFiltered(filters) ? ` (전체 ${questions.length}개 중)` : ''}

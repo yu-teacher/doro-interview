@@ -17,6 +17,15 @@ const PAGES: Case[] = [
   { name: '홈', path: '/', ready: (p) => p.getByRole('heading', { level: 3, name: '스프링' }).waitFor() },
   { name: '주제(필터 포함)', path: '/t/transaction', ready: (p) => p.getByRole('heading', { level: 1 }).waitFor() },
   { name: '주제(필터 적용)', path: '/t/transaction?tier=DEEP&imp=ge2&extra=1&concept=proxy', ready: (p) => p.getByRole('heading', { level: 1 }).waitFor() },
+  { name: '주제(적용한 필터 칩)', path: '/t/transaction?imp=3&extra=1&concept=proxy', ready: (p) => p.getByRole('list', { name: '적용한 필터' }).waitFor() },
+  {
+    name: '주제(필터 시트 열림)', path: '/t/transaction?imp=ge2', session: 'authenticated',
+    ready: (p) => p.getByRole('button', { name: /^필터( \d+)?$/ }).waitFor(),
+    act: async (p) => {
+      await p.getByRole('button', { name: /^필터( \d+)?$/ }).click();
+      await p.getByRole('dialog', { name: '필터' }).waitFor();
+    },
+  },
   { name: '질문 상세', path: '/q/tx-04', ready: (p) => p.locator('[data-badge]').first().waitFor({ state: 'attached' }) },
   { name: '개념 목록', path: '/concepts', ready: (p) => p.getByRole('heading', { level: 1, name: '개념' }).waitFor() },
   { name: '개념 상세', path: '/c/proxy', ready: (p) => p.getByRole('heading', { level: 1, name: '프록시' }).waitFor() },

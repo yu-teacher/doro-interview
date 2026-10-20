@@ -6,13 +6,14 @@ describe('labels', () => {
     expect(TIER_LABEL).toEqual({ BASIC: '기본', DEEP: '심화', TRICKY: '함정' });
   });
 
-  it('필수도는 항상 "필수도" 를 앞에 붙여 tier 의 심화와 구분한다', () => {
-    expect(importanceLabel(3)).toBe('필수도 3 · 필수');
-    expect(importanceLabel(2)).toBe('필수도 2 · 자주');
-    expect(importanceLabel(1)).toBe('필수도 1 · 심화');
-    expect(importanceLabel(null)).toBe('필수도 미분류');
-    for (const v of [1, 2, 3, null]) {
-      expect(importanceLabel(v)).toContain('필수도');
+  it('필수도는 얼마나 자주 묻는지를 쉬운 말로 쓰고, 내부 용어(필수도·tier 와 같은 심화)를 쓰지 않는다', () => {
+    expect(importanceLabel(3)).toBe('꼭 나와요');
+    expect(importanceLabel(2)).toBe('자주 나와요');
+    expect(importanceLabel(1)).toBe('가끔 나와요');
+    expect(importanceLabel(null)).toBe('');
+    for (const v of [1, 2, 3]) {
+      expect(importanceLabel(v)).not.toContain('필수도');
+      expect(importanceLabel(v)).not.toContain('심화'); // 난이도 "심화" 와 헷갈리지 않는다
     }
   });
 

@@ -29,15 +29,15 @@ async function open(q: QuestionDetail = detail()) {
 }
 
 describe('질문 화면', () => {
-  it('제목·경로·tier·필수도·보충 표시를 보여 준다', async () => {
+  it('제목·경로·난이도·얼마나 자주 나오는지·공식 문서 밖 설명 표시를 보여 준다', async () => {
     await open();
     const nav = screen.getByRole('navigation', { name: '경로' });
     expect(within(nav).getByRole('link', { name: '처음' }).getAttribute('href')).toBe('/');
     expect(within(nav).getByRole('link', { name: '트랜잭션' }).getAttribute('href')).toBe('/t/transaction');
     const main = screen.getByRole('main');
     expect(main.querySelector('[data-tier="BASIC"]')?.textContent).toBe('기본');
-    expect(main.querySelector('[data-importance="3"]')?.textContent).toBe('필수도 3 · 필수');
-    expect(within(main).getByText('보충 있음')).toBeTruthy();
+    expect(main.querySelector('[data-importance="3"]')?.textContent).toBe('꼭 나와요');
+    expect(within(main).getByText('공식 문서 밖 설명')).toBeTruthy();
   });
 
   it('키워드는 목록으로, 개념은 개념 화면으로 가는 링크로 보인다', async () => {
@@ -74,7 +74,7 @@ describe('질문 화면', () => {
   it('상세가 없으면 펼침 영역을 만들지 않는다', async () => {
     await open(detail({ detailMd: '', hasExtra: false }));
     expect(screen.queryByText('근거 · 코드 · 실험 설명 보기')).toBeNull();
-    expect(screen.queryByText('보충 있음')).toBeNull();
+    expect(screen.queryByText('공식 문서 밖 설명')).toBeNull();
   });
 
   it('초안이면 검수 전 안내를, 검수 뒤에 바뀌었으면 재확인 안내를 보여 준다', async () => {

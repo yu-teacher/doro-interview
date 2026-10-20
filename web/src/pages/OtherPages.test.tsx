@@ -121,7 +121,7 @@ describe('검색', () => {
     const first = screen.getByRole('link', { name: /전파 속성이란\?/ });
     expect(first.textContent).toContain('트랜잭션');
     expect(first.textContent).toContain('일치: 제목, 키워드');
-    expect(first.textContent).toContain('필수도 3 · 필수');
+    expect(first.textContent).toContain('꼭 나와요');
     expect(screen.getByRole('link', { name: /REQUIRES_NEW/ }).textContent).toContain('일치: 본문');
     expect(document.title).toBe('‘전파’ 검색 · 도로 면접');
   });

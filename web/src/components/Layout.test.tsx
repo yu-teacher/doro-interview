@@ -64,7 +64,8 @@ describe('레이아웃', () => {
     await screen.findByRole('heading', { level: 1, name: '트랜잭션' });
     scrollTo.mockClear();
     fireEvent.click(screen.getByRole('button', { name: /기본 \(1\)/ }));
-    fireEvent.click(screen.getByRole('checkbox', { name: '보충이 있는 질문만' }));
+    fireEvent.click(screen.getByRole('button', { name: /^필터( \d+)?$/ }));
+    fireEvent.click(screen.getByRole('checkbox', { name: '공식 문서 밖 설명이 있는 질문만' }));
     expect(scrollTo).not.toHaveBeenCalled();
   });
 });

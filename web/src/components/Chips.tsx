@@ -13,16 +13,20 @@ export function TierBadge({ tier }: { tier: Tier }) {
   );
 }
 
+/** 얼마나 자주 묻는지. 미분류는 정보가 없으니 아무것도 그리지 않는다. */
 export function ImportanceBadge({ importance }: { importance: number | null }) {
+  if (importance === null) {
+    return null;
+  }
   return (
-    <span data-importance={importance ?? 'none'} className={`${PILL} ${importance === null ? 'text-[var(--color-muted)]' : 'font-semibold'}`}>
+    <span data-importance={importance} className={`${PILL} font-semibold`}>
       {importanceLabel(importance)}
     </span>
   );
 }
 
 export function ExtraFlag() {
-  return <span className={`${PILL} text-[var(--color-extra)] border-[var(--color-extra)]`}>보충 있음</span>;
+  return <span className={`${PILL} text-[var(--color-extra)] border-[var(--color-extra)]`}>공식 문서 밖 설명</span>;
 }
 
 /** "다시 공부 후보": 체크했는데 최근 시험에서 틀린 질문. 색뿐 아니라 글자로도 알린다. */

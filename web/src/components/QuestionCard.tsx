@@ -4,6 +4,7 @@ import { MATCHED_LABEL } from '../lib/labels';
 import { questionPath } from '../routes';
 import { ExtraFlag, ImportanceBadge, ReviewBadge, TierBadge } from './Chips';
 import { LearnedCheckbox } from './LearnedCheckbox';
+import { TitleText } from './TitleText';
 
 interface Props {
   question: QuestionSummary;
@@ -24,7 +25,9 @@ export function QuestionCard({ question, topicName, matchedIn, learned }: Props)
         </div>
       )}
       <Link to={questionPath(question.slug)} className="block min-h-11 min-w-0 flex-1 p-3 no-underline">
-        <span className="block font-semibold text-[var(--color-text)]">{question.title}</span>
+        <span className="block font-semibold text-[var(--color-text)]">
+          <TitleText text={question.title} />
+        </span>
         {topicName && <span className="mt-0.5 block text-sm text-[var(--color-muted)]">{topicName}</span>}
         <span className="mt-2 flex flex-wrap gap-1.5">
           <TierBadge tier={question.tier} />

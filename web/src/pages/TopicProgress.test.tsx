@@ -111,7 +111,7 @@ describe('주제 화면: 일괄 확인창', () => {
     const trigger = screen.getByRole('button', { name: '모두 해제' });
     fireEvent.click(trigger);
     fireEvent.click(screen.getByRole('button', { name: '취소' }));
-    await waitFor(() => expect(document.querySelector('dialog')?.hasAttribute('open')).toBe(false));
+    await waitFor(() => expect(document.querySelector('dialog[aria-labelledby="confirm-title"]')?.hasAttribute('open')).toBe(false));
     expect(document.activeElement).toBe(trigger);
     expect(putCalls(requests)).toHaveLength(0);
   });
@@ -120,7 +120,7 @@ describe('주제 화면: 일괄 확인창', () => {
     const { requests } = await open({ [SESSION_URL]: authed(), ...base() });
     const trigger = screen.getByRole('button', { name: '모두 학습함으로 표시' });
     fireEvent.click(trigger);
-    const dialog = document.querySelector('dialog') as HTMLDialogElement;
+    const dialog = document.querySelector('dialog[aria-labelledby="confirm-title"]') as HTMLDialogElement;
     dialog.removeAttribute('open');
     fireEvent(dialog, new Event('close'));
     await waitFor(() => expect(document.activeElement).toBe(trigger));
@@ -167,7 +167,7 @@ describe('주제 화면: 일괄 확인창', () => {
     fireEvent.click(screen.getByRole('button', { name: '표시하기' }));
     expect(await screen.findByText('6개 질문을 학습 완료로 표시합니다.')).toBeTruthy();
     expect(screen.getByText('질문 수가 바뀌었습니다. 다시 확인해 주세요.')).toBeTruthy();
-    expect(document.querySelector('dialog')?.hasAttribute('open')).toBe(true);
+    expect(document.querySelector('dialog[aria-labelledby="confirm-title"]')?.hasAttribute('open')).toBe(true);
     expect(topicCalls).toBe(2);
   });
 

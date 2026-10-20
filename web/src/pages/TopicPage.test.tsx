@@ -44,6 +44,12 @@ function open(path = '/t/transaction') {
   );
 }
 
+/** 필터 시트를 열고 그 안을 돌려준다(필수도·보충·개념·내 체크 상태는 시트 안에 있다). */
+function openSheet() {
+  fireEvent.click(screen.getByRole('button', { name: /^필터( \d+)?$/ }));
+  return within(screen.getByRole('dialog', { name: '필터' }));
+}
+
 const cardCount = () => document.querySelectorAll('main ul li a[href*="/q/"]').length;
 
 describe('주제 화면', () => {
@@ -70,7 +76,7 @@ describe('주제 화면', () => {
   it('필수도 선택: 필수만 / 자주 이상 / 미분류', async () => {
     open();
     await screen.findByRole('heading', { name: '트랜잭션' });
-    const select = screen.getByRole('combobox', { name: '필수도' });
+    const select = openSheet().getByRole('combobox', { name: '필수도' });
     fireEvent.change(select, { target: { value: '3' } });
     expect(cardCount()).toBe(2);
     fireEvent.change(select, { target: { value: 'ge2' } });
@@ -83,7 +89,7 @@ describe('주제 화면', () => {
   it('보충이 있는 질문만 보기', async () => {
     open();
     await screen.findByRole('heading', { name: '트랜잭션' });
-    fireEvent.click(screen.getByRole('checkbox', { name: '보충이 있는 질문만' }));
+    fireEvent.click(openSheet().getByRole('checkbox', { name: '공식 문서 밖 설명이 있는 질문만' }));
     expect(cardCount()).toBe(2);
     expect(screen.getByTestId('where').textContent).toBe('/t/transaction?extra=1');
   });
@@ -91,11 +97,54 @@ describe('주제 화면', () => {
   it('개념 버튼은 개념 이름으로 보이고 다시 누르면 해제된다', async () => {
     open();
     await screen.findByRole('heading', { name: '트랜잭션' });
-    const group = screen.getByRole('group', { name: '개념' });
-    fireEvent.click(within(group).getByRole('button', { name: '트랜잭션 경계' }));
+    const group = within(openSheet().getByRole('group', { name: '개념' }));
+    fireEvent.click(group.getByRole('button', { name: '트랜잭션 경계' }));
     expect(cardCount()).toBe(2);
-    fireEvent.click(within(group).getByRole('button', { name: '트랜잭션 경계' }));
+    fireEvent.click(group.getByRole('button', { name: '트랜잭션 경계' }));
     expect(cardCount()).toBe(5);
+  });
+
+  it('필터 버튼에 적용한 필터 수가 붙고, 칩으로 한눈에 보이며, 칩을 누르면 그 필터만 풀린다', async () => {
+    open('/t/transaction?imp=3&extra=1&concept=proxy');
+    await screen.findByRole('heading', { name: '트랜잭션' });
+    expect(screen.getByRole('button', { name: '필터 3' })).toBeTruthy();
+    const chips = within(screen.getByRole('list', { name: '적용한 필터' }));
+    expect(chips.getAllByRole('button').map((b) => b.getAttribute('aria-label'))).toEqual(['필터 해제: 꼭 나와요만', '필터 해제: 공식 문서 밖 설명', '필터 해제: 개념: 프록시']);
+    fireEvent.click(chips.getByRole('button', { name: '필터 해제: 공식 문서 밖 설명' }));
+    expect(screen.getByTestId('where').textContent).toBe('/t/transaction?imp=3&concept=proxy');
+    expect(screen.getByRole('button', { name: '필터 2' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: '필터 해제: 공식 문서 밖 설명' })).toBeNull();
+  });
+
+  it('필터가 없으면 칩 목록도 개수도 없다', async () => {
+    open();
+    await screen.findByRole('heading', { name: '트랜잭션' });
+    expect(screen.queryByRole('list', { name: '적용한 필터' })).toBeNull();
+    expect(screen.getByRole('button', { name: '필터' })).toBeTruthy();
+  });
+
+  it('시트의 "질문 N개 보기" 는 시트를 닫고 포커스를 필터 버튼으로 돌려준다', async () => {
+    open('/t/transaction?imp=3');
+    await screen.findByRole('heading', { name: '트랜잭션' });
+    const sheet = openSheet();
+    fireEvent.click(sheet.getByRole('button', { name: '질문 2개 보기' }));
+    expect(document.querySelector('dialog[aria-labelledby="sheet-title"]')?.hasAttribute('open')).toBe(false);
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: '필터 1' }));
+  });
+
+  it('시트의 "모두 초기화" 는 모든 필터를 풀지만 난이도·검색어까지 함께 푼다', async () => {
+    open('/t/transaction?tier=DEEP&imp=none&q=질문');
+    await screen.findByRole('heading', { name: '트랜잭션' });
+    fireEvent.click(openSheet().getByRole('button', { name: '모두 초기화' }));
+    expect(screen.getByTestId('where').textContent).toBe('/t/transaction');
+    expect(cardCount()).toBe(5);
+  });
+
+  it('시트 밖에 난이도 분할 버튼과 검색창이 항상 있다(자주 쓰는 것은 바로)', async () => {
+    open();
+    await screen.findByRole('heading', { name: '트랜잭션' });
+    expect(screen.getByRole('group', { name: '난이도 구분' })).toBeTruthy();
+    expect(screen.getByRole('searchbox', { name: '이 주제에서 찾기' })).toBeTruthy();
   });
 
   it('주제 안 글 검색은 제목·키워드에서 찾는다', async () => {
@@ -113,7 +162,9 @@ describe('주제 화면', () => {
     expect(cardCount()).toBe(1);
     expect(screen.queryByText('REQUIRES_NEW 동작')).toBeNull();
     expect(screen.getByText('미분류 질문')).toBeTruthy();
-    expect((screen.getByRole('combobox', { name: '필수도' }) as HTMLSelectElement).value).toBe('none');
+    // 시트 밖에서도 적용한 필터가 보이고(칩), 시트를 열면 값이 복원돼 있다
+    expect(screen.getByRole('button', { name: '필터 해제: 필수도 미분류' })).toBeTruthy();
+    expect((openSheet().getByRole('combobox', { name: '필수도' }) as HTMLSelectElement).value).toBe('none');
     expect(screen.getByRole('button', { name: /심화 \(1\)/ }).getAttribute('aria-pressed')).toBe('true');
   });
 
@@ -135,8 +186,8 @@ describe('주제 화면', () => {
       </MemoryRouter>,
     );
     await screen.findByRole('heading', { name: '트랜잭션' });
-    const group = await screen.findByRole('group', { name: '개념' });
-    expect(within(group).getByRole('button', { name: 'tx-boundary' })).toBeTruthy();
+    const group = within(openSheet().getByRole('group', { name: '개념' }));
+    expect(await group.findByRole('button', { name: 'tx-boundary' })).toBeTruthy();
     expect(cardCount()).toBe(5);
   });
 
@@ -148,14 +199,17 @@ describe('주제 화면', () => {
     expect(within(details).getByRole('link', { name: 'https://docs.spring.io/tx' }).getAttribute('rel')).toBe('noopener noreferrer');
   });
 
-  it('질문 카드에 tier·필수도·보충 표시가 글로 있다', async () => {
+  it('질문 카드에 난이도·얼마나 자주 나오는지·공식 문서 밖 설명 표시가 글로 있다', async () => {
     open();
     await screen.findByRole('heading', { name: '트랜잭션' });
     const card = screen.getByText('전파 속성').closest('a') as HTMLAnchorElement;
     expect(card.textContent).toContain('기본');
-    expect(card.textContent).toContain('필수도 2 · 자주');
-    expect(card.textContent).toContain('보충 있음');
-    expect((screen.getByText('미분류 질문').closest('a') as HTMLAnchorElement).textContent).toContain('필수도 미분류');
+    expect(card.textContent).toContain('자주 나와요');
+    expect(card.textContent).toContain('공식 문서 밖 설명');
+    // 미분류는 정보가 없으니 표시를 하지 않는다
+    const unclassified = (screen.getByText('미분류 질문').closest('a') as HTMLAnchorElement).textContent ?? '';
+    expect(unclassified).not.toContain('나와요');
+    expect(unclassified).not.toContain('미분류 질문미분류');
   });
 
   it('문서 제목이 주제 이름이다', async () => {
