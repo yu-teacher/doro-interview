@@ -24,7 +24,7 @@ class RealContentLoadTest {
     private static final int TOPICS = 8;
     private static final int TRICKY = 44;
     /** 검수 배치를 커밋할 때마다 올린다(B4: tx-01~25). */
-    private static final int REVIEWED = 25;
+    private static final int REVIEWED = 54;
 
     @DynamicPropertySource
     static void schema(DynamicPropertyRegistry registry) {

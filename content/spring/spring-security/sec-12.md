@@ -6,7 +6,8 @@ difficulty: 2
 title: "ExceptionTranslationFilter는 인증 예외와 접근 거부를 각각 어떻게 처리하나요?"
 keywords: ["ExceptionTranslationFilter", "AuthenticationEntryPoint", "AccessDeniedHandler", "RequestCache", "BearerTokenAuthenticationEntryPoint"]
 has_extra: false
-status: DRAFT
+status: REVIEWED
+reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-security/reference/servlet/architecture.html", "https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/form.html", "https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/index.html"]
 ---
 **모범 답변 (30~60초)**

@@ -6,7 +6,8 @@ difficulty: 2
 title: "Environment는 프로파일과 프로퍼티를 어떻게 다루나요?"
 keywords: ["@Profile", "spring.profiles.active", "default 프로파일", "PropertySource", "시스템 프로퍼티"]
 has_extra: false
-status: DRAFT
+status: REVIEWED
+reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/environment.html"]
 ---
 **모범 답변 (30~60초)**

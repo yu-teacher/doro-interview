@@ -6,7 +6,8 @@ difficulty: 1
 title: "SecurityContextHolder, SecurityContext, Authentication은 어떤 관계인가요?"
 keywords: ["SecurityContextHolder", "ThreadLocal", "Authentication", "principal", "createEmptyContext"]
 has_extra: false
-status: DRAFT
+status: REVIEWED
+reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html", "https://docs.spring.io/spring-security/reference/servlet/architecture.html"]
 ---
 **모범 답변 (30~60초)**

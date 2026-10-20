@@ -6,7 +6,8 @@ difficulty: 1
 title: "스프링 시큐리티에서 인증과 인가는 각각 어떤 컴포넌트가 처리하나요?"
 keywords: ["AuthenticationManager", "ProviderManager", "AuthorizationFilter", "AuthorizationManager", "AccessDeniedException"]
 has_extra: false
-status: DRAFT
+status: REVIEWED
+reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html", "https://docs.spring.io/spring-security/reference/servlet/authorization/architecture.html", "https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html"]
 ---
 **모범 답변 (30~60초)**

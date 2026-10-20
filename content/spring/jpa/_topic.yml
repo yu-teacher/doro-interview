@@ -19,3 +19,5 @@ sources:
   - url: "https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html"
   - url: "https://docs.spring.io/spring-data/jpa/reference/repositories/projections.html"
   - url: "https://docs.spring.io/spring-data/jpa/reference/auditing.html"
+  - url: "https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html"
+    note: "11.1.18, 11.1.25만 읽음"

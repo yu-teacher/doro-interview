@@ -6,7 +6,8 @@ difficulty: 1
 title: "@Embeddable 값 타입은 무엇이고 엔티티와 어떻게 다른가요?"
 keywords: ["@Embeddable", "@Embedded", "식별자", "생명주기", "@AttributeOverride"]
 has_extra: false
-status: DRAFT
+status: REVIEWED
+reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.hibernate.org/orm/7.0/userguide/html_single/"]
 ---
 **모범 답변 (30~60초)**

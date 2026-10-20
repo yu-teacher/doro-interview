@@ -6,7 +6,8 @@ difficulty: 2
 title: "자바 설정에서 @Import와 @Conditional은 각각 어떤 역할을 하나요?"
 keywords: ["@Import", "@Conditional", "matches", "파라미터", "중첩 설정 클래스"]
 has_extra: false
-status: DRAFT
+status: REVIEWED
+reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/java/composing-configuration-classes.html"]
 ---
 **모범 답변 (30~60초)**

@@ -6,7 +6,8 @@ difficulty: 2
 title: "FactoryBean은 무엇이고, getBean에 &를 붙이는 이유는 무엇인가요?"
 keywords: ["FactoryBean", "getObject", "getObjectType", "isSingleton", "& 접두사"]
 has_extra: false
-status: DRAFT
+status: REVIEWED
+reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html"]
 ---
 **모범 답변 (30~60초)**

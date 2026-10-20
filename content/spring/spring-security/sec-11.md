@@ -6,7 +6,8 @@ difficulty: 2
 title: "CORS 설정은 왜 스프링 시큐리티보다 먼저 처리되어야 하나요?"
 keywords: ["CorsFilter", "preflight", "JSESSIONID", "CorsConfigurationSource", "UrlBasedCorsConfigurationSource"]
 has_extra: false
-status: DRAFT
+status: REVIEWED
+reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html"]
 ---
 **모범 답변 (30~60초)**

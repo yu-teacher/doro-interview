@@ -6,7 +6,8 @@ difficulty: 1
 title: "Spring Data JPA Auditing(@CreatedDate 등)은 어떻게 설정하나요?"
 keywords: ["@CreatedDate", "@LastModifiedDate", "AuditorAware", "@EnableJpaAuditing", "AuditingEntityListener"]
 has_extra: false
-status: DRAFT
+status: REVIEWED
+reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-data/jpa/reference/auditing.html"]
 ---
 **모범 답변 (30~60초)**
@@ -21,4 +22,4 @@ class Post {
 }
 ```
 
-(공식 문서) auditing 페이지에 근거한다. AuditorAware 빈이 여러 개면 auditorAwareRef로 선택한다. 문서는 spring-aspects 및 orm.xml 관련 요구도 적지만 최신 Boot 4 환경에서의 필요 여부는 확인하지 못해 본문에서 제외했다.
+(공식 문서) auditing 페이지에 근거한다. AuditorAware 빈이 여러 개면 auditorAwareRef로 선택한다. 문서는 모든 엔티티에 적용하려면 orm.xml에 리스너를 등록하는 방법도 적고 spring-aspects.jar가 필요하다고 하지만, 최신 Boot 4 환경에서의 필요 여부는 확인하지 못해 본문에서 제외했다.

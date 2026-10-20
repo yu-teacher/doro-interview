@@ -6,7 +6,8 @@ difficulty: 3
 title: "@EventListener는 기본적으로 동기인가요? @Async를 붙이면 무엇이 달라지나요?"
 keywords: ["동기 실행", "발행자의 트랜잭션", "@Async", "AsyncUncaughtExceptionHandler", "ThreadLocal"]
 has_extra: false
-status: DRAFT
+status: REVIEWED
+reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/context-introduction.html"]
 ---
 **모범 답변 (30~60초)**

@@ -6,7 +6,8 @@ difficulty: 1
 title: "UserDetailsService와 DaoAuthenticationProvider는 어떻게 함께 동작하나요?"
 keywords: ["UserDetailsService", "DaoAuthenticationProvider", "PasswordEncoder", "UserDetails", "FACTOR_PASSWORD"]
 has_extra: false
-status: DRAFT
+status: REVIEWED
+reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/user-details-service.html", "https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/dao-authentication-provider.html", "https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html"]
 ---
 **모범 답변 (30~60초)**
