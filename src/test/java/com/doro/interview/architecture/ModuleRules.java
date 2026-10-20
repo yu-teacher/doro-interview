@@ -14,8 +14,9 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
  * common   -> (없음)   모든 모듈이 common 에 의존할 수 있다(응답 규격·예외)
  * account  -> (없음)
  * catalog  -> (없음)
- * progress -> catalog, account
- * quiz     -> catalog, account, progress.read(읽기 전용 패키지)
+ * mine     -> account            (내 질문, docs/M4-PLAN.md D8)
+ * progress -> catalog, account, mine.read(읽기 전용 패키지)
+ * quiz     -> catalog, account, progress.read, mine.read(읽기 전용 패키지)
  * api      -> 전부 (아무도 api 에 의존하지 않는다)
  * </pre>
  *
@@ -23,19 +24,22 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
  */
 final class ModuleRules {
 
-    private static final List<String> MODULES = List.of("common", "account", "catalog", "progress", "quiz", "api");
+    private static final List<String> MODULES = List.of("common", "account", "catalog", "mine", "progress", "quiz", "api");
 
     private ModuleRules() {
     }
 
     static List<ArchRule> all(String base) {
         return List.of(
-                forbid(base, "common", "account", "catalog", "progress", "quiz", "api"),
-                forbid(base, "account", "catalog", "progress", "quiz", "api"),
-                forbid(base, "catalog", "account", "progress", "quiz", "api"),
+                forbid(base, "common", "account", "catalog", "mine", "progress", "quiz", "api"),
+                forbid(base, "account", "catalog", "mine", "progress", "quiz", "api"),
+                forbid(base, "catalog", "account", "mine", "progress", "quiz", "api"),
+                forbid(base, "mine", "catalog", "progress", "quiz", "api"),
                 forbid(base, "progress", "quiz", "api"),
                 forbid(base, "quiz", "api"),
                 quizDoesNotWriteProgress(base),
+                onlyMineRead(base, "progress"),
+                onlyMineRead(base, "quiz"),
                 sdkOnlyInAccountAndConfig(base));
     }
 
@@ -57,6 +61,19 @@ final class ModuleRules {
                                         && !c.getPackageName().equals(base + ".progress.read")
                                         && !c.getPackageName().startsWith(base + ".progress.read.")))
                 .as("quiz 모듈은 progress.read 패키지만 쓴다. progress 에 쓰지 않는다")
+                .allowEmptyShould(true);
+    }
+
+    /** progress·quiz 는 mine 의 읽기 창구(mine.read)만 쓴다. 내 질문을 쓰거나 mine 의 구현을 알지 못한다(docs/M4-PLAN.md D8). */
+    private static ArchRule onlyMineRead(String base, String from) {
+        return noClasses().that().resideInAPackage(base + "." + from + "..")
+                .should().dependOnClassesThat(
+                        com.tngtech.archunit.base.DescribedPredicate.describe(
+                                "mine 모듈에서 mine.read 밖의 클래스",
+                                c -> c.getPackageName().startsWith(base + ".mine")
+                                        && !c.getPackageName().equals(base + ".mine.read")
+                                        && !c.getPackageName().startsWith(base + ".mine.read.")))
+                .as(from + " 모듈은 mine.read 패키지만 쓴다")
                 .allowEmptyShould(true);
     }
 
