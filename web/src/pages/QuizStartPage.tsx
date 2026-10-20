@@ -13,6 +13,8 @@ import { loginUrl, useSession, useSessionKey } from '../session/SessionProvider'
 
 const FIELD = 'min-h-11 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-base';
 const MAX_COUNT = 30;
+/** 시험 범위에서 "내 질문" 을 고르는 가짜 주제(서버와 같은 값). 고르지 않으면 주제 필터가 없을 때만 내 질문이 들어간다. */
+const MINE_TOPIC = '@mine';
 
 function newSessionId(): string {
   return crypto.randomUUID();
@@ -91,6 +93,13 @@ function StartForm({ categories, includeUnlearnedDefault }: FormProps) {
             </div>
           </div>
         ))}
+        <div role="group" aria-label="내 질문" className="space-y-1">
+          <p className="text-sm text-[var(--color-muted)]">내 질문</p>
+          <label className="flex min-h-11 items-center gap-2">
+            <input type="checkbox" className="size-5" checked={topics.has(MINE_TOPIC)} onChange={() => toggle(topics, MINE_TOPIC, setTopics)} />
+            <span>내 질문</span>
+          </label>
+        </div>
       </fieldset>
 
       <fieldset className="flex flex-wrap items-center gap-x-4">

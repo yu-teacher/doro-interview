@@ -11,7 +11,7 @@ import { ProgressBar } from '../components/ProgressBar';
 import { ReviewList } from '../components/ReviewList';
 import { useApi } from '../hooks/useApi';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
-import { questionPath, quizStartPath, topicPath } from '../routes';
+import { questionLink, quizStartPath, topicPath } from '../routes';
 import { loginUrl, useSession, useSessionKey } from '../session/SessionProvider';
 
 function Last30Days({ stats }: { stats: QuizStats }) {
@@ -59,7 +59,7 @@ function MostMissed({ stats }: { stats: QuizStats }) {
       <ol className="mt-2 space-y-2">
         {stats.mostMissed.map((m) => (
           <li key={m.questionSlug} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
-            <Link to={questionPath(m.questionSlug)} className="inline-flex min-h-11 items-center font-semibold no-underline">
+            <Link to={questionLink(m.questionSlug)} className="inline-flex min-h-11 items-center font-semibold no-underline">
               {m.title}
             </Link>
             <div className="flex flex-wrap items-center gap-1.5 text-sm text-[var(--color-muted)]">

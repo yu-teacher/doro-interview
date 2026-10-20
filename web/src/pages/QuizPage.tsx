@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { fetchQuestion } from '../api/catalog';
+import { fetchMineQuestion } from '../api/mine';
 import { ApiError, userMessage } from '../api/client';
 import { fetchQuiz, finishQuiz, putQuizItem } from '../api/quiz';
-import type { QuestionDetail, QuizItem, QuizResult, QuizSession } from '../api/types';
+import type { MineQuestion, QuestionDetail, QuizItem, QuizResult, QuizSession } from '../api/types';
 import { AsyncView } from '../components/AsyncView';
 import { ImportanceBadge, KeywordList, TierBadge } from '../components/Chips';
 import { setDraftDirty } from '../drafts/draftRegistry';
 import { useApi } from '../hooks/useApi';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { LazyMarkdown } from '../markdown/LazyMarkdown';
-import { questionPath, quizStartPath } from '../routes';
+import { mineIdOf, questionLink, quizStartPath } from '../routes';
 import { loginUrl, useSession, useSessionKey } from '../session/SessionProvider';
 
 /** 노트와 같은 상한(코드포인트 기준). 서버가 다시 검사한다. */
@@ -39,6 +40,54 @@ function useElapsed(resetKey: string): () => number {
   return useCallback(() => Math.floor((Date.now() - startedRef.current) / 1000), []);
 }
 
+/** 공용 질문의 모범 답변 카드. */
+function CatalogAnswerCard({ q }: { q: QuestionDetail }) {
+  return (
+    <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+      <LazyMarkdown source={q.spokenAnswer} />
+      {q.keywords.length > 0 && (
+        <div className="mt-3">
+          <p className="text-sm font-semibold">핵심 키워드 — 말한 것에 표시해 보세요</p>
+          <KeywordList keywords={q.keywords} />
+        </div>
+      )}
+      <div className="mt-2 flex flex-wrap items-center gap-1.5">
+        <ImportanceBadge importance={q.importance} />
+        <Link to={questionLink(q.slug)} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center text-sm">
+          사전에서 자세히 보기(새 탭)
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+/** 내 질문의 "모범 답변" 은 내가 적어 둔 답이다(일반 텍스트, HTML 로 해석하지 않는다). */
+function MineAnswerCard({ mine }: { mine: MineQuestion }) {
+  return (
+    <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+      <p className="text-sm text-[var(--color-muted)]">내가 적어 둔 답입니다.</p>
+      {mine.answerText === '' ? (
+        <p className="mt-1 text-[var(--color-muted)]">적어 둔 답이 없습니다.</p>
+      ) : (
+        <p data-testid="mine-answer" className="mt-1 whitespace-pre-wrap break-words">
+          {mine.answerText}
+        </p>
+      )}
+      {mine.keywords.length > 0 && (
+        <div className="mt-3">
+          <p className="text-sm font-semibold">핵심 키워드 — 말한 것에 표시해 보세요</p>
+          <KeywordList keywords={mine.keywords} />
+        </div>
+      )}
+      <div className="mt-2">
+        <Link to={questionLink(mine.slug)} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center text-sm">
+          내 질문에서 자세히 보기(새 탭)
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 // ---------------------------------------------------------------------------- 문제 하나
 
 interface AskProps {
@@ -57,9 +106,18 @@ function Ask({ sessionId, item, total, answered, onDone, onProblem }: AskProps) 
   const [busy, setBusy] = useState(false);
   const elapsed = useElapsed(`${sessionId}:${item.seq}`);
   const closed = item.title === null;
-  const answerState = useApi<QuestionDetail | null>(
+  // 모범 답변은 "보기" 를 누른 뒤에만 받는다. 내 질문이면 내가 적은 답(GET /mine/{id}), 아니면 공용 질문이다.
+  const mineId = mineIdOf(item.questionSlug);
+  const answerState = useApi<{ question: QuestionDetail } | { mine: MineQuestion } | null>(
     `quiz-answer:${item.questionSlug}:${revealed}`,
-    (signal) => (revealed ? fetchQuestion(item.questionSlug, signal) : Promise.resolve(null)),
+    (signal) => {
+      if (!revealed) {
+        return Promise.resolve(null);
+      }
+      return mineId === null
+        ? fetchQuestion(item.questionSlug, signal).then((question) => ({ question }))
+        : fetchMineQuestion(mineId, signal).then((mine) => ({ mine }));
+    },
     revealed,
   );
   const tooLong = codePoints(text) > ANSWER_MAX;
@@ -148,25 +206,7 @@ function Ask({ sessionId, item, total, answered, onDone, onProblem }: AskProps) 
             <div className="mt-4">
               <h3 className="font-bold">모범 답변</h3>
               <AsyncView state={answerState.state} reload={answerState.reload} notFoundMessage="이 질문은 더 이상 공개되지 않습니다.">
-                {(q) =>
-                  q === null ? null : (
-                    <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-                      <LazyMarkdown source={q.spokenAnswer} />
-                      {q.keywords.length > 0 && (
-                        <div className="mt-3">
-                          <p className="text-sm font-semibold">핵심 키워드 — 말한 것에 표시해 보세요</p>
-                          <KeywordList keywords={q.keywords} />
-                        </div>
-                      )}
-                      <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                        <ImportanceBadge importance={q.importance} />
-                        <Link to={questionPath(q.slug)} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center text-sm">
-                          사전에서 자세히 보기(새 탭)
-                        </Link>
-                      </div>
-                    </div>
-                  )
-                }
+                {(answer) => (answer === null ? null : 'mine' in answer ? <MineAnswerCard mine={answer.mine} /> : <CatalogAnswerCard q={answer.question} />)}
               </AsyncView>
               <p className="mt-4 font-bold">내가 말한 것은 어땠나요?</p>
               <div className="mt-2 flex flex-wrap gap-2">
@@ -219,8 +259,8 @@ function Result({ session }: { session: QuizSession }) {
               <li key={i.seq} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
                 <p className="font-semibold">{i.title ?? '(더 이상 공개되지 않는 질문)'}</p>
                 {i.title !== null && (
-                  <Link to={questionPath(i.questionSlug)} className="inline-flex min-h-11 items-center">
-                    사전에서 보기
+                  <Link to={questionLink(i.questionSlug)} className="inline-flex min-h-11 items-center">
+                    {mineIdOf(i.questionSlug) === null ? '사전에서 보기' : '내 질문에서 보기'}
                   </Link>
                 )}
               </li>

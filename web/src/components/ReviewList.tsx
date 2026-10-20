@@ -5,7 +5,7 @@ import { putLearned } from '../api/progress';
 import { fetchReviewCandidates } from '../api/quiz';
 import type { ReviewCandidate } from '../api/types';
 import { useApi } from '../hooks/useApi';
-import { questionPath } from '../routes';
+import { questionLink } from '../routes';
 import { useSession, useSessionKey } from '../session/SessionProvider';
 import { TierBadge } from './Chips';
 
@@ -62,7 +62,7 @@ export function ReviewList({ limit, heading = '다시 공부 후보', onReleased
         {shown.map((c) => (
           <li key={c.slug} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
             <div className="min-w-0">
-              <Link to={questionPath(c.slug)} className="inline-flex min-h-11 items-center font-semibold no-underline">
+              <Link to={questionLink(c.slug)} className="inline-flex min-h-11 items-center font-semibold no-underline">
                 {c.title}
               </Link>
               <div className="flex flex-wrap items-center gap-1.5 text-sm text-[var(--color-muted)]">
