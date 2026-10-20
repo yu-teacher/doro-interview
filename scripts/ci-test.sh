@@ -4,6 +4,7 @@
 #   scripts/ci-test.sh            # 전체
 #   scripts/ci-test.sh backend    # 백엔드(+ 변환기 단위 테스트)
 #   scripts/ci-test.sh web        # 프런트만 (스택 불필요)
+#   CI_PROJECT=interview-ci-b CI_DB_PORT=25434 scripts/ci-test.sh backend   # 다른 실행과 겹치지 않게
 #
 # 필요: Docker, Java 25, Node 24, Python 3. 포트는 CI_DB_PORT 로 바꿀 수 있다.
 set -Eeuo pipefail
@@ -13,7 +14,9 @@ TARGET="${1:-all}"
 export CI_DB_PASSWORD="${CI_DB_PASSWORD:-ci-only-password}"
 export CI_DB_PORT="${CI_DB_PORT:-25433}"
 STACK_TIMEOUT_SEC="${CI_STACK_TIMEOUT_SEC:-120}"
-COMPOSE=(docker compose -p interview-ci -f docker-compose.ci.yml)
+# 같은 체크아웃에서 CI 스크립트를 동시에 돌릴 때(세션 둘 등)는 CI_PROJECT 와 CI_DB_PORT 를 서로 다르게 준다(안 그러면 한쪽이 상대의 DB 를 내린다).
+CI_PROJECT="${CI_PROJECT:-interview-ci}"
+COMPOSE=(docker compose -p "$CI_PROJECT" -f docker-compose.ci.yml)
 
 log() { printf '[%s] %s\n' "$(date +%H:%M:%S)" "$*"; }
 die() { log "ERROR: $*"; exit 1; }
