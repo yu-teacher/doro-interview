@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -57,6 +59,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleNotAcceptable(HttpMediaTypeNotAcceptableException e) {
         log.warn("HttpMediaTypeNotAcceptableException: {}", e.getMessage());
         return respond(ErrorCode.NOT_ACCEPTABLE, ErrorCode.NOT_ACCEPTABLE.message());
+    }
+
+    /** 본문이 없거나, JSON 이 아니거나, 모르는 필드가 있는 쓰기 요청. 내부 파싱 메시지는 싣지 않는다. */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNotReadable(HttpMessageNotReadableException e) {
+        log.warn("Unreadable request body: {}", e.getClass().getSimpleName());
+        return respond(ErrorCode.INVALID_INPUT, ErrorCode.INVALID_INPUT.message());
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUnsupportedMediaType(HttpMediaTypeNotSupportedException e) {
+        log.warn("HttpMediaTypeNotSupportedException: {}", e.getContentType());
+        return respond(ErrorCode.UNSUPPORTED_MEDIA_TYPE, ErrorCode.UNSUPPORTED_MEDIA_TYPE.message());
     }
 
     @ExceptionHandler(Exception.class)

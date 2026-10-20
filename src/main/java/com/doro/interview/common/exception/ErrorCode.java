@@ -19,6 +19,9 @@ public enum ErrorCode {
     // 405
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "COMMON-405-01", "지원하지 않는 HTTP 메서드입니다."),
 
+    // 415
+    UNSUPPORTED_MEDIA_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "COMMON-415-01", "지원하지 않는 요청 형식입니다."),
+
     // 406
     NOT_ACCEPTABLE(HttpStatus.NOT_ACCEPTABLE, "COMMON-406-01", "요청한 응답 형식을 제공할 수 없습니다."),
 
