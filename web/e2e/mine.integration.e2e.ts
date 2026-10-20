@@ -150,6 +150,65 @@ test('삭제는 PUT 이고, 체크·통계는 사라지고 지난 시험은 깨�
   }
 });
 
+test('화면에서: 추가 → 체크 → 시험(내 질문만) → 내가 적은 답 공개 → 틀림 → 후보 → 삭제', async ({ browser }) => {
+  const carol = await newActor(browser);
+  const errors: string[] = [];
+  carol.page.on('console', (m) => m.type() === 'error' && errors.push(`console.error: ${m.text()}`));
+  carol.page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+  try {
+    const page = carol.page;
+    await page.goto('/interview/mine');
+    await expect(page.getByText(/아직 추가한 질문이 없습니다/)).toBeVisible();
+
+    await page.getByRole('button', { name: '질문 추가' }).click();
+    const form = page.getByRole('region', { name: '질문 추가' });
+    await form.getByLabel('질문').fill('프록시가 뭔가요? <b>x</b>');
+    await form.getByLabel(/내 답/).fill('호출을 대신 받아 앞뒤로 일을 합니다.\n<script>1</script>');
+    await form.getByLabel(/키워드/).fill('프록시, AOP');
+    await form.getByLabel(/출처 표시/).fill('강사 추천');
+    await form.getByRole('button', { name: '추가', exact: true }).click();
+    const item = page.getByRole('link', { name: '프록시가 뭔가요? <b>x</b>' });
+    await expect(item).toBeVisible();
+    await expect(page.getByText('강사 추천')).toBeVisible();
+    expect(await page.locator('main b').count()).toBe(0); // 제목이 HTML 로 해석되지 않는다
+
+    await page.getByRole('checkbox', { name: /학습함: 프록시가 뭔가요/ }).check();
+    await page.reload();
+    await expect(page.getByRole('checkbox', { name: /학습함: 프록시가 뭔가요/ })).toBeChecked();
+
+    // 시험: 내 질문만
+    await page.goto('/interview/quiz');
+    await page.getByRole('checkbox', { name: '내 질문' }).check();
+    await page.getByRole('button', { name: '시험 시작' }).click();
+    await expect(page.getByRole('heading', { level: 2, name: '프록시가 뭔가요? <b>x</b>' })).toBeVisible();
+    const asked: string[] = [];
+    page.on('request', (r) => asked.push(r.url()));
+    await page.getByRole('button', { name: '모범 답변 보기' }).click();
+    await expect(page.getByTestId('mine-answer')).toHaveText('호출을 대신 받아 앞뒤로 일을 합니다.\n<script>1</script>');
+    expect(await page.locator('main script').count()).toBe(0);
+    expect(asked.some((u) => u.includes('/api/v1/questions/'))).toBe(false);
+    await page.getByRole('button', { name: '틀림', exact: true }).click();
+    await expect(page.getByRole('heading', { name: '시험 결과' })).toBeVisible();
+    await expect(page.getByRole('link', { name: '내 질문에서 보기' })).toBeVisible();
+
+    // 후보로 보이고, 내 질문 화면의 배지도 붙는다
+    await page.goto('/interview/');
+    await expect(page.getByRole('heading', { name: '다시 공부 후보 (1)' })).toBeVisible();
+    await page.getByRole('link', { name: '프록시가 뭔가요? <b>x</b>' }).click();
+    await expect(page.getByRole('heading', { level: 1, name: '프록시가 뭔가요? <b>x</b>' })).toBeVisible();
+    await expect(page.getByText('다시 공부 후보').first()).toBeVisible();
+
+    // 삭제: 확인창을 거쳐 PUT 으로 지우고 목록으로 돌아간다
+    await page.getByRole('button', { name: '삭제' }).click();
+    await page.getByRole('dialog').getByRole('button', { name: '지우기' }).click();
+    await expect(page.getByRole('heading', { level: 1, name: '내 질문' })).toBeVisible();
+    await expect(page.getByText(/아직 추가한 질문이 없습니다/)).toBeVisible();
+    expect(errors.filter((e) => !e.includes('400'))).toEqual([]);
+  } finally {
+    await carol.context.close();
+  }
+});
+
 test('Doro 에서 탈퇴하면 동기화가 내 질문과 체크를 지운다', async () => {
   const before = countRows(`SELECT count(*) FROM my_question WHERE user_id = '${alice.user}'`);
   if (before !== null) {
