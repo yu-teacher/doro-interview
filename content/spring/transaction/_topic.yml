@@ -17,3 +17,5 @@ sources:
   - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html"
   - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/programmatic.html"
   - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html"
+  - url: "https://docs.spring.io/spring-framework/reference/data-access/orm/jpa.html"
+  - url: "https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html"

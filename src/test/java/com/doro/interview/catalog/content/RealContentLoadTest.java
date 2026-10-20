@@ -23,6 +23,8 @@ class RealContentLoadTest {
     private static final int QUESTIONS = 159;
     private static final int TOPICS = 7;
     private static final int TRICKY = 39;
+    /** 검수 배치를 커밋할 때마다 올린다(B1: tx-01~08). */
+    private static final int REVIEWED = 8;
 
     @DynamicPropertySource
     static void schema(DynamicPropertyRegistry registry) {
@@ -48,8 +50,10 @@ class RealContentLoadTest {
     }
 
     @Test
-    void 시드는_전부_초안이고_주제는_비공개다() {
-        assertThat(count("select count(*) from question where status <> 'DRAFT' or reviewed_at is not null or needs_review")).isZero();
+    void 검수된_질문은_기대_수만큼이고_주제는_비공개다() {
+        assertThat(count("select count(*) from question where status = 'REVIEWED' and reviewed_at is not null and not needs_review")).isEqualTo(REVIEWED);
+        assertThat(count("select count(*) from question where status = 'DRAFT' and (reviewed_at is not null or needs_review)")).isZero();
+        assertThat(count("select count(*) from question where status not in ('DRAFT', 'REVIEWED')")).isZero();
         assertThat(count("select count(*) from topic where published")).isZero();
         assertThat(count("select count(*) from question where retired_at is not null")).isZero();
     }

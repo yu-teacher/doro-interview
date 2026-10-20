@@ -23,6 +23,8 @@ class ContentIntegrityTest {
     private static final int QUESTIONS = 159;
     private static final int TOPICS = 7;
     private static final int TRICKY = 39;
+    /** 검수 배치를 커밋할 때마다 올린다(B1: tx-01~08). */
+    private static final int REVIEWED = 8;
 
     private static ContentSet content;
 
@@ -81,11 +83,13 @@ class ContentIntegrityTest {
     }
 
     @Test
-    void 시드는_모두_초안이고_주제는_비공개다() {
+    void 검수된_질문은_기대_수만큼이고_검수일이_있으며_주제는_비공개다() {
         assertThat(content.questions()).allSatisfy(q -> {
-            assertThat(q.status()).isEqualTo("DRAFT");
-            assertThat(q.reviewedAt()).isNull();
+            assertThat(q.status()).isIn("DRAFT", "REVIEWED");
+            if (q.status().equals("REVIEWED")) assertThat(q.reviewedAt()).as(q.slug()).isNotNull();
+            else assertThat(q.reviewedAt()).as(q.slug()).isNull();
         });
+        assertThat(content.questions().stream().filter(q -> q.status().equals("REVIEWED")).count()).isEqualTo(REVIEWED);
         assertThat(content.topics()).noneMatch(TopicDoc::published);
     }
 
