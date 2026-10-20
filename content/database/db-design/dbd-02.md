@@ -9,7 +9,7 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://www.postgresql.org/docs/16/ddl-constraints.html", "https://www.postgresql.org/docs/16/datatype-numeric.html", "https://www.postgresql.org/docs/16/sql-createtable.html"]
-concepts: [schema-design]
+concepts: [schema-design, id-generation]
 importance: 3
 links: [{to: "dbd-03", kind: FOLLOWUP}, {to: "dbd-07", kind: FOLLOWUP}, {to: "dbs-01", kind: RELATED}, {to: "jpa-10", kind: RELATED}]
 ---

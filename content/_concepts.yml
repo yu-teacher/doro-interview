@@ -35,6 +35,9 @@ concepts:
   - slug: observability
     name: "관측성"
     description: "로그·메트릭·트레이싱, Actuator, 슬로우 쿼리 추적"
+  - slug: event-driven
+    name: "이벤트·리스너"
+    description: "애플리케이션 이벤트, 옵저버, 동기·비동기 리스너"
   - slug: cache
     name: "캐시"
     description: "캐시 전략, 무효화, 일관성, 교체 정책(LRU 등)"
@@ -104,6 +107,9 @@ concepts:
   - slug: bean-lifecycle
     name: "빈 생명주기와 스코프"
     description: "싱글톤·프로토타입 스코프, 초기화·소멸, 후처리기"
+  - slug: bean-scope
+    name: "빈 스코프"
+    description: "싱글톤·프로토타입·웹 스코프와 스코프가 다른 빈 주입"
   - slug: proxy
     name: "프록시"
     description: "AOP 프록시 기반 동작과 그 제약(자기 호출, final/private)"
@@ -119,6 +125,12 @@ concepts:
   - slug: mvc-request-flow
     name: "MVC 요청 처리 흐름"
     description: "DispatcherServlet, 컨트롤러 바인딩, 메시지 변환, 검증, DTO"
+  - slug: servlet-container
+    name: "서블릿 컨테이너"
+    description: "Tomcat 같은 서블릿 컨테이너와 내장 서버, 요청 스레드 모델"
+  - slug: request-validation
+    name: "요청 검증·DTO"
+    description: "요청 바인딩, Bean Validation, 요청·응답 DTO 설계"
   - slug: global-exception-handling
     name: "전역 예외 처리"
     description: "@ControllerAdvice, ProblemDetail, 예외 처리 경로"
@@ -140,6 +152,12 @@ concepts:
   - slug: entity-mapping
     name: "엔티티 매핑"
     description: "연관관계, 상속, 값 타입, 식별자 전략"
+  - slug: orm
+    name: "ORM"
+    description: "객체-관계 패러다임 불일치와 ORM의 역할"
+  - slug: id-generation
+    name: "식별자 생성 전략"
+    description: "IDENTITY·SEQUENCE·UUID 등 기본키 생성과 영향"
   - slug: spring-data-jpa
     name: "Spring Data JPA"
     description: "리포지토리, 쿼리 방식, 페이징, 프로젝션, 대량 처리"
@@ -242,6 +260,9 @@ concepts:
   - slug: http-protocol
     name: "HTTP 프로토콜"
     description: "메서드·상태 코드, 버전별 차이, 웹소켓"
+  - slug: http-client
+    name: "HTTP 클라이언트"
+    description: "RestClient·RestTemplate·HttpClient 등 HTTP 호출 클라이언트와 타임아웃·연결 재사용"
   - slug: virtual-memory
     name: "가상 메모리"
     description: "페이징, TLB, 페이지 폴트, 교체, mmap"

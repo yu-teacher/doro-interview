@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://objectmentor.com/resources/articles/Principles_and_Patterns.pdf", "https://docs.spring.io/spring-framework/reference/core/beans/context-introduction.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ApplicationListener.html"]
-concepts: [gof-patterns]
+concepts: [gof-patterns, event-driven]
 importance: 2
 links: [{to: "pat-16", kind: FOLLOWUP}, {to: "pat-17", kind: FOLLOWUP}, {to: "ioc-25", kind: RELATED}]
 refs: ["Martin, Design Principles and Design Patterns (2000), Observer, pp.29~30 (머리글 기준 쪽 번호)"]

@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/integration/rest-clients.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/client/RestClient.html", "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes", "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-6.1-Release-Notes"]
-concepts: [http-protocol]
+concepts: [http-client, http-protocol]
 importance: 2
 links: [{to: "misc-16", kind: FOLLOWUP}, {to: "mvc-16", kind: RELATED}]
 ---

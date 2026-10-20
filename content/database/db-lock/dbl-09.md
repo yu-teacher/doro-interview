@@ -18,4 +18,4 @@ PostgreSQL 16의 테이블 락은 ACCESS SHARE부터 ACCESS EXCLUSIVE까지 여�
 
 (공식 문서) explicit-locking 13.3.1절의 모드별 설명과 충돌표(Table 13.2): ACCESS EXCLUSIVE는 DROP TABLE, TRUNCATE, REINDEX, CLUSTER, VACUUM FULL과 ALTER TABLE의 여러 형태가 잡는다. 락은 보통 트랜잭션이 끝날 때까지 유지된다. functions-info의 `pg_blocking_pids` 설명은 락을 막는 쪽에 "충돌하는 락을 가진 쪽"뿐 아니라 "충돌하는 락을 기다리면서 대기열에서 앞서 있는 쪽"도 포함한다고 쓴다. runtime-config-client의 `lock_timeout`은 락 획득 대기를 제한한다. sql-lock은 `LOCK TABLE`의 기본 모드가 ACCESS EXCLUSIVE이고 `NOWAIT`를 줄 수 있다고 한다.
 (실험 확인) PostgreSQL 16.15: 세션 A가 트랜잭션 안에서 `SELECT count(*)`를 하고 열어 둔 상태에서 세션 B가 `ALTER TABLE accounts ADD COLUMN ...`을 실행하자 `pg_locks`에 A의 `AccessShareLock`(granted)과 B의 `AccessExclusiveLock`(granted=false)이 보였다. 이후 세션 C의 일반 `SELECT count(*)`는 `lock_timeout=1s` 안에 끝나지 못하고 약 1.0초 뒤 락 타임아웃으로 중단됐다. DDL 쪽에 `lock_timeout='500ms'`를 걸고 같은 상황을 만들면 DDL이 500ms 뒤 오류로 포기했고 이어진 SELECT는 정상 실행됐다.
-(보충) 운영 DDL에 짧은 lock_timeout을 걸고 실패하면 재시도하는 방식은 공식 문서의 권장이 아니라 일반적인 운영 관행이다. 이번에는 그 효과를 위 실험으로만 확인했다.
+(보충) 운영 DDL에 짧은 lock_timeout을 걸고 실패하면 재시도하는 방식은 공식 문서의 권장이 아니라 일반적인 운영 관행이다. 그 효과를 위 실험으로만 확인했다.

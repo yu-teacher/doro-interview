@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/requestbody.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/arguments.html"]
-concepts: [mvc-request-flow]
+concepts: [request-validation]
 importance: 3
 links: [{to: "mvc-04", kind: PREREQ}, {to: "mvc-14", kind: FOLLOWUP}, {to: "mvc-12", kind: RELATED}]
 ---

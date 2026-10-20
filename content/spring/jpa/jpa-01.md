@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://docs.hibernate.org/orm/7.0/introduction/html_single/"]
-concepts: [entity-mapping, persistence-context]
+concepts: [orm, entity-mapping]
 importance: 3
 links: [{to: "jpa-02", kind: FOLLOWUP}, {to: "jpa-03", kind: FOLLOWUP}, {to: "jpa-32", kind: RELATED}]
 ---

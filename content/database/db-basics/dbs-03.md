@@ -25,4 +25,4 @@ INNER JOIN은 조건이 참인 행 쌍만 돌려줍니다. LEFT JOIN은 내부 �
 
 (공식 문서) PostgreSQL 16 queries-table-expressions 페이지가 CROSS, INNER, LEFT/RIGHT/FULL OUTER 조인의 정의를 단계별로 설명한다. 특히 외부 조인은 먼저 내부 조인을 하고 짝 없는 행을 NULL로 채워 더한다고 서술한다. MySQL 8.4 매뉴얼 JOIN 페이지의 문법 절에는 INNER|CROSS JOIN, STRAIGHT_JOIN, LEFT|RIGHT [OUTER] JOIN, NATURAL JOIN이 나오고 FULL은 없다.
 (실험 확인) 위 표의 행 수는 두 DB에서 모두 그대로 나왔다. PostgreSQL 16.15는 `FULL OUTER JOIN`이 되지만 MySQL 8.4.11은 같은 문장이 문법 오류(1064)였고, `LEFT JOIN ... UNION ... RIGHT JOIN`으로는 4행(1, 2, 3, 5 기준)이 나왔다. 다만 t1 = (10, 20, 30, 30), t2 = (10, 30, 50)처럼 중복 값이 있는 데이터에서는 PostgreSQL의 `FULL JOIN`이 5행인데 단순 UNION 방식은 중복 행이 합쳐져 4행이었고, `LEFT JOIN ... UNION ALL (RIGHT JOIN ... WHERE 왼쪽 키 IS NULL)`은 5행으로 일치했다. MySQL 8.4.11에서 `OUTER`를 빼고 `FULL JOIN`이라고만 쓰면 문법 오류 없이 FULL이 테이블 별칭처럼 처리되어 `ON t1.num = t2.num`이 "Unknown column" 오류가 났고, `USING (num)`으로 쓰면 내부 조인 결과(3행)가 나왔다. `FROM t1, t2`는 `CROSS JOIN`과 같은 9행이었다.
-(보충) MySQL에서 FULL JOIN을 LEFT JOIN과 UNION ALL로 흉내 내는 방법은 이번에 읽은 매뉴얼 JOIN 페이지에 나오지 않는 일반적인 우회 방법이고, 위 실험으로만 확인했다.
+(보충) MySQL에서 FULL JOIN을 LEFT JOIN과 UNION ALL로 흉내 내는 방법은 참고한 매뉴얼 JOIN 페이지에 나오지 않는 일반적인 우회 방법이고, 위 실험으로만 확인했다.

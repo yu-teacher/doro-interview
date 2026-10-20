@@ -27,4 +27,4 @@ PostgreSQL 16의 행 락은 강한 순서로 FOR UPDATE, FOR NO KEY UPDATE, FOR 
 
 KEY SHARE를 쥔 동안 키가 아닌 컬럼의 UPDATE는 통과했고(`balance` 변경), 키 컬럼 변경(`id = id + 100`)과 `DELETE`는 대기했다. 반면 SHARE, NO KEY UPDATE, UPDATE를 쥔 동안에는 키 아닌 컬럼 UPDATE도 대기했다.
 외래 키 관련 관찰: 자식 테이블 INSERT를 커밋하지 않은 동안 부모 행의 키 아닌 컬럼 UPDATE는 PostgreSQL에서 통과했고 부모 DELETE는 대기했다. MySQL 8.4.11(InnoDB)에서는 같은 상황에서 부모 행의 UPDATE가 `ERROR 1205`로 대기했다. MySQL 매뉴얼(innodb-locks-set)은 외래 키 검사가 확인하는 레코드에 공유 레코드 락을 건다고 쓴다.
-(보충) PostgreSQL 쪽 차이의 원인이 외래 키 검사가 부모 행에 가장 약한 행 락을 잡기 때문일 것이라는 설명은 이번에 읽은 문서에서 확인하지 못했고, 위 관찰 결과만 실험으로 확인했다.
+(보충) PostgreSQL 쪽 차이의 원인이 외래 키 검사가 부모 행에 가장 약한 행 락을 잡기 때문일 것이라는 설명은 참고한 문서에서 확인하지 못했고, 위 관찰 결과만 실험으로 확인했다.

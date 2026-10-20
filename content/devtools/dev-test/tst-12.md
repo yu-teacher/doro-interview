@@ -18,4 +18,4 @@ links: [{to: "tst-13", kind: FOLLOWUP}, {to: "tst-05", kind: PREREQ}, {to: "boot
 
 (공식 문서) Spring Framework의 `@MockitoBean` 문서는 이 애노테이션이 컨텍스트의 빈을 Mockito 목으로 교체하며 기본이 `REPLACE_OR_CREATE`이고, `@MockitoSpyBean`은 원래 빈을 감싸는 `WRAP` 전략이라고 설명한다. 교체된 목은 Spring AOP 프록시로 감싸지지 않으며, 한정자(필드 이름 포함)가 별도 컨텍스트가 필요한지 결정하므로 여러 테스트에서 같은 빈을 목으로 만들 때는 필드 이름을 일관되게 지으라고 한다. 캐싱 문서는 `@MockitoBean` 같은 빈 오버라이드가 컨텍스트 커스터마이저로서 캐시 키에 포함된다고 한다. Boot 4.1.1 문서의 Mocking and Spying Beans 절은 `@MockitoBean`과 `@MockitoSpyBean`을 쓰라고 안내한다.
 (실험 확인) `spring-boot-test` 3.5.10 jar에는 `org.springframework.boot.test.mock.mockito.MockBean`과 `SpyBean` 클래스가 있었고, 4.1.0과 4.1.1 jar에는 `MockBean`, `SpyBean`, `MockitoBean` 어느 것도 없었다(`unzip -l`로 확인, 로컬 캐시에 있는 4.1.x 계열 `org.springframework.boot` jar 전체에서도 `MockBean.class`는 찾지 못했다). Boot 4.1.0 실험 프로젝트에서 설정이 같은 `@SpringBootTest` 클래스 둘은 같은 컨텍스트(객체 해시가 같음)를 썼고, `@MockitoBean`을 추가한 클래스는 다른 컨텍스트를 썼다.
-확인하지 못한 것: `@MockBean`이 정확히 어느 Boot 릴리스에서 제거됐는지와 공식 이행 가이드는 이번에 읽은 문서에 없어 확인하지 못했다.
+확인하지 못한 것: `@MockBean`이 정확히 어느 Boot 릴리스에서 제거됐는지와 공식 이행 가이드는 참고한 문서에 없어 확인하지 못했다.

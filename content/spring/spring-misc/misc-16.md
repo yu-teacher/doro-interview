@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/integration/rest-clients.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/client/RestClient.html"]
-concepts: [http-protocol, spring-migration]
+concepts: [http-client, spring-migration]
 importance: 1
 ---
 **모범 답변 (30~60초)**

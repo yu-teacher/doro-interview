@@ -27,4 +27,4 @@ START TRANSACTION; INSERT INTO ac VALUES (3); CREATE TABLE ddl_t(id int); ROLLBA
 
 (공식 문서) TRUNCATE 문서는 테이블 데이터에 대해 트랜잭션 안전해서 둘러싼 트랜잭션이 커밋되지 않으면 안전하게 롤백되지만, MVCC-safe하지 않아 이전 스냅샷의 동시 트랜잭션에는 비어 보인다고 한다. Concurrency Control의 Caveats 절은 이 현상이 TRUNCATE와 테이블을 다시 쓰는 형태의 ALTER TABLE에만 해당한다고 한다. MySQL의 Implicit Commit 문서는 DDL이 현재 트랜잭션을 COMMIT한 것처럼 끝낸다고 하고, `CREATE/DROP TEMPORARY TABLE`은 커밋하지 않지만 롤백도 되지 않아 원자성이 깨진다고 한다.
 (실험 확인) PostgreSQL 16.15에서 위 트랜잭션을 롤백하자 `ddl_t`와 `note` 컬럼이 모두 존재하지 않았다. MySQL 8.4.11에서는 롤백 뒤에도 INSERT한 행 3이 남았고 `ddl_t`가 존재했다. `CREATE TEMPORARY TABLE`을 쓴 경우에는 INSERT가 롤백됐지만 임시 테이블은 롤백 뒤에도 남아 있었다(문서의 설명과 같다).
-(보충) 'PostgreSQL에서 CREATE TABLE·ALTER TABLE 같은 일반 DDL도 트랜잭션 안에서 롤백된다'는 문장은 이번에 읽은 문서가 직접 말한 것이 아니라 실험 결과(CREATE TABLE, ADD COLUMN)에 기댄 설명이다. 모든 DDL로 일반화하지 않았다.
+(보충) 'PostgreSQL에서 CREATE TABLE·ALTER TABLE 같은 일반 DDL도 트랜잭션 안에서 롤백된다'는 문장은 참고한 문서가 직접 말한 것이 아니라 실험 결과(CREATE TABLE, ADD COLUMN)에 기댄 설명이다. 모든 DDL로 일반화하지 않았다.

@@ -23,6 +23,6 @@ CREATE TABLE order_flat(order_id int, cust_name text, cust_city text, item text,
 UPDATE order_flat SET cust_city = 'Incheon' WHERE order_id = 1 AND item = 'pen';
 ```
 
-(공식 문서) 정규형의 정의는 이번에 읽은 PostgreSQL 16과 MySQL 8.4 페이지에서 찾지 못했다. PostgreSQL 16 ddl-constraints 페이지의 주문-상품 예시는 다대다 관계를 `order_items` 연결 테이블로 나누고 `PRIMARY KEY (product_no, order_id)`를 두는데, 정규화된 설계가 어떤 모양인지 보여 주는 예 정도로만 참고했다.
+(공식 문서) 정규형의 정의는 참고한 PostgreSQL 16과 MySQL 8.4 페이지에서 찾지 못했다. PostgreSQL 16 ddl-constraints 페이지의 주문-상품 예시는 다대다 관계를 `order_items` 연결 테이블로 나누고 `PRIMARY KEY (product_no, order_id)`를 두는데, 정규화된 설계가 어떤 모양인지 보여 주는 예 정도로만 참고했다.
 (실험 확인) PostgreSQL 16.15에서 `kim`의 주문 3행 중 한 행만 도시를 바꾼 뒤 `SELECT DISTINCT cust_name, cust_city`를 하자 `kim`이 Incheon, Seoul 두 값으로 나왔다. 갱신 이상의 사례이고 MySQL 8.4.11에서도 같았다.
 (보충) 1NF~3NF의 정의와 반정규화 설명은 데이터베이스 설계 이론의 일반 설명이며 공식 문서에 근거하지 않는다. BCNF와 그 이상의 정규형은 공식 출처로 확인할 수 없어 다루지 않았다.

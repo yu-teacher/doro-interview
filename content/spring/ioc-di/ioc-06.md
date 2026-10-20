@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html"]
-concepts: [bean-lifecycle]
+concepts: [bean-scope, bean-lifecycle]
 importance: 3
 links: [{to: "ioc-07", kind: FOLLOWUP}, {to: "ioc-13", kind: FOLLOWUP}, {to: "ioc-14", kind: FOLLOWUP}, {to: "pat-02", kind: RELATED}]
 ---

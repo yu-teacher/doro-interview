@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/context-introduction.html"]
-concepts: [thread-pool, gof-patterns]
+concepts: [event-driven, thread-pool]
 importance: 2
 links: [{to: "pat-16", kind: RELATED}, {to: "pat-15", kind: RELATED}, {to: "tx-23", kind: RELATED}]
 ---

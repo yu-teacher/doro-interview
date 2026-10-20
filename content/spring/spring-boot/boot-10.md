@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-boot/reference/web/servlet.html", "https://docs.spring.io/spring-boot/specification/executable-jar/index.html", "https://docs.spring.io/spring-boot/specification/executable-jar/nested-jars.html", "https://docs.spring.io/spring-boot/specification/executable-jar/launching.html", "https://docs.spring.io/spring-boot/gradle-plugin/packaging.html", "https://docs.spring.io/spring-boot/how-to/webserver.html", "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide"]
-concepts: [build-tool]
+concepts: [servlet-container, build-tool]
 importance: 2
 links: [{to: "bld-15", kind: RELATED}, {to: "cic-13", kind: RELATED}]
 ---

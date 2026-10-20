@@ -25,5 +25,5 @@ $ gradle clean build --build-cache
 ```
 
 (공식 문서) Maven 가이드는 POM이 프로젝트 정보와 빌드 설정(의존성, 실행할 플러그인·goal, 프로필 등)을 담은 XML 파일이라고 하고, 패키징 종류(jar 등)에 따라 라이프사이클 단계에 묶이는 goal이 정해지며 goal은 플러그인이 제공한다고 설명한다. Gradle 문서는 빌드 스크립트가 구성 단계에 평가되어 task 그래프를 만들고, 입력과 출력이 바뀌지 않으면 task를 UP-TO-DATE로 건너뛰며, 빌드 캐시는 기본으로 꺼져 있고 `--build-cache` 또는 `org.gradle.caching=true`로 켠다고 한다. 데몬은 Gradle 3.0부터 기본으로 켜져 있다.
-(실험 확인) Gradle 9.5.1 임시 프로젝트에서 `build`를 연달아 두 번 실행하자 두 번째는 `compileJava`와 `jar`가 UP-TO-DATE였다(소스가 없는 task는 NO-SOURCE로 표시된다). `--build-cache`(캐시 디렉터리는 프로젝트 안으로 지정)로 한 번 빌드한 뒤 `clean`하고 다시 빌드하니 `compileJava`가 FROM-CACHE로 나왔고, 같은 상태에서 옵션 없이 `clean build`를 하면 캐시를 쓰지 않고 다시 컴파일했다. 데몬 동작은 실행해 보지 않았다. Maven은 이 PC에 없어 실행하지 않았다.
+(실험 확인) Gradle 9.5.1 임시 프로젝트에서 `build`를 연달아 두 번 실행하자 두 번째는 `compileJava`와 `jar`가 UP-TO-DATE였다(소스가 없는 task는 NO-SOURCE로 표시된다). `--build-cache`(캐시 디렉터리는 프로젝트 안으로 지정)로 한 번 빌드한 뒤 `clean`하고 다시 빌드하니 `compileJava`가 FROM-CACHE로 나왔고, 같은 상태에서 옵션 없이 `clean build`를 하면 캐시를 쓰지 않고 다시 컴파일했다. 데몬 동작은 실행해 보지 않았다. Maven은 실험 환경에 없어 실행하지 않았다.
 (보충) 어느 도구가 더 낫다는 판단은 팀의 기존 자산과 규약에 달린 일반 설명이며, 공식 문서가 우열을 매기지는 않는다.

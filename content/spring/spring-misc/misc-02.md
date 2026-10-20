@@ -9,7 +9,7 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/overview.html", "https://docs.spring.io/spring-framework/reference/core/aop.html", "https://docs.spring.io/spring-framework/reference/data-access/dao.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet.html", "https://docs.spring.io/spring-security/reference/servlet/architecture.html", "https://docs.spring.io/spring-boot/reference/web/servlet.html", "https://docs.spring.io/spring-boot/index.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html"]
-concepts: [ioc-di, aop, mvc-request-flow]
+concepts: [ioc-di, aop, servlet-container]
 importance: 2
 links: [{to: "misc-12", kind: FOLLOWUP}, {to: "mvc-01", kind: RELATED}]
 ---

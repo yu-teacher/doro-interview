@@ -27,4 +27,4 @@ links: [{to: "dbt-17", kind: RELATED}, {to: "dbt-02", kind: RELATED}]
 | REPEATABLE READ, SELECT FOR UPDATE | 110 | 대기하던 쪽이 같은 오류(재시도 필요) |
 | `SET balance = balance + n` | 130 | 둘 다 반영 |
 
-(보충) '갱신 손실(lost update)'이라는 용어는 이번에 읽은 PostgreSQL 16 문서 본문에는 나오지 않았다. 문서가 설명하는 동작을 이 용어에 맞춰 풀어 쓴 것이다. 버전 컬럼으로 하는 낙관적 락도 문서가 아니라 일반적인 설계 패턴이다(dbl-03).
+(보충) '갱신 손실(lost update)'이라는 용어는 참고한 PostgreSQL 16 문서 본문에는 나오지 않았다. 문서가 설명하는 동작을 이 용어에 맞춰 풀어 쓴 것이다. 버전 컬럼으로 하는 낙관적 락도 문서가 아니라 일반적인 설계 패턴이다(dbl-03).

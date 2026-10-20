@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/context-introduction.html", "https://gameprogrammingpatterns.com/observer.html"]
-concepts: [gof-patterns, tx-boundary, thread-pool]
+concepts: [gof-patterns, tx-boundary, event-driven]
 importance: 2
 links: [{to: "ioc-25", kind: RELATED}, {to: "tx-19", kind: RELATED}, {to: "tx-23", kind: RELATED}]
 ---

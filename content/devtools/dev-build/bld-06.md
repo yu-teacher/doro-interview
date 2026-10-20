@@ -21,4 +21,4 @@ mvn verify          # validate -> compile -> test -> package -> verify
 mvn clean deploy    # clean 라이프사이클 후 default 를 deploy 까지
 ```
 
-(공식 문서) Maven 라이프사이클 소개 가이드에 근거한다. 단계 설명은 package가 컴파일된 코드를 jar 같은 배포 형식으로 묶는 것, verify가 통합 테스트 결과에 대한 품질 기준 검사를 하는 것, install이 로컬 저장소에 설치하는 것, deploy가 원격 저장소에 복사하는 것이다. 단계는 goal이 묶여야 실제로 동작하며, jar 패키징에서는 compile에 `compiler:compile`, test에 `surefire:test`, package에 `jar:jar`가 묶인다. 이 페이지에는 Maven 4를 언급하는 대목도 있으며, Maven은 이 PC에 없어 실행해 보지 않았다.
+(공식 문서) Maven 라이프사이클 소개 가이드에 근거한다. 단계 설명은 package가 컴파일된 코드를 jar 같은 배포 형식으로 묶는 것, verify가 통합 테스트 결과에 대한 품질 기준 검사를 하는 것, install이 로컬 저장소에 설치하는 것, deploy가 원격 저장소에 복사하는 것이다. 단계는 goal이 묶여야 실제로 동작하며, jar 패키징에서는 compile에 `compiler:compile`, test에 `surefire:test`, package에 `jar:jar`가 묶인다. 이 페이지에는 Maven 4를 언급하는 대목도 있으며, Maven은 실험 환경에 없어 실행해 보지 않았다.

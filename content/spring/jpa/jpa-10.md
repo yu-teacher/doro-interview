@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.hibernate.org/orm/7.0/userguide/html_single/", "https://docs.hibernate.org/orm/7.0/introduction/html_single/"]
-concepts: [entity-mapping, persistence-context]
+concepts: [id-generation, entity-mapping]
 importance: 2
 links: [{to: "jpa-05", kind: PREREQ}, {to: "jpa-30", kind: FOLLOWUP}, {to: "dbd-07", kind: RELATED}, {to: "dbd-02", kind: RELATED}]
 ---

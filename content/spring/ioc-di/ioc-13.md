@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html"]
-concepts: [bean-lifecycle]
+concepts: [bean-lifecycle, bean-scope]
 importance: 1
 links: [{to: "ioc-06", kind: PREREQ}]
 ---

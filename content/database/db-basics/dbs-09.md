@@ -23,4 +23,4 @@ SELECT id, sal*2 AS dbl FROM emp ORDER BY dbl DESC;  -- 가능 (ORDER BY가 나�
 
 (공식 문서) PostgreSQL 16 queries-table-expressions 페이지는 WHERE, GROUP BY, HAVING이 FROM 결과에 연속 적용되는 변환 파이프라인이고 그 결과가 select list로 넘어간다고 설명한다. queries-select-lists 페이지는 DISTINCT가 select list 처리 뒤에 적용된다고 하고, queries-order 페이지는 ORDER BY가 출력 테이블 뒤에 적용되며 출력 컬럼 이름을 쓸 수 있지만 식 안에서는 쓸 수 없다고 한다. tutorial-window 페이지는 윈도 함수가 WHERE, GROUP BY, HAVING 뒤에 실행되어 그 절에서 금지된다고 한다. sql-select 페이지는 표준상 출력식이 DISTINCT, ORDER BY, LIMIT 전에 계산된다고 적는다. MySQL 8.4 problems-with-alias 페이지는 별칭을 GROUP BY, ORDER BY, HAVING에서 쓸 수 있고 표준 SQL은 WHERE의 별칭 참조를 금지한다고 하며, select 페이지는 표준이 HAVING에 GROUP BY 컬럼이나 집계 컬럼만 허용하지만 MySQL은 SELECT 목록 컬럼도 참조하도록 확장했다고 설명한다.
 (실험 확인) PostgreSQL 16.15에서 `WHERE dbl`과 `HAVING s`는 `column ... does not exist` 오류였고 `ORDER BY dbl`은 성공, `ORDER BY dbl + 1`은 오류였다. MySQL 8.4.11은 `WHERE` 별칭은 오류(1054)였지만 `HAVING s > 9000`과 `ORDER BY dbl + 1`은 성공했다.
-(보충) 옵티마이저가 의미를 보존하는 한 실행 순서를 바꿀 수 있다는 설명은 일반 설명이며 이번에 읽은 문서 구절로 확인한 것은 아니다.
+(보충) 옵티마이저가 의미를 보존하는 한 실행 순서를 바꿀 수 있다는 설명은 일반 설명이며 참고한 문서 구절로 확인한 것은 아니다.

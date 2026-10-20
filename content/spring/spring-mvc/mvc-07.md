@@ -9,7 +9,7 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/return-types.html", "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-ann-async.html", "https://docs.spring.io/spring-framework/reference/web/webflux/new-framework.html", "https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html"]
-concepts: [thread-pool, thread-process]
+concepts: [thread-pool, thread-process, servlet-container]
 importance: 2
 links: [{to: "mvc-16", kind: FOLLOWUP}, {to: "mvc-17", kind: FOLLOWUP}, {to: "mvc-23", kind: FOLLOWUP}, {to: "misc-01", kind: RELATED}, {to: "misc-07", kind: RELATED}]
 ---

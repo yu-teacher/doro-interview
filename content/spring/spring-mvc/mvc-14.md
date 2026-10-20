@@ -9,7 +9,7 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
 sources: ["https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/modelattrib-method-args.html"]
-concepts: [mvc-request-flow, layered-architecture]
+concepts: [request-validation, layered-architecture]
 importance: 3
 links: [{to: "mvc-15", kind: FOLLOWUP}, {to: "jpa-13", kind: RELATED}, {to: "jpa-36", kind: RELATED}]
 ---
