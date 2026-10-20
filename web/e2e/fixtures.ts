@@ -60,10 +60,34 @@ const fail = (status: number, code: string, message: string) => ({ status, conte
 export type SessionMode = 'anonymous' | 'authenticated' | 'error';
 
 const LONG_NOTE = `${LONG_TOKEN} 는 TransactionAttributeSource 를 보고 어드바이스를 적용할지 판단한다.\n${'헷갈린 점을 적어 둔 긴 메모입니다. '.repeat(12)}`;
+const LONG_NOTE_SHORT = `${LONG_TOKEN} 라고 답했다.`;
 const progressSummary = {
   total: 19, learned: 7,
   topics: [{ topicSlug: 'transaction', total: 14, learned: 5 }, { topicSlug: 'jpa', total: 5, learned: 2 }],
 };
+
+export const QUIZ_ACTIVE_ID = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
+export const QUIZ_DONE_ID = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
+const ACTIVE_ID = QUIZ_ACTIVE_ID;
+const DONE_ID = QUIZ_DONE_ID;
+const quizItem = (seq: number, over: Record<string, unknown> = {}) => ({
+  seq, questionSlug: `tx-${String(seq).padStart(2, '0')}`, title: seq % 2 === 0 ? LONG_TITLE : `질문 ${seq}: 트랜잭션 전파`, tier: tiers[seq % 3],
+  topicSlug: 'transaction', topicName: topicSummary.name, result: null, seconds: null, answerText: null, answeredAt: null, ...over,
+});
+const quizSession = (id: string, items: unknown[], finishedAt: string | null) => ({
+  sessionId: id, plannedCount: items.length, includeUnlearned: false, mode: 'WEIGHTED', startedAt: '2026-10-20T00:00:00Z', finishedAt, items,
+});
+const activeSession = quizSession(ACTIVE_ID, [quizItem(1, { result: 'CORRECT', seconds: 40 }), quizItem(2), quizItem(3)], null);
+const doneSession = quizSession(
+  DONE_ID,
+  [quizItem(1, { result: 'CORRECT', seconds: 40 }), quizItem(2, { result: 'WRONG', seconds: 95, answerText: LONG_NOTE_SHORT }), quizItem(3, { result: 'SKIPPED', seconds: 3 })],
+  '2026-10-20T00:10:00Z',
+);
+const stats = {
+  askedLast30Days: 24, correctLast30Days: 11, wrongLast30Days: 9, skippedLast30Days: 4, sessionsLast30Days: 3,
+  mostMissed: [1, 2, 3].map((i) => ({ questionSlug: `tx-0${i}`, title: i % 2 === 0 ? LONG_TITLE : `질문 ${i}`, tier: tiers[i % 3], topicSlug: 'transaction', topicName: topicSummary.name, missCount: 4 - i, askCount: 5 })),
+};
+const reviewCandidates = [2, 4].map((i) => ({ slug: `tx-0${i}`, title: LONG_TITLE, tier: tiers[i % 3], topicSlug: 'transaction', topicName: topicSummary.name }));
 
 /**
  * `/interview/api/**` 요청을 가로채 가짜 응답을 준다. 등록하지 않은 주소는 404.
@@ -91,6 +115,18 @@ export async function installApi(page: Page, session: SessionMode = 'anonymous')
         return route.fulfill(ok({ slug: path.split('/').pop(), body: LONG_NOTE, updatedAt: '2026-10-20T00:00:00Z' }));
       case path.startsWith('/v1/notes/') && method === 'PUT':
         return route.fulfill(ok({ slug: path.split('/').pop(), body: LONG_NOTE, updatedAt: '2026-10-20T01:00:00Z' }));
+      case path === '/v1/me/prefs':
+        return route.fulfill(authenticated ? ok({ includeUnlearnedDefault: false }) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
+      case path === '/v1/me/stats':
+        return route.fulfill(authenticated ? ok(stats) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
+      case path === '/v1/review-candidates':
+        return route.fulfill(authenticated ? ok(reviewCandidates) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
+      case path === `/v1/quiz/${ACTIVE_ID}`:
+        return route.fulfill(ok(activeSession));
+      case path === `/v1/quiz/${DONE_ID}`:
+        return route.fulfill(ok(doneSession));
+      case path.startsWith('/v1/quiz/') && method === 'PUT':
+        return route.fulfill(ok({ ok: true }));
       case path === '/v1/categories':
         return route.fulfill(ok(categories));
       case path === '/v1/topics/transaction':

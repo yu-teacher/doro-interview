@@ -10,6 +10,7 @@ import { QuestionPage } from './pages/QuestionPage';
 import { QuizPage } from './pages/QuizPage';
 import { QuizStartPage } from './pages/QuizStartPage';
 import { SearchPage } from './pages/SearchPage';
+import { SkimPage, SkimTopicPage } from './pages/SkimPage';
 import { StatsPage } from './pages/StatsPage';
 import { TopicPage } from './pages/TopicPage';
 import { BASE_PATH } from './config';
@@ -26,6 +27,8 @@ const PAGES: Record<AppRoutePath, ReactElement> = {
   '/search': <SearchPage />,
   '/quiz': <QuizStartPage />,
   '/quiz/:id': <QuizPage />,
+  '/skim': <SkimPage />,
+  '/skim/:topic': <SkimTopicPage />,
   '/stats': <StatsPage />,
 };
 

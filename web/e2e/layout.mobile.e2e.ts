@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { installApi, type SessionMode } from './fixtures';
+import { installApi, QUIZ_ACTIVE_ID, QUIZ_DONE_ID, type SessionMode } from './fixtures';
 import { auditAxe, auditLayout } from './mobileAudit';
 
 /** 화면 8종(+오류)을 라이트·다크 모드로 열어 레이아웃과 접근성(색 대비 포함)을 실제 브라우저에서 잰다. */
@@ -37,6 +37,23 @@ const PAGES: Case[] = [
       await p.getByRole('dialog').waitFor();
     },
   },
+  // M3: 시험·현황·훑기
+  { name: '시험 시작', path: '/quiz', session: 'authenticated', ready: (p) => p.getByRole('button', { name: '시험 시작' }).waitFor() },
+  { name: '시험 시작(비로그인)', path: '/quiz', ready: (p) => p.getByRole('link', { name: '로그인하고 시험 보기' }).waitFor() },
+  { name: '시험 진행(질문)', path: `/quiz/${QUIZ_ACTIVE_ID}`, session: 'authenticated', ready: (p) => p.getByRole('textbox').waitFor() },
+  {
+    name: '시험 진행(모범 답변 공개)', path: `/quiz/${QUIZ_ACTIVE_ID}`, session: 'authenticated',
+    ready: (p) => p.getByRole('textbox').waitFor(),
+    act: async (p) => {
+      await p.getByRole('textbox').fill('프록시가 감싸서 처리합니다. '.repeat(20));
+      await p.getByRole('button', { name: '모범 답변 보기' }).click();
+      await p.getByRole('button', { name: '맞음' }).waitFor();
+    },
+  },
+  { name: '시험 결과', path: `/quiz/${QUIZ_DONE_ID}`, session: 'authenticated', ready: (p) => p.getByRole('link', { name: /사전에서 보기/ }).first().waitFor() },
+  { name: '내 현황', path: '/stats', session: 'authenticated', ready: (p) => p.getByRole('region', { name: '자주 틀린 질문' }).waitFor() },
+  { name: '훑기 주제 선택', path: '/skim', ready: (p) => p.getByRole('link', { name: 'JPA' }).waitFor() },
+  { name: '훑기(키워드 공개)', path: '/skim/transaction', ready: (p) => p.getByRole('button', { name: '키워드 보기' }).waitFor(), act: (p) => p.getByRole('button', { name: '키워드 보기' }).click() },
   { name: '질문 상세(로그인·노트)', path: '/q/tx-04', session: 'authenticated', ready: (p) => p.getByRole('textbox', { name: '이 질문에 대한 내 노트' }).waitFor() },
 ];
 
