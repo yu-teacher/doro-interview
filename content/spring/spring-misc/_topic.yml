@@ -6,7 +6,7 @@ slug_prefix: "misc"
 description: "싱글톤 동시성, 커넥션 풀, 가상 스레드, 3 → 7 변화"
 base_version: "Spring Framework 7 / Boot 4"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://github.com/spring-projects/spring-framework/wiki/What%27s-New-in-Spring-Framework-7.x"
     note: "링크 목록만 확인"

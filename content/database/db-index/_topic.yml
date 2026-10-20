@@ -6,7 +6,7 @@ slug_prefix: "dbi"
 description: "B-Tree, 복합 인덱스, 커버링, 인덱스를 못 타는 경우"
 base_version: "PostgreSQL 16 (MySQL 8.4 일부 비교)"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://www.postgresql.org/docs/16/indexes-intro.html"
   - url: "https://www.postgresql.org/docs/16/indexes-types.html"

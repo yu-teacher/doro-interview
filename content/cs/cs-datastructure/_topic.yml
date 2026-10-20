@@ -6,7 +6,7 @@ slug_prefix: "ds"
 description: "배열, 연결 리스트, 스택·큐, 해시, 트리, 힙, 그래프"
 base_version: "NIST DADS / Java SE 25 / Python 3 / C++ 표준 초안"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://xlinux.nist.gov/dads/HTML/array.html"
   - url: "https://xlinux.nist.gov/dads/HTML/linkedList.html"

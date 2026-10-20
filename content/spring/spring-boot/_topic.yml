@@ -6,7 +6,7 @@ slug_prefix: "boot"
 description: "자동 설정, 프로필, 프로퍼티 우선순위, 테스트 슬라이스"
 base_version: "Spring Framework 7 / Boot 4"
 default_evidence: OFFICIAL
-published: false
+published: true
 sources:
   - url: "https://docs.spring.io/spring-boot/reference/using/auto-configuration.html"
   - url: "https://docs.spring.io/spring-boot/reference/features/external-config.html"

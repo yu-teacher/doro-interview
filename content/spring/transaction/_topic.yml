@@ -6,7 +6,7 @@ slug_prefix: "tx"
 description: "전파·격리·롤백 규칙, readOnly, UnexpectedRollbackException"
 base_version: "Spring Framework 7 / Boot 4"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction.html"
   - url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/strategies.html"

@@ -6,7 +6,7 @@ slug_prefix: "dbl"
 description: "행 락, 데드락, 낙관/비관 락, SELECT FOR UPDATE"
 base_version: "PostgreSQL 16 (MySQL 8.4 일부 비교)"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://www.postgresql.org/docs/16/explicit-locking.html"
   - url: "https://www.postgresql.org/docs/16/view-pg-locks.html"

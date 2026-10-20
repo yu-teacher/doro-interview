@@ -6,7 +6,7 @@ slug_prefix: "dbp"
 description: "EXPLAIN, 조인 알고리즘, 페이징, 통계"
 base_version: "PostgreSQL 16 (MySQL 8.4 일부 비교)"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://www.postgresql.org/docs/16/sql-explain.html"
   - url: "https://www.postgresql.org/docs/16/using-explain.html"

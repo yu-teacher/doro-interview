@@ -6,7 +6,7 @@ slug_prefix: "osp"
 description: "프로세스·스레드, 스케줄링, 동기화, 데드락, IPC"
 base_version: "POSIX.1-2024 / Linux man-pages 6.19 / Linux kernel 문서 7.3"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://pubs.opengroup.org/onlinepubs/9799919799/functions/fork.html"
   - url: "https://pubs.opengroup.org/onlinepubs/9799919799/functions/exec.html"

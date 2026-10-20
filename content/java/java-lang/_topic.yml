@@ -6,7 +6,7 @@ slug_prefix: "jl"
 description: "타입, String, 오토박싱, equals/hashCode, 제네릭, 예외"
 base_version: "Java 25 (LTS)"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://docs.oracle.com/javase/specs/jls/se25/html/jls-4.html"
   - url: "https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html"

@@ -6,7 +6,7 @@ slug_prefix: "alg"
 description: "정렬, 탐색, 재귀, DP, 그리디, 그래프 탐색"
 base_version: "Java SE 25 / Python 3 / NIST DADS"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://xlinux.nist.gov/dads/HTML/bigOnotation.html"
   - url: "https://xlinux.nist.gov/dads/HTML/asymptoticTimeComplexity.html"

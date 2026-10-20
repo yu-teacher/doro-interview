@@ -6,7 +6,7 @@ slug_prefix: "aop"
 description: "JDK 동적 프록시 vs CGLIB, 어드바이스, 자기 호출 문제"
 base_version: "Spring Framework 7 / Boot 4"
 default_evidence: OFFICIAL
-published: false
+published: true
 sources:
   - url: "https://docs.spring.io/spring-framework/reference/core/aop.html"
   - url: "https://docs.spring.io/spring-framework/reference/core/aop/introduction-defn.html"

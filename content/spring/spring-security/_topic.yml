@@ -6,7 +6,7 @@ slug_prefix: "sec"
 description: "필터 체인, 인증·인가 구조, 비밀번호 저장, 세션·CSRF·CORS, 메서드 보안, JWT 리소스 서버"
 base_version: "Spring Security 7.1.1 (문서 stable) / Spring Boot 4"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://docs.spring.io/spring-security/reference/servlet/architecture.html"
   - url: "https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html"

@@ -6,7 +6,7 @@ slug_prefix: "ioc"
 description: "제어의 역전, 의존성 주입, 빈 스코프·생명주기, 순환 참조"
 base_version: "Spring Framework 7 / Boot 4"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://docs.spring.io/spring-framework/reference/core/beans.html"
   - url: "https://docs.spring.io/spring-framework/reference/core/beans/introduction.html"

@@ -6,7 +6,7 @@ slug_prefix: "jc"
 description: "List/Set/Map 선택, HashMap 동작, fail-fast, 불변 컬렉션"
 base_version: "Java 25 (LTS)"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html"
   - url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html"

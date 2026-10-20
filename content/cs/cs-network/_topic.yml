@@ -6,7 +6,7 @@ slug_prefix: "net"
 description: "계층 모델, TCP/UDP, 핸드셰이크, 흐름·혼잡 제어, IP, DNS"
 base_version: "IETF RFC 현행판 (RFC 9293 등) / IANA 레지스트리"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://www.rfc-editor.org/rfc/rfc1034.html"
   - url: "https://www.rfc-editor.org/rfc/rfc1035.html"

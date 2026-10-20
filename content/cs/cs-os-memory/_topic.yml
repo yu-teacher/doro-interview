@@ -6,7 +6,7 @@ slug_prefix: "osm"
 description: "가상 메모리, 페이징, 페이지 교체, 파일 시스템, 시스템 콜, I/O 모델"
 base_version: "POSIX.1-2024 / Linux man-pages 6.19 / Linux kernel 문서 7.3 (실험은 macOS 26, Apple Silicon)"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://pubs.opengroup.org/onlinepubs/9799919799/functions/mmap.html"
   - url: "https://pubs.opengroup.org/onlinepubs/9799919799/functions/fork.html"

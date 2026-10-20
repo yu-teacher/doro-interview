@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class RealContentLoadTest {
 
-    private static final int QUESTIONS = 557;
+    private static final int QUESTIONS = 556;
     private static final int TOPICS = 26;
     private static final int TRICKY = 136;
     /** 검수 배치를 커밋할 때마다 올린다(B4: tx-01~25). */
@@ -50,11 +50,11 @@ class RealContentLoadTest {
     }
 
     @Test
-    void 검수된_질문은_기대_수만큼이고_주제는_비공개다() {
+    void 검수된_질문은_기대_수만큼이고_모든_주제는_공개다() {
         assertThat(count("select count(*) from question where status = 'REVIEWED' and reviewed_at is not null and not needs_review")).isEqualTo(REVIEWED);
         assertThat(count("select count(*) from question where status = 'DRAFT' and (reviewed_at is not null or needs_review)")).isZero();
         assertThat(count("select count(*) from question where status not in ('DRAFT', 'REVIEWED')")).isZero();
-        assertThat(count("select count(*) from topic where published")).isZero();
+        assertThat(count("select count(*) from topic where not published")).isZero();
         assertThat(count("select count(*) from question where retired_at is not null")).isZero();
     }
 

@@ -6,7 +6,7 @@ slug_prefix: "web"
 description: "HTTP 버전, 메서드·상태 코드, 캐시, 쿠키, TLS, CORS"
 base_version: "IETF RFC 현행판 (HTTP RFC 9110~9114, TLS 1.3 RFC 9846) / WHATWG Fetch Living Standard"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://www.rfc-editor.org/rfc/rfc9110.html"
   - url: "https://www.rfc-editor.org/rfc/rfc9111.html"

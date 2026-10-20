@@ -6,7 +6,7 @@ slug_prefix: "jt"
 description: "synchronized, volatile, JMM, ExecutorService, 가상 스레드"
 base_version: "Java 25 (LTS)"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://docs.oracle.com/en/java/javase/25/core/virtual-threads.html"
   - url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html"

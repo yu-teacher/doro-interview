@@ -6,7 +6,7 @@ slug_prefix: "jo"
 description: "상속, 인터페이스, 레코드, sealed, 초기화 순서"
 base_version: "Java 25 (LTS)"
 default_evidence: UNKNOWN
-published: false
+published: true
 sources:
   - url: "https://docs.oracle.com/javase/specs/jls/se25/html/jls-8.html"
   - url: "https://docs.oracle.com/javase/specs/jls/se25/html/jls-9.html"
