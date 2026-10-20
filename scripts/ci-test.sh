@@ -24,7 +24,7 @@ die() { log "ERROR: $*"; exit 1; }
 run_web() {
   if [ ! -d web ]; then log "web/ 가 아직 없다 — 건너뜀"; return 0; fi
   log "== 프런트: 린트 · 타입 · 테스트 =="
-  (cd web && npm ci --no-audit --no-fund && npm run lint && npx tsc -b && npm test)
+  (cd web && npm ci --no-audit --no-fund && npm run lint && npx tsc -b && npm test && npm run build && npm run check:size)
 }
 
 run_backend() {

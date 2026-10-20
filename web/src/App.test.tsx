@@ -49,7 +49,7 @@ describe('화면 경로', () => {
     expect(await screen.findByRole('heading', { name: '스프링' })).toBeTruthy();
     fireEvent.click(screen.getByRole('link', { name: /트랜잭션/ }));
     expect(await screen.findByRole('heading', { name: '트랜잭션' })).toBeTruthy();
-    expect(screen.getByRole('link', { name: 'ACID 란?' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /ACID 란\?/ })).toBeTruthy();
   });
 
   it('공개 주제가 없으면 안내 문구를 보여 준다(오류가 아니다)', async () => {
@@ -96,7 +96,7 @@ describe('화면 경로', () => {
     };
     const api = mockApi({ '/interview/api/v1/search': respond((url) => new Response(JSON.stringify({ success: true, data: url.searchParams.get('q') === '전파' ? result : { words: ['없음'], total: 0, hits: [] } }), { status: 200 })) });
     go('/search?q=전파');
-    expect(await screen.findByRole('heading', { name: '검색 결과 1건' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: /검색 결과 1건/ })).toBeTruthy();
     expect(api.calls[0]).toBe('/interview/api/v1/search?q=%EC%A0%84%ED%8C%8C');
     cleanup();
     go('/search?q=없음');

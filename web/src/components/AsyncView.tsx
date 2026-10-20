@@ -30,6 +30,15 @@ export function AsyncView<T>({ state, reload, notFoundMessage = '찾을 수 없�
         </div>
       );
     }
+    // 같은 요청을 다시 보내도 결과가 같은 클라이언트 오류(4xx, 예: 잘못된 검색어)에는 재시도 버튼을 두지 않는다
+    const retryable = state.error.status === 0 || state.error.status >= 500;
+    if (!retryable) {
+      return (
+        <div role="alert" className="py-8 text-center">
+          <p className="font-semibold">{state.error.message}</p>
+        </div>
+      );
+    }
     return (
       <div role="alert" className="py-8 text-center">
         <p className="font-semibold">{state.error.message}</p>

@@ -1,5 +1,5 @@
-import { useState, type FormEvent } from 'react';
-import { Link, Outlet, useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { SERVICE_NAME } from '../config';
 import { conceptsPath, searchPath } from '../routes';
 
@@ -42,9 +42,35 @@ function SearchForm() {
   );
 }
 
+/**
+ * 화면(경로)이 바뀌면 맨 위로 올리고 본문으로 포커스를 옮긴다. 일반 페이지 이동에서 브라우저가 해 주는 일을 SPA 에서도 하는 것이다
+ * (스크린 리더가 새 화면의 시작을 읽고, 키보드 사용자가 헤더를 다시 거치지 않는다). 첫 렌더에서는 하지 않는다.
+ * 같은 경로의 쿼리만 바뀌는 필터 조작에서는 하지 않는다.
+ */
+function useRouteFocus(mainRef: React.RefObject<HTMLElement | null>) {
+  const { pathname } = useLocation();
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    window.scrollTo(0, 0);
+    mainRef.current?.focus({ preventScroll: true });
+  }, [pathname, mainRef]);
+}
+
 export function Layout() {
+  const mainRef = useRef<HTMLElement | null>(null);
+  useRouteFocus(mainRef);
   return (
     <div className="mx-auto flex min-h-screen max-w-3xl flex-col px-4">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-10 focus:rounded-md focus:bg-[var(--color-surface)] focus:px-4 focus:py-3"
+      >
+        본문으로 건너뛰기
+      </a>
       <header className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
         <nav aria-label="주요 메뉴" className="flex items-center gap-4">
           <Link to="/" className="inline-flex min-h-11 items-center text-lg font-bold no-underline">
@@ -56,7 +82,7 @@ export function Layout() {
         </nav>
         <SearchForm />
       </header>
-      <main id="main" className="flex-1 pb-12">
+      <main id="main" ref={mainRef} tabIndex={-1} className="flex-1 pb-12 outline-none">
         <Outlet />
       </main>
       <footer className="border-t border-[var(--color-border)] py-4 text-sm text-[var(--color-muted)]">

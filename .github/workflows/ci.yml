@@ -33,6 +33,8 @@ jobs:
       - run: npx tsc -b
       - run: npm test
       - run: npm run build
+      # 첫 화면 JS gzip 150KB, 지연 조각 120KB 예산(마크다운 렌더러가 첫 화면에 들어가면 실패한다)
+      - run: npm run check:size
 
   backend:
     name: Backend (converter tests, content integrity, tests on an isolated Postgres)
