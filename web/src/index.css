@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+/* 색은 토큰으로 두고 다크 모드는 시스템 설정을 따른다. 본문은 읽기 편한 줄 길이와 한글 단어 단위 줄바꿈을 쓴다. */
+:root {
+  color-scheme: light dark;
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-text: #0f172a;
+  --color-muted: #475569;
+  --color-border: #cbd5e1;
+  --color-accent: #1d4ed8;
+  --color-accent-contrast: #ffffff;
+  --color-official: #166534;
+  --color-extra: #92400e;
+  --color-lab: #5b21b6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0b1220;
+    --color-surface: #111a2e;
+    --color-text: #e2e8f0;
+    --color-muted: #94a3b8;
+    --color-border: #334155;
+    --color-accent: #93c5fd;
+    --color-accent-contrast: #0b1220;
+    --color-official: #86efac;
+    --color-extra: #fcd34d;
+    --color-lab: #c4b5fd;
+  }
+}
+
+html {
+  font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+a {
+  color: var(--color-accent);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+code, pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}

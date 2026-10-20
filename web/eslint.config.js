@@ -27,6 +27,11 @@ export default tseslint.config(
           selector: "CallExpression[callee.object.property.name='location'][callee.property.name='reload']",
           message: '상태 불일치를 location.reload() 로 때우지 말고 상태를 동기화한다.',
         },
+        {
+          // 본문 마크다운은 원시 HTML 을 해석하지 않는 렌더러로만 그린다(docs/M1-PLAN.md D6). HTML 문자열을 DOM 에 직접 넣지 않는다.
+          selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+          message: 'dangerouslySetInnerHTML 은 쓰지 않는다. 마크다운은 Markdown 컴포넌트로 그린다.',
+        },
       ],
     },
   },
