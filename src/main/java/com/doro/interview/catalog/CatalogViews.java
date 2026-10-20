@@ -40,6 +40,10 @@ public final class CatalogViews {
                                   boolean hasExtra, Integer importance, List<String> concepts) {
     }
 
+    /** 시험 화면에 보이는 질문의 겉모습: 제목·tier·주제(모범 답변은 싣지 않는다). */
+    public record QuestionHeading(String slug, String title, String tier, String topicSlug, String topicName) {
+    }
+
     /** 보이는 질문의 위치 색인(시험의 풀 구성용): 어느 카테고리·주제·tier 에 속하는가. */
     public record QuestionIndexEntry(String slug, String topicSlug, String categorySlug, String tier) {
     }

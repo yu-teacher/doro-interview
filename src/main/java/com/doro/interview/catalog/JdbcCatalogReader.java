@@ -4,6 +4,7 @@ import com.doro.interview.catalog.CatalogViews.CategoryView;
 import com.doro.interview.catalog.CatalogViews.ConceptDetail;
 import com.doro.interview.catalog.CatalogViews.ConceptRef;
 import com.doro.interview.catalog.CatalogViews.ConceptView;
+import com.doro.interview.catalog.CatalogViews.QuestionHeading;
 import com.doro.interview.catalog.CatalogViews.QuestionIndexEntry;
 import com.doro.interview.catalog.CatalogViews.QuestionRef;
 import com.doro.interview.catalog.CatalogViews.QuestionSummary;
@@ -235,6 +236,26 @@ public class JdbcCatalogReader implements CatalogReader {
                 FROM question q JOIN topic t ON t.slug = q.topic_slug JOIN category c ON c.slug = t.category_slug
                 WHERE %s ORDER BY c.sort, c.slug, t.sort, t.slug, %s""".formatted(visibility.questionVisible("q", "t"), QUESTION_ORDER),
                 (rs, n) -> new QuestionIndexEntry(rs.getString("slug"), rs.getString("topic_slug"), rs.getString("category_slug"), rs.getString("tier")));
+    }
+
+    @Override
+    public Map<String, QuestionHeading> visibleQuestionHeadings(java.util.Collection<String> slugs) {
+        if (slugs.isEmpty()) {
+            return Map.of();
+        }
+        Map<String, QuestionHeading> found = new LinkedHashMap<>();
+        jdbc.query(con -> {
+            var ps = con.prepareStatement("""
+                    SELECT q.slug, q.title, q.tier, q.topic_slug, t.name AS topic_name
+                    FROM question q JOIN topic t ON t.slug = q.topic_slug
+                    WHERE q.slug = ANY (?) AND %s""".formatted(visibility.questionVisible("q", "t")));
+            ps.setArray(1, con.createArrayOf("varchar", slugs.toArray()));
+            return ps;
+        }, rs -> {
+            found.put(rs.getString("slug"), new QuestionHeading(rs.getString("slug"), rs.getString("title"), rs.getString("tier"),
+                    rs.getString("topic_slug"), rs.getString("topic_name")));
+        });
+        return Map.copyOf(found);
     }
 
     // ------------------------------------------------------------------ 검색

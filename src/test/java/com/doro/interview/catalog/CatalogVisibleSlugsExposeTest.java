@@ -29,4 +29,9 @@ class CatalogVisibleSlugsExposeTest extends AbstractCatalogReaderTest {
         assertThat(index).extracting(e -> e.slug()).contains("bb-01", "cc-01");
         assertThat(index.stream().filter(e -> e.slug().equals("cc-01")).findFirst().orElseThrow().categorySlug()).isEqualTo("c2");
     }
+
+    @Test
+    void 제목_조회에도_비공개_주제의_질문이_들어온다() {
+        assertThat(reader.visibleQuestionHeadings(java.util.List.of("bb-01", "aa-01"))).containsOnlyKeys("bb-01", "aa-01");
+    }
 }

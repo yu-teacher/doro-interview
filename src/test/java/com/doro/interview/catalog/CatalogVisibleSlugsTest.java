@@ -60,4 +60,22 @@ class CatalogVisibleSlugsTest extends AbstractCatalogReaderTest {
         var fromIndex = reader.visibleQuestionIndex().stream().map(e -> e.slug()).toList();
         assertThat(fromIndex).isEqualTo(reader.visibleQuestionSlugsByTopic().values().stream().flatMap(List::stream).toList());
     }
+
+    @Test
+    void 제목_조회는_보이는_질문만_주고_답은_싣지_않는다() {
+        var headings = reader.visibleQuestionHeadings(List.of("aa-01", "bb-01", "zz-99"));
+        assertThat(headings).containsOnlyKeys("aa-01"); // 비공개 주제·없는 질문은 없다
+        var h = headings.get("aa-01");
+        assertThat(h.title()).isEqualTo("심화 질문");
+        assertThat(h.tier()).isEqualTo("DEEP");
+        assertThat(h.topicSlug()).isEqualTo("t1");
+        assertThat(h.topicName()).isEqualTo("주제 t1");
+        assertThat(reader.visibleQuestionHeadings(List.of())).isEmpty();
+    }
+
+    @Test
+    void 제목_조회에서_닫힌_질문이_빠진다() {
+        retireAa04();
+        assertThat(reader.visibleQuestionHeadings(List.of("aa-02", "aa-04"))).containsOnlyKeys("aa-02");
+    }
 }

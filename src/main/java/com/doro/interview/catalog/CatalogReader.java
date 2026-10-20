@@ -3,11 +3,13 @@ package com.doro.interview.catalog;
 import com.doro.interview.catalog.CatalogViews.CategoryView;
 import com.doro.interview.catalog.CatalogViews.ConceptDetail;
 import com.doro.interview.catalog.CatalogViews.ConceptView;
+import com.doro.interview.catalog.CatalogViews.QuestionHeading;
 import com.doro.interview.catalog.CatalogViews.QuestionIndexEntry;
 import com.doro.interview.catalog.CatalogViews.QuestionView;
 import com.doro.interview.catalog.CatalogViews.SearchResult;
 import com.doro.interview.catalog.CatalogViews.TopicView;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,4 +47,7 @@ public interface CatalogReader {
 
     /** 보이는 모든 질문의 (slug, 주제, 카테고리, tier) — 카테고리·주제·tier·질문 순서. 시험이 "보이는 질문 ∩ 내 체크" 풀을 만들 때 쓴다. */
     List<QuestionIndexEntry> visibleQuestionIndex();
+
+    /** 주어진 slug 중 **보이는** 질문의 제목·tier·주제(모범 답변 없음). 보이지 않는 질문은 결과에 없다. */
+    Map<String, QuestionHeading> visibleQuestionHeadings(Collection<String> slugs);
 }
