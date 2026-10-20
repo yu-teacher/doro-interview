@@ -20,11 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ContentIntegrityTest {
 
-    private static final int QUESTIONS = 435;
-    private static final int TOPICS = 20;
-    private static final int TRICKY = 105;
+    private static final int QUESTIONS = 557;
+    private static final int TOPICS = 26;
+    private static final int TRICKY = 136;
     /** 검수 배치를 커밋할 때마다 올린다(B4: tx-01~25). */
-    private static final int REVIEWED = 435;
+    private static final int REVIEWED = 556;
 
     private static ContentSet content;
 
@@ -40,7 +40,7 @@ class ContentIntegrityTest {
 
     @Test
     void 질문_주제_꼬리_질문_수가_기대와_같다() {
-        assertThat(content.categories()).hasSize(3);
+        assertThat(content.categories()).hasSize(4);
         assertThat(content.topics()).hasSize(TOPICS);
         assertThat(content.questions()).hasSize(QUESTIONS);
         assertThat(content.questions().stream().filter(q -> q.tier().equals("TRICKY")).count()).isEqualTo(TRICKY);
@@ -57,7 +57,9 @@ class ContentIntegrityTest {
                 Map.entry("java-lang", 21L), Map.entry("java-oop", 20L), Map.entry("java-collections", 20L),
                 Map.entry("java-stream", 21L), Map.entry("java-concurrency", 21L), Map.entry("java-jvm", 20L),
                 Map.entry("db-basics", 21L), Map.entry("db-index", 20L), Map.entry("db-transaction", 20L),
-                Map.entry("db-lock", 20L), Map.entry("db-tuning", 21L), Map.entry("db-design", 22L)));
+                Map.entry("db-lock", 20L), Map.entry("db-tuning", 21L), Map.entry("db-design", 22L),
+                Map.entry("cs-datastructure", 20L), Map.entry("cs-algorithm", 21L), Map.entry("cs-network", 20L),
+                Map.entry("cs-web", 21L), Map.entry("cs-os-process", 20L), Map.entry("cs-os-memory", 20L)));
     }
 
     @Test
