@@ -118,6 +118,11 @@ scripts/ci-test.sh rehearse  # 배포 리허설: 실제 이미지·배포 스크
 
 시스템 Chrome이 아니라 Playwright 내장 Chromium(헤드리스)을 씁니다. 같은 검증이 GitHub Actions의 CI에서 돌고, 통과하면 배포됩니다.
 
+## 라이선스
+
+- 소스 코드: [MIT](LICENSE)
+- 질문 콘텐츠(`content/`)와 문서(`docs/`): [CC BY 4.0](LICENSE-CONTENT.md) — 출처를 밝히면 자유롭게 쓸 수 있습니다.
+
 ## 문서
 
 - 사용법: [사용 가이드(화면별 설명)](docs/USAGE.md)
