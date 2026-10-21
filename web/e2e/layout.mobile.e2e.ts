@@ -9,7 +9,7 @@ interface Case {
   ready: (page: Page) => Promise<void>;
   /** 로그인 상태(기본 비로그인) */
   session?: SessionMode;
-  /** 방문 통계 측정 ID 가 설정된 서버(동의 배너가 뜬다) */
+  /** 방문 통계 측정 ID 가 설정된 서버(기본 켜짐) */
   analytics?: boolean;
   /** 화면을 연 뒤 잴 상태로 만드는 조작(확인창 열기 등) */
   act?: (page: Page) => Promise<void>;
@@ -84,8 +84,6 @@ const PAGES: Case[] = [
   { name: '내 현황', path: '/stats', session: 'authenticated', ready: (p) => p.getByRole('region', { name: '자주 틀린 질문' }).waitFor() },
   { name: '훑기 주제 선택', path: '/skim', ready: (p) => p.getByRole('link', { name: 'JPA' }).waitFor() },
   { name: '훑기(키워드 공개)', path: '/skim/transaction', ready: (p) => p.getByRole('button', { name: '키워드 보기' }).waitFor(), act: (p) => p.getByRole('button', { name: '키워드 보기' }).click() },
-  { name: '홈(방문 통계 동의 배너)', path: '/', analytics: true, ready: (p) => p.getByRole('region', { name: '방문 통계 동의' }).waitFor() },
-  { name: '질문 상세(방문 통계 동의 배너)', path: '/q/tx-04', analytics: true, ready: (p) => p.getByRole('region', { name: '방문 통계 동의' }).waitFor() },
   { name: '내 공부(방문 통계 설정)', path: '/me', analytics: true, ready: (p) => p.getByRole('group', { name: '방문 통계' }).waitFor() },
   // F0: 새 껍데기(아래 탭 바)와 탐색·내 공부·검색 입구
   { name: '탐색', path: '/explore', ready: (p) => p.getByRole('heading', { level: 2, name: '스프링' }).waitFor() },

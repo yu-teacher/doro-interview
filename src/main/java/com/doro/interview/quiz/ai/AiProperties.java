@@ -20,7 +20,7 @@ public class AiProperties {
     private int perUserPerDay = 10;
     private int globalPerDay = 100;
     private Duration timeout = Duration.ofSeconds(20);
-    private int maxOutputTokens = 500;
+    private int maxOutputTokens = 2000;
 
     public Provider getProvider() { return provider; }
     public void setProvider(Provider provider) { this.provider = provider; }

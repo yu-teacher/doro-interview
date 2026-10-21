@@ -3,9 +3,9 @@ import { BASE_PATH } from '../config';
 import { APP_ROUTE_PATHS } from '../routes';
 
 /**
- * 방문 통계(구글 애널리틱스 4, 선택). 원칙: ① 측정 ID 가 설정돼 있고 ② 사용자가 **동의한 뒤에만** 스크립트를 불러온다(동의 전에는 구글로 아무것도 가지 않는다).
+ * 방문 통계(구글 애널리틱스 4, 선택). 원칙: ① 측정 ID 가 설정돼 있고 ② 기본은 켜짐이며 사용자가 내 공부에서 끌 수 있다(수집 사실은 그 화면에 안내). 끄면 전송하지 않는다.
  * ③ 보내는 것은 화면 종류뿐이다: 주소는 `/q/:slug`·`/quiz/:id` 같은 **경로 틀**로 바꾸고 쿼리(검색어·필터)는 버린다. 페이지 제목·질문 내용·사용자 id 는 보내지 않는다.
- * ④ 광고용 신호·개인 맞춤 광고는 끈다. 동의를 거두면 이후 전송을 끄고 GA 쿠키를 지운다.
+ * ④ 광고용 신호·개인 맞춤 광고는 끈다. 끄면 이후 전송을 멈추고 GA 쿠키를 지운다.
  */
 export type Consent = 'granted' | 'denied' | 'unset';
 
@@ -18,7 +18,7 @@ export function readConsent(): Consent {
     const v = window.localStorage.getItem(KEY);
     return v === 'granted' || v === 'denied' ? v : 'unset';
   } catch {
-    return 'unset'; // 저장소를 못 쓰면 기억하지 못하니 매번 묻되, 동의 없이는 아무것도 보내지 않는다
+    return 'unset'; // 저장소를 못 쓰면 기억하지 못하니 이번 방문에는 기본(켜짐)으로 동작한다
   }
 }
 
@@ -69,7 +69,7 @@ interface GaWindow extends Window {
   gtag?: Gtag;
 }
 
-/** 스크립트를 한 번만 불러온다. 동의한 뒤에만 부른다. */
+/** 스크립트를 한 번만 불러온다. 사용자가 끄지 않았을 때만 부른다. */
 export function loadAnalytics(id: string): void {
   const w = window as GaWindow;
   (w as unknown as Record<string, unknown>)[`ga-disable-${id}`] = false;

@@ -89,17 +89,16 @@ export function MeHubPage() {
               <h2 id="stats-heading" className="mb-1 font-bold">
                 방문 통계
               </h2>
-              <p className="mb-2 text-sm text-[var(--color-muted)]">구글 애널리틱스로 어떤 화면을 보는지만 집계합니다(질문 내용·검색어·로그인 정보는 보내지 않습니다).</p>
+              <p className="mb-2 text-sm text-[var(--color-muted)]">방문 통계를 위해 구글 애널리틱스를 사용합니다. 어떤 화면을 보는지만 구글로 전송되고 쿠키가 저장되며, 질문 내용·검색어·로그인 정보는 보내지 않습니다. 끄면 전송을 멈추고 쿠키를 지웁니다.</p>
               <Segmented
                 label="방문 통계"
-                value={consent === 'granted' ? 'granted' : 'denied'}
+                value={consent === 'denied' ? 'denied' : 'granted'}
                 onChange={(next) => saveConsent(next)}
                 options={[
-                  { value: 'granted' as const, label: '동의' },
-                  { value: 'denied' as const, label: '거부' },
+                  { value: 'granted' as const, label: '켜기' },
+                  { value: 'denied' as const, label: '끄기' },
                 ]}
               />
-              {consent === 'unset' && <p className="mt-1 text-sm text-[var(--color-muted)]">아직 선택하지 않았습니다. 선택하기 전에는 아무것도 전송하지 않습니다.</p>}
             </section>
           )}
           {session.authenticated && (
