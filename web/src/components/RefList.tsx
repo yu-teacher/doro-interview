@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { TitleText } from './TitleText';
 import type { QuestionRef } from '../api/types';
 import { questionPath } from '../routes';
 import { TierBadge } from './Chips';
@@ -15,7 +16,9 @@ export function RefList({ title, items }: { title: string; items: QuestionRef[] 
         {items.map((r) => (
           <li key={r.slug} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
             <Link to={questionPath(r.slug)} className="flex min-h-11 flex-wrap items-center gap-2 p-3 no-underline">
-              <span>{r.title}</span>
+              <span>
+                <TitleText text={r.title} />
+              </span>
               <TierBadge tier={r.tier} />
             </Link>
           </li>

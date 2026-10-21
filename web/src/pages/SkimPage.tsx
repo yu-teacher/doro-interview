@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { TitleText } from '../components/TitleText';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { fetchCategories, fetchTopic } from '../api/catalog';
 import type { QuestionSummary, Tier, TopicView } from '../api/types';
@@ -79,7 +80,7 @@ function Deck({ view, tier }: { view: TopicView; tier: Tier | null }) {
             {unsure.map((q) => (
               <li key={q.slug}>
                 <Link to={questionPath(q.slug)} className="inline-flex min-h-11 items-center">
-                  {q.title}
+                  <TitleText text={q.title} />
                 </Link>
               </li>
             ))}
@@ -120,7 +121,7 @@ function Deck({ view, tier }: { view: TopicView; tier: Tier | null }) {
         {index + 1} / {pool.length}
       </p>
       <h2 id="skim-q" className="mt-1 text-xl font-bold">
-        <TierBadge tier={q.tier} /> {q.title}
+        <TierBadge tier={q.tier} /> <TitleText text={q.title} />
       </h2>
       {!shown ? (
         <button type="button" className={`${PRIMARY} mt-4`} onClick={() => setShown(true)}>

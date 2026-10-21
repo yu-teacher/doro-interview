@@ -23,6 +23,8 @@
 
 ## 화면 둘러보기
 
+> 단계별 설명은 [사용 가이드](docs/USAGE.md)에 있습니다.
+
 | 탐색 | 주제 | 질문 |
 | --- | --- | --- |
 | <img src="docs/screenshots/explore.png" width="260" alt="탐색"> | <img src="docs/screenshots/topic.png" width="260" alt="주제: 난이도 탭과 필터"> | <img src="docs/screenshots/question.png" width="260" alt="질문: 모범 답변·키워드·관련 개념"> |
@@ -36,6 +38,8 @@
 | <img src="docs/screenshots/mine.png" width="260" alt="내 질문"> | <img src="docs/screenshots/mobile-question.png" width="140" alt="모바일 질문"> | <img src="docs/screenshots/mobile-question-dark.png" width="140" alt="모바일 질문(어둡게)"> |
 
 ## 사용법
+
+> 화면마다 번호를 붙여 설명한 **[사용 가이드](docs/USAGE.md)**가 따로 있습니다. 아래는 요약입니다.
 
 1. **로그인**: 헤더의 로그인으로 Doro 계정에 로그인합니다. 처음이면 Doro의 `/signup`에서 가입합니다. 로그인하지 않아도 질문은 읽을 수 있고, 체크·시험·노트·내 질문은 로그인이 필요합니다.
 2. **읽기**: **탐색**에서 주제를 고르고 질문을 엽니다. 질문 화면 아래의 **완전히 학습함**을 체크하면 진도에 반영됩니다. 이전·다음 질문으로 이어서 읽을 수 있습니다.
@@ -116,6 +120,7 @@ scripts/ci-test.sh rehearse  # 배포 리허설: 실제 이미지·배포 스크
 
 ## 문서
 
+- 사용법: [사용 가이드(화면별 설명)](docs/USAGE.md)
 - 설계: [DESIGN](docs/DESIGN.md) · 프런트 설계: [FRONTEND-DESIGN](docs/FRONTEND-DESIGN.md)
 - 단계별 계획: [M0](docs/M0-PLAN.md) · [M1](docs/M1-PLAN.md) · [M2](docs/M2-PLAN.md) · [M3](docs/M3-PLAN.md) · [M4](docs/M4-PLAN.md) · [M6(AI 피드백)](docs/M6-PLAN.md) · [REFS](docs/REFS-PLAN.md)
 - 콘텐츠: [작성·수정 방법](docs/CONTENT-GUIDE.md) · [검수 트랙](docs/REVIEW-TRACK.md)
