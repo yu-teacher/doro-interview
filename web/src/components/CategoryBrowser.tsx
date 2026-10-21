@@ -76,7 +76,7 @@ export function CategoryBrowser({ categories, byTopic }: Props) {
                   <span className="min-w-0 break-words font-semibold text-[var(--color-text)]">{topic.name}</span>
                   <span className="shrink-0 text-sm text-[var(--color-muted)]">질문 {total}개</span>
                 </span>
-                {topic.description && <span className="mt-0.5 block truncate text-sm text-[var(--color-muted)]">{topic.description}</span>}
+                {topic.description && <span className="mt-0.5 line-clamp-2 text-sm text-[var(--color-muted)]">{topic.description}</span>}
               </Link>
               {p && (
                 <div className="px-3 pb-3">
