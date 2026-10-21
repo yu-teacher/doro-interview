@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ApiError, userMessage } from '../api/client';
 import { fetchAiStatus, putFeedback } from '../api/quiz';
 import { useApi } from '../hooks/useApi';
+import { LazyMarkdown } from '../markdown/LazyMarkdown';
 import { useSession } from '../session/SessionProvider';
 
 const BUTTON = 'min-h-11 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-4 disabled:opacity-60';
@@ -19,7 +20,7 @@ interface Props {
 
 /**
  * AI 피드백(선택 기능, docs/M6-PLAN.md). 서버가 꺼져 있으면 아무것도 그리지 않는다. 버튼을 눌러야만 질문과 내 답이 외부 AI 서비스로
- * 전송되고(안내를 함께 보인다), 실패해도 시험은 그대로 계속된다(맞음/틀림은 사용자가 고른다). 결과는 일반 텍스트로만 그린다.
+ * 전송되고(안내를 함께 보인다), 실패해도 시험은 그대로 계속된다(맞음/틀림은 사용자가 고른다). 결과는 마크다운으로 그리되 원시 HTML 은 해석하지 않는다(렌더러 규칙).
  */
 export function AiFeedbackBox({ sessionId, seq, answer, saved, tooLong }: Props) {
   const { markAnonymous } = useSession();
@@ -61,9 +62,9 @@ export function AiFeedbackBox({ sessionId, seq, answer, saved, tooLong }: Props)
         AI 피드백
       </h3>
       {text !== undefined ? (
-        <p data-testid="ai-feedback" className="mt-1 whitespace-pre-wrap break-words rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-          {text}
-        </p>
+        <div data-testid="ai-feedback" className="mt-1 break-words rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2">
+          <LazyMarkdown source={text} />
+        </div>
       ) : (
         <>
           <p className="text-sm text-[var(--color-muted)]">

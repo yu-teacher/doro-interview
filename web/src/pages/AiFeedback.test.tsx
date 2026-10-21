@@ -68,12 +68,14 @@ describe('AI 피드백', () => {
     expect(screen.getByText(/내 답을 적어야 피드백을 받을 수 있습니다/)).toBeTruthy();
   });
 
-  it('누르면 내 답을 PUT 하고 피드백을 일반 텍스트로 보여 준다', async () => {
-    const { requests } = base({ [FEEDBACK]: { feedback: '잘했어요 <b>굵게</b>\n둘째 줄', cached: false, remainingToday: 6 } });
+  it('누르면 내 답을 PUT 하고 피드백을 마크다운으로 그리되 원시 HTML 은 글자로 둔다', async () => {
+    const { requests } = base({ [FEEDBACK]: { feedback: '- **잘한 점**: 잘했어요 <b>굵게</b>\n- **빠진 핵심**: 둘째 줄', cached: false, remainingToday: 6 } });
     await reveal('프록시가 대신 받습니다');
     fireEvent.click(await screen.findByRole('button', { name: 'AI 피드백 받기' }));
     const box = await screen.findByTestId('ai-feedback');
-    expect(box.textContent).toBe('잘했어요 <b>굵게</b>\n둘째 줄');
+    await waitFor(() => expect(box.querySelectorAll('li').length).toBe(2));
+    expect(box.querySelector('strong')?.textContent).toBe('잘한 점');
+    expect(box.textContent).toContain('<b>굵게</b>'); // 원시 HTML 은 해석하지 않는다
     expect(box.querySelector('b')).toBeNull();
     const put = requests.find((r) => r.method === 'PUT' && r.path.endsWith('/feedback')) as unknown as { body: unknown; headers: Record<string, string> };
     expect(put.body).toEqual({ answerText: '프록시가 대신 받습니다' });
