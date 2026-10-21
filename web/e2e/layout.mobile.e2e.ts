@@ -186,6 +186,18 @@ test('긴 이름과 주소는 줄바꿈되어 가로로 넘치지 않는다', as
   expect(doc).toBeLessThanOrEqual(vw + 1);
 });
 
+// 헤더(도로 홈 · 서비스 이름 · 상단 메뉴 · 로그아웃 · 검색)는 상단 메뉴가 보이는 폭(md 이상)에서 한 줄에 들어간다.
+// 본문 폭이 max-w-3xl(736px)로 고정이라 큰 화면에서도 같은 한계다.
+test('상단 메뉴가 보이는 폭에서는 헤더가 한 줄이다', async ({ page }) => {
+  await installApi(page, 'authenticated');
+  await page.goto('/interview/');
+  await page.getByRole('heading', { level: 3, name: '스프링' }).first().waitFor();
+  const nav = page.getByRole('navigation', { name: '주요 메뉴' });
+  test.skip(!(await nav.isVisible()), '상단 메뉴는 md(768px) 이상에서만 보인다');
+  const box = await page.locator('header').boundingBox();
+  expect(box?.height ?? 0).toBeLessThanOrEqual(80);
+});
+
 // 아래 탭 바(폰)가 본문 끝을 가리지 않는다: 맨 아래까지 내렸을 때 바닥글이 탭 바 위에 온다
 test.describe('아래 탭 바', () => {
   test('맨 아래까지 내리면 바닥글이 탭 바에 가려지지 않는다', async ({ page }, info) => {
