@@ -114,7 +114,7 @@ export function Layout() {
               <SearchIcon />
             </Link>
             <div className="hidden md:block">
-              <SearchBox />
+              <SearchBox compact />
             </div>
           </div>
         </header>

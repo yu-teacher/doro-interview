@@ -4,7 +4,18 @@ import { searchPath } from '../routes';
 
 /** 검색 입력. 데스크톱 헤더와 폰의 검색 화면이 같이 쓴다. 입력은 16px 이상이라야 iOS 가 확대하지 않는다. */
 /** `landmark`: 검색 영역의 이름. 한 화면에 입력이 둘(헤더·본문)일 수 있어 서로 다른 이름을 준다. */
-export function SearchBox({ id = 'search-input', autoFocus = false, landmark = '질문 검색' }: { id?: string; autoFocus?: boolean; landmark?: string }) {
+export function SearchBox({
+  id = 'search-input',
+  autoFocus = false,
+  landmark = '질문 검색',
+  compact = false,
+}: {
+  id?: string;
+  autoFocus?: boolean;
+  landmark?: string;
+  /** 헤더용: 눈에 보이는 검색 버튼을 빼서 폭을 아낀다(Enter 로 제출하고, 버튼은 스크린 리더용으로만 남긴다). */
+  compact?: boolean;
+}) {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const [value, setValue] = useState(params.get('q') ?? '');
@@ -33,7 +44,7 @@ export function SearchBox({ id = 'search-input', autoFocus = false, landmark = '
         autoFocus={autoFocus}
         className="min-h-11 min-w-0 flex-1 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-base md:w-36"
       />
-      <button type="submit" className="min-h-11 rounded-md bg-[var(--color-accent)] px-4 font-semibold text-[var(--color-accent-contrast)]">
+      <button type="submit" className={compact ? 'sr-only' : 'min-h-11 rounded-md bg-[var(--color-accent)] px-4 font-semibold text-[var(--color-accent-contrast)]'}>
         검색
       </button>
     </form>
