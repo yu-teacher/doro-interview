@@ -45,6 +45,11 @@ describe('레이아웃', () => {
     expect(focusable[0]).toBe(skip);
   });
 
+  it('헤더에 도로 허브(루트)로 나가는 링크가 있다', async () => {
+    await screen.findByRole('heading', { level: 3, name: '스프링' });
+    expect(screen.getByRole('link', { name: '← 도로 홈' }).getAttribute('href')).toBe('/');
+  });
+
   it('랜드마크가 있다(banner·navigation·search·main·contentinfo)', async () => {
     await screen.findByRole('heading', { level: 3, name: '스프링' });
     for (const role of ['banner', 'navigation', 'search', 'main', 'contentinfo']) {

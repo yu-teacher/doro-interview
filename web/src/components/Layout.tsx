@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { SERVICE_NAME } from '../config';
+import { HUB_PATH, SERVICE_NAME } from '../config';
 import { loginUrl, useSession } from '../session/SessionProvider';
 import { AnalyticsGate, AnalyticsNotice } from './AnalyticsGate';
 import { ChromeContext, useChromeState } from './chrome';
@@ -93,6 +93,10 @@ export function Layout() {
           본문으로 건너뛰기
         </a>
         <header className="flex flex-wrap items-center gap-x-4 gap-y-2 py-3">
+          {/* 도로 허브(게이트웨이의 `/`)로 나가는 링크: 다른 앱이므로 라우터 링크가 아니라 전체 페이지 이동이다 */}
+          <a href={HUB_PATH} className="inline-flex min-h-11 shrink-0 items-center text-sm text-[var(--color-muted)] no-underline">
+            ← 도로 홈
+          </a>
           <Link to="/" className="inline-flex min-h-11 shrink-0 items-center text-lg font-bold no-underline">
             {SERVICE_NAME}
           </Link>

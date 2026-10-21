@@ -1,5 +1,8 @@
 export const SERVICE_NAME = '도로 면접';
 
+/** 도로 허브(포털) 주소. 게이트웨이의 루트다. */
+export const HUB_PATH = '/';
+
 /** 웹이 마운트된 하위 경로(끝 슬래시 없음). vite.config.ts 의 base 와 같아야 한다. */
 export const BASE_PATH = '/interview';
 
