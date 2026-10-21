@@ -157,7 +157,7 @@ export function createFakeDoro({ internalToken = INTERNAL_TOKEN } = {}) {
           return json(res, 500, { type: 'error', error: { type: 'api_error', message: 'boom' } });
         }
         const candidate = /<candidate>\n([\s\S]*?)\n<\/candidate>/.exec(content)?.[1] ?? '';
-        return json(res, 200, { id: 'msg_fake', type: 'message', role: 'assistant', content: [{ type: 'text', text: `[가짜 AI] ${candidate.slice(0, 40)} 에 대한 의견입니다.` }] });
+        return json(res, 200, { id: 'msg_fake', type: 'message', role: 'assistant', model: 'fake-model', content: [{ type: 'text', text: `[가짜 AI] ${candidate.slice(0, 40)} 에 대한 의견입니다.` }], stop_reason: 'end_turn', stop_sequence: null, usage: { input_tokens: 1, output_tokens: 1 } });
       });
       return undefined;
     }

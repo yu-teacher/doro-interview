@@ -30,6 +30,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    // AI 피드백(docs/M6-PLAN.md): Spring AI 의 Anthropic 모델만 쓴다(자동 구성·스타터는 쓰지 않는다: 키가 없을 때 기동이 실패하지 않게 우리 설정(AiConfig)이 직접 만든다).
+    implementation platform('org.springframework.ai:spring-ai-bom:2.0.1')
+    implementation 'org.springframework.ai:spring-ai-anthropic'
+
     // Database & Flyway
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-database-postgresql'
