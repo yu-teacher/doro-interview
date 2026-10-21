@@ -47,7 +47,7 @@ describe('레이아웃', () => {
 
   it('헤더에 도로 허브(루트)로 나가는 링크가 있다', async () => {
     await screen.findByRole('heading', { level: 3, name: '스프링' });
-    expect(screen.getByRole('link', { name: '← 도로 홈' }).getAttribute('href')).toBe('/');
+    expect(screen.getByRole('link', { name: '도로 홈으로' }).getAttribute('href')).toBe('/');
   });
 
   it('랜드마크가 있다(banner·navigation·search·main·contentinfo)', async () => {

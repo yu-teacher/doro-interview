@@ -4,7 +4,7 @@ import { HUB_PATH, SERVICE_NAME } from '../config';
 import { loginUrl, useSession } from '../session/SessionProvider';
 import { AnalyticsGate, AnalyticsNotice } from './AnalyticsGate';
 import { ChromeContext, useChromeState } from './chrome';
-import { SearchIcon } from './icons';
+import { HubHomeIcon, SearchIcon } from './icons';
 import { SearchBox } from './SearchBox';
 import { TabBar, TABS, useActiveTab } from './TabBar';
 
@@ -94,8 +94,13 @@ export function Layout() {
         </a>
         <header className="flex flex-wrap items-center gap-x-4 gap-y-2 py-3">
           {/* 도로 허브(게이트웨이의 `/`)로 나가는 링크: 다른 앱이므로 라우터 링크가 아니라 전체 페이지 이동이다 */}
-          <a href={HUB_PATH} className="inline-flex min-h-11 shrink-0 items-center text-sm text-[var(--color-muted)] no-underline">
-            ← 도로 홈
+          <a
+            href={HUB_PATH}
+            aria-label="도로 홈으로"
+            title="도로 홈으로"
+            className="-mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-md text-[var(--color-muted)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
+          >
+            <HubHomeIcon />
           </a>
           <Link to="/" className="inline-flex min-h-11 shrink-0 items-center text-lg font-bold no-underline">
             {SERVICE_NAME}
