@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { a11yViolations } from '../testing/axe';
 import { anonymous, authed, summary, SESSION_URL, topicView } from '../testing/fixtures';
@@ -31,6 +31,8 @@ async function open(routes: Record<string, unknown>, path = '/t/transaction') {
   const api = mockApi(routes);
   renderApp(path);
   await screen.findByRole('heading', { level: 1, name: '트랜잭션' });
+  // 마운트 직후의 효과(낙관적 값 초기화)가 끝난 뒤에 조작한다: 느린 환경에서 클릭이 초기화에 덮이는 경합을 없앤다
+  await act(async () => undefined);
   return api;
 }
 
