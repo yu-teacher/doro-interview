@@ -13,7 +13,8 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1,
   forbidOnly: !!process.env.CI,
-  retries: 0,
+  // 로컬(macOS Docker Desktop)에서는 게이트웨이→호스트 연결이 가끔 끊겨 한 시험이 30초 멈춘다(docs/M6-PLAN.md 끝). 로컬에서만 한 번 다시 시도하고, CI 는 그대로 엄격하다.
+  retries: process.env.CI ? 0 : 1,
   reporter: [['list']],
   use: { baseURL, trace: 'off', launchOptions },
   projects: [

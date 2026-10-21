@@ -40,7 +40,7 @@ function QuestionContent({ q }: { q: QuestionDetail }) {
       <h1 className="text-2xl font-bold leading-snug">
         <TitleText text={q.title} />
       </h1>
-      <div className="mt-3 flex flex-wrap gap-1.5">
+      <div className="mt-3 flex flex-wrap items-center gap-1.5">
         <TierBadge tier={q.tier} />
         {q.importance === 3 || q.importance === 2 ? (
           // 눌러서 같은 주제의 그 정도 질문만 모아 본다

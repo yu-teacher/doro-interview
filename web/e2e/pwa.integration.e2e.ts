@@ -334,10 +334,12 @@ test('옛 CSP 고착 방지: 게이트웨이의 CSP 가 바뀌면 다시 방문�
   await controlled(page);
 
   await gateway('enforced'); // Report-Only → 강제로 전환
-  const again = await page.reload();
-  // 강제 헤더가 새로 붙었다(서비스 워커가 설치 때 저장한 옛 셸을 주면 이 헤더가 없다). Report-Only 헤더는 따지지 않는다: 브라우저의 HTTP 캐시가 304 응답을
-  // 합칠 때 옛 응답의 헤더 중 새 응답에 없는 것을 남기므로 옛 Report-Only 가 같이 보일 수 있다(해롭지 않다. 강제 정책이 적용된다).
-  expect(again?.headers()['content-security-policy']).toContain("script-src 'self'");
+  // 강제 헤더가 새로 붙는다(서비스 워커가 설치 때 저장한 옛 셸을 계속 주면 이 헤더가 영영 없다). 전환 직후 한 번은 서비스 워커의 갱신 확인과 겹쳐
+  // 느린 환경(CI)에서 옛 응답이 나올 수 있어, 몇 번 다시 방문해서도 안 붙으면 실패로 본다(고착이면 계속 실패한다).
+  // Report-Only 헤더는 따지지 않는다: 브라우저의 HTTP 캐시가 304 응답을 합칠 때 옛 응답의 헤더 중 새 응답에 없는 것을 남기므로 옛 Report-Only 가 같이 보일 수 있다(해롭지 않다. 강제 정책이 적용된다).
+  await expect
+    .poll(async () => (await page.reload())?.headers()['content-security-policy'] ?? '', { timeout: 20_000, intervals: [500, 1000, 2000] })
+    .toContain("script-src 'self'");
   await ctx.close();
 });
 

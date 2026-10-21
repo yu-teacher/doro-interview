@@ -60,7 +60,7 @@ function MostMissed({ stats }: { stats: QuizStats }) {
       <ol className="mt-2 space-y-2">
         {stats.mostMissed.map((m) => (
           <li key={m.questionSlug} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
-            <Link to={questionLink(m.questionSlug)} className="inline-flex min-h-11 items-center font-semibold no-underline">
+            <Link to={questionLink(m.questionSlug)} className="block min-h-11 py-2.5 font-semibold no-underline">
               <TitleText text={m.title} />
             </Link>
             <div className="flex flex-wrap items-center gap-1.5 text-sm text-[var(--color-muted)]">
