@@ -1,4 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Segmented } from '../components/Segmented';
+import { readTheme, saveTheme, type Theme } from '../lib/theme';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { minePath, skimPath } from '../routes';
 import { loginUrl, useSession, useSessionKey } from '../session/SessionProvider';
@@ -10,6 +13,7 @@ export function MeHubPage() {
   useDocumentTitle('내 공부');
   const session = useSessionKey();
   const { state, refresh, logout } = useSession();
+  const [theme, setTheme] = useState<Theme>(() => readTheme());
   return (
     <div>
       <h1 className="text-2xl font-bold">내 공부</h1>
@@ -58,6 +62,24 @@ export function MeHubPage() {
               </Link>
             </li>
           </ul>
+          <section aria-labelledby="theme-heading" className="mt-6">
+            <h2 id="theme-heading" className="mb-2 font-bold">
+              화면 색
+            </h2>
+            <Segmented
+              label="화면 색"
+              value={theme}
+              onChange={(next) => {
+                setTheme(next);
+                saveTheme(next);
+              }}
+              options={[
+                { value: 'system' as const, label: '시스템 설정' },
+                { value: 'light' as const, label: '밝게' },
+                { value: 'dark' as const, label: '어둡게' },
+              ]}
+            />
+          </section>
           {session.authenticated && (
             <button type="button" onClick={() => void logout()} className="mt-6 min-h-11 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-4">
               로그아웃

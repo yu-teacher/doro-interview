@@ -82,6 +82,21 @@ describe('내 공부 화면', () => {
     await waitFor(() => expect(api.requests.some((r) => r.method === 'POST' && r.path.endsWith('/bff/logout'))).toBe(true));
   });
 
+  it('화면 색을 고르면 문서에 반영하고 기억한다(비로그인도)', async () => {
+    window.localStorage.clear();
+    document.documentElement.removeAttribute('data-theme');
+    mockApi({ [SESSION_URL]: anonymous() });
+    renderApp('/me');
+    const group = within(await screen.findByRole('group', { name: '화면 색' }));
+    expect(group.getByRole('button', { name: '시스템 설정' }).getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(group.getByRole('button', { name: '어둡게' }));
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+    expect(window.localStorage.getItem('interview.theme')).toBe('dark');
+    expect(group.getByRole('button', { name: '어둡게' }).getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(group.getByRole('button', { name: '시스템 설정' }));
+    expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
+  });
+
   it('세션 확인이 실패하면 추측하지 않고 다시 시도를 안내한다', async () => {
     mockApi({ [SESSION_URL]: respond(() => errorResponse(503, 'AUTH-503-02', 'x')) });
     renderApp('/me');

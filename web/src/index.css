@@ -21,7 +21,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --color-bg: #0b1220;
     --color-surface: #111a2e;
     --color-text: #e2e8f0;
@@ -37,6 +37,23 @@
     --color-info: #93c5fd;
     --color-surface-2: #17233b;
   }
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #0b1220;
+  --color-surface: #111a2e;
+  --color-text: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-border: #334155;
+  --color-accent: #93c5fd;
+  --color-accent-contrast: #0b1220;
+  --color-official: #86efac;
+  --color-extra: #fcd34d;
+  --color-lab: #c4b5fd;
+  --color-success: #86efac;
+  --color-warning: #fcd34d;
+  --color-info: #93c5fd;
+  --color-surface-2: #17233b;
 }
 
 /* 폰에서는 글자를 조금 키운다(17px 기준, rem 으로 쓰는 모든 크기가 같이 커진다). 데스크톱은 16px. */
@@ -96,7 +113,7 @@ code, pre {
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --hl-keyword: #fdba74;
     --hl-string: #86efac;
     --hl-comment: #94a3b8;
@@ -105,8 +122,21 @@ code, pre {
   }
 }
 
+:root[data-theme="dark"] {
+  --hl-keyword: #fdba74;
+  --hl-string: #86efac;
+  --hl-comment: #94a3b8;
+  --hl-number: #93c5fd;
+  --hl-title: #d8b4fe;
+}
+
 .hljs-keyword, .hljs-selector-tag, .hljs-literal, .hljs-built_in { color: var(--hl-keyword); }
 .hljs-string, .hljs-regexp, .hljs-attr, .hljs-meta .hljs-string { color: var(--hl-string); }
 .hljs-comment, .hljs-quote { color: var(--hl-comment); font-style: italic; }
 .hljs-number, .hljs-symbol { color: var(--hl-number); }
 .hljs-title, .hljs-title.class_, .hljs-title.function_, .hljs-meta, .hljs-type, .hljs-variable { color: var(--hl-title); }
+
+/* 수동 선택: 밝게 */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
