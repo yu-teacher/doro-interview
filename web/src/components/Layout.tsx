@@ -6,6 +6,7 @@ import { AnalyticsGate, AnalyticsNotice } from './AnalyticsGate';
 import { ChromeContext, useChromeState } from './chrome';
 import { HubHomeIcon, SearchIcon } from './icons';
 import { SearchBox } from './SearchBox';
+import ServiceLauncher from './ServiceLauncher';
 import { TabBar, TABS, useActiveTab } from './TabBar';
 
 /** 로그인 상태에 따른 헤더 메뉴. 상태를 알 수 없으면(오류) 추측하지 않고 다시 시도를 안내한다. */
@@ -106,7 +107,8 @@ export function Layout() {
             {SERVICE_NAME}
           </Link>
           <DesktopNav />
-          <div className="ml-auto flex items-center gap-x-3">
+          <div className="relative ml-auto flex items-center gap-x-3">
+            <ServiceLauncher currentId="interview" />
             <SessionNav />
             <Link to="/search" aria-label="검색" className="inline-flex size-11 items-center justify-center rounded-md text-[var(--color-text)] md:hidden">
               <SearchIcon />
