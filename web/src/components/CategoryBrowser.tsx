@@ -70,10 +70,10 @@ export function CategoryBrowser({ categories, byTopic }: Props) {
           const total = topic.counts.basic + topic.counts.deep + topic.counts.tricky;
           const p = byTopic.get(topic.slug);
           return (
-            <li key={topic.slug} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
-              <Link to={topicPath(topic.slug)} className="block min-h-11 p-3 no-underline">
+            <li key={topic.slug} className="min-w-0 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
+              <Link to={topicPath(topic.slug)} className="block min-h-11 min-w-0 p-3 no-underline">
                 <span className="flex items-baseline justify-between gap-2">
-                  <span className="font-semibold text-[var(--color-text)]">{topic.name}</span>
+                  <span className="min-w-0 break-words font-semibold text-[var(--color-text)]">{topic.name}</span>
                   <span className="shrink-0 text-sm text-[var(--color-muted)]">질문 {total}개</span>
                 </span>
                 {topic.description && <span className="mt-0.5 block truncate text-sm text-[var(--color-muted)]">{topic.description}</span>}
