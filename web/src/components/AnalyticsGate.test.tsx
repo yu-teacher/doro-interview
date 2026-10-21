@@ -61,6 +61,15 @@ describe('방문 통계(항상 켜짐)', () => {
     await waitFor(() => expect(gtag).toHaveBeenCalledWith('event', 'page_view', expect.objectContaining({ page_path: '/explore' })));
   });
 
+  it('푸터에 작은 수집 안내가 있고, 측정 ID 가 없으면 없다', async () => {
+    open({ analyticsId: 'G-ABCD1234' });
+    expect(await screen.findByText(/구글 애널리틱스를 사용합니다/)).toBeTruthy();
+    cleanup();
+    open({ analyticsId: null });
+    await screen.findByRole('link', { name: '도로 면접' });
+    expect(screen.queryByText(/구글 애널리틱스를 사용합니다/)).toBeNull();
+  });
+
   it('설정 화면에는 방문 통계 구역이 없다', async () => {
     open({ analyticsId: 'G-ABCD1234' }, '/me');
     await screen.findByRole('heading', { level: 1, name: '내 공부' });

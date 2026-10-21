@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { SERVICE_NAME } from '../config';
 import { loginUrl, useSession } from '../session/SessionProvider';
-import { AnalyticsGate } from './AnalyticsGate';
+import { AnalyticsGate, AnalyticsNotice } from './AnalyticsGate';
 import { ChromeContext, useChromeState } from './chrome';
 import { SearchIcon } from './icons';
 import { SearchBox } from './SearchBox';
@@ -112,6 +112,7 @@ export function Layout() {
         </main>
         <footer className="border-t border-[var(--color-border)] py-4 text-sm text-[var(--color-muted)]">
           공식 문서를 읽고 정리한 면접 질문입니다. 검수 상태와 근거 표기를 확인하세요.
+          <AnalyticsNotice />
           {/* 통합 e2e 가 서로 다른 두 빌드를 구분하는 표식(운영 빌드에는 없다) */}
           {import.meta.env.VITE_BUILD_MARK && <span data-build-mark={import.meta.env.VITE_BUILD_MARK} className="sr-only"> 빌드 {import.meta.env.VITE_BUILD_MARK}</span>}
         </footer>
