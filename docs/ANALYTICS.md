@@ -1,0 +1,22 @@
+# 방문 통계 (구글 애널리틱스 4, 선택 — 기본 꺼짐)
+
+> 상태: **구현 완료 (2026-10-21)**. 서버에서 켜려면 측정 ID 설정과 **게이트웨이 반영**(사용자가 직접)이 필요하다. 그 전까지 웹은 구글에 아무것도 요청하지 않는다.
+
+## 동작
+1. 서버가 환경변수 `INTERVIEW_GA_ID`(예: `G-XXXXXXXXXX`)를 `GET /api/v1/config` 의 `analyticsId` 로 알려 준다. 형식(`G-` + 영문 대문자·숫자 4~20자)이 아니면 없는 것으로 본다. 측정 ID 는 비밀이 아니다(페이지 소스에 노출된다).
+2. 웹은 ID 가 있고 사용자가 **동의한 뒤에만** 스크립트를 불러온다. 선택 전에는 하단에 동의 배너(동의/거부)만 보이고, 구글로는 아무것도 가지 않는다. 선택은 이 브라우저에 저장되고 **내 공부 > 방문 통계**에서 바꿀 수 있다(거부로 바꾸면 이후 전송을 끄고 GA 쿠키를 지운다).
+3. 보내는 것은 **화면 종류뿐**이다: 주소는 `/q/:slug`·`/quiz/:id`·`/t/:topic` 같은 경로 틀로 바꾸고, 쿼리(검색어·필터)·페이지 제목·질문 내용·사용자 id 는 보내지 않는다(`page_path`·`page_title`·`page_location` 을 모두 덮어쓴다). 광고용 신호(Google signals)와 맞춤 광고는 끈다. 화면이 바뀔 때마다 `page_view` 를 보낸다(SPA).
+4. 스크립트는 `public/ga-init.js`(gtag 정의, 같은 출처) → `googletagmanager.com/gtag/js` 순서로 불러온다.
+
+## 켜는 순서 (서버에서, 사용자가)
+1. GA4 속성에서 웹 스트림을 만들고 측정 ID(`G-…`)를 확인한다.
+2. `~/doro-interview/.env` 에 `INTERVIEW_GA_ID=G-…` 를 넣고, 서버 쪽 `docker-compose.prod.yml` 의 `interview-api` 환경에 `INTERVIEW_GA_ID: ${INTERVIEW_GA_ID:-}` 를 전달하는 줄을 더한 뒤 api 컨테이너만 다시 만든다.
+3. 게이트웨이의 `/interview/` 위치가 구글 주소를 허용해야 한다: `deploy/gateway-interview.conf` 의 CSP 에 `script-src`(googletagmanager), `connect-src`·`img-src`(google-analytics, analytics.google, googletagmanager)가 이미 들어 있다. `scripts/apply-gateway-interview.sh` 로 서버의 게이트웨이에 다시 반영하고 reload 한다(처음에는 Report-Only 로 위반이 없는지 보는 절차는 DEPLOY.md 와 같다).
+4. 확인: 사이트를 열면 동의 배너가 뜨고, 동의 뒤 GA 의 "실시간" 보고서에 화면이 나타난다.
+
+## 개인정보
+- 한국의 개인정보 보호 기준상 쿠키·식별자를 쓰는 통계는 **사전 동의**가 필요하다고 보고 동의 전 전송을 막았다(법률 자문이 아니다). 공개 서비스로 넓히기 전에 개인정보 처리방침(수집 항목·목적·보관·해지 방법)을 따로 게시하는 것이 좋다.
+- GA4 의 데이터 보관 기간은 속성 설정(기본 2개월, 최대 14개월)에서 정한다.
+
+## 확인
+`analytics.test.ts`(경로 틀, 동의 저장·저장소 실패, 스크립트 한 번만, 쿼리·제목·id 가 나가지 않음, 쿠키 정리), `AnalyticsGate.test.tsx`(ID 없음·설정 실패·선택 전 배너·거부·동의·이미 선택, 내 공부 설정), `ConfigApiTest` 외 2개(측정 ID 형식), 모바일 감사(배너 2종·설정 1종 × 폭 4 × 라이트·다크). **실제 구글 서버로는 한 번도 전송해 보지 못했다**(측정 ID 가 없다): 켠 뒤 "실시간" 보고서가 첫 실제 확인이다.

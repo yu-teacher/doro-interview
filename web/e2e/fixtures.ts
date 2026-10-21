@@ -106,7 +106,7 @@ const reviewCandidates = [2, 4].map((i) => ({ slug: `tx-0${i}`, title: LONG_TITL
  * `/interview/api/**` 요청을 가로채 가짜 응답을 준다. 등록하지 않은 주소는 404.
  * `session` 은 로그인 상태(기본 비로그인): 로그인이면 체크 상태·진도·노트가 같이 나오고, error 면 세션 조회가 실패한다.
  */
-export async function installApi(page: Page, session: SessionMode = 'anonymous'): Promise<void> {
+export async function installApi(page: Page, session: SessionMode = 'anonymous', options: { analytics?: boolean } = {}): Promise<void> {
   const authenticated = session === 'authenticated';
   await page.route(/\/interview\/api\//, async (route) => {
     const url = new URL(route.request().url());
@@ -156,6 +156,8 @@ export async function installApi(page: Page, session: SessionMode = 'anonymous')
         return route.fulfill(ok({ summary: topicSummary, categorySlug: 'spring', categoryName: '스프링', sources: [{ url: 'https://docs.spring.io/spring-framework/reference/data-access/transaction.html', note: null }], questions: authenticated ? questionsLearned : questions }));
       case path === '/v1/topics/boom':
         return route.fulfill({ status: 502, contentType: 'text/html', body: '<html>502 Bad Gateway</html>' });
+      case path === '/v1/config':
+        return route.fulfill(ok({ analyticsId: options.analytics ? 'G-TEST1234' : null }));
       case path === '/v1/questions/featured':
         return route.fulfill(ok([1, 2, 3, 4, 5, 6].map((i) => ({ slug: `tx-0${i}`, title: i % 2 === 0 ? LONG_TITLE : `질문 ${i}: 트랜잭션 전파`, tier: tiers[i % 3], topicSlug: 'transaction', topicName: topicSummary.name }))));
       case path === '/v1/questions/tx-04':

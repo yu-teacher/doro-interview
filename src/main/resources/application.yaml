@@ -60,6 +60,9 @@ interview:
     location: classpath:content/
     # true: 콘텐츠 파일이 깨져 있으면 기동을 막는다(반쯤 반영된 콘텐츠로 뜨지 않게). 급할 때만 false.
     fail-fast: ${INTERVIEW_CONTENT_FAIL_FAST:true}
+  # 방문 통계(구글 애널리틱스 4, 선택): 측정 ID(G-XXXXXXXX)를 넣으면 웹이 사용자의 동의를 받은 뒤에만 불러온다. 비워 두면 아무것도 하지 않는다.
+  analytics:
+    ga-measurement-id: ${INTERVIEW_GA_ID:}
   # AI 피드백(선택 기능, docs/M6-PLAN.md): 기본 꺼짐. 켜려면 INTERVIEW_AI_ENABLED=true 와 ANTHROPIC_API_KEY 가 모두 필요하다(키는 환경변수로만).
   ai:
     enabled: ${INTERVIEW_AI_ENABLED:false}

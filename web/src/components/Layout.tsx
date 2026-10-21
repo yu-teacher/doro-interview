@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { SERVICE_NAME } from '../config';
 import { loginUrl, useSession } from '../session/SessionProvider';
+import { AnalyticsGate } from './AnalyticsGate';
 import { ChromeContext, useChromeState } from './chrome';
 import { SearchIcon } from './icons';
 import { SearchBox } from './SearchBox';
@@ -115,6 +116,7 @@ export function Layout() {
           {import.meta.env.VITE_BUILD_MARK && <span data-build-mark={import.meta.env.VITE_BUILD_MARK} className="sr-only"> 빌드 {import.meta.env.VITE_BUILD_MARK}</span>}
         </footer>
       </div>
+      <AnalyticsGate />
       {/* 폰의 아래 고정 영역: 평소엔 탭 바, 화면이 동작 바를 내면 그 바가 대신한다 */}
       <div ref={chrome.setSlot} className="fixed inset-x-0 bottom-0 z-20">
         {!chrome.hasBar && <TabBar />}

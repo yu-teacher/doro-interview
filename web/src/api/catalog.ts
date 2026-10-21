@@ -2,6 +2,7 @@ import { apiGet } from './client';
 import type { CategoryView, ConceptDetail, ConceptView, FeaturedQuestion, QuestionDetail, SearchResult, TopicView } from './types';
 
 export const fetchCategories = (signal?: AbortSignal) => apiGet<CategoryView[]>('v1/categories', undefined, signal);
+export const fetchConfig = (signal?: AbortSignal) => apiGet<{ analyticsId: string | null }>('v1/config', undefined, signal);
 export const fetchFeatured = (signal?: AbortSignal) => apiGet<FeaturedQuestion[]>('v1/questions/featured', undefined, signal);
 export const fetchTopic = (slug: string, signal?: AbortSignal) => apiGet<TopicView>(`v1/topics/${encodeURIComponent(slug)}`, undefined, signal);
 export const fetchQuestion = (slug: string, signal?: AbortSignal) =>

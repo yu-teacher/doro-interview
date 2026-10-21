@@ -123,7 +123,8 @@ describe('화면 경로', () => {
     const api = mockApi({});
     go('/search');
     expect(await screen.findByText('검색어를 입력해 주세요.')).toBeTruthy();
-    expect(api.calls).toEqual([]);
+    // 검색 요청은 없다(레이아웃의 공개 설정 조회는 별개)
+    expect(api.calls.filter((c) => c.includes('/search'))).toEqual([]);
   });
 
   it('헤더의 검색 폼은 검색 화면으로 이동한다(빈 입력은 이동하지 않는다)', async () => {
