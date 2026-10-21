@@ -124,3 +124,25 @@ describe('Markdown: 그 밖', () => {
     expect(view('').textContent).toBe('');
   });
 });
+
+describe('근거 배지 앞의 줄바꿈', () => {
+  const brs = (md: string) => {
+    const { container } = render(<Markdown source={md} />);
+    return container.querySelectorAll('br').length;
+  };
+
+  it('문단 가운데에서 새 주장을 여는 배지는 새 줄(빈 줄 하나)에서 시작한다', () => {
+    expect(brs('앞 문장이다. (공식 문서) JLS 는 이렇게 정의한다. (실험 확인) 위 코드를 컴파일하면 오류가 났다.')).toBe(4);
+  });
+
+  it('문단의 맨 앞 배지와 뒤에 글이 없는 꼬리표형 배지는 줄을 바꾸지 않는다', () => {
+    expect(brs('(공식 문서) 문단 맨 앞의 배지 뒤에 이어지는 글이다.')).toBe(0);
+    expect(brs('이 설명은 공식 문서에 있다 (공식 문서)')).toBe(0);
+  });
+
+  it('글자는 하나도 사라지지 않는다', () => {
+    const { container } = render(<Markdown source="앞이다. (보충) 덧붙이는 설명이다." />);
+    expect(container.textContent).toContain('덧붙이는 설명이다.');
+    expect(container.textContent).toContain('앞이다.');
+  });
+});

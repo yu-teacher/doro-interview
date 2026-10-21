@@ -147,6 +147,20 @@ describe('주제 화면', () => {
     expect(screen.getByRole('searchbox', { name: '이 주제에서 찾기' })).toBeTruthy();
   });
 
+  it('"꼭 나와요만 보기" 는 시트를 열지 않고 바로 필수도 3 으로 거르고, 다시 누르면 푼다', async () => {
+    open();
+    await screen.findByRole('heading', { name: '트랜잭션' });
+    const toggle = screen.getByRole('button', { name: '꼭 나와요만 보기' });
+    expect(toggle.getAttribute('aria-pressed')).toBe('false');
+    fireEvent.click(toggle);
+    expect(cardCount()).toBe(2);
+    expect(screen.getByTestId('where').textContent).toBe('/t/transaction?imp=3');
+    expect(screen.getByRole('button', { name: '꼭 나와요만 보기' }).getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(screen.getByRole('button', { name: '꼭 나와요만 보기' }));
+    expect(cardCount()).toBe(5);
+    expect(screen.getByTestId('where').textContent).toBe('/t/transaction');
+  });
+
   it('주제 안 글 검색은 제목·키워드에서 찾는다', async () => {
     open();
     await screen.findByRole('heading', { name: '트랜잭션' });

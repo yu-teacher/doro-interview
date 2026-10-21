@@ -42,7 +42,18 @@ function QuestionContent({ q }: { q: QuestionDetail }) {
       </h1>
       <div className="mt-3 flex flex-wrap gap-1.5">
         <TierBadge tier={q.tier} />
-        <ImportanceBadge importance={q.importance} />
+        {q.importance === 3 || q.importance === 2 ? (
+          // 눌러서 같은 주제의 그 정도 질문만 모아 본다
+          <Link
+            to={`${topicPath(q.topicSlug)}?imp=${q.importance === 3 ? '3' : 'ge2'}`}
+            aria-label={`${q.importance === 3 ? '꼭 나와요' : '자주 나와요'}: 이 주제에서 같은 정도의 질문만 보기`}
+            className="inline-flex min-h-11 items-center"
+          >
+            <ImportanceBadge importance={q.importance} />
+          </Link>
+        ) : (
+          <ImportanceBadge importance={q.importance} />
+        )}
         {q.hasExtra && <ExtraFlag />}
         {q.reviewCandidate === true && learned.isLearned(q.slug) && <ReviewBadge />}
       </div>

@@ -157,6 +157,17 @@ function TopicContent({ view, conceptNames, reopenBulk, onBulkConflict, onReopen
           onChange={(tier) => update({ tier })}
           options={[{ value: 'ALL' as const, label: '전체', count: counts.ALL }, ...TIERS.map((t) => ({ value: t, label: TIER_LABEL[t], count: counts[t] }))]}
         />
+        <div className="flex flex-wrap gap-2">
+          {/* 자주 쓰는 필터는 시트를 열지 않고 바로 켠다 */}
+          <button
+            type="button"
+            aria-pressed={filters.importance === '3'}
+            onClick={() => update({ importance: filters.importance === '3' ? 'all' : '3' })}
+            className={toggleClass(filters.importance === '3')}
+          >
+            꼭 나와요만 보기
+          </button>
+        </div>
         <div className="flex gap-2">
           <label className="min-w-0 flex-1">
             <span className="sr-only">이 주제에서 찾기</span>

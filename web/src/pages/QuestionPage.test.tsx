@@ -51,6 +51,18 @@ describe('질문 화면', () => {
     expect(links.map((a) => a.getAttribute('href'))).toEqual(['/c/proxy', '/c/tx-boundary']);
   });
 
+  it('"꼭 나와요" 배지를 누르면 같은 주제의 꼭 나오는 질문만 모아 본다(자주 나와요는 2~3)', async () => {
+    await open();
+    const link = screen.getByRole('link', { name: /꼭 나와요: 이 주제에서/ });
+    expect(link.getAttribute('href')).toBe('/t/transaction?imp=3');
+    cleanup();
+    await open(detail({ importance: 2 }));
+    expect(screen.getByRole('link', { name: /자주 나와요: 이 주제에서/ }).getAttribute('href')).toBe('/t/transaction?imp=ge2');
+    cleanup();
+    await open(detail({ importance: 1 }));
+    expect(screen.queryByRole('link', { name: /이 주제에서 같은 정도/ })).toBeNull();
+  });
+
   it('모범 답변이 먼저 보인다', async () => {
     await open();
     const section = screen.getByRole('region', { name: '모범 답변' });
