@@ -139,8 +139,20 @@ scripts/deploy-on-server.sh --apply
 수동 롤백: `docker tag doro-interview-api:rollback-<시각> doro-interview-api:latest` (웹도 같게) 후
 `docker compose -p interview -f docker-compose.prod.yml up -d --no-build --no-deps --force-recreate interview-api interview-web`, 이어서 `docker exec doro-gateway nginx -s reload`.
 
-### AI 피드백(M6, 선택 — 기본 꺼짐)
-코드는 배포돼 있지만 **서버에서 두 환경변수를 넣기 전까지는 아무 일도 일어나지 않는다**(화면에 버튼도 없다). 켜려면 `~/doro-interview/.env` 에 `INTERVIEW_AI_ENABLED=true` 와 `GEMINI_API_KEY=<키>`(기본 공급자 Gemini; Anthropic 은 `INTERVIEW_AI_PROVIDER=anthropic` 과 `ANTHROPIC_API_KEY`) 를 넣고, 서버 쪽 `docker-compose.prod.yml` 의 `interview-api` 환경에 두 변수를 전달하는 줄을 더한 뒤 api 컨테이너만 다시 만든다. 선택 변수: `INTERVIEW_AI_MODEL`(공급자가 정한 모델 이름 그대로, 기본 `gemini-2.5-flash`), `INTERVIEW_AI_PER_USER_PER_DAY`(10), `INTERVIEW_AI_GLOBAL_PER_DAY`(100), `INTERVIEW_AI_TIMEOUT`(PT20S), `INTERVIEW_AI_MAX_OUTPUT_TOKENS`(500). 키는 읽거나 출력하지 않는다. 끄려면 `INTERVIEW_AI_ENABLED` 를 지우거나 false 로 하고 컨테이너를 다시 만든다(저장된 피드백은 남는다). 자세한 설계·한도는 [M6-PLAN.md](M6-PLAN.md).
+### AI 피드백(M6)·방문 통계(GA4) 켜기 (선택 — 기본 꺼짐)
+두 기능 모두 코드와 compose 전달 줄(`docker-compose.prod.yml`, 저장소 파일을 CD 가 그대로 쓴다)이 이미 배포돼 있고, **서버의 `~/doro-interview/.env` 에 값을 넣기 전까지는 아무 일도 일어나지 않는다**(화면에 버튼·배너도 없다). 서버 쪽 compose 파일을 고칠 필요는 없다.
+
+```bash
+# 1) .env 에 값 추가(키는 화면에 출력하지 않는다. 마지막 줄 끝 개행 확인 후)
+ssh mini 'cd ~/doro-interview && cp -p .env .env.bak-ai-$(date +%Y%m%d-%H%M%S) && printf "%s\n" "INTERVIEW_AI_ENABLED=true" "GEMINI_API_KEY=<여기에 키>" "INTERVIEW_AI_MODEL=<AI Studio 의 모델 ID 그대로>" "INTERVIEW_GA_ID=<G-XXXXXXXXXX>" >> .env && chmod 600 .env'
+# 2) api 컨테이너만 다시 만든다(약 25초)
+ssh mini 'cd ~/doro-interview && docker compose -p interview --env-file .env -f docker-compose.prod.yml up -d --no-build --no-deps --force-recreate interview-api'
+# 3) 건강 확인
+ssh mini 'docker ps --format "{{.Names}} {{.Status}}" | grep interview'
+# 4) (GA 를 켤 때만) 게이트웨이의 CSP 에 구글 주소를 허용한다 — 처음은 Report-Only 로
+ssh mini 'cd ~/doro-interview && git pull --ff-only && scripts/apply-gateway-interview.sh --apply --refresh'
+```
+끄려면 `.env` 에서 `INTERVIEW_AI_ENABLED` 를 `false` 로(GA 는 `INTERVIEW_GA_ID` 줄 삭제) 바꾸고 2) 를 다시 한다. 선택 변수: `INTERVIEW_AI_PROVIDER`(gemini 기본, anthropic), `INTERVIEW_AI_PER_USER_PER_DAY`(10), `INTERVIEW_AI_GLOBAL_PER_DAY`(100). 설계·한도는 [M6-PLAN.md](M6-PLAN.md), 통계는 [ANALYTICS.md](ANALYTICS.md).
 
 ### 자동 배포(CD, 선택)
 

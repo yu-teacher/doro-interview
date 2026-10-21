@@ -10,7 +10,7 @@
 
 ## 켜는 순서 (서버에서, 사용자가)
 1. GA4 속성에서 웹 스트림을 만들고 측정 ID(`G-…`)를 확인한다.
-2. `~/doro-interview/.env` 에 `INTERVIEW_GA_ID=G-…` 를 넣고, 서버 쪽 `docker-compose.prod.yml` 의 `interview-api` 환경에 `INTERVIEW_GA_ID: ${INTERVIEW_GA_ID:-}` 를 전달하는 줄을 더한 뒤 api 컨테이너만 다시 만든다.
+2. `~/doro-interview/.env` 에 `INTERVIEW_GA_ID=G-…` 를 넣고 api 컨테이너만 다시 만든다(compose 의 전달 줄은 저장소 파일에 이미 있다: DEPLOY.md 의 명령 참고).
 3. 게이트웨이의 `/interview/` 위치가 구글 주소를 허용해야 한다: `deploy/gateway-interview.conf` 의 CSP 에 `script-src`(googletagmanager), `connect-src`·`img-src`(google-analytics, analytics.google, googletagmanager)가 이미 들어 있다. `scripts/apply-gateway-interview.sh` 로 서버의 게이트웨이에 다시 반영하고 reload 한다(처음에는 Report-Only 로 위반이 없는지 보는 절차는 DEPLOY.md 와 같다).
 4. 확인: 사이트를 열면 동의 배너가 뜨고, 동의 뒤 GA 의 "실시간" 보고서에 화면이 나타난다.
 
