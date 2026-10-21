@@ -6,6 +6,8 @@ import { ApiError, userMessage } from '../api/client';
 import { fetchQuiz, finishQuiz, putQuizItem } from '../api/quiz';
 import type { MineQuestion, QuestionDetail, QuizItem, QuizResult, QuizSession } from '../api/types';
 import { AiFeedbackBox } from '../components/AiFeedbackBox';
+import { BottomBar } from '../components/chrome';
+import { TitleText } from '../components/TitleText';
 import { AsyncView } from '../components/AsyncView';
 import { ImportanceBadge, KeywordList, TierBadge } from '../components/Chips';
 import { setDraftDirty } from '../drafts/draftRegistry';
@@ -153,6 +155,44 @@ function Ask({ sessionId, item, total, answered, onDone, onProblem }: AskProps) 
 
   return (
     <section aria-labelledby="ask-heading">
+      <div
+        role="progressbar"
+        aria-label="시험 진행"
+        aria-valuemin={0}
+        aria-valuemax={total}
+        aria-valuenow={answered}
+        aria-valuetext={`${total}문제 중 ${answered}문제 끝`}
+        className="mb-3 h-1.5 overflow-hidden rounded-full bg-[var(--color-border)]"
+      >
+        <div className="h-full bg-[var(--color-accent)]" style={{ width: `${total === 0 ? 0 : Math.round((answered / total) * 100)}%` }} />
+      </div>
+      {/* 집중 모드(F4): 동작 버튼은 폰 화면 아래에 고정되어 스크롤하지 않고도 누른다(탭 바를 대신한다) */}
+      <BottomBar label="시험 동작">
+        {closed ? (
+          <button type="button" disabled={busy} onClick={() => void record('SKIPPED')} className={`${PRIMARY} flex-1`}>
+            건너뛰기
+          </button>
+        ) : !revealed ? (
+          <>
+            <button type="button" onClick={() => void record('SKIPPED')} disabled={busy || tooLong} className={BUTTON}>
+              건너뛰기
+            </button>
+            <button type="button" onClick={() => setRevealed(true)} disabled={tooLong} className={`${PRIMARY} flex-1`}>
+              모범 답변 보기
+            </button>
+          </>
+        ) : (
+          <>
+            <span className="sr-only">내가 말한 것은 어땠나요?</span>
+            <button type="button" disabled={busy || tooLong} onClick={() => void record('WRONG')} className={`${BUTTON} flex-1`}>
+              틀림
+            </button>
+            <button type="button" disabled={busy || tooLong} onClick={() => void record('CORRECT')} className={`${PRIMARY} flex-1`}>
+              맞음
+            </button>
+          </>
+        )}
+      </BottomBar>
       <p className="text-sm text-[var(--color-muted)]">
         <span aria-live="off">
           {answered + 1} / {total}
@@ -163,7 +203,7 @@ function Ask({ sessionId, item, total, answered, onDone, onProblem }: AskProps) 
         </span>
       </p>
       <h2 id="ask-heading" className="mt-2 text-xl font-bold">
-        {closed ? '이 질문은 더 이상 공개되지 않습니다.' : item.title}
+        {closed ? '이 질문은 더 이상 공개되지 않습니다.' : <TitleText text={item.title ?? ''} />}
       </h2>
       {!closed && (
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
@@ -173,9 +213,7 @@ function Ask({ sessionId, item, total, answered, onDone, onProblem }: AskProps) 
       )}
 
       {closed ? (
-        <button type="button" disabled={busy} onClick={() => void record('SKIPPED')} className={`mt-6 ${PRIMARY}`}>
-          건너뛰기
-        </button>
+        <p className="mt-6 text-[var(--color-muted)]">이 질문은 건너뛰고 다음 문제로 가세요.</p>
       ) : (
         <>
           <label className="mt-6 block">
@@ -194,31 +232,13 @@ function Ask({ sessionId, item, total, answered, onDone, onProblem }: AskProps) 
             {codePoints(text).toLocaleString()}/{ANSWER_MAX.toLocaleString()}자{tooLong ? ' — 너무 깁니다' : ''}
           </p>
 
-          {!revealed ? (
-            <div className="mt-4 flex flex-wrap gap-2">
-              <button type="button" onClick={() => setRevealed(true)} disabled={tooLong} className={PRIMARY}>
-                모범 답변 보기
-              </button>
-              <button type="button" onClick={() => void record('SKIPPED')} disabled={busy || tooLong} className={BUTTON}>
-                건너뛰기
-              </button>
-            </div>
-          ) : (
+          {!revealed ? null : (
             <div className="mt-4">
               <h3 className="font-bold">모범 답변</h3>
               <AsyncView state={answerState.state} reload={answerState.reload} notFoundMessage="이 질문은 더 이상 공개되지 않습니다.">
                 {(answer) => (answer === null ? null : 'mine' in answer ? <MineAnswerCard mine={answer.mine} /> : <CatalogAnswerCard q={answer.question} />)}
               </AsyncView>
               <AiFeedbackBox sessionId={sessionId} seq={item.seq} answer={text} saved={item.feedback} tooLong={tooLong} />
-              <p className="mt-4 font-bold">내가 말한 것은 어땠나요?</p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                <button type="button" disabled={busy || tooLong} onClick={() => void record('CORRECT')} className={PRIMARY}>
-                  맞음
-                </button>
-                <button type="button" disabled={busy || tooLong} onClick={() => void record('WRONG')} className={BUTTON}>
-                  틀림
-                </button>
-              </div>
             </div>
           )}
         </>
@@ -259,7 +279,7 @@ function Result({ session }: { session: QuizSession }) {
           <ul className="mt-2 space-y-2">
             {wrong.map((i) => (
               <li key={i.seq} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
-                <p className="font-semibold">{i.title ?? '(더 이상 공개되지 않는 질문)'}</p>
+                <p className="font-semibold">{i.title === null ? '(더 이상 공개되지 않는 질문)' : <TitleText text={i.title} />}</p>
                 {i.feedback && (
                   <details className="mt-1">
                     <summary className="inline-flex min-h-11 cursor-pointer items-center">AI 피드백 보기</summary>
