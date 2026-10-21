@@ -31,7 +31,7 @@ export function SearchBox({ id = 'search-input', autoFocus = false, landmark = '
         maxLength={100}
         autoComplete="off"
         autoFocus={autoFocus}
-        className="min-h-11 min-w-0 flex-1 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-base md:w-64"
+        className="min-h-11 min-w-0 flex-1 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-base md:w-36 lg:w-64"
       />
       <button type="submit" className="min-h-11 rounded-md bg-[var(--color-accent)] px-4 font-semibold text-[var(--color-accent-contrast)]">
         검색
