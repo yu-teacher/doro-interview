@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { resetConsentMemoryForTest } from '../lib/analytics';
 import { a11yViolations } from '../testing/axe';
@@ -35,7 +35,7 @@ const open = (config: unknown, path = '/') => {
 };
 const ID_SCRIPT = 'https://www.googletagmanager.com/gtag/js?id=G-ABCD1234';
 
-describe('방문 통계(기본 켜짐)', () => {
+describe('방문 통계(항상 켜짐)', () => {
   it('측정 ID 가 없으면 스크립트도 설정 구역도 없다', async () => {
     open({ analyticsId: null });
     await screen.findByRole('link', { name: '도로 면접' });
@@ -61,34 +61,15 @@ describe('방문 통계(기본 켜짐)', () => {
     await waitFor(() => expect(gtag).toHaveBeenCalledWith('event', 'page_view', expect.objectContaining({ page_path: '/explore' })));
   });
 
-  it('이미 꺼 뒀으면 아무것도 불러오지 않는다', async () => {
-    window.localStorage.setItem('interview.analytics', 'denied');
-    open({ analyticsId: 'G-ABCD1234' });
-    await screen.findByRole('link', { name: '도로 면접' });
-    expect(document.head.querySelector('script[src*="googletagmanager"]')).toBeNull();
-    await waitFor(() => expect(w['ga-disable-G-ABCD1234']).toBe(true));
-  });
-
-  it('내 공부에서 수집 사실을 안내하고 끄고 켤 수 있다(측정 ID 가 있을 때만 그 구역이 있다)', async () => {
+  it('설정 화면에는 방문 통계 구역이 없다', async () => {
     open({ analyticsId: 'G-ABCD1234' }, '/me');
-    const group = within(await screen.findByRole('group', { name: '방문 통계' }));
-    expect(screen.getByText(/구글 애널리틱스를 사용합니다/)).toBeTruthy();
-    expect(group.getByRole('button', { name: '켜기' }).getAttribute('aria-pressed')).toBe('true');
-    fireEvent.click(group.getByRole('button', { name: '끄기' }));
-    expect(window.localStorage.getItem('interview.analytics')).toBe('denied');
-    expect(group.getByRole('button', { name: '끄기' }).getAttribute('aria-pressed')).toBe('true');
-    await waitFor(() => expect(w['ga-disable-G-ABCD1234']).toBe(true));
-    fireEvent.click(group.getByRole('button', { name: '켜기' }));
-    expect(window.localStorage.getItem('interview.analytics')).toBe('granted');
-    cleanup();
-    open({ analyticsId: null }, '/me');
     await screen.findByRole('heading', { level: 1, name: '내 공부' });
     expect(screen.queryByRole('group', { name: '방문 통계' })).toBeNull();
   });
 
   it('axe 위반이 없다', async () => {
     open({ analyticsId: 'G-ABCD1234' }, '/me');
-    await screen.findByRole('group', { name: '방문 통계' });
+    await screen.findByRole('heading', { level: 1, name: '내 공부' });
     expect(await a11yViolations()).toEqual([]);
   });
 });
