@@ -118,7 +118,7 @@ class InsertTest(unittest.TestCase):
 
     def test_refresh_는_기존_블록을_걷어내고_조각대로_다시_쓴다(self):
         _, once = gi.insert_piece(BASE, PIECE, report_only=True)
-        changed_piece = PIECE.replace("script-src 'self';", "script-src 'self' 'sha256-abc';")
+        changed_piece = PIECE.replace("script-src 'self' https://www.googletagmanager.com;", "script-src 'self' https://www.googletagmanager.com 'sha256-abc';")
         state, out = gi.insert_piece(once, changed_piece, refresh=True)
         self.assertEqual(state, "changed")
         self.assertIn("'sha256-abc'", out)
@@ -219,7 +219,8 @@ class InsertTest(unittest.TestCase):
         for header in ("X-Content-Type-Options", "X-Frame-Options", "Strict-Transport-Security", "Referrer-Policy", "Permissions-Policy"):
             self.assertIn(header, web)
         csp = re.search(r'add_header Content-Security-Policy "([^"]+)"', web).group(1)
-        self.assertIn("script-src 'self';", csp)
+        # 스크립트는 같은 출처와 방문 통계(구글 태그 매니저)만 허용한다: 인라인·eval 은 없다
+        self.assertIn("script-src 'self' https://www.googletagmanager.com;", csp)
         self.assertIn("object-src 'none'", csp)
         self.assertNotIn("unsafe-inline", csp)
         self.assertNotIn("unsafe-eval", csp)
