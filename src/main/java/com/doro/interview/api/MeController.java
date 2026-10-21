@@ -1,5 +1,6 @@
 package com.doro.interview.api;
 
+import com.doro.interview.account.AccountService;
 import com.doro.interview.account.CurrentUser;
 import com.doro.interview.catalog.CatalogViews.QuestionHeading;
 import com.doro.interview.common.exception.ErrorCode;
@@ -33,14 +34,16 @@ import java.util.UUID;
 public class MeController {
 
     private final CurrentUser currentUser;
+    private final AccountService account;
     private final QuizService quiz;
     private final QuizStatsReader quizStats;
     private final ProgressReader progress;
     private final QuestionHeadings headings;
     private final QuizFeedbackService feedback;
 
-    public MeController(CurrentUser currentUser, QuizService quiz, QuizStatsReader quizStats, ProgressReader progress, QuestionHeadings headings, QuizFeedbackService feedback) {
+    public MeController(CurrentUser currentUser, AccountService account, QuizService quiz, QuizStatsReader quizStats, ProgressReader progress, QuestionHeadings headings, QuizFeedbackService feedback) {
         this.currentUser = currentUser;
+        this.account = account;
         this.quiz = quiz;
         this.quizStats = quizStats;
         this.progress = progress;
@@ -113,6 +116,13 @@ public class MeController {
         }
         quiz.setIncludeUnlearnedDefault(user, value);
         return noStore(new PrefsResponse(value));
+    }
+
+    /** 학습 현황 초기화: 학습 체크와 시험 기록·통계를 지운다(노트·내 질문·설정은 유지). 게이트웨이가 PUT 만 통과시키므로 PUT 이다. */
+    @PutMapping("/me/reset")
+    public ResponseEntity<ApiResponse<Map<String, Boolean>>> reset() {
+        account.resetProgress(currentUser.require());
+        return noStore(Map.of("reset", true));
     }
 
     private static <T> ResponseEntity<ApiResponse<T>> noStore(T data) {

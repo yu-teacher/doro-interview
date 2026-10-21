@@ -1,7 +1,9 @@
 package com.doro.interview.account;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,9 +13,17 @@ import java.util.UUID;
 public class AccountService {
 
     private final JdbcTemplate jdbc;
+    private final ApplicationEventPublisher events;
 
-    public AccountService(JdbcTemplate jdbc) {
+    public AccountService(JdbcTemplate jdbc, ApplicationEventPublisher events) {
         this.jdbc = jdbc;
+        this.events = events;
+    }
+
+    /** 사용자의 학습 현황을 한 트랜잭션으로 초기화한다(리스너: progress 의 학습 체크, quiz 의 시험 기록). 노트·내 질문은 남는다. */
+    @Transactional
+    public void resetProgress(UUID userId) {
+        events.publishEvent(new ProgressReset(userId));
     }
 
     /**

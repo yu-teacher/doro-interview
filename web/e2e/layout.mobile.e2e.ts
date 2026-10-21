@@ -128,6 +128,14 @@ const PAGES: Case[] = [
       await p.getByRole('dialog').waitFor();
     },
   },
+  {
+    name: '내 공부(초기화 확인창)', path: '/me', session: 'authenticated',
+    ready: (p) => p.getByRole('button', { name: '학습 현황 초기화…' }).waitFor(),
+    act: async (p) => {
+      await p.getByRole('button', { name: '학습 현황 초기화…' }).click();
+      await p.getByRole('dialog', { name: '학습 현황을 초기화할까요?' }).waitFor();
+    },
+  },
   { name: '질문 상세(로그인·노트)', path: '/q/tx-04', session: 'authenticated', ready: (p) => p.getByRole('textbox', { name: '이 질문에 대한 내 노트' }).waitFor() },
 ];
 

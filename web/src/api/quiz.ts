@@ -19,5 +19,7 @@ export const putFeedback = (id: string, seq: number, answerText: string) => apiS
 
 export const fetchPrefs = (signal?: AbortSignal) => apiGet<Prefs>('v1/me/prefs', undefined, signal);
 export const putPrefs = (body: Prefs) => apiSend<Prefs>('PUT', 'v1/me/prefs', body);
+/** 학습 체크와 시험 기록·통계를 모두 지운다(노트·내 질문·설정은 남는다). 되돌릴 수 없다. */
+export const resetProgress = () => apiSend<{ reset: boolean }>('PUT', 'v1/me/reset', {});
 export const fetchStats = (signal?: AbortSignal) => apiGet<QuizStats>('v1/me/stats', undefined, signal);
 export const fetchReviewCandidates = (signal?: AbortSignal) => apiGet<ReviewCandidate[]>('v1/review-candidates', undefined, signal);
