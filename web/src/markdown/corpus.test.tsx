@@ -2,8 +2,11 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { Markdown } from './Markdown';
+
+// 실제 질문 본문 전체(수백 개)를 렌더링하는 시험이라 콘텐츠가 늘수록 오래 걸린다(느린 CI 포함). 기본 5초로는 모자란다.
+vi.setConfig({ testTimeout: 120_000 });
 
 /**
  * 실제 content/ 의 모든 질문 본문을 렌더링해서 확인한다(docs/M1-PLAN.md S6). 특정 질문을 못 박지 않고 불변식만 본다:
