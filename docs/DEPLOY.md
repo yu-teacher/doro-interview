@@ -140,7 +140,7 @@ scripts/deploy-on-server.sh --apply
 `docker compose -p interview -f docker-compose.prod.yml up -d --no-build --no-deps --force-recreate interview-api interview-web`, 이어서 `docker exec doro-gateway nginx -s reload`.
 
 ### AI 피드백(M6, 선택 — 기본 꺼짐)
-코드는 배포돼 있지만 **서버에서 두 환경변수를 넣기 전까지는 아무 일도 일어나지 않는다**(화면에 버튼도 없다). 켜려면 `~/doro-interview/.env` 에 `INTERVIEW_AI_ENABLED=true` 와 `ANTHROPIC_API_KEY=<키>` 를 넣고, 서버 쪽 `docker-compose.prod.yml` 의 `interview-api` 환경에 두 변수를 전달하는 줄을 더한 뒤 api 컨테이너만 다시 만든다. 선택 변수: `INTERVIEW_AI_MODEL`(기본 `claude-haiku-5-5`), `INTERVIEW_AI_PER_USER_PER_DAY`(20), `INTERVIEW_AI_GLOBAL_PER_DAY`(200), `INTERVIEW_AI_TIMEOUT`(PT20S), `INTERVIEW_AI_MAX_OUTPUT_TOKENS`(500). 키는 읽거나 출력하지 않는다. 끄려면 `INTERVIEW_AI_ENABLED` 를 지우거나 false 로 하고 컨테이너를 다시 만든다(저장된 피드백은 남는다). 자세한 설계·한도는 [M6-PLAN.md](M6-PLAN.md).
+코드는 배포돼 있지만 **서버에서 두 환경변수를 넣기 전까지는 아무 일도 일어나지 않는다**(화면에 버튼도 없다). 켜려면 `~/doro-interview/.env` 에 `INTERVIEW_AI_ENABLED=true` 와 `GEMINI_API_KEY=<키>`(기본 공급자 Gemini; Anthropic 은 `INTERVIEW_AI_PROVIDER=anthropic` 과 `ANTHROPIC_API_KEY`) 를 넣고, 서버 쪽 `docker-compose.prod.yml` 의 `interview-api` 환경에 두 변수를 전달하는 줄을 더한 뒤 api 컨테이너만 다시 만든다. 선택 변수: `INTERVIEW_AI_MODEL`(공급자가 정한 모델 이름 그대로, 기본 `gemini-2.5-flash`), `INTERVIEW_AI_PER_USER_PER_DAY`(10), `INTERVIEW_AI_GLOBAL_PER_DAY`(100), `INTERVIEW_AI_TIMEOUT`(PT20S), `INTERVIEW_AI_MAX_OUTPUT_TOKENS`(500). 키는 읽거나 출력하지 않는다. 끄려면 `INTERVIEW_AI_ENABLED` 를 지우거나 false 로 하고 컨테이너를 다시 만든다(저장된 피드백은 남는다). 자세한 설계·한도는 [M6-PLAN.md](M6-PLAN.md).
 
 ### 자동 배포(CD, 선택)
 

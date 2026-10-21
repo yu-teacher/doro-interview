@@ -45,8 +45,8 @@ class FeedbackApiTest extends AbstractProgressApiTest {
     @BeforeEach
     void reset() {
         provider.reset();
-        props.setPerUserPerDay(20);
-        props.setGlobalPerDay(200);
+        props.setPerUserPerDay(10);
+        props.setGlobalPerDay(100);
     }
 
     private static String body(String answer) {
@@ -76,7 +76,7 @@ class FeedbackApiTest extends AbstractProgressApiTest {
     @Test
     void 상태는_켜짐과_남은_횟수를_알려_준다() throws Exception {
         getAs(alice, "/api/v1/me/ai").andExpect(status().isOk()).andExpect(header().string("Cache-Control", "no-store"))
-                .andExpect(jsonPath("$.data.enabled").value(true)).andExpect(jsonPath("$.data.perUserPerDay").value(20)).andExpect(jsonPath("$.data.remainingToday").value(20));
+                .andExpect(jsonPath("$.data.enabled").value(true)).andExpect(jsonPath("$.data.perUserPerDay").value(10)).andExpect(jsonPath("$.data.remainingToday").value(10));
         provider.available = false;
         getAs(alice, "/api/v1/me/ai").andExpect(jsonPath("$.data.enabled").value(false)).andExpect(jsonPath("$.data.remainingToday").value(0));
         getAs(null, "/api/v1/me/ai").andExpect(status().isUnauthorized());
@@ -97,7 +97,7 @@ class FeedbackApiTest extends AbstractProgressApiTest {
                 .andExpect(header().string("Cache-Control", "no-store"))
                 .andExpect(jsonPath("$.data.feedback").value("피드백: 내 답입니다"))
                 .andExpect(jsonPath("$.data.cached").value(false))
-                .andExpect(jsonPath("$.data.remainingToday").value(19));
+                .andExpect(jsonPath("$.data.remainingToday").value(9));
         assertThat(stored()).isOne();
         assertThat(jdbc.queryForObject("select model from quiz_feedback", String.class)).isEqualTo("scripted-model");
         var sent = provider.requests.get(0);
@@ -185,7 +185,7 @@ class FeedbackApiTest extends AbstractProgressApiTest {
         String text = bodyOf(putAs(alice, feedbackUrl(s, 1), body("답")).andExpect(status().isServiceUnavailable()).andExpect(jsonPath("$.code").value("AI-503-01")));
         assertThat(text).doesNotContain("secret-detail"); // 공급자의 오류 내용은 응답에 없다
         assertThat(stored()).isZero();
-        getAs(alice, "/api/v1/me/ai").andExpect(jsonPath("$.data.remainingToday").value(20));
+        getAs(alice, "/api/v1/me/ai").andExpect(jsonPath("$.data.remainingToday").value(10));
         provider.fail = false;
         putAs(alice, feedbackUrl(s, 1), body("답")).andExpect(status().isOk());
         assertThat(stored()).isOne();

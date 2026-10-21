@@ -7,23 +7,31 @@ import java.time.Duration;
  */
 public class AiProperties {
 
+    /** 공급자: 기본 Gemini(Google AI Studio 키), ANTHROPIC 도 지원한다. */
+    public enum Provider { GEMINI, ANTHROPIC }
+
     private boolean enabled = false;
+    private Provider provider = Provider.GEMINI;
     private String apiKey = "";
-    private String baseUrl = "https://api.anthropic.com";
-    private String model = "claude-haiku-5-5";
-    private int perUserPerDay = 20;
-    private int globalPerDay = 200;
+    /** 비워 두면 공급자의 기본 주소(시험에서는 가짜 서버 주소를 넣는다). */
+    private String baseUrl = "";
+    /** 공급자가 정한 모델 이름 그대로(예: gemini-2.5-flash, claude-haiku-5-5). 비워 두면 공급자의 기본 모델. */
+    private String model = "";
+    private int perUserPerDay = 10;
+    private int globalPerDay = 100;
     private Duration timeout = Duration.ofSeconds(20);
     private int maxOutputTokens = 500;
 
+    public Provider getProvider() { return provider; }
+    public void setProvider(Provider provider) { this.provider = provider; }
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
     public String getApiKey() { return apiKey; }
     public void setApiKey(String apiKey) { this.apiKey = apiKey == null ? "" : apiKey; }
     public String getBaseUrl() { return baseUrl; }
-    public void setBaseUrl(String baseUrl) { this.baseUrl = baseUrl; }
-    public String getModel() { return model; }
-    public void setModel(String model) { this.model = model; }
+    public void setBaseUrl(String baseUrl) { this.baseUrl = baseUrl == null ? "" : baseUrl; }
+    public String getModel() { return model.isBlank() ? (provider == Provider.GEMINI ? "gemini-2.5-flash" : "claude-haiku-5-5") : model; }
+    public void setModel(String model) { this.model = model == null ? "" : model; }
     public int getPerUserPerDay() { return perUserPerDay; }
     public void setPerUserPerDay(int perUserPerDay) { this.perUserPerDay = perUserPerDay; }
     public int getGlobalPerDay() { return globalPerDay; }

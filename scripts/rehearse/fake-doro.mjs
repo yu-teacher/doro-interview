@@ -10,6 +10,7 @@
 //                                          쿠키가 있고 쓰기 요청인데 CSRF 헤더가 없으면 403
 //   GET  /internal/v1/deleted-users        IAM 내부 API(서비스 토큰 필요)
 //   POST /dev/deleted?user=<uuid>          탈퇴 목록에 사용자를 넣는다(시험 조작용)
+//   POST /v1beta/models/<model>:generateContent  가짜 Gemini(M6 기본 공급자): 키는 x-goog-api-key, 본문에 FAIL-ME 가 있으면 500
 //   POST /v1/messages                      가짜 AI 공급자(Anthropic Messages API 모양, M6): 키가 AI_KEY 와 같아야 하고, 본문에 FAIL-ME 가 있으면 500
 //   GET  /dev/ai-last                      마지막으로 받은 AI 요청(키는 헤더 이름과 일치 여부만, 값은 돌려주지 않는다)
 //   POST /dev/outage?on=1|0                BFF 장애를 흉내 낸다(켜면 /internal/auth 가 500)
@@ -158,6 +159,33 @@ export function createFakeDoro({ internalToken = INTERNAL_TOKEN } = {}) {
         }
         const candidate = /<candidate>\n([\s\S]*?)\n<\/candidate>/.exec(content)?.[1] ?? '';
         return json(res, 200, { id: 'msg_fake', type: 'message', role: 'assistant', model: 'fake-model', content: [{ type: 'text', text: `[가짜 AI] ${candidate.slice(0, 40)} 에 대한 의견입니다.` }], stop_reason: 'end_turn', stop_sequence: null, usage: { input_tokens: 1, output_tokens: 1 } });
+      });
+      return undefined;
+    }
+    if (/^\/v1beta\/models\/[^/]+:generateContent$/.test(path) && req.method === 'POST') {
+      // 가짜 Gemini(Google AI Studio) generateContent. 키는 x-goog-api-key 헤더.
+      let raw = '';
+      req.on('data', (c) => { raw += c; });
+      req.on('end', () => {
+        const keyOk = req.headers['x-goog-api-key'] === AI_KEY;
+        let parsed = null;
+        try { parsed = JSON.parse(raw); } catch { /* 아래에서 400 */ }
+        aiLast = { keyOk, body: parsed, provider: 'gemini' };
+        if (!keyOk) {
+          return json(res, 403, { error: { code: 403, message: 'API key not valid', status: 'PERMISSION_DENIED' } });
+        }
+        const content = parsed?.contents?.[0]?.parts?.[0]?.text;
+        if (typeof content !== 'string') {
+          return json(res, 400, { error: { code: 400, message: 'bad body', status: 'INVALID_ARGUMENT' } });
+        }
+        if (content.includes('FAIL-ME')) {
+          return json(res, 500, { error: { code: 500, message: 'boom', status: 'INTERNAL' } });
+        }
+        const candidate = /<candidate>\n([\s\S]*?)\n<\/candidate>/.exec(content)?.[1] ?? '';
+        return json(res, 200, {
+          candidates: [{ content: { role: 'model', parts: [{ text: `[가짜 AI] ${candidate.slice(0, 40)} 에 대한 의견입니다.` }] }, finishReason: 'STOP', index: 0 }],
+          usageMetadata: { promptTokenCount: 1, candidatesTokenCount: 1, totalTokenCount: 2 }, modelVersion: 'fake-gemini',
+        });
       });
       return undefined;
     }

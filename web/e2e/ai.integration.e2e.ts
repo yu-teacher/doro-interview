@@ -114,10 +114,13 @@ test('공급자가 실패하면 503, 한도는 쓰지 않고, 시험은 계속�
   expect(await ok.text()).not.toContain(API_KEY);
 
   // 가짜 공급자가 받은 요청: 키·버전 헤더가 맞고, 사용자 글은 시스템 프롬프트가 아니라 메시지에만 있다
-  const last = (await (await bob.context.request.get(`${DORO}/dev/ai-last`)).json()) as { keyOk: boolean; body: { system: string; messages: { content: string }[] } };
+  const last = (await (await bob.context.request.get(`${DORO}/dev/ai-last`)).json()) as {
+    keyOk: boolean;
+    body: { systemInstruction: { parts: { text: string }[] }; contents: { parts: { text: string }[] }[] };
+  };
   expect(last.keyOk).toBe(true);
-  expect(last.body.system).not.toContain('정상 답');
-  expect(last.body.messages[0].content).toContain('<candidate>\n정상 답\n</candidate>');
+  expect(last.body.systemInstruction.parts.map((p) => p.text).join('')).not.toContain('정상 답');
+  expect(last.body.contents[0].parts[0].text).toContain('<candidate>\n정상 답\n</candidate>');
 });
 
 test('화면에서: 모범 답변을 연 뒤 AI 피드백을 받고, 새로고침해도 남고, 결과 화면에서 펼쳐 본다', async ({ browser }) => {

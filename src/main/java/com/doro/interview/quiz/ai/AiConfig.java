@@ -16,6 +16,6 @@ class AiConfig {
 
     @Bean
     FeedbackProvider feedbackProvider(AiProperties props) {
-        return props.usable() ? new SpringAiFeedbackProvider(props) : new DisabledFeedbackProvider();
+        return props.usable() ? new SpringAiFeedbackProvider(props, AiModels.create(props)) : new DisabledFeedbackProvider();
     }
 }

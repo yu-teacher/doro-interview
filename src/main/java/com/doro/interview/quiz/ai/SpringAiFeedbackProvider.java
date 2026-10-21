@@ -1,17 +1,15 @@
 package com.doro.interview.quiz.ai;
 
-import com.anthropic.errors.AnthropicServiceException;
-import org.springframework.ai.anthropic.AnthropicChatModel;
-import org.springframework.ai.anthropic.AnthropicChatOptions;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 
 import java.util.List;
 
 /**
- * Spring AI(Anthropic 모델)로 피드백을 만든다. 모델은 우리 설정({@link AiProperties})으로 **직접 만들고** 스타터의 자동 구성은 쓰지 않는다:
+ * Spring AI 의 채팅 모델(Gemini 또는 Anthropic)로 피드백을 만든다. 모델은 우리 설정({@link AiProperties})으로 **직접 만들고**({@link AiModels}) 스타터의 자동 구성은 쓰지 않는다:
  * 자동 구성은 키가 없으면 기동 단계에서 실패하지만, 이 기능은 키가 없으면 그냥 꺼져 있어야 한다(docs/M6-PLAN.md §2).
  * 키는 모델 옵션으로만 넘기고 로그·예외 메시지에 넣지 않는다. 사용자 글도 로그에 남기지 않는다.
  * 질문·모범 답변·내 답은 태그로 감싼 **데이터**로 전하고, 시스템 프롬프트가 그 안의 지시를 따르지 말라고 못 박는다(프롬프트 주입 방어, D5).
@@ -30,24 +28,12 @@ public final class SpringAiFeedbackProvider implements FeedbackProvider {
     static final int MAX_FEEDBACK_CHARS = 1500;
 
     private final AiProperties props;
-    private final AnthropicChatModel model;
+    private final ChatModel model;
 
-    public SpringAiFeedbackProvider(AiProperties props) {
+    /** {@code model} 이 null 이면(꺼짐·키 없음) 쓸 수 없는 공급자다. 실제 모델은 {@link AiModels} 가 설정으로 만든다. */
+    public SpringAiFeedbackProvider(AiProperties props, ChatModel model) {
         this.props = props;
-        // 키가 없으면 모델을 만들지 않는다(available() 이 false 라 호출되지도 않는다)
-        this.model = props.usable() ? build(props) : null;
-    }
-
-    private static AnthropicChatModel build(AiProperties props) {
-        AnthropicChatOptions options = AnthropicChatOptions.builder()
-                .apiKey(props.getApiKey())
-                .baseUrl(props.getBaseUrl().replaceAll("/+$", ""))
-                .model(props.getModel())
-                .maxTokens(props.getMaxOutputTokens())
-                .timeout(props.getTimeout())
-                .maxRetries(0)
-                .build();
-        return AnthropicChatModel.builder().options(options).build();
+        this.model = model;
     }
 
     @Override
@@ -72,9 +58,11 @@ public final class SpringAiFeedbackProvider implements FeedbackProvider {
         ChatResponse response;
         try {
             response = model.call(new Prompt(List.of(new SystemMessage(SYSTEM), new UserMessage(userContent(request)))));
-        } catch (AnthropicServiceException e) {
-            throw new FeedbackUnavailableException("AI 서비스가 오류를 돌려줬다(" + e.statusCode() + ")");
         } catch (RuntimeException e) {
+            Integer status = AiModels.statusOf(e);
+            if (status != null) {
+                throw new FeedbackUnavailableException("AI 서비스가 오류를 돌려줬다(" + status + ")");
+            }
             // 메시지에는 원인 종류만 싣는다: SDK 예외 메시지에 응답 본문이 섞일 수 있어 그대로 옮기지 않는다
             throw new FeedbackUnavailableException("AI 서비스 호출에 실패했다(" + e.getClass().getSimpleName() + ")");
         }

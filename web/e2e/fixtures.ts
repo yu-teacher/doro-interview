@@ -135,7 +135,7 @@ export async function installApi(page: Page, session: SessionMode = 'anonymous')
       case path.startsWith('/v1/mine') && method === 'PUT':
         return route.fulfill(ok(mineList[0]));
       case path === '/v1/me/ai':
-        return route.fulfill(authenticated ? ok({ enabled: true, perUserPerDay: 20, remainingToday: 7 }) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
+        return route.fulfill(authenticated ? ok({ enabled: true, perUserPerDay: 10, remainingToday: 7 }) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
       case /^\/v1\/quiz\/[0-9a-f-]+\/items\/\d+\/feedback$/.test(path) && method === 'PUT':
         return route.fulfill(ok({ feedback: LONG_FEEDBACK, cached: false, remainingToday: 6 }));
       case path === '/v1/me/prefs':

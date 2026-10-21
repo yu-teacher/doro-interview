@@ -169,6 +169,19 @@ describe('가짜 AI 공급자(/v1/messages)', () => {
     assert.equal((await post(msg('FAIL-ME please'))).status, 500);
   });
 
+  it('가짜 Gemini: 키가 맞으면 candidates 모양으로 답하고, 틀리면 403, 이상한 본문은 400, FAIL-ME 는 500', async () => {
+    const gem = (body, key = AI_KEY) => fetch(`${base}/v1beta/models/gemini-x:generateContent`, {
+      method: 'POST', headers: { 'content-type': 'application/json', 'x-goog-api-key': key }, body: JSON.stringify(body),
+    });
+    const req = (answer) => ({ contents: [{ role: 'user', parts: [{ text: `<candidate>\n${answer}\n</candidate>` }] }] });
+    const ok = await gem(req('젬마 답'));
+    assert.equal(ok.status, 200);
+    assert.match((await ok.json()).candidates[0].content.parts[0].text, /젬마 답/);
+    assert.equal((await gem(req('x'), 'wrong')).status, 403);
+    assert.equal((await gem({ nothing: true })).status, 400);
+    assert.equal((await gem(req('FAIL-ME'))).status, 500);
+  });
+
   it('마지막 요청을 기록하되 키 값은 돌려주지 않는다', async () => {
     await post(msg('기록용'));
     const last = await (await get('/dev/ai-last')).json();
