@@ -20,11 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ContentIntegrityTest {
 
-    private static final int QUESTIONS = 746;
-    private static final int TOPICS = 35;
-    private static final int TRICKY = 183;
+    private static final int QUESTIONS = 866;
+    private static final int TOPICS = 41;
+    private static final int TRICKY = 213;
     /** 검수 배치를 커밋할 때마다 올린다(B4: tx-01~25). */
-    private static final int REVIEWED = 746;
+    private static final int REVIEWED = 866;
 
     private static ContentSet content;
 
@@ -40,7 +40,7 @@ class ContentIntegrityTest {
 
     @Test
     void 질문_주제_꼬리_질문_수가_기대와_같다() {
-        assertThat(content.categories()).hasSize(6);
+        assertThat(content.categories()).hasSize(8);
         assertThat(content.topics()).hasSize(TOPICS);
         assertThat(content.questions()).hasSize(QUESTIONS);
         assertThat(content.questions().stream().filter(q -> q.tier().equals("TRICKY")).count()).isEqualTo(TRICKY);
@@ -58,8 +58,10 @@ class ContentIntegrityTest {
                 Map.entry("db-tuning", 21L), Map.entry("design-distributed", 24L), Map.entry("design-pattern", 25L),
                 Map.entry("design-principles", 16L), Map.entry("dev-build", 21L), Map.entry("dev-cicd", 20L),
                 Map.entry("dev-docker", 20L), Map.entry("dev-git", 22L), Map.entry("dev-test", 20L),
+                Map.entry("frontend-js", 20L), Map.entry("frontend-react-ts", 20L), Map.entry("frontend-web-platform", 20L),
                 Map.entry("java-collections", 20L), Map.entry("java-concurrency", 21L), Map.entry("java-jvm", 20L),
                 Map.entry("java-lang", 21L), Map.entry("java-oop", 20L), Map.entry("java-stream", 21L),
+                Map.entry("security-auth", 20L), Map.entry("security-crypto", 20L), Map.entry("security-web-vuln", 20L),
                 Map.entry("aop-proxy", 20L), Map.entry("ioc-di", 27L), Map.entry("jpa", 37L),
                 Map.entry("spring-boot", 21L), Map.entry("spring-misc", 17L), Map.entry("spring-mvc", 23L),
                 Map.entry("spring-security", 18L), Map.entry("transaction", 25L)));

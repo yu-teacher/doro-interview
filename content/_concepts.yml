@@ -302,3 +302,80 @@ concepts:
   - slug: mocking-junit
     name: "Mock과 JUnit"
     description: "JUnit 5 기능, Mockito, 단언, 테스트 더블"
+  # --- 보안 ---
+  - slug: password-storage
+    name: "비밀번호 저장"
+    description: "솔트와 느린 해시(bcrypt·PBKDF2·Argon2)로 비밀번호를 안전하게 저장하는 방식"
+  - slug: hash-function
+    name: "해시 함수"
+    description: "암호학적 해시의 성질, 해시·암호화·인코딩의 차이, SHA 계열과 폐기된 해시"
+  - slug: mac-signature
+    name: "MAC과 디지털 서명"
+    description: "HMAC, 서명과 MAC의 차이, 서명 검증과 알고리즘 혼동, 상수 시간 비교"
+  - slug: tls-pki
+    name: "TLS와 인증서 체인"
+    description: "TLS 핸드셰이크, 키 교환·전방 비밀성, 인증서 검증과 HSTS"
+  - slug: jwt
+    name: "JWT"
+    description: "구조, 서명 검증 항목, 알고리즘 혼동, 폐기의 어려움, 페이로드 노출"
+  - slug: session-token-auth
+    name: "세션·토큰 인증"
+    description: "세션과 토큰의 선택, 액세스·리프레시 토큰, 토큰 저장 위치, 세션 고정"
+  - slug: oauth-oidc
+    name: "OAuth 2.0과 OpenID Connect"
+    description: "역할, 인가 코드·PKCE, 위험한 grant, redirect_uri·state, ID 토큰, SSO"
+  - slug: access-control
+    name: "접근 제어 모델"
+    description: "RBAC·ABAC, 객체 수준 권한 검사(IDOR), 인가 누락(Broken Access Control)"
+  - slug: injection
+    name: "인젝션 계열 취약점"
+    description: "SQL 인젝션, 로그 인젝션, 역직렬화처럼 입력이 코드·명령으로 해석되는 문제"
+  - slug: xss
+    name: "XSS"
+    description: "저장형·반사형·DOM 기반 XSS, 출력 이스케이프, CSP, 토큰 탈취 영향"
+  - slug: csrf
+    name: "CSRF"
+    description: "쿠키 자동 전송을 악용한 위조 요청, CSRF 토큰, SameSite의 한계"
+  - slug: cors-sop
+    name: "동일 출처 정책과 CORS"
+    description: "출처 정의, 단순·프리플라이트 요청, CORS가 막는 것과 막지 못하는 것"
+  - slug: cookie
+    name: "쿠키와 브라우저 저장소"
+    description: "쿠키 속성(Secure·HttpOnly·SameSite·Domain), localStorage·sessionStorage와의 차이"
+  # --- 프론트엔드 ---
+  - slug: js-event-loop
+    name: "이벤트 루프와 비동기"
+    description: "콜 스택, 마이크로태스크·매크로태스크, Promise, async/await의 실행 순서"
+  - slug: js-scope-closure
+    name: "스코프와 클로저"
+    description: "var·let·const, 호이스팅·TDZ, 렉시컬 스코프와 클로저, 루프 변수 캡처"
+  - slug: js-this-prototype
+    name: "this와 프로토타입"
+    description: "this 결정 규칙, 화살표 함수, 프로토타입 체인, class와의 관계"
+  - slug: browser-rendering
+    name: "브라우저 렌더링"
+    description: "URL 입력부터 화면까지, DOM·CSSOM, 리플로우·리페인트, 스크립트 로딩(async·defer)"
+  - slug: css-layout
+    name: "CSS 레이아웃"
+    description: "박스 모델, flex·grid, position, 쌓임 맥락, 마진 병합, 반응형"
+  - slug: react-state-rendering
+    name: "React 상태와 렌더링"
+    description: "선언적 UI, useState, 불변 갱신, 상태 배치, key와 state 보존, 순수한 렌더"
+  - slug: js-modules
+    name: "JS 모듈"
+    description: "ESM·CommonJS 모듈 시스템과 live binding"
+  - slug: dom-events
+    name: "DOM 이벤트"
+    description: "이벤트 버블링·캡처링·위임"
+  - slug: accessibility
+    name: "웹 접근성"
+    description: "시맨틱 HTML과 ARIA"
+  - slug: react-optimization
+    name: "React 최적화"
+    description: "메모이제이션·리렌더 최소화·서버 컴포넌트"
+  - slug: react-effects
+    name: "useEffect와 부수 효과"
+    description: "의존성 배열, 정리 함수, 개발 모드 이중 실행, 이펙트가 필요 없는 경우"
+  - slug: typescript-types
+    name: "TypeScript 타입 시스템"
+    description: "구조적 타입, interface·type, any·unknown, 제네릭, 유니온 좁히기, strict"

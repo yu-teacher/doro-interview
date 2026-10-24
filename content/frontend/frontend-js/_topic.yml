@@ -1,0 +1,20 @@
+slug: "frontend-js"
+category: "frontend"
+name: "JavaScript 언어"
+sort: 10
+slug_prefix: "fjs"
+description: "실행 컨텍스트, 클로저, this, 프로토타입, 비동기와 이벤트 루프"
+base_version: "ECMAScript 2025 / HTML Living Standard"
+default_evidence: UNKNOWN
+published: true
+sources:
+  - url: "https://tc39.es/ecma262/"
+  - url: "https://html.spec.whatwg.org/multipage/webappapis.html"
+  - url: "https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html"
+  - url: "https://html.spec.whatwg.org/multipage/structured-data.html"
+  - url: "https://html.spec.whatwg.org/multipage/scripting.html"
+  - url: "https://nodejs.org/docs/latest/api/esm.html"
+  - url: "https://nodejs.org/docs/latest/api/process.html"
+  - url: "https://nodejs.org/docs/latest/api/globals.html"
+  - url: "https://nodejs.org/docs/latest/api/modules.html"
+  - url: "https://nodejs.org/docs/latest/api/timers.html"
