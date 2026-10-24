@@ -8,7 +8,8 @@ keywords: ["write는 페이지 캐시에 기록", "dirty 페이지는 나중에 
 has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
-sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/fsync.html", "https://man7.org/linux/man-pages/man2/fsync.2.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://www.kernel.org/doc/html/latest/admin-guide/sysctl/vm.html"]
+sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/fsync.html", "https://man7.org/linux/man-pages/man2/fsync.2.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://www.kernel.org/doc/html/latest/admin-guide/sysctl/vm.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
+refs: ["OSTEP, 39장 Interlude: Files and Directories(39.7 Writing Immediately With fsync()), PDF p.12", "OSTEP, 40장 File System Implementation(40.7 Caching and Buffering, Tip: Durability/Performance Trade-Off), PDF p.15-16"]
 concepts: [io-filesystem]
 importance: 2
 links: [{to: "cch-10", kind: RELATED}]
@@ -18,4 +19,5 @@ links: [{to: "cch-10", kind: RELATED}]
 
 (공식 문서) POSIX XBD 4.11 File System Cache는 캐시 항목이 `fsync` 등의 성공적 호출 결과로 저장 장치에 전달되어야 하고 그 외 시점에도 자동으로 전달될 수 있으며, 크래시 전에 다 전달되지 못하면 뒤쪽 연산 결과만 남고 앞쪽 효과는 빠질 수 있다고 밝힌다. POSIX `fsync`는 전송의 성격이 구현 정의라고 하고 완료되거나 오류가 날 때까지 돌아오지 않는다고 한다. Linux `fsync(2)`는 수정된 버퍼 캐시 페이지와 메타데이터를 디스크에 내리고 디스크 캐시가 있으면 이것도 비우며 장치가 완료를 알릴 때까지 블록하고, 디렉터리 항목이 디스크에 닿았다고 보장하려면 디렉터리 fd에 별도 `fsync`가 필요하다고 한다. 커널 Concepts overview는 쓰기가 페이지 캐시에 들어가 dirty로 표시되고 결국 저장 장치로 간다고 하며, sysctl 문서는 `vm.dirty_expire_centisecs`가 dirty 데이터가 플러셔 스레드의 기록 대상이 되는 나이를, `vm.dirty_writeback_centisecs`가 플러셔 스레드가 깨어나는 주기를 정한다고 설명한다.
 (실험 확인) macOS(Apple Silicon)에서 64MB를 `write`하는 데 약 9ms였고, 직후 `fsync`는 약 0.7ms, 변경이 없을 때의 `fsync`는 거의 0이었다. 4KB 쓰기와 `fsync` 반복은 회당 약 0.06ms였지만 같은 반복을 `fcntl(F_FULLFSYNC)`로 바꾸면 회당 약 3.3ms였다. 이 측정은 macOS에서의 결과이며 Linux `fsync`의 비용·동작과 같다고 볼 수 없다.
-(보충) 위 측정에서 두 호출의 비용이 크게 다른 이유는 확인하지 못했다. `F_FULLFSYNC`는 참고한 공식 문서가 다루지 않는 Apple 전용 호출이라 측정 사실만 적었다. "정전이 나면 사라질 수 있다"는 표현은 POSIX의 크래시 서술을 풀어 쓴 일반 설명이다.
+(원저자 자료) OSTEP 39장(Interlude: Files and Directories, 39.7)은 대부분 `write`가 하는 일은 "언젠가 저장해 달라"는 요청이며 파일 시스템이 성능을 위해 5초나 30초쯤 메모리에 모았다가 장치로 내려 보낸다고 한다. 그래서 응용에서는 쓰기가 빨리 끝난 것처럼 보이지만 `write` 직후 디스크에 닿기 전에 머신이 크래시하면 데이터를 잃을 수 있다고 직접 적는다. 40장(File System Implementation, 40.7)도 쓰기를 메모리에 오래 둘수록 일괄 처리와 스케줄링으로 성능이 좋아지지만 전파되기 전에 시스템이 죽으면 갱신이 사라지는 절충이 있고, 데이터베이스처럼 이를 못 받아들이는 응용은 `fsync`, 직접 I/O, 원시 디스크로 쓰기를 강제한다고 설명한다. 다시 39.7에 따르면 `fsync`는 해당 파일의 아직 쓰이지 않은 dirty 데이터를 디스크로 내리고 모두 끝나야 돌아오며, 새 파일이면 디렉터리에도 `fsync`가 필요할 수 있다고 한다.
+(보충) 위 측정에서 두 호출의 비용이 크게 다른 이유는 확인하지 못했다. `F_FULLFSYNC`는 참고한 공식 문서와 OSTEP이 다루지 않는 Apple 전용 호출이라 측정 사실만 적었다.

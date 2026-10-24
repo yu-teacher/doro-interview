@@ -8,7 +8,8 @@ keywords: ["MAC 주소", "브로드캐스트", "자기 MAC 주소를 담아 응�
 has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
-sources: ["https://www.rfc-editor.org/rfc/rfc826.html", "https://www.rfc-editor.org/rfc/rfc4861.html"]
+sources: ["https://www.rfc-editor.org/rfc/rfc826.html", "https://www.rfc-editor.org/rfc/rfc4861.html", "https://book.systemsapproach.org/internetworking/basic-ip.html"]
+refs: ["Computer Networks: A Systems Approach, 3.3.4 Datagram Forwarding in IP·3.3.6 Address Translation (ARP) (웹 판)"]
 concepts: [network-layers]
 importance: 1
 ---
@@ -17,4 +18,5 @@ importance: 1
 
 (공식 문서) RFC 826은 프로토콜 주소(예: IP)와 48비트 이더넷 주소 사이의 대응을 동적으로 배포하는 프로토콜이라고 하며, 대상 호스트가 연결된 이더넷 케이블 위에 있는 경우를 전제로 서술한다. 변환표에 없으면 요청 패킷(ar$op=REQUEST)에 자신의 하드웨어·프로토콜 주소와 찾는 프로토콜 주소를 채우고 목적 하드웨어 주소는 비워(또는 브로드캐스트로 두고) 링크에 브로드캐스트한다. 수신 측은 보낸 쪽의 (프로토콜 타입, 프로토콜 주소) 쌍이 이미 표에 있으면 그 항목의 하드웨어 주소를 새 값으로 갱신하고(opcode는 그 뒤에 본다), 자신이 대상 프로토콜 주소이면 표에 없던 항목을 추가한 뒤 요청이면 필드를 맞바꿔 요청자에게 REPLY를 보낸다. 주기적 브로드캐스트는 바람직하지 않다고 보아 필요할 때만 묻는 방식을 택했고, 상위 계층이 상대 주소를 정하는 것은 라우팅 메커니즘이 '직접 도달할 대상(immediate target)'으로 결정한다고 쓴다. RFC 4861 §3.1은 IPv6 Neighbor Discovery가 IPv4의 ARP, ICMP Router Discovery, ICMP Redirect를 합친 것에 해당한다고 한다.
 (실험 확인) 이 Mac(macOS 26.6.2)에서 `arp -an`으로 로컬 ARP 캐시를 읽으니 en0 인터페이스에 사설 IPv4 주소와 MAC 주소를 짝지은 항목이 여러 개 있었다(주소 값은 기록하지 않음). ARP 요청·응답 패킷은 패킷 캡처가 금지되어 관찰하지 않았다.
-(보충) 다른 서브넷이면 기본 게이트웨이의 IP에 대해 ARP한다는 설명은 RFC 826의 '라우팅 메커니즘이 정한 직접 대상' 서술을 풀어 쓴 일반 설명이다. RFC 826은 구현 사항으로 표 항목의 aging과 timeout이 바람직할 수 있다고 논의하지만 구체적인 만료 시간 값은 정하지 않으며, ARP 스푸핑 같은 보안 문제는 다루지 않는다(스푸핑 위협은 IPv6 ND 규격인 RFC 4861 §11에 있다).
+(원저자 자료) Computer Networks: A Systems Approach 3.3.4~3.3.5는 호스트가 서브넷 마스크로 목적지가 다른 서브넷임을 알면 패킷을 기본 라우터로 보내며, 전달할 다음 장치의 MAC 주소를 찾는 데 ARP를 쓴다고 설명한다. 3.3.6은 ARP를 같은 네트워크에 있다고 아는 상대에 대해 브로드캐스트로 묻는 방식으로 설명하고, 변환표 항목은 주기적으로 만료되며 그 주기가 대략 15분 단위라고 적는다(RFC 826은 구체 값을 정하지 않는다). 따라서 다른 서브넷이면 기본 게이트웨이의 IP에 대해 ARP한다는 설명을 이 책이 뒷받침한다.
+(보충) ARP 스푸핑 같은 보안 문제는 RFC 826과 이 책 해당 절 모두 다루지 않는다(스푸핑 위협은 IPv6 ND 규격인 RFC 4861 §11에 있다).

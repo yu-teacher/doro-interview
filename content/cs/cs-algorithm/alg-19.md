@@ -8,7 +8,8 @@ keywords: ["지역 최선이 전역 최선", "동전 {1,3,4} 6원 반례", "그�
 has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
-sources: ["https://xlinux.nist.gov/dads/HTML/greedyalgo.html", "https://xlinux.nist.gov/dads/HTML/fractionalKnapsack.html", "https://xlinux.nist.gov/dads/HTML/knapsackProblem.html", "https://xlinux.nist.gov/dads/HTML/dynamicprog.html"]
+sources: ["https://xlinux.nist.gov/dads/HTML/greedyalgo.html", "https://xlinux.nist.gov/dads/HTML/fractionalKnapsack.html", "https://xlinux.nist.gov/dads/HTML/knapsackProblem.html", "https://xlinux.nist.gov/dads/HTML/dynamicprog.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/"]
+refs: ["Algorithms (Erickson), 4.1-4.3 Storing Files on Tape, Scheduling Classes, General Pattern, PDF p.177-183", "Algorithms (Erickson), 3.5 Warning: Greed is Stupid, PDF p.125-126", "Algorithms (Erickson), 4장 연습문제 동전 거스름돈, PDF p.198-199"]
 concepts: [recursion-dp]
 importance: 2
 ---
@@ -17,4 +18,5 @@ importance: 2
 
 (공식 문서) DADS greedy algorithm 항목은 그리디가 항상 가장 좋은 지역 해를 택하며 어떤 최적화 문제에서는 전역 최적해를 찾지만 다른 문제에서는 덜 최적인 해를 찾을 수 있다고 한다. Prim-Jarnik과 Kruskal이 전역 최적인 MST를 찾는 그리디라는 예와, 최적을 항상 찾는 그리디가 없으면 지수 개의 해를 탐색해야 할 수 있다는 설명도 있다. fractional knapsack 항목은 조각을 담을 수 있으면 그리디가 최적이라고 하고, knapsack problem 항목은 0-1 배낭의 결정 문제가 NP-완전이라고 한다.
 (실험 확인) 동전 {1,3,4}로 1~100원을 만들 때 그리디는 6, 10, 14, …, 98원(6부터 4씩 증가하는 24개 금액)에서 최적이 아니었다. 동전 {1,5,10,25}는 1~500원에서 그리디와 DP의 개수가 모두 같았다. 동전 {2,5}의 6원은 그리디가 5를 고른 뒤 막혀 실패했고(해는 2+2+2) DP는 3개를 찾았다. 구간 [(0,10),(1,2),(3,4),(5,6)]에서 먼저 시작하는 순으로 고르면 1개, 먼저 끝나는 순으로 고르면 3개였다. 먼저 끝나는 순 그리디가 무작위 2000개 사례의 전수 탐색 최적과 모두 일치했다(Python 3.14.0).
-(보충) 그리디 선택 속성·최적 부분 구조로 증명한다는 설명, 통하지 않으면 동적 계획법을 쓴다는 대안, 활동 선택 문제에서 끝나는 시간 순 그리디가 최적이라는 것(문서에 없고 실험으로만 확인), 그리고 동전이 {1,5,10,25}일 때 항상 최적이라는 일반 결론은 일반 지식이다. 위 실험은 해당 범위만 확인한 것이다.
+(원저자 자료) Algorithms(Erickson) 4.1~4.3절은 그리디가 맞다는 것을 교환 논증으로 증명한다. 최적해와 그리디 해의 첫 차이를 찾아 최적해의 선택을 그리디 선택으로 바꿔도 나빠지지 않음을 보이고, 귀납으로 그리디 해를 포함하는 최적해가 있음을 보인다. 활동 선택 문제는 끝나는 시간이 가장 빠른 수업부터 고르는 그리디가 최적이라는 정리와 증명을 싣고, 같은 문제를 푸는 O(n³) 동적 계획법도 있으며 그 동적 계획법은 최선의 정의가 달라져도 쓸 수 있지만 그리디는 최선이 가장 많이라는 뜻일 때만 통한다고 각주에서 덧붙인다. 3.5절은 그리디가 맞는 최적화 문제는 드물어 먼저 동적 계획법을 생각하라고 권하고 그리디에는 증명이 있어야 한다고 한다. 4장 연습문제는 미국 동전 1, 5, 10, 25, 50, 100센트에서는 그리디가 항상 최소 개수를 내지만 그렇지 않은 동전 집합도 있다고 전제한다.
+(보충) 위 책은 그리디 선택 속성과 최적 부분 구조라는 이름을 쓰지 않고 교환 논증으로 서술한다. 동전이 {1,5,10,25}일 때 항상 최적이라는 결론은 책의 미국 동전 집합(50, 100센트 포함)과 정확히 같지 않아 직접 확인하지 못했고, 위 실험은 해당 범위만 확인한 것이다.

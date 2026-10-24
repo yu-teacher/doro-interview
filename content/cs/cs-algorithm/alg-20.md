@@ -8,7 +8,8 @@ keywords: ["정점 확정 가정", "확정 뒤 더 짧은 경로 발견", "S→A
 has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
-sources: ["https://xlinux.nist.gov/dads/HTML/dijkstraalgo.html", "https://xlinux.nist.gov/dads/HTML/bellmanford.html"]
+sources: ["https://xlinux.nist.gov/dads/HTML/dijkstraalgo.html", "https://xlinux.nist.gov/dads/HTML/bellmanford.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/"]
+refs: ["Algorithms (Erickson), 8.6 Best-First: Dijkstra's Algorithm, PDF p.304-307"]
 concepts: [graph-algorithms]
 importance: 1
 ---
@@ -17,4 +18,5 @@ importance: 1
 
 (공식 문서) DADS Dijkstra's algorithm 항목은 모든 가중치가 음이 아니어야 한다고 명시하고, Bellman-Ford algorithm 항목은 가중치가 음수여도 풀 수 있고 음수 사이클을 검출한다고 한다. 문서는 이유(확정 가정)까지는 서술하지 않는다.
 (실험 확인) S→A 2, S→B 3, B→A -2 그래프에서 정점을 꺼내 확정하는 표준 형태의 다익스트라(직접 구현)는 A = 2를 냈고 벨만-포드는 A = 1을 냈다. 한 번 확정한 정점도 더 짧은 거리가 나오면 다시 큐에 넣는 변형은 이 그래프에서 A = 1을 냈다. 모든 간선에 +2를 더하면(S→A 4, S→B 5, B→A 0) 다익스트라는 직접 간선(원래 값 2)을 고르는 경로를 택해 원래 그래프의 실제 최단 경로(B를 거친 1)와 달라졌다(Python 3.14.0).
-(보충) 다시 큐에 넣는 변형이 음수 간선이 있는 그래프에서 항상 맞는지, 시간이 얼마나 걸리는지는 확인하지 않았다. 확정 가정이 깨지는 이유 설명과 상수 더하기가 틀리는 이유(간선 수가 다른 경로에 상수가 누적됨)는 일반 설명이며 위 실험은 이 한 가지 그래프에서 확인한 것이다.
+(원저자 자료) Algorithms(Erickson) 8.6절은 가중치가 모두 음이 아니면 꺼낸 거리가 줄어들지 않고 각 정점이 우선순위 큐에서 한 번만 꺼내져 꺼낸 뒤 거리가 고정된다고 증명한다. 음수 간선이 있으면 물결이 퍼지듯 거리순으로 확정된다는 직관이 깨져 같은 정점이 여러 번 꺼내지고 같은 간선이 여러 번 완화되며 거리가 증가 순서로 발견되지 않는다고 하고, 이를 보이는 예제 실행을 싣는다. 그 책의 다익스트라는 이미 큐에서 꺼낸 정점도 거리가 줄면 다시 넣는 형태라 음수 사이클이 없으면 음수 간선이 있어도 올바른 최단 경로를 구하지만, 최악 시간이 지수라는 반례 그래프 족을 보이고 실전에서는 보통 빠르다고 덧붙인다.
+(보충) 모든 간선에 상수를 더하면 틀리는 이유(간선 수가 다른 경로에 상수가 누적됨)는 위 책이 서술하지 않는 일반 설명이며 위 실험은 이 한 가지 그래프에서 확인한 것이다.
