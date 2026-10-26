@@ -25,7 +25,7 @@ case "$1" in
   images) printf '%s\n' ${FAKE_TAGS:-latest} ;;
   compose)
     case " $* " in
-      *" config "*) exit 0 ;;
+      *" config "*) echo "${FAKE_COMPOSE_CONFIG:-}"; exit 0 ;;
       *" build"*) [ "${FAKE_BUILD_FAIL:-0}" = 1 ] && exit 1 || exit 0 ;;
       *) exit 0 ;;
     esac ;;
@@ -152,6 +152,21 @@ check "배포 후 점검이 실패하면 배포를 실패 처리한다" "$([ $RC
 check "롤백한다" "$(has '롤백한다' "$OUT")"
 run swnogw "$ENV_OK" -- --apply --no-gateway
 check "게이트웨이 없이(첫 배포)는 점검하지 않는다" "$(lacks 'swcheck' "$CALLS")"
+
+echo "== 웹 공개 경로(INTERVIEW_WEB_BASE_PATH) =="
+run defbase "$ENV_OK" -- --dry-run
+check "기본은 /interview 다" "$(has '웹 공개 경로=/interview' "$OUT")"
+ENV_DEV="$WORK/dev.env"; printf 'DB_USER=u\nDB_PASSWORD=p\nINTERVIEW_WEB_BASE_PATH=dev/interview/\n' > "$ENV_DEV"
+run devbase "$ENV_DEV" FAKE_COMPOSE_CONFIG="VITE_BASE_PATH: /dev/interview" -- --apply
+check "서버 .env 의 값을 /dev/interview 로 정규화해 읽는다" "$([ $RC = 0 ] && grep -qF '웹 공개 경로=/dev/interview' <<<"$OUT"; echo $?)"
+check "서비스 워커 점검은 공개 경로로 한다(이미지 안 경로는 그대로)" "$(has 'swcheck image:doro-interview-web:latest:/usr/share/nginx/html/interview /dev/interview/ pre' "$CALLS")"
+check "게이트웨이 경유 확인도 공개 경로로 한다" "$(has '확인: /dev/interview/=200 (200 기대), /dev/interview/api/v1/categories=200' "$OUT")"
+run devnoarg "$ENV_DEV" -- --apply
+check "compose 파일에 빌드 인자가 없으면 아무것도 건드리지 않고 실패한다" "$([ $RC != 0 ] && grep -qF 'VITE_BASE_PATH 가 없다' <<<"$OUT" && ! grep -qF 'docker tag' <<<"$CALLS"; echo $?)"
+run devnogw "$ENV_DEV" FAKE_COMPOSE_CONFIG="VITE_BASE_PATH: /dev/interview" -- --apply --no-gateway
+check "컨테이너 직접 확인은 공개 경로와 상관없이 /interview/ 다" "$([ $RC = 0 ] && grep -qF 'wget -qO- http://127.0.0.1/interview/' <<<"$CALLS"; echo $?)"
+run envwins "$ENV_DEV" INTERVIEW_WEB_BASE_PATH=/x/y FAKE_COMPOSE_CONFIG="VITE_BASE_PATH: /x/y" -- --dry-run
+check "환경변수가 .env 보다 앞선다" "$(has '웹 공개 경로=/x/y' "$OUT")"
 
 echo "== 헬스 실패 → 롤백 =="
 run unhealthy "$ENV_OK" FAKE_HEALTH=unhealthy -- --apply
