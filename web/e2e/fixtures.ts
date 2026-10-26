@@ -106,7 +106,7 @@ const reviewCandidates = [2, 4].map((i) => ({ slug: `tx-0${i}`, title: LONG_TITL
  * `/interview/api/**` 요청을 가로채 가짜 응답을 준다. 등록하지 않은 주소는 404.
  * `session` 은 로그인 상태(기본 비로그인): 로그인이면 체크 상태·진도·노트가 같이 나오고, error 면 세션 조회가 실패한다.
  */
-export async function installApi(page: Page, session: SessionMode = 'anonymous', options: { analytics?: boolean } = {}): Promise<void> {
+export async function installApi(page: Page, session: SessionMode = 'anonymous', options: { analytics?: boolean; admin?: boolean } = {}): Promise<void> {
   const authenticated = session === 'authenticated';
   await page.route(/\/interview\/api\//, async (route) => {
     const url = new URL(route.request().url());
@@ -117,7 +117,7 @@ export async function installApi(page: Page, session: SessionMode = 'anonymous',
       case path === '/v1/bff/session':
         return session === 'error'
           ? route.fulfill(fail(503, 'AUTH-503-02', '로그인 서비스에 연결할 수 없습니다.'))
-          : route.fulfill(ok(authenticated ? { authenticated: true, user: { userId: '11111111-1111-1111-1111-111111111111' } } : { authenticated: false }));
+          : route.fulfill(ok(authenticated ? { authenticated: true, user: { userId: '11111111-1111-1111-1111-111111111111', admin: options.admin === true } } : { authenticated: false }));
       case path === '/v1/bff/logout' && method === 'POST':
         return route.fulfill(ok(null));
       case path === '/v1/progress/summary':

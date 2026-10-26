@@ -3,13 +3,13 @@ import { fetchSession, postLogout } from '../api/progress';
 import { apiPath } from '../config';
 
 /**
- * 로그인 상태. 로그인·로그아웃과 토큰은 서버(BFF)가 맡고 브라우저에는 HttpOnly 쿠키만 있다. 여기에는 "누구인지" 의 id 만 있다.
+ * 로그인 상태. 로그인·로그아웃과 토큰은 서버(BFF)가 맡고 브라우저에는 HttpOnly 쿠키만 있다. 여기에는 "누구인지" 의 id 와 관리자 여부(`admin`, 관리자 전용 링크용)만 있다.
  * `error` 는 세션을 **알 수 없는** 상태다(네트워크·5xx): 로그인했다고도 안 했다고도 추측하지 않고 읽기 전용으로 보여 준다.
  */
 export type SessionState =
   | { status: 'loading' }
   | { status: 'anonymous' }
-  | { status: 'authenticated'; userId: string }
+  | { status: 'authenticated'; userId: string; admin: boolean }
   | { status: 'error' };
 
 export interface SessionContextValue {
@@ -61,7 +61,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     fetchSession(controller.signal)
       .then((info) => {
         if (!controller.signal.aborted) {
-          setState(info.authenticated && info.user ? { status: 'authenticated', userId: info.user.userId } : { status: 'anonymous' });
+          setState(info.authenticated && info.user ? { status: 'authenticated', userId: info.user.userId, admin: info.user.admin === true } : { status: 'anonymous' });
         }
       })
       .catch(() => {

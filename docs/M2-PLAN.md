@@ -102,7 +102,7 @@ M1 처럼 **기능 완료**(개발 트랙)와 **운영 완료**(Doro 레포 PR·
 ### S2. `account` — 사용자 사본·`CurrentUser`·세션 조회
 - **V4**: `interview_user(user_id UUID PK, created_at TIMESTAMPTZ NOT NULL DEFAULT now(), deleted_at TIMESTAMPTZ NULL)`.
 - `account`: `CurrentUser`(`Optional<UUID> id()`, `UUID require()`: 없으면 401 `InterviewException`), SDK 구현(`DoroUserContext` 읽기, `account` 내부), `AccountService.ensureActive(UUID)` = `INSERT … ON CONFLICT DO NOTHING` 후 `deleted_at` 이 있으면 **거부**(탈퇴한 사용자는 만들어지지도 되살려지지도 않음).
-- `api.SessionController`: `GET /api/v1/bff/session` → `{authenticated, user?: {userId}}`. 비로그인·잘못된 토큰도 200 `authenticated:false`, `Cache-Control: no-store`. 로그인이면 `ensureActive` 호출. 응답에 이메일·역할·세션 id 를 **싣지 않는다**(화면에 필요 없다).
+- `api.SessionController`: `GET /api/v1/bff/session` → `{authenticated, user?: {userId, admin}}`. 비로그인·잘못된 토큰도 200 `authenticated:false`, `Cache-Control: no-store`. 로그인이면 `ensureActive` 호출. 응답에 이메일·세션 id 를 **싣지 않는다**(화면에 필요 없다). 역할도 문자열로는 싣지 않고 관리자 전용 링크용 `admin` 불리언만 싣는다(ADMIN·SUPER_ADMIN 이면 true, `CurrentUser.isAdmin()`).
 - 시험 지원: `support/FakeDoro`(games `FakeIam` 에서 JWKS·RS256 발급만 가져오고 토큰 엔드포인트는 뺀다; 클레임은 SDK `DoroTokenVerifier` 가 읽는 것에 맞춘다), `revocation-check=OFF`.
 - 검증: 비로그인 200/false, 유효 토큰 → true + 행 1개, **같은 사용자 동시 10 요청 → 행 1개**, 만료·변조·다른 `cid`·서명 키가 다른 토큰 → 익명(F3), `deleted_at` 이 있는 사용자의 유효 토큰 → `authenticated:false`·쓰기 거부, 응답에 PII 없음(필드 목록 고정), 쿠키만 보내면 익명(games 시험과 같은 보장). ◆ `ensureActive` 의 삭제 검사 제거 시 실패, ◆ `cid` 허용 목록 비움 시 실패.
 

@@ -137,7 +137,7 @@ export interface SearchResult {
 
 export interface SessionInfo {
   authenticated: boolean;
-  user?: { userId: string };
+  user?: { userId: string; admin?: boolean };
 }
 
 export interface TopicProgress {
