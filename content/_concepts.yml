@@ -379,3 +379,118 @@ concepts:
   - slug: typescript-types
     name: "TypeScript 타입 시스템"
     description: "구조적 타입, interface·type, any·unknown, 제네릭, 유니온 좁히기, strict"
+  # --- 스프링 확장(WebFlux·Batch·Cloud) ---
+  - slug: reactive-programming
+    name: "리액티브 프로그래밍과 백프레셔"
+    description: "Reactive Streams, Mono·Flux, 구독 시점 실행, 백프레셔, 연산자와 오류 전파"
+  - slug: nonblocking-model
+    name: "논블로킹 이벤트 루프 모델"
+    description: "소수 스레드 이벤트 루프, 블로킹 호출 금지, 스케줄러 전환, 가상 스레드와의 관계"
+  - slug: batch-job-metadata
+    name: "배치 잡 구조와 메타데이터"
+    description: "Job·Step·청크, JobInstance·Execution, 파라미터, 메타데이터 테이블과 재시작"
+  - slug: api-gateway
+    name: "API 게이트웨이"
+    description: "라우트·프레딕트·필터, 요청 제한, 단일 진입점에서의 공통 관심사 처리"
+  - slug: service-discovery
+    name: "서비스 디스커버리와 클라이언트 로드 밸런싱"
+    description: "서비스 레지스트리, 인스턴스 헬스, 이름 기반 호출과 클라이언트 측 부하 분산"
+  # --- API 설계 ---
+  - slug: rest-design
+    name: "REST 설계"
+    description: "REST 제약, 리소스 URI, 메서드 의미와 상태 비저장, HATEOAS"
+  - slug: http-status-error
+    name: "상태 코드와 에러 응답"
+    description: "상태 코드 선택(4xx/5xx), Problem Details, 프로토콜별 오류 표현"
+  - slug: api-pagination
+    name: "페이징·정렬·필터"
+    description: "오프셋과 커서(키셋) 방식, 불투명 토큰, 페이지 크기 정책, 정렬·필터 설계"
+  - slug: api-versioning
+    name: "API 버저닝과 하위 호환"
+    description: "버전 표기 위치, 호환·비호환 변경, 폐기 예고, 필드 추가·삭제의 영향"
+  - slug: grpc-protobuf
+    name: "gRPC와 프로토콜 버퍼"
+    description: "IDL 기반 RPC, 호출 유형, 필드 번호와 스키마 진화, 데드라인과 상태 코드"
+  - slug: graphql
+    name: "GraphQL"
+    description: "스키마와 리졸버, 쿼리·뮤테이션·구독, 오버페칭 해소, N+1과 DataLoader, 에러·캐싱"
+  # --- 클라우드(AWS)·IaC·운영 ---
+  - slug: cloud-network
+    name: "클라우드 네트워크(VPC)"
+    description: "리전·가용 영역, 퍼블릭·프라이빗 서브넷, 게이트웨이, 보안 그룹과 ACL"
+  - slug: cloud-iam
+    name: "IAM과 최소 권한"
+    description: "사용자·역할·정책, 임시 자격 증명, 허용·거부 평가, 키를 코드에 두지 않기"
+  - slug: high-availability
+    name: "고가용성과 다중 AZ"
+    description: "가용 영역 분산, 장애 조치, 헬스 체크, 복제본, DNS 캐시와 재연결"
+  - slug: autoscaling
+    name: "오토스케일링"
+    description: "수평 확장 정책, 지표 기준, 헬스 체크 연동, HPA와 ASG"
+  - slug: load-balancer
+    name: "로드 밸런서와 인그레스"
+    description: "L4·L7 분산, 헬스 체크 기반 라우팅, 경로·호스트 라우팅, Ingress·Gateway API"
+  - slug: iac-terraform
+    name: "IaC와 Terraform"
+    description: "선언적 인프라 정의, plan·apply, state와 잠금, 모듈, 드리프트와 민감 값"
+  - slug: slo-metrics
+    name: "메트릭 설계와 SLO 알림"
+    description: "SLI·SLO·오류 예산, 번 레이트, 증상 기준 알림, Counter·Gauge·Histogram, 백분위"
+  - slug: deploy-strategy
+    name: "배포 전략과 롤백"
+    description: "롤링·블루그린·카나리, 롤아웃 진행과 정체, 롤백이 되돌리는 범위"
+  # --- 쿠버네티스 ---
+  - slug: k8s-architecture
+    name: "쿠버네티스 구조와 선언적 관리"
+    description: "컨트롤 플레인·노드 구성요소, 원하는 상태 조정 루프, apply와 선언적 관리, Pod·Deployment 관계"
+  - slug: k8s-service-network
+    name: "쿠버네티스 서비스와 네트워킹"
+    description: "Pod 네트워크 모델, Service 유형, 클러스터 DNS, 엔드포인트, kube-proxy, NetworkPolicy"
+  - slug: k8s-config-secret
+    name: "ConfigMap과 Secret"
+    description: "설정·비밀값 주입 방식, 갱신 반영 시점, base64와 암호화 저장, 불변 설정"
+  - slug: k8s-rbac
+    name: "쿠버네티스 RBAC와 ServiceAccount"
+    description: "Role·ClusterRole, 바인딩, ServiceAccount 토큰, 기본 계정 권한 범위"
+  - slug: k8s-storage
+    name: "쿠버네티스 영속 스토리지"
+    description: "PV·PVC·StorageClass, 접근 모드, 회수 정책, StatefulSet 볼륨 수명"
+  - slug: k8s-scheduling
+    name: "스케줄링과 노드 배치"
+    description: "스케줄러 필터·점수, 어피니티·taint·toleration, 우선순위와 선점, Pending 원인"
+  - slug: k8s-resources
+    name: "리소스 requests·limits와 QoS"
+    description: "요청·제한 의미, CPU 스로틀링과 OOM, QoS 등급, 쿼터와 LimitRange"
+  - slug: k8s-troubleshooting
+    name: "파드 장애 진단"
+    description: "Pending·ImagePull·CrashLoopBackOff·OOMKilled 등 상태별 원인과 kubectl 점검 순서"
+  # --- 컨테이너 ---
+  - slug: container-isolation
+    name: "컨테이너 격리 원리"
+    description: "리눅스 네임스페이스·cgroup, 자원 한도 적용, 루트 파일시스템과 PID 1"
+  - slug: container-image
+    name: "컨테이너 이미지와 OCI"
+    description: "OCI 사양, 레이어·매니페스트, 태그와 다이제스트, 멀티 아키텍처, 런타임 계층(containerd·runc)"
+  - slug: container-hardening
+    name: "컨테이너 하드닝"
+    description: "비루트 실행, capability·seccomp, 읽기 전용 파일시스템, 특권·소켓 마운트 위험, 공급망"
+  - slug: jvm-in-container
+    name: "컨테이너 안의 JVM"
+    description: "메모리·CPU 제한 인식, 힙 크기 결정, 종료 코드 137, 종료 유예와 프로브 연동"
+  # --- 메시징 확장 ---
+  - slug: partition-consumer-group
+    name: "파티션과 컨슈머 그룹"
+    description: "파티션 단위 병렬성과 순서, 컨슈머 그룹 할당, 리밸런싱, 랙, 프리페치와 처리 시간"
+  - slug: delivery-guarantee
+    name: "전달 보장과 확인 응답"
+    description: "at-most/at-least/exactly-once, ack·커밋 시점, 프로듀서 확인, 복제와 내구성, 중복 전달"
+  - slug: dlq-retry
+    name: "재시도와 데드 레터"
+    description: "소비 실패 시 재시도·백오프, 데드 레터 큐·토픽, 독 메시지, 재전달 횟수 제한"
+  # --- 자바 릴리스 ---
+  - slug: java-release-lts
+    name: "자바 릴리스 주기와 LTS"
+    description: "6개월 릴리스, LTS 버전, 프리뷰·인큐베이터, 프레임워크 JDK 요구사항, 버전별 주요 기능"
+  - slug: jdk-migration
+    name: "JDK 업그레이드와 호환성"
+    description: "제거된 API·모듈, 옵션 변경, --release, 기본 동작 변화(문자셋·버전 문자열), 점검 순서"
