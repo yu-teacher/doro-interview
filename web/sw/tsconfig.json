@@ -10,5 +10,5 @@
     "noEmit": true,
     "types": []
   },
-  "include": ["sw.ts", "../src/pwa/allowlist.ts", "../src/routes.ts"]
+  "include": ["sw.ts", "env.d.ts", "../src/pwa/allowlist.ts", "../src/routes.ts"]
 }
