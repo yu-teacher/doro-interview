@@ -36,12 +36,16 @@ public final class FakeDoro {
     }
 
     private String build(String subject, String clientId, long expiresInMillis, KeyPair signWith) {
+        return build(subject, clientId, expiresInMillis, signWith, "USER");
+    }
+
+    private String build(String subject, String clientId, long expiresInMillis, KeyPair signWith, String role) {
         long now = System.currentTimeMillis();
         var builder = Jwts.builder()
                 .header().keyId(KID).and()
                 .claim("email", "user@example.test")
                 .claim("sid", UUID.randomUUID().toString())
-                .claim("role", "USER")
+                .claim("role", role)
                 .issuedAt(new Date(now - 10_000))
                 .expiration(new Date(now + expiresInMillis));
         if (subject != null) {
@@ -56,6 +60,11 @@ public final class FakeDoro {
     /** 이 서비스의 BFF 클라이언트(cid=doro-interview)가 받은 정상 토큰(15분). */
     public String token(UUID userId) {
         return build(userId.toString(), CLIENT_ID, 900_000, keyPair);
+    }
+
+    /** 역할(role 클레임)을 지정한 정상 토큰. */
+    public String tokenWithRole(UUID userId, String role) {
+        return build(userId.toString(), CLIENT_ID, 900_000, keyPair, role);
     }
 
     /** OAuth 클라이언트 없이 Doro 가 직접 발급한 사용자 토큰(cid 없음). */

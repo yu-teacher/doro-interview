@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { DEV_HOME_LABEL, DEV_HOME_PATH } from '../lib/portalLinks';
+import { DEV_HOME_LABEL, DEV_HOME_PATH, HUB_HOME_DESC, HUB_HOME_LABEL, HUB_HOME_PATH } from '../lib/portalLinks';
+import { useSession } from '../session/SessionProvider';
 import { forDeveloperProduct, loadServices, type LauncherService } from '../lib/servicesManifest';
 
 interface ServiceLauncherProps {
@@ -10,10 +11,13 @@ interface ServiceLauncherProps {
 /**
  * 헤더의 "도로 서비스 목록" 버튼. 누르면 Doro Dev 홈과 개발자 제품의 서비스로 가는 링크가 뜬다.
  * 목록은 포털의 /services.json 에서 읽는다(servicesManifest.ts). 이 앱은 목록을 코드에 두지 않는다.
+ * 관리자 계정(세션의 admin)에게만 일반 허브(`/`)로 가는 링크가 하나 더 보인다. 일반 사용자·비로그인에게는 허브를 드러내지 않는다.
  * 포털·서비스는 이 앱의 라우터 밖이라 일반 링크(<a>)로 이동한다.
  * 목록 창은 가장 가까운 position:relative 조상(헤더 오른쪽 묶음)의 오른쪽 끝에 맞춰 열려서 좁은 폰에서도 화면 안에 들어온다.
  */
 export default function ServiceLauncher({ currentId }: ServiceLauncherProps) {
+  const { state } = useSession();
+  const isAdmin = state.status === 'authenticated' && state.admin;
   const [open, setOpen] = useState(false);
   const [services, setServices] = useState<LauncherService[] | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -88,6 +92,14 @@ export default function ServiceLauncher({ currentId }: ServiceLauncherProps) {
                 <span className="text-xs text-[var(--color-muted)]">개발자 서비스 한눈에</span>
               </a>
             </li>
+            {isAdmin && (
+              <li>
+                <a href={HUB_HOME_PATH} className={linkClass}>
+                  <span className="font-semibold">{HUB_HOME_LABEL}</span>
+                  <span className="text-xs text-[var(--color-muted)]">{HUB_HOME_DESC}</span>
+                </a>
+              </li>
+            )}
             {(services ?? []).map((service) => (
               <li key={service.id}>
                 <a

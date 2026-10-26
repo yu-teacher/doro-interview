@@ -18,6 +18,12 @@ public interface CurrentUser {
     /** {@link #id()} 와 같되, 이 서비스에 사용자 행이 없으면 만든다(로그인 뒤 첫 확인). 탈퇴한 사용자는 만들지도 되살리지도 않는다. */
     Optional<UUID> activate();
 
+    /**
+     * 로그인했고 탈퇴하지 않은 관리자(ADMIN·SUPER_ADMIN)인가. 역할 문자열은 밖으로 내보내지 않고 이 판정만 준다.
+     * 익명·잘못된 토큰·탈퇴한 사용자는 false. 읽기 전용이다.
+     */
+    boolean isAdmin();
+
     /** 쓰기 요청용: {@link #activate()} 하고 없으면 401. */
     UUID require();
 }

@@ -78,7 +78,7 @@ test('로그인하면 보던 화면으로 돌아오고, 체크는 새로고침�
   await login(page);
   await expect(page).toHaveURL(new RegExp(`/interview/t/${topic}$`)); // 돌아온 경로
   await expect(page.getByRole('heading', { level: 1, name })).toBeVisible();
-  expect(await sessionOf(context.request)).toEqual({ authenticated: true, user: { userId: user } });
+  expect(await sessionOf(context.request)).toEqual({ authenticated: true, user: { userId: user, admin: false } });
 
   await expect(checks(page)).toHaveCount(questions.length);
   await expect(page.getByRole('progressbar', { name: `${name} 학습 진도` })).toHaveAttribute('aria-valuenow', '0');
@@ -211,13 +211,13 @@ test('위조·직접 Bearer: 쿠키가 없으면 클라이언트 값이 통과�
   // 쿠키 없음 + 진짜 서명 토큰(API 키·직접 호출과 같은 경로): 통과해 인증된다
   const someone = uuid();
   const { token } = (await (await request.get(`${DORO}/dev/token?user=${someone}`)).json()) as { token: string };
-  expect(await sessionOf(request, { Authorization: `Bearer ${token}` })).toEqual({ authenticated: true, user: { userId: someone } });
+  expect(await sessionOf(request, { Authorization: `Bearer ${token}` })).toEqual({ authenticated: true, user: { userId: someone, admin: false } });
 
   // 쿠키 있음 + 다른 사용자의 토큰을 헤더로 보냄: 게이트웨이가 BFF 토큰으로 덮어쓰므로 쿠키의 사용자로 보인다
   const mine = await newUser(context);
   const page = await context.newPage();
   await page.goto('/interview/'); await login(page);
-  expect(await sessionOf(context.request, { Authorization: `Bearer ${token}` })).toEqual({ authenticated: true, user: { userId: mine } });
+  expect(await sessionOf(context.request, { Authorization: `Bearer ${token}` })).toEqual({ authenticated: true, user: { userId: mine, admin: false } });
   await page.close();
   void playwright;
 });

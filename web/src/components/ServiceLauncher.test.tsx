@@ -2,6 +2,7 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { resetServicesCache } from '../lib/servicesManifest';
+import { SessionProvider } from '../session/SessionProvider';
 import ServiceLauncher from './ServiceLauncher';
 
 const manifest = {
@@ -13,8 +14,17 @@ const manifest = {
   ],
 };
 
-function stubFetch(ok: boolean) {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok, json: () => Promise.resolve(manifest) } as Response));
+function stubFetch(ok: boolean, session: unknown = { authenticated: false }) {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((url: string) =>
+      Promise.resolve(
+        String(url).includes('bff/session')
+          ? ({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ success: true, data: session })) } as Response)
+          : ({ ok, json: () => Promise.resolve(manifest) } as Response),
+      ),
+    ),
+  );
 }
 
 afterEach(() => {
@@ -40,5 +50,39 @@ describe('ServiceLauncher', () => {
     fireEvent.click(screen.getByRole('button', { name: '도로 서비스 목록' }));
     await waitFor(() => expect(screen.getByText(/불러오지 못했어요/).textContent).toContain('Doro Dev 홈'));
     expect(screen.getAllByRole('link')).toHaveLength(1);
+  });
+
+  async function openWithSession(session: unknown) {
+    stubFetch(true, session);
+    render(
+      <SessionProvider>
+        <ServiceLauncher currentId="interview" />
+      </SessionProvider>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: '도로 서비스 목록' }));
+    await waitFor(() => expect(screen.getByRole('link', { name: /DORO\.log/ })).toBeTruthy());
+    // 세션 응답이 반영될 시간을 준다
+    await new Promise((r) => setTimeout(r, 20));
+  }
+
+  it('관리자(admin=true)에게만 Doro 허브(/) 링크가 보인다', async () => {
+    await openWithSession({ authenticated: true, user: { userId: 'u-1', admin: true } });
+    const link = await screen.findByRole('link', { name: /^Doro 허브/ });
+    expect(link.getAttribute('href')).toBe('/');
+    expect(link.textContent).toContain('일반 서비스 허브');
+    expect(screen.queryByText('도로 파티')).toBeNull();
+  });
+
+  it('일반 사용자와 비로그인에게는 허브 링크가 없다', async () => {
+    await openWithSession({ authenticated: true, user: { userId: 'u-1', admin: false } });
+    expect(screen.queryByRole('link', { name: /허브/ })).toBeNull();
+    cleanup();
+    resetServicesCache();
+    await openWithSession({ authenticated: true, user: { userId: 'u-1' } });
+    expect(screen.queryByRole('link', { name: /허브/ })).toBeNull();
+    cleanup();
+    resetServicesCache();
+    await openWithSession({ authenticated: false });
+    expect(screen.queryByRole('link', { name: /허브/ })).toBeNull();
   });
 });

@@ -92,12 +92,34 @@ class SessionApiTest extends AbstractAuthTest {
     void 응답에는_이메일_역할_세션_id가_없다() throws Exception {
         UUID id = UUID.randomUUID();
         session(BEARER + DORO.token(id))
-                .andExpect(jsonPath("$.data.user.length()").value(1))
+                .andExpect(jsonPath("$.data.user.length()").value(2))
                 .andExpect(jsonPath("$.data.length()").value(2))
                 .andExpect(content().string(not(containsString("user@example.test"))))
                 .andExpect(content().string(not(containsString("USER"))))
                 .andExpect(content().string(not(containsString("sid"))))
                 .andExpect(content().string(not(containsString("role"))));
+    }
+
+    @Test
+    void 관리자_역할만_admin_true이고_역할_문자열은_싣지_않는다() throws Exception {
+        for (String role : new String[]{"ADMIN", "SUPER_ADMIN"}) {
+            session(BEARER + DORO.tokenWithRole(UUID.randomUUID(), role))
+                    .andExpect(jsonPath("$.data.authenticated").value(true))
+                    .andExpect(jsonPath("$.data.user.admin").value(true))
+                    .andExpect(content().string(not(containsString(role))));
+        }
+        session(BEARER + DORO.tokenWithRole(UUID.randomUUID(), "USER")).andExpect(jsonPath("$.data.user.admin").value(false));
+        session(BEARER + DORO.token(UUID.randomUUID())).andExpect(jsonPath("$.data.user.admin").value(false));
+    }
+
+    @Test
+    void 비로그인과_탈퇴한_관리자는_admin_플래그가_없다() throws Exception {
+        session(null).andExpect(jsonPath("$.data.user").doesNotExist());
+        UUID id = UUID.randomUUID();
+        jdbc.update("insert into interview_user (user_id, deleted_at) values (?, now())", id);
+        session(BEARER + DORO.tokenWithRole(id, "ADMIN"))
+                .andExpect(jsonPath("$.data.authenticated").value(false))
+                .andExpect(jsonPath("$.data.user").doesNotExist());
     }
 
     @Test
