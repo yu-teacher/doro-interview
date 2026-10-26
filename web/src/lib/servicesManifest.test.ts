@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { loadServices, parseServicesManifest, resetServicesCache } from './servicesManifest';
+import { forDeveloperProduct, loadServices, parseServicesManifest, resetServicesCache } from './servicesManifest';
 
 const valid = {
   version: 1,
@@ -50,6 +50,31 @@ describe('parseServicesManifest', () => {
   it('항목은 20개까지만 읽는다', () => {
     const services = Array.from({ length: 30 }, (_, i) => ({ id: `s${i}`, name: `S${i}`, href: `/s${i}/` }));
     expect(parseServicesManifest({ version: 1, services })).toHaveLength(20);
+  });
+});
+
+describe('audience', () => {
+  const mixed = {
+    version: 1,
+    services: [
+      { id: 'blog', name: 'DORO.log', href: '/dev/blog/', audience: 'developer' },
+      { id: 'party', name: '도로 파티', href: '/party/', audience: 'general' },
+      { id: 'old', name: '옛 항목', href: '/old/' },
+      { id: 'odd', name: '이상한 값', href: '/odd/', audience: 'admin' },
+    ],
+  };
+
+  it('audience 는 general·developer 만 읽고 그 밖의 값은 undefined 다', () => {
+    expect(parseServicesManifest(mixed).map((s) => s.audience)).toEqual(['developer', 'general', undefined, undefined]);
+  });
+
+  it('개발자 제품 목록에서는 general 만 빠진다', () => {
+    expect(forDeveloperProduct(parseServicesManifest(mixed)).map((s) => s.id)).toEqual(['blog', 'old', 'odd']);
+  });
+
+  it('audience 가 없는 옛 목록은 그대로 다 보인다', () => {
+    const parsed = parseServicesManifest(valid);
+    expect(forDeveloperProduct(parsed)).toEqual(valid.services);
   });
 });
 
