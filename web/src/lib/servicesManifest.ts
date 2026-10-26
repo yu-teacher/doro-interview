@@ -1,6 +1,6 @@
 /**
- * 도로 허브가 제공하는 서비스 목록(/services.json, 같은 오리진)을 읽는다. 이 앱은 목록을 코드에 두지 않으므로
- * 새 서비스가 생겨도 이 앱을 고치거나 다시 배포할 필요가 없다. 목록을 못 읽으면 "도로 홈" 링크만 보인다.
+ * 포털이 제공하는 서비스 목록(/services.json, 같은 오리진)을 읽는다. 이 앱은 목록을 코드에 두지 않으므로
+ * 새 서비스가 생겨도 이 앱을 고치거나 다시 배포할 필요가 없다. 목록을 못 읽으면 "Doro Dev 홈" 링크만 보인다.
  * 이 파일은 도로의 다른 웹 앱들과 같은 내용이다(한 곳을 고치면 나머지도 같이 고친다).
  */
 export interface LauncherService {
@@ -9,7 +9,11 @@ export interface LauncherService {
   desc: string;
   /** 같은 오리진의 경로(/로 시작). 다른 오리진·프로토콜 상대 주소는 받지 않는다. */
   href: string;
+  /** 어느 제품의 서비스인지. 옛 목록에는 없다(undefined). */
+  audience?: Audience;
 }
+
+export type Audience = 'general' | 'developer';
 
 const SERVICES_URL = '/services.json';
 const SUPPORTED_VERSION = 1;
@@ -40,9 +44,15 @@ export function parseServicesManifest(raw: unknown): LauncherService[] {
     const id = shortText(item.id);
     const name = shortText(item.name);
     if (id === null || name === null || !isSamePathHref(item.href)) continue;
-    services.push({ id, name, desc: shortText(item.desc) ?? '', href: item.href });
+    const audience = item.audience === 'general' || item.audience === 'developer' ? item.audience : undefined;
+    services.push({ id, name, desc: shortText(item.desc) ?? '', href: item.href, ...(audience ? { audience } : {}) });
   }
   return services;
+}
+
+/** 개발자 제품에 보일 목록. 일반 서비스(audience 'general')는 뺀다. audience 가 없는 옛 목록은 그대로 다 보인다. */
+export function forDeveloperProduct(services: LauncherService[]): LauncherService[] {
+  return services.filter((service) => service.audience !== 'general');
 }
 
 let loaded: LauncherService[] | null = null;
