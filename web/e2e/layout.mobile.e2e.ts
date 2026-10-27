@@ -51,6 +51,15 @@ const PAGES: Case[] = [
   },
   // M3: 시험·현황·훑기
   { name: '시험 시작', path: '/quiz', session: 'authenticated', ready: (p) => p.getByRole('button', { name: '시험 시작' }).waitFor() },
+  {
+    name: '시험 시작(카테고리 펼침·주제 선택)', path: '/quiz', session: 'authenticated',
+    ready: (p) => p.getByRole('button', { name: '시험 시작' }).waitFor(),
+    act: async (p) => {
+      await p.locator('summary').first().click();
+      await p.locator('details label').first().click();
+      await p.getByRole('button', { name: /선택 해제/ }).waitFor();
+    },
+  },
   { name: '시험 시작(비로그인)', path: '/quiz', ready: (p) => p.getByRole('link', { name: '로그인하고 시험 보기' }).waitFor() },
   { name: '시험 진행(질문)', path: `/quiz/${QUIZ_ACTIVE_ID}`, session: 'authenticated', ready: (p) => p.getByRole('textbox').waitFor() },
   {
