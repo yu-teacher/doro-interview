@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/yu-teacher/doro-interview/actions/workflows/ci.yml/badge.svg)](https://github.com/yu-teacher/doro-interview/actions/workflows/ci.yml)
 
-개발 면접 질문을 **읽고, 학습했다고 체크하고, 체크한 질문만 랜덤으로 풀어 보며** 준비하는 서비스입니다. 자바·스프링·데이터베이스·CS 기초·개발 도구·설계까지 **6개 카테고리, 35개 주제, 746개 질문**이 들어 있고, 전부 공식 문서와 대조해 검수했습니다. [Doro](https://github.com/yu-teacher/doro) 플랫폼의 서비스 중 하나(`/interview/`)이며, 폰에서 설치해 쓰는 PWA입니다.
+개발 면접 질문을 **읽고, 학습했다고 체크하고, 체크한 질문만 랜덤으로 풀어 보며** 준비하는 서비스입니다. 자바·스프링·데이터베이스·CS 기초·개발 도구·설계·보안·프론트엔드·API·클라우드·메시징까지 **11개 카테고리, 58개 주제, 1225개 질문**이 들어 있고, 전부 공식 문서와 대조해 검수했습니다. [Doro](https://github.com/yu-teacher/doro) 플랫폼의 서비스 중 하나(`/dev/interview/`)이며, 폰에서 설치해 쓰는 PWA입니다.
 
 <p align="center">
   <img src="docs/screenshots/home.png" width="520" alt="홈: 오늘 할 일, 진도, 다시 공부 후보">
