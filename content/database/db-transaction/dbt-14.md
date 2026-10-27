@@ -7,7 +7,7 @@ title: "2PC(two-phase commit)와 PostgreSQL의 PREPARE TRANSACTION은 무엇이�
 keywords: ["PREPARE TRANSACTION", "COMMIT PREPARED", "외부 트랜잭션 매니저", "max_prepared_transactions", "방치"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/sql-prepare-transaction.html", "https://www.postgresql.org/docs/16/transaction-id.html", "https://www.postgresql.org/docs/16/sql-commit-prepared.html", "https://www.postgresql.org/docs/16/runtime-config-resource.html"]
 concepts: [distributed-consistency]
 importance: 2

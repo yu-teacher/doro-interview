@@ -7,7 +7,7 @@ title: "Maven의 compile, provided, runtime, test 스코프는 각각 어떤 클
 keywords: ["compile 기본 스코프", "provided는 런타임 제외", "runtime은 컴파일 제외", "test는 비전이적"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html", "https://docs.gradle.org/current/userguide/java_library_plugin.html"]
 concepts: [dependency-management]
 importance: 2

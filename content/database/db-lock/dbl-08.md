@@ -7,7 +7,7 @@ title: "PostgreSQL의 행 락 모드(FOR UPDATE, NO KEY UPDATE, SHARE, KEY SHARE
 keywords: ["FOR UPDATE", "FOR NO KEY UPDATE", "FOR SHARE", "FOR KEY SHARE", "충돌 행렬"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-select.html"]
 concepts: [db-locking]
 importance: 1

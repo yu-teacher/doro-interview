@@ -7,7 +7,7 @@ title: "DDL은 트랜잭션 안에서 롤백되나요? PostgreSQL과 MySQL의 �
 keywords: ["DDL", "ROLLBACK하면 취소", "암묵적으로 커밋", "MVCC-safe", "TRUNCATE"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/sql-truncate.html", "https://www.postgresql.org/docs/16/mvcc-caveats.html", "https://dev.mysql.com/doc/refman/8.4/en/implicit-commit.html"]
 concepts: [tx-boundary]
 importance: 1

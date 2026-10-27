@@ -7,7 +7,7 @@ title: "가상 스레드를 켜면 `@Async`와 스케줄러는 어떻게 되나�
 keywords: ["풀 설정 무효", "`spring.main.keep-alive`", "동시성 제한 대체 수단", "`@ConcurrencyLimit`"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/resilience/annotation/ConcurrencyLimit.html", "https://docs.spring.io/spring-framework/reference/core/resilience.html", "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes", "https://docs.spring.io/spring-boot/reference/features/spring-application.html"]
 concepts: [virtual-thread, thread-pool]
 importance: 1

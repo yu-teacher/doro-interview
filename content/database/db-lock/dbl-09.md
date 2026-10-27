@@ -7,7 +7,7 @@ title: "PostgreSQL 테이블 락 모드에는 어떤 것이 있고, 운영 중 A
 keywords: ["ACCESS EXCLUSIVE", "ROW EXCLUSIVE", "락 대기열", "lock_timeout으로 DDL 보호"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-lock.html", "https://www.postgresql.org/docs/16/functions-info.html", "https://www.postgresql.org/docs/16/runtime-config-client.html"]
 concepts: [db-locking, online-schema-change]
 importance: 2

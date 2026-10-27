@@ -7,7 +7,7 @@ title: "컨테이너와 가상 머신(VM)은 무엇이 다른가요?"
 keywords: ["격리된 프로세스", "호스트 커널 공유", "VM은 자체 커널", "더 적은 인프라로 더 많은 앱", "커널 네임스페이스"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/", "https://docs.docker.com/get-started/docker-overview/"]
 concepts: [container]
 importance: 3

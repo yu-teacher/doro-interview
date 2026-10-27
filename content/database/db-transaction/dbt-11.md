@@ -7,7 +7,7 @@ title: "PostgreSQL의 트랜잭션 ID와 xmin·xmax는 무엇이고 행 가시�
 keywords: ["xmin", "xmax", "새 버전", "처음 쓸 때 배정", "스냅샷", "32비트"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/ddl-system-columns.html", "https://www.postgresql.org/docs/16/transaction-id.html", "https://www.postgresql.org/docs/16/functions-info.html", "https://www.postgresql.org/docs/16/routine-vacuuming.html"]
 concepts: [mvcc]
 importance: 1

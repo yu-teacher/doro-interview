@@ -7,7 +7,7 @@ title: "컨테이너에 메모리 제한을 걸면 어떻게 되고, 자바 앱�
 keywords: ["기본은 메모리 무제한", "-m으로 한도 설정", "한도 초과 시 OOM 킬", "종료 코드 137 OOMKilled", "MaxRAMPercentage 힙 비율"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://docs.docker.com/engine/containers/resource_constraints/", "https://docs.docker.com/reference/cli/docker/container/run/", "https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html"]
 concepts: [container, memory-layout]
 importance: 1

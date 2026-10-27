@@ -7,7 +7,7 @@ title: "cascade와 orphanRemoval은 무엇이고 주의점은?"
 keywords: ["CascadeType.ALL", "orphanRemoval", "단일 소유자일 때만", "컬렉션 교체 주의"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html", "https://docs.hibernate.org/orm/7.0/userguide/html_single/"]
 concepts: [entity-mapping, ddd]
 importance: 2

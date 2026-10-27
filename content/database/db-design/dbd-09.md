@@ -7,7 +7,7 @@ title: "PostgreSQL 선언적 파티셔닝의 range, list, hash는 각각 언제 
 keywords: ["range는 하한 포함 상한 제외", "list는 값을 직접 나열", "hash는 modulus와 remainder", "DEFAULT 파티션", "키 갱신 시 행 이동"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/ddl-partitioning.html", "https://www.postgresql.org/docs/16/sql-createtable.html", "https://dev.mysql.com/doc/refman/8.4/en/partitioning-types.html"]
 concepts: [db-scaling]
 importance: 2

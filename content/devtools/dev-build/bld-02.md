@@ -7,7 +7,7 @@ title: "Gradle과 Maven은 무엇이 다른가요?"
 keywords: ["XML 선언과 빌드 스크립트", "고정된 라이프사이클과 task 그래프", "증분 빌드와 빌드 캐시", "Gradle 데몬"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html", "https://maven.apache.org/guides/introduction/introduction-to-the-pom.html", "https://docs.gradle.org/current/userguide/build_lifecycle.html", "https://docs.gradle.org/current/userguide/incremental_build.html", "https://docs.gradle.org/current/userguide/build_cache.html", "https://docs.gradle.org/current/userguide/gradle_daemon.html"]
 concepts: [build-tool]
 importance: 3

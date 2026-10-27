@@ -7,7 +7,7 @@ title: "PostgreSQL의 SERIALIZABLE은 락으로 동시성을 막나요? 왜 직�
 keywords: ["SSI 비차단 감시", "SIReadLock 술어 락", "직렬화 실패 40001", "REPEATABLE READ 허용 이상 현상", "재시도"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/transaction-iso.html", "https://www.postgresql.org/docs/16/applevel-consistency.html"]
 concepts: [isolation-level, db-locking]
 importance: 1
