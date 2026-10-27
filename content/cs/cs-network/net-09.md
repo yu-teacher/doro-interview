@@ -8,7 +8,8 @@ keywords: ["마지막 ACK가 유실", "지연된 세그먼트", "2×MSL", "MSL�
 has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
-sources: ["https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc8085.html"]
+sources: ["https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc8085.html", "https://book.systemsapproach.org/applications/traditional.html"]
+refs: ["Computer Networks: A Systems Approach, 9.1.2 World Wide Web (HTTP), 지속 연결 부분 (웹 판)"]
 concepts: [tcp]
 importance: 2
 ---
@@ -17,4 +18,5 @@ importance: 2
 
 (공식 문서) RFC 9293 §3.3.2는 TIME-WAIT를 '상대가 종료 요청의 ACK를 받았음을 확신하고 이전 연결의 지연된 세그먼트가 새 연결에 영향을 주지 않도록 충분히 기다리는 상태'로 정의한다. §3.4.1은 TIME-WAIT가 연결 재사용 속도를 제한한다고 하고, §3.6.1은 능동적으로 닫은 연결이 2×MSL 동안 TIME-WAIT에 머물러야 한다(MUST)고 하며, 이 상태에서 새 SYN으로 연결을 다시 여는 것은 새 ISN이 이전 연결의 최대 순번보다 크다는 등의 조건에서만 허용(MAY)한다. 타임스탬프 옵션을 이용한 TIME-WAIT 축소 알고리즘은 구현 권고(SHOULD)라고 한다. §3.4.2는 이 규격에서 MSL을 2분으로 잡았고 이는 공학적 선택이라 바뀔 수 있다고 한다. RFC 8085 §3은 닫는 쪽을 애플리케이션이 제어해 TIME-WAIT 유지 부담을 옮길 수 있다고 한다.
 (실험 확인) macOS 26.6.2(Apple Silicon), Python 3.14.0, 루프백(127.0.0.1)에서 서버가 먼저 close하자 서버 쪽 연결이 TIME_WAIT로 남았다(netstat). 리스너를 닫은 뒤 그 포트에 SO_REUSEADDR 없이 bind하면 Address already in use였고, SO_REUSEADDR를 켜면 성공했다. TIME_WAIT는 약 30~31초 뒤 사라졌는데(재실행에서 30초), 이 Mac의 net.inet.tcp.msl이 15,000 ms라 2×MSL이 30초이기 때문이다. RFC가 가정한 MSL 2분과 다르므로 TIME_WAIT 지속 시간은 구현 의존적이며, Linux 값은 근거 문서를 읽지 않아 적지 않는다.
-(보충) '연결을 재사용해 연결 수 자체를 줄인다'는 대응은 RFC에 없는 일반적인 운영 요령이다. RFC 8085 §3이 말하는 것은 어느 쪽이 닫을지 제어해 TIME-WAIT 부담을 옮길 수 있다는 점까지다.
+(원저자 자료) Computer Networks: A Systems Approach의 HTTP 절(9.1)은 지속 연결을 쓰면 한 TCP 연결로 여러 요청을 보낼 수 있어 페이지마다 slow start를 거칠 필요가 없어진다고 설명한다. 연결을 재사용하는 것이 HTTP 수준의 일반 관행임은 이 책이 뒷받침한다.
+(보충) 연결 재사용으로 연결 수를 줄이면 TIME-WAIT 부담도 줄어든다는 인과는 이 책이나 RFC에 직접 서술이 없는 운영상 추론이다. RFC 8085 §3이 말하는 것은 어느 쪽이 닫을지 제어해 TIME-WAIT 부담을 옮길 수 있다는 점까지다.

@@ -20,11 +20,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class RealContentLoadTest {
 
-    private static final int QUESTIONS = 746;
-    private static final int TOPICS = 35;
-    private static final int TRICKY = 183;
+    private static final int QUESTIONS = 1225;
+    private static final int TOPICS = 58;
+    private static final int TRICKY = 304;
     /** 검수 배치를 커밋할 때마다 올린다(B4: tx-01~25). */
-    private static final int REVIEWED = 746;
+    private static final int REVIEWED = 1225;
 
     @DynamicPropertySource
     static void schema(DynamicPropertyRegistry registry) {
@@ -43,7 +43,7 @@ class RealContentLoadTest {
 
     @Test
     void 앱_시작만으로_실제_콘텐츠가_들어간다() {
-        assertThat(count("select count(*) from category")).isEqualTo(6);
+        assertThat(count("select count(*) from category")).isEqualTo(11);
         assertThat(count("select count(*) from topic")).isEqualTo(TOPICS);
         assertThat(count("select count(*) from question")).isEqualTo(QUESTIONS);
         assertThat(count("select count(*) from question where tier = 'TRICKY'")).isEqualTo(TRICKY);

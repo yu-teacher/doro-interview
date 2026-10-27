@@ -8,7 +8,8 @@ keywords: ["베이스 케이스", "호출마다 스택 프레임", "StackOverflo
 has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
-sources: ["https://xlinux.nist.gov/dads/HTML/recursion.html", "https://xlinux.nist.gov/dads/HTML/tailRecursion.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackOverflowError.html", "https://docs.python.org/3/library/sys.html"]
+sources: ["https://xlinux.nist.gov/dads/HTML/recursion.html", "https://xlinux.nist.gov/dads/HTML/tailRecursion.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackOverflowError.html", "https://docs.python.org/3/library/sys.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/"]
+refs: ["Algorithms (Erickson), 1.2 Simplify and Delegate, PDF p.41", "Algorithms (Erickson), 5.5 Whatever-First Search, PDF p.217"]
 concepts: [recursion-dp, memory-layout]
 importance: 3
 links: [{to: "alg-11", kind: FOLLOWUP}, {to: "alg-17", kind: FOLLOWUP}, {to: "osm-03", kind: RELATED}]
@@ -18,4 +19,5 @@ links: [{to: "alg-11", kind: FOLLOWUP}, {to: "alg-17", kind: FOLLOWUP}, {to: "os
 
 (공식 문서) DADS recursion 항목은 모든 재귀 해가 베이스 케이스와 재귀 케이스(나누기, 호출, 합치기)로 이루어진다고 한다. tail recursion 항목은 재귀 호출이 새 스택 프레임을 만든다고 전제하고 마지막 호출을 현재 프레임에서 실행하면 메모리를 아낄 수 있다고 한다. Java SE 25 StackOverflowError는 애플리케이션이 너무 깊게 재귀해서 스택 오버플로가 났을 때 던져진다고 한다. Python sys 문서는 재귀 한도가 무한 재귀로 C 스택이 넘쳐 인터프리터가 죽는 것을 막는 장치이며, 한도를 올리는 것은 플랫폼에 따라 한계가 있고 너무 높이면 충돌할 수 있다고 한다.
 (실험 확인) Corretto 25.0.3에서 종료 조건 없는 재귀는 깊이 대략 4만~5만 선(재실행 결과 약 4만 2천~4만 6천 이상)에서 StackOverflowError가 났다(실행마다 달라지고 스택 크기 설정에 의존한다). Python 3.14.0의 기본 한도는 1000이었고 꼬리 형태로 쓴 합 함수가 900에서는 성공, 1000에서는 `RecursionError`였으며 한도를 20000으로 올리면 10000에서 성공했다.
-(보충) 종료 조건과 인자가 줄어드는지부터 확인하고 반복문이나 명시적 스택으로 바꾼다는 대응 순서는 일반적인 권고이며 위 문서가 서술하지 않는다.
+(원저자 자료) Algorithms(Erickson) 1.2절은 재귀가 올바르게 동작하려면 더 단순한 인스턴스로 끝없이 환원되는 열이 없어야 하고 결국 다른 방법으로 푸는 베이스 케이스에 닿아야 하며, 그러지 못하면 재귀가 영원히 돈다고 한다. 가장 흔한 방법은 호출할 때마다 입력을 엄격히 더 작게 만드는 것이다. 5.5절은 재귀 DFS와 명시적 스택을 쓰는 반복형 DFS가 같은 알고리즘이며 반복형에서는 재귀 스택이 눈에 보일 뿐이라고 해서, 재귀를 명시적 스택으로 바꿀 수 있음을 보여 준다.
+(보충) 종료 조건과 인자가 줄어드는지를 먼저 확인한 다음 반복문이나 명시적 스택으로 바꾸거나 한도를 조심해 올린다는 대응 순서는 일반적인 권고이며 위 책이 절차로 서술하지는 않는다.

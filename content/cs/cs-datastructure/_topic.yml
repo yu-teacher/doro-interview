@@ -56,3 +56,5 @@ sources:
   - url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html"
   - url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html"
   - url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/LinkedHashMap.html"
+  - url: "https://opendatastructures.org/"
+  - url: "https://pages.cs.wisc.edu/~remzi/OSTEP/"

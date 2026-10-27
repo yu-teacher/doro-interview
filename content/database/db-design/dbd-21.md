@@ -5,10 +5,10 @@ tier: TRICKY
 difficulty: 3
 title: "ALTER TABLE이 락을 못 얻어 대기만 해도 왜 서비스의 단순 조회까지 멈출 수 있나요?"
 keywords: ["ACCESS EXCLUSIVE 대기", "앞선 긴 트랜잭션", "뒤따르는 SELECT도 대기", "lock_timeout", "idle in transaction 방치 금지"]
-has_extra: true
+has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
-sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-altertable.html", "https://www.postgresql.org/docs/16/runtime-config-client.html", "https://www.postgresql.org/docs/16/functions-info.html"]
+sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-altertable.html", "https://www.postgresql.org/docs/16/runtime-config-client.html", "https://www.postgresql.org/docs/16/functions-info.html", "https://www.postgresql.org/docs/16/view-pg-locks.html"]
 concepts: [online-schema-change, db-locking]
 importance: 1
 links: [{to: "dbl-09", kind: RELATED}]
@@ -24,4 +24,4 @@ ALTER TABLE big ADD COLUMN e int;   -- 앞선 트랜잭션이 안 끝나면 4초
 
 (공식 문서) PostgreSQL 16 explicit-locking 페이지는 ACCESS EXCLUSIVE가 같은 테이블의 모든 다른 락 모드와 충돌하고, 교착 상태가 감지되지 않는 한 락을 기다리는 트랜잭션은 무한정 기다리므로 오래 열린 트랜잭션은 좋지 않다고 한다. runtime-config-client 페이지는 `lock_timeout`이 락을 기다리는 동안에만 발생하며 postgresql.conf 전역 설정은 권장하지 않는다고 한다. sql-altertable 페이지는 ALTER TABLE이 별도 언급 없으면 ACCESS EXCLUSIVE 락을 얻는다고 한다.
 (실험 확인) PostgreSQL 16.15에서 세션 A가 트랜잭션 안에서 30만 행 테이블을 SELECT한 채 6초 열려 있고, 1초 뒤 세션 B가 `lock_timeout = 4s`로 `ALTER TABLE ... ADD COLUMN`을 시도했고, 2초 뒤 세션 C가 단순 `SELECT count(*)`를 실행했다. B는 4초 뒤 lock timeout 오류로 끝났고, 기준 시각을 0초로 두면 A는 0~6.1초, B는 1.0~5.1초, C는 3.0초에 시작해 B가 포기한 직후인 5.1초에야 끝났다(A는 6.1초까지 열려 있었음). B 없이 A와 C만 실행한 대조에서는 C가 시작 직후(약 0.1초)에 끝났다. 즉 C는 A가 아니라 대기 중인 B 때문에 막혔다.
-(보충) 대기 중인 락 요청 뒤에 새 요청이 줄을 선다는 설명은 위 실험 결과에서 도출한 해석이며, `pg_blocking_pids` 문서가 락 대기 중인 세션이 다른 세션들에 의해 막힌다고 설명하는 정도가 간접적인 근거이며, 이 동작을 정면으로 설명하는 문서 문장은 확인하지 못했다.
+(공식 문서) `pg_blocking_pids` 문서는 대기 큐에서 앞서 있는 충돌 락 요청(soft block)도 세션을 막는 것으로 세고, `pg_locks` 문서도 대기열의 앞선 프로세스가 막는다고 설명한다. 위 실험은 이 동작을 보여 준다.

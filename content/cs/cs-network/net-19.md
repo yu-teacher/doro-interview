@@ -5,10 +5,11 @@ tier: TRICKY
 difficulty: 2
 title: "대역폭이 큰데도 한 TCP 연결이 느린 이유는 무엇이고, 지연·대역폭·RTT·BDP는 어떤 관계인가요?"
 keywords: ["대역폭", "RTT", "윈도우를 RTT로 나눈 값", "BDP", "윈도우 스케일 옵션", "slow start"]
-has_extra: true
+has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-20
-sources: ["https://www.rfc-editor.org/rfc/rfc7323.html", "https://www.rfc-editor.org/rfc/rfc5681.html", "https://www.rfc-editor.org/rfc/rfc6298.html", "https://www.rfc-editor.org/rfc/rfc9293.html"]
+sources: ["https://www.rfc-editor.org/rfc/rfc7323.html", "https://www.rfc-editor.org/rfc/rfc5681.html", "https://www.rfc-editor.org/rfc/rfc6298.html", "https://www.rfc-editor.org/rfc/rfc9293.html", "https://book.systemsapproach.org/foundation/performance.html"]
+refs: ["Computer Networks: A Systems Approach, 1.5.1 Bandwidth and Latency·1.5.2 Delay × Bandwidth Product", "Computer Networks: A Systems Approach, 5.2.10 Alternative Design Choices (윈도우와 속도의 이중성) (웹 판)"]
 concepts: [tcp]
 importance: 1
 ---
@@ -17,4 +18,4 @@ importance: 1
 
 (공식 문서) RFC 7323 §1.1은 16비트 수신 윈도우 필드 때문에 윈도우가 최대 64 KiB이며 대역폭×지연(BDP)이 이를 넘는 긴 뚱뚱한 경로(LFN)에서는 수신 윈도우가 최대 처리량을 제한한다고 하고, 그 한도는 '파이프를 채우기 위해 TCP가 보낼 수 있는 미확인 데이터량'이라는 설명과 같은 맥락이다. §2는 Window Scale 옵션이 SYN에서만 보내져 협상되고 최대 지수가 14라서 윈도우가 1 GiB까지 가능하다고 한다. RFC 5681 §3.1은 연결 초기의 cwnd(초기 윈도우)가 작게 시작해 slow start로 커진다고 하고, RFC 6298은 RTT 측정으로 RTO를 정한다.
 (실험 확인) 식을 코드로 계산했다. 100 Mbit/s×50 ms=625,000바이트(610.4 KiB), 윈도우 65,535바이트÷50 ms=10.49 Mbit/s, 1 Gbit/s×100 ms=11.9 MiB, 윈도우 스케일 최대 2^30=1,073,741,824바이트였다. macOS 26.6.2(Apple Silicon), Python 3.14.0, 루프백(127.0.0.1)에서 1바이트 에코 왕복의 중앙값은 약 15~16 μs, p99는 약 56~63 μs(두 번 실행)여서 같은 호스트 안의 RTT는 매우 작았고, 이 연결에서 TCP_CONNECTION_INFO로 읽은 윈도우 스케일 계수는 6으로 협상되어 있었다.
-(보충) 지연을 전파·전송·큐잉 지연으로 나누는 설명과 '지연 vs 대역폭' 비유는 참고한 RFC에 없는 일반 개념이다. 식 '처리량 ≤ 윈도우/RTT'는 RFC의 윈도우 서술에서 이끌어 낸 단순 계산이다.
+(원저자 자료) Computer Networks: A Systems Approach 1.5.1은 지연을 전파 지연(거리/빛의 속도), 전송 지연(크기/대역폭), 큐잉 지연의 합으로 나누고, 1바이트 왕복처럼 지연이 지배하는 응용과 큰 파일처럼 대역폭이 지배하는 응용을 구분한다. 1.5.2는 채널을 속이 빈 파이프로 비유해 지연이 길이, 대역폭이 굵기이며 둘의 곱이 파이프에 들어갈 데이터 양이라고 하고, 송신자가 이를 다 채우지 못하면 망을 충분히 쓰지 못한다고 설명한다. 5.2.10은 윈도우 안의 데이터 양을 RTT로 나눈 값이 곧 전송 속도이므로 윈도우를 키우거나 줄이는 것이 속도를 조절하는 일이라고 설명하며, 이는 '처리량 ≤ 윈도우/RTT'와 같은 내용이다.

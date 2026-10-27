@@ -8,7 +8,7 @@ keywords: ["없는 행은 잠글 수 없음", "InnoDB 갭 락", "유니크 제�
 has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-20
-sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-insert.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-locking.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-locks-set.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html"]
+sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-insert.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-locking.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-locks-set.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-next-key-locking.html"]
 concepts: [db-locking, race-condition]
 importance: 1
 links: [{to: "dbl-02", kind: PREREQ}, {to: "dbl-13", kind: PREREQ}, {to: "misc-14", kind: RELATED}]
@@ -26,4 +26,4 @@ PostgreSQL 16에서는 막을 수 없습니다. 행 락은 SELECT가 가져온 �
 | MySQL 8.4.11, READ COMMITTED | 수 ms 안에 즉시 성공 | `Duplicate entry '25'` 오류 |
 
 MySQL REPEATABLE READ에서 A가 `id=25`를 FOR UPDATE로 읽은 직후 `performance_schema.data_locks`에는 `PRIMARY` 인덱스의 `X,GAP`(id 30 앞 갭)과 테이블 `IX`가 보였다. 이 결과는 이 테이블(기본 키 id)과 이 시나리오에서 나온 값이다.
-(보충) 없는 키의 잠금 읽기가 REPEATABLE READ에서 갭을 잠근다는 설명은 참고한 MySQL 문서에서 직접 찾지 못해, 위 실험과 `data_locks` 관찰로만 확인했다. 유니크 제약을 최종 방어선으로 두고 ON CONFLICT나 어드바이저리 락으로 푼다는 해법은 관련 문서 설명에서 이끌어 낸 일반적인 접근이며, 문서가 이 문제에 권한 것은 아니다.
+(보충) 없는 키 하나의 잠금 읽기가 REPEATABLE READ에서 갭을 잠근다는 설명은 참고한 세 페이지에 직접 없고, 범위 조건 예제와 Phantom Rows 페이지(next-key 락으로 없는 행의 존재를 잠금)에서 간접적으로 뒷받침되며 위 실험과 `data_locks` 관찰로 확인했다. 유니크 제약을 최종 방어선으로 두고 ON CONFLICT나 어드바이저리 락으로 푼다는 해법은 관련 문서 설명에서 이끌어 낸 일반적인 접근이며, 문서가 이 문제에 권한 것은 아니다.

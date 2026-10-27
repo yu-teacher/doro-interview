@@ -302,3 +302,216 @@ concepts:
   - slug: mocking-junit
     name: "Mock과 JUnit"
     description: "JUnit 5 기능, Mockito, 단언, 테스트 더블"
+  # --- 보안 ---
+  - slug: password-storage
+    name: "비밀번호 저장"
+    description: "솔트와 느린 해시(bcrypt·PBKDF2·Argon2)로 비밀번호를 안전하게 저장하는 방식"
+  - slug: hash-function
+    name: "해시 함수"
+    description: "암호학적 해시의 성질, 해시·암호화·인코딩의 차이, SHA 계열과 폐기된 해시"
+  - slug: mac-signature
+    name: "MAC과 디지털 서명"
+    description: "HMAC, 서명과 MAC의 차이, 서명 검증과 알고리즘 혼동, 상수 시간 비교"
+  - slug: tls-pki
+    name: "TLS와 인증서 체인"
+    description: "TLS 핸드셰이크, 키 교환·전방 비밀성, 인증서 검증과 HSTS"
+  - slug: jwt
+    name: "JWT"
+    description: "구조, 서명 검증 항목, 알고리즘 혼동, 폐기의 어려움, 페이로드 노출"
+  - slug: session-token-auth
+    name: "세션·토큰 인증"
+    description: "세션과 토큰의 선택, 액세스·리프레시 토큰, 토큰 저장 위치, 세션 고정"
+  - slug: oauth-oidc
+    name: "OAuth 2.0과 OpenID Connect"
+    description: "역할, 인가 코드·PKCE, 위험한 grant, redirect_uri·state, ID 토큰, SSO"
+  - slug: access-control
+    name: "접근 제어 모델"
+    description: "RBAC·ABAC, 객체 수준 권한 검사(IDOR), 인가 누락(Broken Access Control)"
+  - slug: injection
+    name: "인젝션 계열 취약점"
+    description: "SQL 인젝션, 로그 인젝션, 역직렬화처럼 입력이 코드·명령으로 해석되는 문제"
+  - slug: xss
+    name: "XSS"
+    description: "저장형·반사형·DOM 기반 XSS, 출력 이스케이프, CSP, 토큰 탈취 영향"
+  - slug: csrf
+    name: "CSRF"
+    description: "쿠키 자동 전송을 악용한 위조 요청, CSRF 토큰, SameSite의 한계"
+  - slug: cors-sop
+    name: "동일 출처 정책과 CORS"
+    description: "출처 정의, 단순·프리플라이트 요청, CORS가 막는 것과 막지 못하는 것"
+  - slug: cookie
+    name: "쿠키와 브라우저 저장소"
+    description: "쿠키 속성(Secure·HttpOnly·SameSite·Domain), localStorage·sessionStorage와의 차이"
+  # --- 프론트엔드 ---
+  - slug: js-event-loop
+    name: "이벤트 루프와 비동기"
+    description: "콜 스택, 마이크로태스크·매크로태스크, Promise, async/await의 실행 순서"
+  - slug: js-scope-closure
+    name: "스코프와 클로저"
+    description: "var·let·const, 호이스팅·TDZ, 렉시컬 스코프와 클로저, 루프 변수 캡처"
+  - slug: js-this-prototype
+    name: "this와 프로토타입"
+    description: "this 결정 규칙, 화살표 함수, 프로토타입 체인, class와의 관계"
+  - slug: browser-rendering
+    name: "브라우저 렌더링"
+    description: "URL 입력부터 화면까지, DOM·CSSOM, 리플로우·리페인트, 스크립트 로딩(async·defer)"
+  - slug: css-layout
+    name: "CSS 레이아웃"
+    description: "박스 모델, flex·grid, position, 쌓임 맥락, 마진 병합, 반응형"
+  - slug: react-state-rendering
+    name: "React 상태와 렌더링"
+    description: "선언적 UI, useState, 불변 갱신, 상태 배치, key와 state 보존, 순수한 렌더"
+  - slug: js-modules
+    name: "JS 모듈"
+    description: "ESM·CommonJS 모듈 시스템과 live binding"
+  - slug: dom-events
+    name: "DOM 이벤트"
+    description: "이벤트 버블링·캡처링·위임"
+  - slug: accessibility
+    name: "웹 접근성"
+    description: "시맨틱 HTML과 ARIA"
+  - slug: react-optimization
+    name: "React 최적화"
+    description: "메모이제이션·리렌더 최소화·서버 컴포넌트"
+  - slug: react-effects
+    name: "useEffect와 부수 효과"
+    description: "의존성 배열, 정리 함수, 개발 모드 이중 실행, 이펙트가 필요 없는 경우"
+  - slug: typescript-types
+    name: "TypeScript 타입 시스템"
+    description: "구조적 타입, interface·type, any·unknown, 제네릭, 유니온 좁히기, strict"
+  # --- 스프링 확장(WebFlux·Batch·Cloud) ---
+  - slug: reactive-programming
+    name: "리액티브 프로그래밍과 백프레셔"
+    description: "Reactive Streams, Mono·Flux, 구독 시점 실행, 백프레셔, 연산자와 오류 전파"
+  - slug: nonblocking-model
+    name: "논블로킹 이벤트 루프 모델"
+    description: "소수 스레드 이벤트 루프, 블로킹 호출 금지, 스케줄러 전환, 가상 스레드와의 관계"
+  - slug: batch-job-metadata
+    name: "배치 잡 구조와 메타데이터"
+    description: "Job·Step·청크, JobInstance·Execution, 파라미터, 메타데이터 테이블과 재시작"
+  - slug: api-gateway
+    name: "API 게이트웨이"
+    description: "라우트·프레딕트·필터, 요청 제한, 단일 진입점에서의 공통 관심사 처리"
+  - slug: service-discovery
+    name: "서비스 디스커버리와 클라이언트 로드 밸런싱"
+    description: "서비스 레지스트리, 인스턴스 헬스, 이름 기반 호출과 클라이언트 측 부하 분산"
+  # --- API 설계 ---
+  - slug: rest-design
+    name: "REST 설계"
+    description: "REST 제약, 리소스 URI, 메서드 의미와 상태 비저장, HATEOAS"
+  - slug: http-status-error
+    name: "상태 코드와 에러 응답"
+    description: "상태 코드 선택(4xx/5xx), Problem Details, 프로토콜별 오류 표현"
+  - slug: api-pagination
+    name: "페이징·정렬·필터"
+    description: "오프셋과 커서(키셋) 방식, 불투명 토큰, 페이지 크기 정책, 정렬·필터 설계"
+  - slug: api-versioning
+    name: "API 버저닝과 하위 호환"
+    description: "버전 표기 위치, 호환·비호환 변경, 폐기 예고, 필드 추가·삭제의 영향"
+  - slug: grpc-protobuf
+    name: "gRPC와 프로토콜 버퍼"
+    description: "IDL 기반 RPC, 호출 유형, 필드 번호와 스키마 진화, 데드라인과 상태 코드"
+  - slug: graphql
+    name: "GraphQL"
+    description: "스키마와 리졸버, 쿼리·뮤테이션·구독, 오버페칭 해소, N+1과 DataLoader, 에러·캐싱"
+  # --- 클라우드(AWS)·IaC·운영 ---
+  - slug: cloud-network
+    name: "클라우드 네트워크(VPC)"
+    description: "리전·가용 영역, 퍼블릭·프라이빗 서브넷, 게이트웨이, 보안 그룹과 ACL"
+  - slug: cloud-iam
+    name: "IAM과 최소 권한"
+    description: "사용자·역할·정책, 임시 자격 증명, 허용·거부 평가, 키를 코드에 두지 않기"
+  - slug: high-availability
+    name: "고가용성과 다중 AZ"
+    description: "가용 영역 분산, 장애 조치, 헬스 체크, 복제본, DNS 캐시와 재연결"
+  - slug: autoscaling
+    name: "오토스케일링"
+    description: "수평 확장 정책, 지표 기준, 헬스 체크 연동, HPA와 ASG"
+  - slug: load-balancer
+    name: "로드 밸런서와 인그레스"
+    description: "L4·L7 분산, 헬스 체크 기반 라우팅, 경로·호스트 라우팅, Ingress·Gateway API"
+  - slug: iac-terraform
+    name: "IaC와 Terraform"
+    description: "선언적 인프라 정의, plan·apply, state와 잠금, 모듈, 드리프트와 민감 값"
+  - slug: slo-metrics
+    name: "메트릭 설계와 SLO 알림"
+    description: "SLI·SLO·오류 예산, 번 레이트, 증상 기준 알림, Counter·Gauge·Histogram, 백분위"
+  - slug: deploy-strategy
+    name: "배포 전략과 롤백"
+    description: "롤링·블루그린·카나리, 롤아웃 진행과 정체, 롤백이 되돌리는 범위"
+  # --- 쿠버네티스 ---
+  - slug: k8s-architecture
+    name: "쿠버네티스 구조와 선언적 관리"
+    description: "컨트롤 플레인·노드 구성요소, 원하는 상태 조정 루프, apply와 선언적 관리, Pod·Deployment 관계"
+  - slug: k8s-service-network
+    name: "쿠버네티스 서비스와 네트워킹"
+    description: "Pod 네트워크 모델, Service 유형, 클러스터 DNS, 엔드포인트, kube-proxy, NetworkPolicy"
+  - slug: k8s-config-secret
+    name: "ConfigMap과 Secret"
+    description: "설정·비밀값 주입 방식, 갱신 반영 시점, base64와 암호화 저장, 불변 설정"
+  - slug: k8s-rbac
+    name: "쿠버네티스 RBAC와 ServiceAccount"
+    description: "Role·ClusterRole, 바인딩, ServiceAccount 토큰, 기본 계정 권한 범위"
+  - slug: k8s-storage
+    name: "쿠버네티스 영속 스토리지"
+    description: "PV·PVC·StorageClass, 접근 모드, 회수 정책, StatefulSet 볼륨 수명"
+  - slug: k8s-scheduling
+    name: "스케줄링과 노드 배치"
+    description: "스케줄러 필터·점수, 어피니티·taint·toleration, 우선순위와 선점, Pending 원인"
+  - slug: k8s-resources
+    name: "리소스 requests·limits와 QoS"
+    description: "요청·제한 의미, CPU 스로틀링과 OOM, QoS 등급, 쿼터와 LimitRange"
+  - slug: k8s-troubleshooting
+    name: "파드 장애 진단"
+    description: "Pending·ImagePull·CrashLoopBackOff·OOMKilled 등 상태별 원인과 kubectl 점검 순서"
+  # --- 컨테이너 ---
+  - slug: container-isolation
+    name: "컨테이너 격리 원리"
+    description: "리눅스 네임스페이스·cgroup, 자원 한도 적용, 루트 파일시스템과 PID 1"
+  - slug: container-image
+    name: "컨테이너 이미지와 OCI"
+    description: "OCI 사양, 레이어·매니페스트, 태그와 다이제스트, 멀티 아키텍처, 런타임 계층(containerd·runc)"
+  - slug: container-hardening
+    name: "컨테이너 하드닝"
+    description: "비루트 실행, capability·seccomp, 읽기 전용 파일시스템, 특권·소켓 마운트 위험, 공급망"
+  - slug: jvm-in-container
+    name: "컨테이너 안의 JVM"
+    description: "메모리·CPU 제한 인식, 힙 크기 결정, 종료 코드 137, 종료 유예와 프로브 연동"
+  # --- 메시징 확장 ---
+  - slug: partition-consumer-group
+    name: "파티션과 컨슈머 그룹"
+    description: "파티션 단위 병렬성과 순서, 컨슈머 그룹 할당, 리밸런싱, 랙, 프리페치와 처리 시간"
+  - slug: delivery-guarantee
+    name: "전달 보장과 확인 응답"
+    description: "at-most/at-least/exactly-once, ack·커밋 시점, 프로듀서 확인, 복제와 내구성, 중복 전달"
+  - slug: dlq-retry
+    name: "재시도와 데드 레터"
+    description: "소비 실패 시 재시도·백오프, 데드 레터 큐·토픽, 독 메시지, 재전달 횟수 제한"
+  # --- 자바 릴리스 ---
+  - slug: java-release-lts
+    name: "자바 릴리스 주기와 LTS"
+    description: "6개월 릴리스, LTS 버전, 프리뷰·인큐베이터, 프레임워크 JDK 요구사항, 버전별 주요 기능"
+  - slug: jdk-migration
+    name: "JDK 업그레이드와 호환성"
+    description: "제거된 API·모듈, 옵션 변경, --release, 기본 동작 변화(문자셋·버전 문자열), 점검 순서"
+  - slug: batch-chunk-processing
+    name: "배치 청크 처리"
+    description: "읽기·처리·쓰기를 청크 단위로 묶어 커밋하는 방식과 Tasklet·리더 선택"
+  - slug: batch-restart-recovery
+    name: "배치 재시작과 복구"
+    description: "실패·강제 종료 뒤 어디서부터 이어 실행하는지(ExecutionContext, 재시작 규칙, 상태 복구)"
+  - slug: batch-skip-retry
+    name: "배치 스킵과 재시도"
+    description: "예외 종류별 스킵·재시도 정책, 한도, 쓰기 실패 시 문제 아이템 찾기"
+  - slug: cloud-fundamentals
+    name: "클라우드 기본 모델과 설계 원칙"
+    description: "IaaS·PaaS·SaaS, 공동 책임 모델, 인스턴스·요금 선택, Well-Architected 기둥"
+  - slug: cloud-storage
+    name: "클라우드 스토리지"
+    description: "블록(EBS)·인스턴스 스토어·객체(S3) 스토리지의 차이, 스토리지 클래스, 일관성과 접근 제어"
+  - slug: k8s-workload-controller
+    name: "쿠버네티스 워크로드 컨트롤러"
+    description: "DaemonSet·Job·CronJob·StatefulSet 등 용도별 컨트롤러와 Deployment와의 차이"
+  - slug: sre-practice
+    name: "SRE 운영 관행"
+    description: "인시던트 대응 역할, 블레임리스 포스트모템, 오류 예산 정책 같은 운영 문화"
