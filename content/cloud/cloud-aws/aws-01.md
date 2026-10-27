@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://aws.amazon.com/types-of-cloud-computing/", "https://aws.amazon.com/compliance/shared-responsibility-model/"]
-concepts: [cloud-iam]
+concepts: [cloud-fundamentals]
 importance: 2
 ---
 **모범 답변 (30~60초)**

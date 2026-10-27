@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://sre.google/sre-book/introduction/", "https://sre.google/workbook/implementing-slos/", "https://sre.google/sre-book/service-level-objectives/"]
-concepts: [slo-metrics]
+concepts: [slo-metrics, sre-practice]
 importance: 2
 ---
 **모범 답변 (30~60초)**

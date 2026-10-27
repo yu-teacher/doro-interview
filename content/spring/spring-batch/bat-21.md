@@ -9,7 +9,7 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-batch/reference/readers-and-writers/process-indicator.html", "https://docs.spring.io/spring-batch/reference/readers-and-writers/database.html"]
-concepts: [batch-job-metadata, idempotency]
+concepts: [batch-restart-recovery, idempotency]
 importance: 1
 links: [{to: "bat-09", kind: PREREQ}, {to: "bat-12", kind: PREREQ}]
 ---

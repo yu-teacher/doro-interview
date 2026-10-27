@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://sre.google/sre-book/managing-incidents/", "https://sre.google/workbook/incident-response/"]
-concepts: [slo-metrics]
+concepts: [sre-practice]
 importance: 1
 ---
 **모범 답변 (30~60초)**

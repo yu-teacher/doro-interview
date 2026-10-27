@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/restart.html", "https://docs.spring.io/spring-batch/reference/readers-and-writers/item-stream.html", "https://docs.spring.io/spring-batch/reference/domain.html", "https://docs.spring.io/spring-batch/reference/job/configuring-job.html"]
-concepts: [batch-job-metadata]
+concepts: [batch-restart-recovery, batch-job-metadata]
 importance: 2
 links: [{to: "bat-08", kind: PREREQ}, {to: "bat-20", kind: FOLLOWUP}]
 ---

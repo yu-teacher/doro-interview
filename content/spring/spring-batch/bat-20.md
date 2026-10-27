@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-batch/reference/job/advanced-meta-data.html", "https://docs.spring.io/spring-batch/reference/whatsnew.html"]
-concepts: [batch-job-metadata, graceful-shutdown]
+concepts: [batch-restart-recovery, graceful-shutdown]
 importance: 1
 links: [{to: "bat-09", kind: PREREQ}, {to: "dkr-16", kind: RELATED}, {to: "cic-14", kind: RELATED}]
 ---

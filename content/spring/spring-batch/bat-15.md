@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-batch/reference/processor.html", "https://docs.spring.io/spring-batch/reference/domain.html"]
-concepts: [batch-job-metadata, null-handling]
+concepts: [batch-chunk-processing, batch-skip-retry, null-handling]
 importance: 1
 links: [{to: "bat-04", kind: PREREQ}]
 ---

@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-batch/reference/step/tasklet.html"]
-concepts: [batch-job-metadata]
+concepts: [batch-chunk-processing]
 importance: 2
 links: [{to: "bat-04", kind: PREREQ}]
 ---

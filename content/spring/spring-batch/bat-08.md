@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-batch/reference/domain.html", "https://docs.spring.io/spring-batch/reference/schema-appendix.html", "https://docs.spring.io/spring-batch/reference/step/controlling-flow.html", "https://docs.spring.io/spring-batch/reference/job/configuring-job.html", "https://docs.spring.io/spring-batch/reference/job/advanced-meta-data.html", "https://docs.spring.io/spring-boot/how-to/batch.html"]
-concepts: [batch-job-metadata, idempotency]
+concepts: [batch-job-metadata, batch-restart-recovery]
 importance: 2
 links: [{to: "bat-03", kind: PREREQ}, {to: "bat-09", kind: FOLLOWUP}]
 ---

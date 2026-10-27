@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/retry-logic.html", "https://docs.spring.io/spring-batch/reference/whatsnew.html"]
-concepts: [resilience, idempotency]
+concepts: [batch-skip-retry, resilience]
 importance: 1
 links: [{to: "bat-10", kind: PREREQ}, {to: "dst-19", kind: RELATED}, {to: "dst-22", kind: RELATED}]
 ---

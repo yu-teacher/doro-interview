@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-batch/reference/scalability.html", "https://docs.spring.io/spring-batch/reference/whatsnew.html"]
-concepts: [thread-pool, batch-job-metadata]
+concepts: [thread-pool]
 importance: 1
 links: [{to: "bat-04", kind: PREREQ}, {to: "bat-14", kind: FOLLOWUP}, {to: "bat-19", kind: FOLLOWUP}, {to: "jt-13", kind: RELATED}]
 ---

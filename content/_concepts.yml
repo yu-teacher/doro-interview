@@ -494,3 +494,24 @@ concepts:
   - slug: jdk-migration
     name: "JDK 업그레이드와 호환성"
     description: "제거된 API·모듈, 옵션 변경, --release, 기본 동작 변화(문자셋·버전 문자열), 점검 순서"
+  - slug: batch-chunk-processing
+    name: "배치 청크 처리"
+    description: "읽기·처리·쓰기를 청크 단위로 묶어 커밋하는 방식과 Tasklet·리더 선택"
+  - slug: batch-restart-recovery
+    name: "배치 재시작과 복구"
+    description: "실패·강제 종료 뒤 어디서부터 이어 실행하는지(ExecutionContext, 재시작 규칙, 상태 복구)"
+  - slug: batch-skip-retry
+    name: "배치 스킵과 재시도"
+    description: "예외 종류별 스킵·재시도 정책, 한도, 쓰기 실패 시 문제 아이템 찾기"
+  - slug: cloud-fundamentals
+    name: "클라우드 기본 모델과 설계 원칙"
+    description: "IaaS·PaaS·SaaS, 공동 책임 모델, 인스턴스·요금 선택, Well-Architected 기둥"
+  - slug: cloud-storage
+    name: "클라우드 스토리지"
+    description: "블록(EBS)·인스턴스 스토어·객체(S3) 스토리지의 차이, 스토리지 클래스, 일관성과 접근 제어"
+  - slug: k8s-workload-controller
+    name: "쿠버네티스 워크로드 컨트롤러"
+    description: "DaemonSet·Job·CronJob·StatefulSet 등 용도별 컨트롤러와 Deployment와의 차이"
+  - slug: sre-practice
+    name: "SRE 운영 관행"
+    description: "인시던트 대응 역할, 블레임리스 포스트모템, 오류 예산 정책 같은 운영 문화"

@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html", "https://docs.aws.amazon.com/ec2/latest/instancetypes/instance-types.html", "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html"]
-concepts: [autoscaling]
+concepts: [cloud-fundamentals]
 importance: 2
 ---
 **모범 답변 (30~60초)**

@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-batch/reference/readers-and-writers/database.html", "https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/retry-logic.html"]
-concepts: [batch-job-metadata, spring-data-jpa]
+concepts: [batch-chunk-processing, spring-data-jpa]
 importance: 1
 links: [{to: "bat-04", kind: PREREQ}, {to: "jpa-30", kind: RELATED}]
 ---

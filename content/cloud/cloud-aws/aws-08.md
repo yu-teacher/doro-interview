@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.aws.amazon.com/ebs/latest/userguide/what-is-ebs.html", "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html", "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.html", "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/RootDeviceStorage.html"]
-concepts: [high-availability]
+concepts: [cloud-storage]
 importance: 2
 links: [{to: "aws-09", kind: RELATED}]
 ---

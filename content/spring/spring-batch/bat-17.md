@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/configuring-skip.html", "https://docs.spring.io/spring-batch/reference/readers-and-writers/database.html"]
-concepts: [batch-job-metadata, tx-boundary]
+concepts: [batch-skip-retry, batch-chunk-processing, tx-boundary]
 importance: 1
 links: [{to: "bat-10", kind: PREREQ}, {to: "bat-16", kind: PREREQ}]
 ---

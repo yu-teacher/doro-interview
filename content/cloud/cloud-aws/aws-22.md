@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.aws.amazon.com/wellarchitected/latest/framework/the-pillars-of-the-framework.html", "https://docs.aws.amazon.com/wellarchitected/latest/framework/general-design-principles.html", "https://docs.aws.amazon.com/wellarchitected/latest/framework/operational-excellence.html", "https://docs.aws.amazon.com/wellarchitected/latest/framework/security.html", "https://docs.aws.amazon.com/wellarchitected/latest/framework/reliability.html", "https://docs.aws.amazon.com/wellarchitected/latest/framework/performance-efficiency.html", "https://docs.aws.amazon.com/wellarchitected/latest/framework/cost-optimization.html", "https://docs.aws.amazon.com/wellarchitected/latest/framework/sustainability.html"]
-concepts: [high-availability]
+concepts: [cloud-fundamentals]
 importance: 1
 ---
 **모범 답변 (30~60초)**

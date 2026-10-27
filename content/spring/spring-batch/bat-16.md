@@ -9,7 +9,7 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/commit-interval.html", "https://docs.spring.io/spring-batch/reference/spring-batch-architecture.html"]
-concepts: [tx-boundary, batch-job-metadata]
+concepts: [tx-boundary, batch-chunk-processing]
 importance: 2
 links: [{to: "bat-04", kind: PREREQ}, {to: "bat-17", kind: FOLLOWUP}, {to: "jpa-05", kind: RELATED}, {to: "jpa-30", kind: RELATED}]
 ---

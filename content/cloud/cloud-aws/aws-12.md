@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html", "https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-policies.html", "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html", "https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html"]
-concepts: [cloud-iam]
+concepts: [cloud-storage, cloud-iam]
 importance: 2
 links: [{to: "aws-09", kind: PREREQ}, {to: "aws-15", kind: RELATED}, {to: "aws-17", kind: FOLLOWUP}]
 ---

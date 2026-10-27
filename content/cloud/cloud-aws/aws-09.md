@@ -9,7 +9,7 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html", "https://docs.aws.amazon.com/ebs/latest/userguide/what-is-ebs.html"]
-concepts: [high-availability]
+concepts: [cloud-storage]
 importance: 3
 links: [{to: "aws-12", kind: FOLLOWUP}, {to: "aws-08", kind: RELATED}]
 ---

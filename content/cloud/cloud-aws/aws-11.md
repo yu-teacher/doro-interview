@@ -9,7 +9,7 @@ has_extra: true
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html"]
-concepts: [distributed-consistency]
+concepts: [cloud-storage, distributed-consistency]
 importance: 1
 links: [{to: "aws-09", kind: PREREQ}, {to: "dst-23", kind: RELATED}]
 ---

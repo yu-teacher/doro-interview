@@ -9,7 +9,7 @@ has_extra: false
 status: REVIEWED
 reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/configuring-skip.html", "https://docs.spring.io/spring-batch/reference/whatsnew.html"]
-concepts: [resilience, batch-job-metadata]
+concepts: [batch-skip-retry, resilience]
 importance: 2
 links: [{to: "bat-04", kind: PREREQ}, {to: "bat-11", kind: FOLLOWUP}, {to: "bat-17", kind: FOLLOWUP}]
 ---
