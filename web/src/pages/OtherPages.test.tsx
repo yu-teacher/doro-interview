@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AppRoutes } from '../App';
@@ -41,7 +41,7 @@ describe('홈', () => {
     expect(card.textContent).toContain('질문 25개');
     expect(card.textContent).not.toContain('기준 버전');
     expect(screen.getByRole('heading', { level: 3, name: '스프링' })).toBeTruthy();
-    expect(document.title).toBe('도로 면접');
+    await waitFor(() => expect(document.title).toBe('도로 면접'));
   });
 
   it('공개 주제가 없으면 오류가 아니라 안내다', async () => {
@@ -73,7 +73,7 @@ describe('개념', () => {
     expect(card.getAttribute('href')).toBe('/c/proxy');
     expect(card.textContent).toContain('호출을 가로채는 대리 객체');
     expect(card.textContent).toContain('질문 3개');
-    expect(document.title).toBe('개념 · 도로 면접');
+    await waitFor(() => expect(document.title).toBe('개념 · 도로 면접'));
     expect(await a11yViolations()).toEqual([]);
   });
 
@@ -94,7 +94,7 @@ describe('개념', () => {
     expect(await screen.findByRole('heading', { level: 1, name: '프록시' })).toBeTruthy();
     expect(screen.getByText('질문 2개')).toBeTruthy();
     expect(screen.getByRole('link', { name: /동작 원리/ }).getAttribute('href')).toBe('/q/tx-04');
-    expect(document.title).toBe('프록시 · 도로 면접');
+    await waitFor(() => expect(document.title).toBe('프록시 · 도로 면접'));
     expect(await a11yViolations()).toEqual([]);
   });
 
@@ -123,7 +123,7 @@ describe('검색', () => {
     expect(first.textContent).toContain('일치: 제목, 키워드');
     expect(first.textContent).toContain('꼭 나와요');
     expect(screen.getByRole('link', { name: /REQUIRES_NEW/ }).textContent).toContain('일치: 본문');
-    expect(document.title).toBe('‘전파’ 검색 · 도로 면접');
+    await waitFor(() => expect(document.title).toBe('‘전파’ 검색 · 도로 면접'));
   });
 
   it('전체 건수가 보여 준 건수보다 크면 일부만 보여 준다고 알린다', async () => {

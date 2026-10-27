@@ -198,7 +198,7 @@ describe('질문 화면', () => {
 
   it('문서 제목이 질문 제목이다', async () => {
     await open();
-    expect(document.title).toBe('@Transactional 은 어떻게 동작하나요? · 도로 면접');
+    await waitFor(() => expect(document.title).toBe('@Transactional 은 어떻게 동작하나요? · 도로 면접'));
   });
 
   it('접근성 구조 위반이 없다(상세를 펼친 상태 포함)', async () => {
