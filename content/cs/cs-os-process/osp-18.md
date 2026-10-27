@@ -7,7 +7,7 @@ title: "기아(starvation)와 우선순위 역전은 무엇이고 어떻게 해�
 keywords: ["우선순위가 낮아 계속 밀림", "에이징", "락 보유자가 높은 스레드를 막음", "우선순위 상속", "우선순위 천장"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutexattr_getprotocol.html", "https://www.kernel.org/doc/html/latest/locking/rt-mutex.html", "https://man7.org/linux/man-pages/man7/sched.7.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, Locks (threads-locks), Aside: More Reason To Avoid Spinning: Priority Inversion, PDF p.17", "OSTEP, Locks (threads-locks), 28.4 Evaluating Locks(공정성과 기아), PDF p.3", "OSTEP, Scheduling: The Multi-Level Feedback Queue (cpu-sched-mlfq), 8.2-8.3 starvation and priority boost, PDF p.5-7"]
 concepts: [race-condition, process-management]

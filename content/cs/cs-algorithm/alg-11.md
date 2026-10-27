@@ -7,7 +7,7 @@ title: "메모이제이션(top-down)과 타뷸레이션(bottom-up)은 어떻게 
 keywords: ["재귀와 캐시", "반복문으로 표 채우기", "필요한 부분문제만 계산", "재귀 깊이 한계", "중복 계산 제거"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/memoize.html", "https://xlinux.nist.gov/dads/HTML/dynamicprog.html", "https://docs.python.org/3/library/functools.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/"]
 refs: ["Algorithms (Erickson), 3.1 Memoization과 Dynamic Programming: Fill Deliberately, PDF p.118-119", "Algorithms (Erickson), 3.4 The Pattern: Smart Recursion, PDF p.123-125", "Algorithms (Erickson), 3.8 Subset Sum, PDF p.134-135"]
 concepts: [recursion-dp]

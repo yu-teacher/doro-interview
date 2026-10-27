@@ -7,7 +7,7 @@ title: "프로세스 상태에는 무엇이 있고, 리눅스에서는 어떻게
 keywords: ["생성·준비·실행·대기·종료", "준비 큐에서 CPU 할당", "I/O 대기는 대기 상태", "R·S·D 상태 문자", "Z는 좀비"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://man7.org/linux/man-pages/man5/proc_pid_stat.5.html", "https://man7.org/linux/man-pages/man7/sched.7.html", "https://man7.org/linux/man-pages/man1/ps.1.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, The Abstraction: The Process (cpu-intro), 4.4 Process States, PDF p.5-7", "OSTEP, The Abstraction: The Process (cpu-intro), 4.5 Data Structures(초기·최종 상태), PDF p.8-9", "OSTEP, Scheduling: Introduction (cpu-sched), 7.7 Round Robin(타임 슬라이스와 실행 큐), PDF p.7", "OSTEP, Scheduling: The Multi-Level Feedback Queue (cpu-sched-mlfq), 8.1 MLFQ: Basic Rules, PDF p.2"]
 concepts: [process-management]

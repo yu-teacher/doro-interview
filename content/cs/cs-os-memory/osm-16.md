@@ -7,7 +7,7 @@ title: "페이지 프레임을 늘렸는데 오히려 페이지 폴트가 늘어
 keywords: ["프레임이 늘면 폴트가 늘 수 있음", "FIFO에서 발생", "참조열 1,2,3,4,1,2,5,1,2,3,4,5", "LRU에서는 관찰되지 않음", "최적(OPT)은 해당 없음"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 22장 Beyond Physical Memory: Policies(Aside: Belady's Anomaly), PDF p.5"]
 concepts: [virtual-memory]

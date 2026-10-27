@@ -7,7 +7,7 @@ title: "프로세스의 주소 공간은 코드, 데이터, 힙, 스택으로 �
 keywords: ["코드(텍스트) 영역", "초기화 데이터와 BSS", "힙은 낮은 주소에서 확장", "스택은 높은 주소에서 사용", "매 실행마다 주소가 달라질 수 있음"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://man7.org/linux/man-pages/man5/proc_pid_maps.5.html", "https://man7.org/linux/man-pages/man2/brk.2.html", "https://man7.org/linux/man-pages/man3/malloc.3.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 13장 The Abstraction: Address Spaces(13.3 The Address Space, Aside: Every Address You See Is Virtual), PDF p.3-4, 7"]
 concepts: [memory-layout]

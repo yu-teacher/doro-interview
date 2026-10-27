@@ -7,7 +7,7 @@ title: "경쟁 상태(race condition)와 임계 구역은 무엇이고 어떻게
 keywords: ["공유 데이터 동시 접근", "읽기-수정-쓰기", "임계 구역", "상호 배제", "원자 연산"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html", "https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, Concurrency: An Introduction (threads-intro), 26.3 Why It Gets Worse: Shared Data(실행마다 다른 결과), PDF p.8", "OSTEP, Concurrency: An Introduction (threads-intro), 26.4 The Heart Of The Problem: Uncontrolled Scheduling, PDF p.9-10", "OSTEP, Concurrency: An Introduction (threads-intro), 26.5 The Wish For Atomicity, PDF p.11-12", "OSTEP, Concurrency: An Introduction (threads-intro), Aside: Key Concurrency Terms, PDF p.13"]
 concepts: [race-condition]

@@ -7,7 +7,7 @@ title: "시스템 콜은 일반 함수 호출과 무엇이 다르고, 왜 비용
 keywords: ["유저 모드에서 커널 모드로 진입", "라이브러리 래퍼가 호출", "모드 전환 오버헤드", "호출 횟수를 줄이는 버퍼링", "vDSO로 커널 진입 회피"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://man7.org/linux/man-pages/man2/syscalls.2.html", "https://man7.org/linux/man-pages/man7/vdso.7.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 6장 Mechanism: Limited Direct Execution(6.2 Problem #1: Restricted Operations, Tip: Use Protected Control Transfer), PDF p.3-4"]
 concepts: [process-management]

@@ -7,7 +7,7 @@ title: "최소 신장 트리를 구하는 크루스칼과 프림 알고리즘은
 keywords: ["V-1개 간선의 트리", "크루스칼은 간선을 가중치순으로 선택", "프림은 정점 하나에서 확장", "그리디로 전역 최적", "사이클 판정에 서로소 집합"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/minimumSpanningTree.html", "https://xlinux.nist.gov/dads/HTML/kruskalsalgo.html", "https://xlinux.nist.gov/dads/HTML/primJarnik.html", "https://xlinux.nist.gov/dads/HTML/greedyalgo.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/"]
 refs: ["Algorithms (Erickson), 7.4 Jarník's Algorithm, PDF p.281-283", "Algorithms (Erickson), 7.5 Kruskal's Algorithm, PDF p.283-285"]
 concepts: [graph-algorithms]

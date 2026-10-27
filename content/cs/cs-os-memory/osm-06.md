@@ -7,7 +7,7 @@ title: "파일 시스템에서 inode와 디렉터리는 각각 무엇을 담고,
 keywords: ["inode에 메타데이터", "inode 번호로 식별", "디렉터리는 이름과 inode 연결", "링크 카운트", "이름 변경해도 inode 유지"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://man7.org/linux/man-pages/man7/inode.7.html", "https://man7.org/linux/man-pages/man7/path_resolution.7.html", "https://www.kernel.org/doc/html/latest/filesystems/vfs.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/link.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/unlink.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 39장 Interlude: Files and Directories(39.1 Files and Directories, 39.14 Hard Links), PDF p.2, 19-20", "OSTEP, 40장 File System Implementation(40.3 File Organization: The Inode, 40.4 Directory Organization), PDF p.5-6, 8-9"]
 concepts: [io-filesystem]

@@ -7,7 +7,7 @@ title: "존재하지 않는 행에 SELECT FOR UPDATE를 걸면 동시 INSERT를 
 keywords: ["없는 행은 잠글 수 없음", "InnoDB 갭 락", "유니크 제약이 최종 방어", "ON CONFLICT 또는 어드바이저리 락"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-insert.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-locking.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-locks-set.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-next-key-locking.html"]
 concepts: [db-locking, race-condition]
 importance: 1

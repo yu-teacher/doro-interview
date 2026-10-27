@@ -7,7 +7,7 @@ title: "TCP 혼잡 제어의 slow start, congestion avoidance, 빠른 재전송�
 keywords: ["slow start", "ssthresh", "congestion avoidance", "중복 ACK 세 개", "한 세그먼트로 줄여", "AIMD"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.rfc-editor.org/rfc/rfc5681.html", "https://www.rfc-editor.org/rfc/rfc6928.html", "https://www.rfc-editor.org/rfc/rfc9293.html", "https://book.systemsapproach.org/congestion/tcpcc.html"]
 refs: ["Computer Networks: A Systems Approach, 6.3.2 Slow Start (웹 판)", "Computer Networks: A Systems Approach, 6.3.4 TCP CUBIC (웹 판)"]
 concepts: [tcp]

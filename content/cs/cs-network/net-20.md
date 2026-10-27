@@ -7,7 +7,7 @@ title: "L4 로드밸런서와 L7 로드밸런서는 어떻게 다르고, keep-al
 keywords: ["IP 주소와 포트", "TCP 연결 단위", "요청 단위", "프록시, 즉 게이트웨이", "keep-alive 연결 하나", "경로, 호스트 이름, 헤더"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.rfc-editor.org/rfc/rfc9110.html", "https://www.rfc-editor.org/rfc/rfc2391.html", "https://www.rfc-editor.org/rfc/rfc9112.html", "https://book.systemsapproach.org/foundation/architecture.html"]
 refs: ["Computer Networks: A Systems Approach, 1.3.5 Internet Architecture (웹 판)"]
 concepts: [network-layers, msa-boundary]

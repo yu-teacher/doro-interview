@@ -7,7 +7,7 @@ title: "P, NP, NP-완전, NP-난해는 각각 무엇이고 근사 알고리즘�
 keywords: ["다항 시간 검증", "NP-완전", "NP-난해", "P vs NP 미해결", "근사 알고리즘의 성능 보장"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/np.html", "https://xlinux.nist.gov/dads/HTML/npcomplete.html", "https://xlinux.nist.gov/dads/HTML/nphard.html", "https://xlinux.nist.gov/dads/HTML/approximatin.html", "https://xlinux.nist.gov/dads/HTML/travelingSalesman.html", "https://xlinux.nist.gov/dads/HTML/knapsackProblem.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/"]
 refs: ["Algorithms (Erickson), 12.1 A Game You Can't Win, PDF p.397-399", "Algorithms (Erickson), 12.2 P versus NP, PDF p.399-400", "Algorithms (Erickson), 12.3 NP-hard, NP-easy, and NP-complete, PDF p.400-401", "Algorithms (Erickson), 12.4 Formal Definitions, PDF p.402"]
 concepts: [complexity-sorting]

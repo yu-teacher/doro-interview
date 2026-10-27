@@ -7,7 +7,7 @@ title: "변경 감지가 있는데 왜 굳이 `@Transactional(readOnly = true)`�
 keywords: ["스냅샷 비용 절감", "실수 방지", "바깥 트랜잭션 우선", "DB 강제 아님"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://docs.hibernate.org/orm/7.0/introduction/html_single/", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/orm/jpa/JpaDialect.html", "https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html"]
 concepts: [declarative-tx, dirty-checking]
 importance: 2

@@ -7,7 +7,7 @@ title: "CPU 스케줄링 알고리즘(FCFS, SJF, RR, 우선순위, MLFQ)을 비�
 keywords: ["FCFS 호위 효과", "SJF 평균 대기 시간 최소", "RR 타임 퀀텀", "우선순위 기아와 에이징", "MLFQ 피드백 큐"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://man7.org/linux/man-pages/man7/sched.7.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, Scheduling: Introduction (cpu-sched), 7.3 FIFO, 7.4 SJF, PDF p.2-5", "OSTEP, Scheduling: Introduction (cpu-sched), 7.6 Response Time, 7.7 Round Robin, PDF p.6-8", "OSTEP, Scheduling: The Multi-Level Feedback Queue (cpu-sched-mlfq), 8.1-8.3, PDF p.2-7", "OSTEP, Multiprocessor Scheduling (cpu-sched-multi), 10.6 Linux Multiprocessor Schedulers, PDF p.10"]
 concepts: [process-management]

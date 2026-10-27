@@ -7,7 +7,7 @@ title: "퀵 정렬은 어떻게 동작하고, 최악이 O(n²)인 이유와 피�
 keywords: ["피벗 기준 분할", "보통 O(n log n)", "정렬된 입력과 첫 원소 피벗", "무작위 피벗", "제자리 정렬"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/quicksort.html", "https://xlinux.nist.gov/dads/HTML/introspectiveSort.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/", "https://opendatastructures.org/"]
 refs: ["Algorithms (Erickson), 1.5 Quicksort, PDF p.47-49", "Open Data Structures (Java), 11.1.2 Quicksort, PDF p.242-244"]
 concepts: [complexity-sorting, recursion-dp]

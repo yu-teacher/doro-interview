@@ -7,7 +7,7 @@ title: "mmap으로 파일을 매핑하면 read/write와 무엇이 다르고, MAP
 keywords: ["파일을 주소 공간에 매핑", "접근 시 페이지 폴트로 로드", "MAP_SHARED는 파일에 반영", "MAP_PRIVATE는 copy-on-write", "반영 시점은 msync"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/mmap.html", "https://man7.org/linux/man-pages/man2/mmap.2.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 23장 Complete Virtual Memory Systems(Aside: The Ubiquity of Memory-Mapping), PDF p.14", "OSTEP, 23장 Complete Virtual Memory Systems(The Page Cache), PDF p.13"]
 concepts: [virtual-memory, io-filesystem]

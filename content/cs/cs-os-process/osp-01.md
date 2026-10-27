@@ -7,7 +7,7 @@ title: "프로세스와 스레드는 무엇이 다르고, 무엇을 공유하나
 keywords: ["독립된 주소 공간", "전역 변수·힙 공유", "스레드별 스택", "열린 파일 디스크립터 공유", "생성 비용"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://man7.org/linux/man-pages/man7/pthreads.7.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/fork.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_create.html", "https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html", "https://man7.org/linux/man-pages/man2/fork.2.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, Concurrency: An Introduction (threads-intro), 도입부(스레드와 프로세스의 차이), PDF p.1", "OSTEP, Concurrency: An Introduction (threads-intro), 26.1 Why Use Threads?, PDF p.3", "OSTEP, Concurrency: An Introduction (threads-intro), 26.4 Uncontrolled Scheduling, PDF p.9-10"]
 concepts: [thread-process]

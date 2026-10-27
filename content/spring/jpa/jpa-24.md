@@ -7,7 +7,7 @@ title: "JPA와 트랜잭션의 관계, 그리고 `readOnly = true`의 효과는?
 keywords: ["트랜잭션 경계 = 컨텍스트 경계", "readOnly → FlushMode.MANUAL", "더티 체킹 생략", "드라이버 힌트", "자기호출", "쓰기 차단 보장 없음"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://jakarta.ee/specifications/persistence/3.2/jakarta-persistence-spec-3.2.html", "https://docs.spring.io/spring-data/jpa/reference/jpa/transactions.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/orm/jpa/JpaDialect.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/orm/jpa/vendor/HibernateJpaDialect.html", "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html", "https://docs.hibernate.org/orm/7.0/introduction/html_single/"]
 concepts: [declarative-tx, persistence-context]
 importance: 3

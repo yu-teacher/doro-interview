@@ -7,7 +7,7 @@ title: "Spring Boot 4 테스트에서 빈을 목으로 바꾸려면 어떻게 �
 keywords: ["@MockitoBean", "Spring Framework 제공", "컨텍스트 캐시 키 변경", "REPLACE_OR_CREATE 전략", "@MockitoSpyBean"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-framework/reference/testing/annotations/integration-spring/annotation-mockitobean.html", "https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/bean-overriding.html", "https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management/caching.html", "https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html", "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide"]
 concepts: [test-strategy, mocking-junit]
 importance: 2

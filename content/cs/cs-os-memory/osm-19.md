@@ -7,7 +7,7 @@ title: "malloc이 성공했는데도 나중에 프로세스가 메모리 부족�
 keywords: ["malloc 성공이 메모리 보장은 아님", "지연 할당", "오버커밋 정책", "사용 시점에 물리 페이지 부족", "OOM killer"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://man7.org/linux/man-pages/man3/malloc.3.html", "https://www.kernel.org/doc/html/latest/mm/overcommit-accounting.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 23장 Complete Virtual Memory Systems(Other Neat Tricks: demand zeroing), PDF p.7", "OSTEP, 22장 Beyond Physical Memory: Policies(22.11 Thrashing), PDF p.14"]
 concepts: [virtual-memory, memory-layout]

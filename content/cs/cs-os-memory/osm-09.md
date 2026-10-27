@@ -7,7 +7,7 @@ title: "페이지 폴트는 언제 발생하고 커널은 어떻게 처리하나
 keywords: ["변환 실패 시 예외 발생", "커널 폴트 핸들러", "요구 페이징(지연 할당)", "마이너 폴트와 메이저 폴트", "허용되지 않은 접근은 SIGSEGV"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.kernel.org/doc/html/latest/mm/page_tables.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://man7.org/linux/man-pages/man2/getrusage.2.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 21장 Beyond Physical Memory: Mechanisms(21.3 The Page Fault, 21.5 Page Fault Control Flow), PDF p.4-7", "OSTEP, 22장 Beyond Physical Memory: Policies(22.10 Other VM Policies), PDF p.14"]
 concepts: [virtual-memory]

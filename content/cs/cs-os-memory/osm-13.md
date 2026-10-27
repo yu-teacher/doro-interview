@@ -7,7 +7,7 @@ title: "write()가 성공하면 데이터는 디스크에 안전하게 저장된
 keywords: ["write는 페이지 캐시에 기록", "dirty 페이지는 나중에 플러시", "fsync는 저장 장치로 전송", "fsync는 완료까지 블록", "디렉터리 항목은 별도 fsync"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap04.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/fsync.html", "https://man7.org/linux/man-pages/man2/fsync.2.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://www.kernel.org/doc/html/latest/admin-guide/sysctl/vm.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 39장 Interlude: Files and Directories(39.7 Writing Immediately With fsync()), PDF p.12", "OSTEP, 40장 File System Implementation(40.7 Caching and Buffering, Tip: Durability/Performance Trade-Off), PDF p.15-16"]
 concepts: [io-filesystem]

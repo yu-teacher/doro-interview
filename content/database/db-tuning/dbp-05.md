@@ -7,7 +7,7 @@ title: "Nested Loop, Hash Join, Merge Join은 어떻게 다르고 언제 쓰이�
 keywords: ["바깥 행마다 안쪽 탐색", "해시 테이블 빌드와 프로브", "정렬된 입력 병합", "인덱스 없는 등가 조인", "비용 기반 선택"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/using-explain.html", "https://www.postgresql.org/docs/16/runtime-config-query.html", "https://dev.mysql.com/doc/refman/8.4/en/nested-loop-joins.html", "https://dev.mysql.com/doc/refman/8.4/en/hash-joins.html", "https://www.postgresql.org/docs/16/xoper-optimization.html"]
 concepts: [join-query, query-planner]
 importance: 3

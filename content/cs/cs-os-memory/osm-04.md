@@ -7,7 +7,7 @@ title: "페이징은 가상 주소를 어떻게 물리 주소로 바꾸고, 세�
 keywords: ["고정 크기 페이지와 프레임", "페이지 번호와 오프셋", "계층형 페이지 테이블", "희소한 주소 공간의 메모리 절약", "세그멘테이션은 가변 크기"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://www.kernel.org/doc/html/latest/mm/page_tables.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 16장 Segmentation(16.1, 16.6 외부 단편화, 16.7 Summary), PDF p.1, 9-10", "OSTEP, 18장 Paging: Introduction(도입), PDF p.1"]
 concepts: [virtual-memory]

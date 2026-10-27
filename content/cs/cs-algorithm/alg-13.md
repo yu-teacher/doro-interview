@@ -7,7 +7,7 @@ title: "다익스트라와 벨만-포드는 무엇이 다르고 각각 언제 �
 keywords: ["단일 출발점 최단 경로", "음수 가중치 허용 여부", "음수 사이클 검출", "우선순위 큐", "벨만-포드 O(VE)"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/dijkstraalgo.html", "https://xlinux.nist.gov/dads/HTML/bellmanford.html", "https://xlinux.nist.gov/dads/HTML/shortestpath.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/"]
 refs: ["Algorithms (Erickson), 8.6 Best-First: Dijkstra's Algorithm, PDF p.302-307"]
 concepts: [graph-algorithms]

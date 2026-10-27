@@ -7,7 +7,7 @@ title: "다익스트라 알고리즘에 음수 간선이 있으면 왜 틀릴 �
 keywords: ["정점 확정 가정", "확정 뒤 더 짧은 경로 발견", "S→A 2, S→B 3, B→A -2 반례", "모든 간선에 상수를 더해도 틀림", "벨만-포드 사용"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/dijkstraalgo.html", "https://xlinux.nist.gov/dads/HTML/bellmanford.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/"]
 refs: ["Algorithms (Erickson), 8.6 Best-First: Dijkstra's Algorithm, PDF p.304-307"]
 concepts: [graph-algorithms]

@@ -7,7 +7,7 @@ title: "포트와 소켓은 무엇이고, 서버 하나의 포트로 어떻게 �
 keywords: ["16비트 번호", "IP 주소와 포트를 합친", "양쪽 소켓의 쌍", "0~1023", "49152 이상"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc6335.html", "https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml", "https://book.systemsapproach.org/foundation/software.html"]
 refs: ["Computer Networks: A Systems Approach, 1.4.1 Socket API (웹 판)"]
 concepts: [network-layers, tcp]

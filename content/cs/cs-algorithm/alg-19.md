@@ -7,7 +7,7 @@ title: "그리디 알고리즘이 최적해를 보장하려면 어떤 조건이 
 keywords: ["지역 최선이 전역 최선", "동전 {1,3,4} 6원 반례", "그리디 선택 속성 증명", "활동 선택·MST·분할 가능 배낭", "안 되면 DP나 탐색"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/greedyalgo.html", "https://xlinux.nist.gov/dads/HTML/fractionalKnapsack.html", "https://xlinux.nist.gov/dads/HTML/knapsackProblem.html", "https://xlinux.nist.gov/dads/HTML/dynamicprog.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/"]
 refs: ["Algorithms (Erickson), 4.1-4.3 Storing Files on Tape, Scheduling Classes, General Pattern, PDF p.177-183", "Algorithms (Erickson), 3.5 Warning: Greed is Stupid, PDF p.125-126", "Algorithms (Erickson), 4장 연습문제 동전 거스름돈, PDF p.198-199"]
 concepts: [recursion-dp]

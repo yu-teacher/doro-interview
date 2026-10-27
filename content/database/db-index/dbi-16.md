@@ -7,7 +7,7 @@ title: "WHERE 절의 컬럼에 함수, 연산, 형 변환을 쓰면 왜 인덱�
 keywords: ["인덱스 컬럼 연산자 비교값 형태", "컬럼을 가공하지 말고 상수 쪽을 가공", "범위 조건으로 재작성", "암묵적 형 변환", "표현식 인덱스"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/indexes-intro.html", "https://www.postgresql.org/docs/16/indexes-expressional.html", "https://dev.mysql.com/doc/refman/8.4/en/type-conversion.html"]
 concepts: [index-design]
 importance: 3

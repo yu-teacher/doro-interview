@@ -7,7 +7,7 @@ title: "OSI 7계층과 TCP/IP 4계층은 어떻게 다르고, 각 계층에서 �
 keywords: ["OSI 참조 모델", "응용, 전송, 인터넷, 링크", "프레젠테이션과 응용 기능", "TCP와 UDP", "헤더가 붙는 캡슐화"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.rfc-editor.org/rfc/rfc1122.html", "https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml", "https://book.systemsapproach.org/foundation/architecture.html"]
 refs: ["Computer Networks: A Systems Approach, 1.3.2 Encapsulation·1.3.4 OSI Model·1.3.5 Internet Architecture (웹 판)", "Computer Networks: A Systems Approach, 1.3.5 Internet Architecture, 링크 계층의 하위 계층 서술 (웹 판)"]
 concepts: [network-layers]

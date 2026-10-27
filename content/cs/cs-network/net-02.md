@@ -7,7 +7,7 @@ title: "TCP와 UDP의 차이는 무엇이고, 어떤 상황에 각각 쓰나요?
 keywords: ["연결을 먼저 맺고", "연결 없이 데이터그램", "전달, 순서, 중복 방지", "흐름 제어와 혼잡 제어", "DNS 질의", "실시간 음성·영상"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc768.html", "https://www.rfc-editor.org/rfc/rfc8085.html", "https://www.rfc-editor.org/rfc/rfc1035.html", "https://book.systemsapproach.org/e2e/rtp.html"]
 refs: ["Computer Networks: A Systems Approach, 5.4 Transport for Real-Time (RTP), 요구 사항 논의 (웹 판)"]
 concepts: [tcp]

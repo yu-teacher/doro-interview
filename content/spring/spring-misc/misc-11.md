@@ -7,7 +7,7 @@ title: "`@Transactional`이 동작하지 않을 때 원인을 어떻게 찾나�
 keywords: ["프록시", "self-invocation", "접근 제어자", "예외 삼킴", "롤백 규칙", "트랜잭션 로그", "`isActualTransactionActive`"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/annotations.html", "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html", "https://docs.spring.io/spring-framework/reference/core/aop/proxying.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/support/TransactionSynchronizationManager.html", "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/first-example.html"]
 concepts: [declarative-tx, proxy]
 importance: 3

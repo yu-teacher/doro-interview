@@ -7,7 +7,7 @@ title: "ALTER TABLE이 락을 못 얻어 대기만 해도 왜 서비스의 단�
 keywords: ["ACCESS EXCLUSIVE 대기", "앞선 긴 트랜잭션", "뒤따르는 SELECT도 대기", "lock_timeout", "idle in transaction 방치 금지"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/sql-altertable.html", "https://www.postgresql.org/docs/16/runtime-config-client.html", "https://www.postgresql.org/docs/16/functions-info.html", "https://www.postgresql.org/docs/16/view-pg-locks.html"]
 concepts: [online-schema-change, db-locking]
 importance: 1

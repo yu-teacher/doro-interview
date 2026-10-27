@@ -7,7 +7,7 @@ title: "데드락이 발생하는 네 가지 조건은 무엇인가요?"
 keywords: ["상호 배제", "점유와 대기", "비선점", "순환 대기", "하나라도 깨면 예방"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.kernel.org/doc/html/latest/locking/lockdep-design.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, Common Concurrency Problems (threads-bugs), 32.3 Deadlock Bugs, PDF p.5-6", "OSTEP, Common Concurrency Problems (threads-bugs), Conditions for Deadlock, PDF p.7", "OSTEP, Common Concurrency Problems (threads-bugs), Prevention: Circular Wait, PDF p.7-8"]
 concepts: [deadlock]
