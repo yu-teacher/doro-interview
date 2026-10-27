@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AppRoutes } from '../App';
@@ -229,7 +229,7 @@ describe('주제 화면', () => {
   it('문서 제목이 주제 이름이다', async () => {
     open();
     await screen.findByRole('heading', { name: '트랜잭션' });
-    expect(document.title).toBe('트랜잭션 · 도로 면접');
+    await waitFor(() => expect(document.title).toBe('트랜잭션 · 도로 면접'));
   });
 
   it('접근성 구조 위반이 없다', async () => {
