@@ -77,6 +77,37 @@ describe('시험 시작 화면', () => {
     expect(put.headers['X-Interview-Csrf']).toBe('1');
   });
 
+  it('카테고리는 접혀 있고, 고른 주제 수를 카테고리 줄에 보여 준다', async () => {
+    start();
+    await screen.findByRole('button', { name: '시험 시작' });
+    const spring = screen.getByText('스프링').closest('details') as HTMLDetailsElement;
+    expect(spring.open).toBe(false);
+    expect(within(spring).getByText('전체')).toBeTruthy(); // 아무것도 안 골랐다 = 전체
+    fireEvent.click(screen.getByRole('checkbox', { name: '트랜잭션' }));
+    expect(within(spring).getByText('1개 선택')).toBeTruthy();
+    expect(within(screen.getByText('자바').closest('details') as HTMLElement).getByText('전체')).toBeTruthy();
+  });
+
+  it('카테고리 전체 선택·해제와 선택 해제 단추가 주제 범위를 바꾼다', async () => {
+    const id = '33333333-3333-3333-3333-333333333333';
+    vi.spyOn(crypto, 'randomUUID').mockReturnValue(id);
+    const { requests } = start({ [`PUT /interview/api/v1/quiz/${id}`]: okResponse(quizSession([quizItem(1)], { sessionId: id })), [`/interview/api/v1/quiz/${id}`]: quizSession([quizItem(1)], { sessionId: id }) });
+    await screen.findByRole('button', { name: '시험 시작' });
+    fireEvent.click(screen.getByRole('button', { name: '스프링 전체 선택' }));
+    expect((screen.getByRole('checkbox', { name: '트랜잭션' }) as HTMLInputElement).checked).toBe(true);
+    expect((screen.getByRole('checkbox', { name: 'AOP' }) as HTMLInputElement).checked).toBe(true);
+    expect(screen.getByRole('button', { name: '스프링 전체 해제' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: '선택 해제(2)' }));
+    expect((screen.getByRole('checkbox', { name: '트랜잭션' }) as HTMLInputElement).checked).toBe(false);
+    expect(screen.queryByRole('button', { name: /^선택 해제/ })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: '스프링 전체 선택' }));
+    fireEvent.click(screen.getByRole('button', { name: '스프링 전체 해제' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'AOP' }));
+    fireEvent.click(screen.getByRole('button', { name: '시험 시작' }));
+    await screen.findByRole('heading', { level: 2, name: '질문 1' });
+    expect((putStart(requests)[0] as unknown as { body: { topics: string[] } }).body.topics).toEqual(['aop-proxy']);
+  });
+
   it('아무것도 고르지 않으면 범위 키를 보내지 않는다(전부)', async () => {
     const id = '33333333-3333-3333-3333-333333333333';
     vi.spyOn(crypto, 'randomUUID').mockReturnValue(id);

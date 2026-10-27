@@ -12,12 +12,26 @@ import { quizPath, skimPath } from '../routes';
 import { loginUrl, useSession, useSessionKey } from '../session/SessionProvider';
 
 const FIELD = 'min-h-11 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-base';
+/** 눌러서 켜고 끄는 알약. 안쪽은 진짜 체크박스(접근 이름·키보드·스크린 리더는 그대로)이고, 투명하게 알약 전체를 덮어 눌림 영역이 알약과 같다. 상태는 알약 색이 보인다. */
+const PILL =
+  'relative inline-flex min-h-11 cursor-pointer items-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 text-[var(--color-text)] ' +
+  'has-[:checked]:border-[var(--color-accent)] has-[:checked]:bg-[var(--color-accent)] has-[:checked]:font-semibold has-[:checked]:text-[var(--color-accent-contrast)] ' +
+  'has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--color-accent)]';
 const MAX_COUNT = 30;
 /** 시험 범위에서 "내 질문" 을 고르는 가짜 주제(서버와 같은 값). 고르지 않으면 주제 필터가 없을 때만 내 질문이 들어간다. */
 const MINE_TOPIC = '@mine';
 
 function newSessionId(): string {
   return crypto.randomUUID();
+}
+
+function Pill({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
+  return (
+    <label className={PILL}>
+      <input type="checkbox" className="absolute inset-0 size-full cursor-pointer opacity-0" checked={checked} onChange={onChange} />
+      <span>{label}</span>
+    </label>
+  );
 }
 
 interface FormProps {
@@ -79,37 +93,61 @@ function StartForm({ categories, includeUnlearnedDefault }: FormProps) {
   return (
     <form onSubmit={(e) => void submit(e)} className="space-y-6">
       <fieldset className="space-y-2">
-        <legend className="font-bold">주제 (고르지 않으면 전부)</legend>
-        {categories.map((c) => (
-          <div key={c.slug} role="group" aria-label={c.name} className="space-y-1">
-            <p className="text-sm text-[var(--color-muted)]">{c.name}</p>
-            <div className="flex flex-wrap gap-x-4">
-              {c.topics.map((t) => (
-                <label key={t.slug} className="flex min-h-11 items-center gap-2">
-                  <input type="checkbox" className="size-5" checked={topics.has(t.slug)} onChange={() => toggle(topics, t.slug, setTopics)} />
-                  <span>{t.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        ))}
-        <div role="group" aria-label="내 질문" className="space-y-1">
-          <p className="text-sm text-[var(--color-muted)]">내 질문</p>
-          <label className="flex min-h-11 items-center gap-2">
-            <input type="checkbox" className="size-5" checked={topics.has(MINE_TOPIC)} onChange={() => toggle(topics, MINE_TOPIC, setTopics)} />
-            <span>내 질문</span>
-          </label>
+        <div className="flex items-center justify-between gap-2">
+          <legend className="font-bold">주제 (고르지 않으면 전부)</legend>
+          {topics.size > 0 && (
+            <button type="button" onClick={() => setTopics(new Set())} className="min-h-11 px-2 text-sm underline">
+              선택 해제({topics.size})
+            </button>
+          )}
+        </div>
+        {categories.map((c) => {
+          const picked = c.topics.filter((t) => topics.has(t.slug)).length;
+          const all = picked === c.topics.length;
+          return (
+            <details key={c.slug} className="group rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 px-4 font-semibold [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center gap-2">
+                  <span aria-hidden="true" className="inline-block text-[var(--color-muted)] transition-transform group-open:rotate-90">
+                    ›
+                  </span>
+                  {c.name}
+                </span>
+                <span className={`text-sm font-normal ${picked > 0 ? 'text-[var(--color-accent)]' : 'text-[var(--color-muted)]'}`}>{picked > 0 ? `${picked}개 선택` : '전체'}</span>
+              </summary>
+              <div role="group" aria-label={c.name} className="border-t border-[var(--color-border)] p-3">
+                <div className="flex flex-wrap gap-2">
+                  {c.topics.map((t) => (
+                    <Pill key={t.slug} label={t.name} checked={topics.has(t.slug)} onChange={() => toggle(topics, t.slug, setTopics)} />
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = new Set(topics);
+                    c.topics.forEach((t) => (all ? next.delete(t.slug) : next.add(t.slug)));
+                    setTopics(next);
+                  }}
+                  className="mt-2 min-h-11 px-1 text-sm underline"
+                >
+                  {all ? `${c.name} 전체 해제` : `${c.name} 전체 선택`}
+                </button>
+              </div>
+            </details>
+          );
+        })}
+        <div role="group" aria-label="내 질문">
+          <Pill label="내 질문" checked={topics.has(MINE_TOPIC)} onChange={() => toggle(topics, MINE_TOPIC, setTopics)} />
         </div>
       </fieldset>
 
-      <fieldset className="flex flex-wrap items-center gap-x-4">
+      <fieldset className="space-y-2">
         <legend className="font-bold">난이도 (고르지 않으면 전부)</legend>
-        {TIERS.map((t) => (
-          <label key={t} className="flex min-h-11 items-center gap-2">
-            <input type="checkbox" className="size-5" checked={tiers.has(t)} onChange={() => toggle(tiers, t, setTiers)} />
-            <span>{TIER_LABEL[t]}</span>
-          </label>
-        ))}
+        <div className="flex flex-wrap gap-2">
+          {TIERS.map((t) => (
+            <Pill key={t} label={TIER_LABEL[t]} checked={tiers.has(t)} onChange={() => toggle(tiers, t, setTiers)} />
+          ))}
+        </div>
       </fieldset>
 
       <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
