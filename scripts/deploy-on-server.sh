@@ -13,7 +13,7 @@
 #   4) 게이트웨이 경유 확인(짧게 재시도: 재생성 직후 잠깐 연결이 거부될 수 있다). 실패하면 롤백 태그를 되살려 다시 만들고 reload.
 #   서비스 워커 미리 캐시 점검(scripts/check-sw-precache.sh, 게이트웨이 반영 뒤의 배포에서만): 빌드 직후 **배포 전**(새 해시 파일은 200 또는 404 허용, 이동·5xx 는 실패)과
 #   게이트웨이 경유 확인 뒤 **배포 후**(전부 200, 정적 파일이 HTML 로 오면 실패)에 이미지 안의 dist 를 기준으로 돌린다. 실패하면 롤백.
-# 환경변수: DORO_DIR(Doro 체크아웃, 기본 ../Doro). 리허설·점검용(기본값은 운영): INTERVIEW_PROJECT, INTERVIEW_COMPOSE_FILES, INTERVIEW_ENV_FILE, INTERVIEW_HEALTH_TIMEOUT(초, 기본 180), GATEWAY_CONTAINER, CHECK_BASE, CHECK_CURL_ARGS, INTERVIEW_SW_CHECK
+# 환경변수: DORO_DIR(Doro 체크아웃, 기본 ../Doro). 리허설·점검용(기본값은 운영): INTERVIEW_PROJECT, INTERVIEW_COMPOSE_FILES, INTERVIEW_ENV_FILE, INTERVIEW_HEALTH_TIMEOUT(초, 기본 180), INTERVIEW_WEB_BASE_PATH(웹의 공개 하위 경로, 기본 /interview: 서버 .env 에서 읽고, 환경변수가 있으면 그 값), GATEWAY_CONTAINER, CHECK_BASE, CHECK_CURL_ARGS, INTERVIEW_SW_CHECK
 set -Eeuo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -61,8 +61,21 @@ env_has "$ENV_PATH" DORO_IAM_INTERNAL_TOKEN || log "경고: $ENV_PATH 에 DORO_I
 DORO_DIR="${DORO_DIR:-$(cd .. && pwd)/Doro}"
 [ -d "$DORO_DIR/sdk" ] || die "Doro 체크아웃(sdk 디렉터리)이 없다: $DORO_DIR — DORO_DIR=<Doro 체크아웃 경로> 로 지정한다(서버에서는 CI 러너의 Doro 체크아웃을 쓸 수 있다)"
 export DORO_DIR
+# 웹의 공개 하위 경로(예: /interview, 개발 배포는 /dev/interview). 서버 .env 의 INTERVIEW_WEB_BASE_PATH 에서 읽고, 비어 있으면 /interview 다(값은 비밀이 아니다).
+# compose 가 이 값을 웹 이미지 빌드 인자(VITE_BASE_PATH)로 넘긴다. 컨테이너 안의 파일 위치와 직접 확인 주소(/interview/)는 공개 경로와 상관없이 그대로다.
+if [ -z "${INTERVIEW_WEB_BASE_PATH:-}" ]; then
+  INTERVIEW_WEB_BASE_PATH="$(grep -E '^INTERVIEW_WEB_BASE_PATH=' "$ENV_PATH" 2>/dev/null | head -1 | cut -d= -f2- | tr -d "\"'" || true)"
+fi
+INTERVIEW_WEB_BASE_PATH="/$(printf '%s' "${INTERVIEW_WEB_BASE_PATH:-/interview}" | sed -e 's#^/*##' -e 's#/*$##')"
+[ "$INTERVIEW_WEB_BASE_PATH" != "/" ] || INTERVIEW_WEB_BASE_PATH=/interview
+export INTERVIEW_WEB_BASE_PATH
+PUBLIC_BASE="$INTERVIEW_WEB_BASE_PATH"
 compose config -q || die "compose 설정이 올바르지 않다"
-log "계획: 프로젝트=$PROJECT, compose=$COMPOSE_FILES, 게이트웨이 reload·확인=$USE_GATEWAY"
+# 서버의 compose 파일은 배포가 덮어쓰지 않으므로, 기본이 아닌 경로인데 파일에 빌드 인자가 없으면 조용히 /interview 로 빌드된다. 미리 막는다.
+if [ "$PUBLIC_BASE" != /interview ] && ! compose config 2>/dev/null | grep -q 'VITE_BASE_PATH'; then
+  die "공개 경로가 $PUBLIC_BASE 인데 compose 파일(interview-web.build.args)에 VITE_BASE_PATH 가 없다. 서버의 compose 파일에 추가한다"
+fi
+log "계획: 프로젝트=$PROJECT, compose=$COMPOSE_FILES, 게이트웨이 reload·확인=$USE_GATEWAY, 웹 공개 경로=$PUBLIC_BASE"
 if [ "$APPLY" != true ]; then log "--dry-run: 여기서 종료 (--apply 로 반영)"; exit 0; fi
 
 # 1) 롤백 태그(이미지 이름으로)
@@ -101,7 +114,7 @@ log "빌드(이미지 안에서 gradle·npm 빌드: 처음에는 몇 분 걸린�
 compose build || { rollback; exit 1; }
 if [ "$USE_GATEWAY" = true ]; then
   log "서비스 워커 미리 캐시 점검(배포 전)"
-  GATEWAY_URL="$CHECK_BASE" "$SW_CHECK" "$WEB_DIST_SPEC" /interview/ pre || { log "ERROR: 미리 캐시 점검(배포 전) 실패: 새 이미지를 올리지 않는다"; rollback; exit 1; }
+  GATEWAY_URL="$CHECK_BASE" "$SW_CHECK" "$WEB_DIST_SPEC" "$PUBLIC_BASE/" pre || { log "ERROR: 미리 캐시 점검(배포 전) 실패: 새 이미지를 올리지 않는다"; rollback; exit 1; }
 fi
 compose up -d --no-deps interview-api interview-web || { rollback; exit 1; }
 wait_healthy "$API_CONTAINER" || { log "ERROR: $API_CONTAINER 가 제한 시간 안에 healthy 가 되지 않았다"; docker logs --tail 25 "$API_CONTAINER" 2>&1 | sed 's/^/    /'; rollback; exit 1; }
@@ -115,14 +128,14 @@ if [ "$USE_GATEWAY" = true ]; then
   code() { curl $CHECK_CURL_ARGS -o /dev/null -w '%{http_code}' "$CHECK_BASE$1" || echo 000; }
   ok=false
   for _ in 1 2 3 4 5; do
-    web="$(code /interview/)"; api="$(code /interview/api/v1/categories)"
+    web="$(code "$PUBLIC_BASE/")"; api="$(code "$PUBLIC_BASE/api/v1/categories")"
     if [ "$web" = 200 ] && [ "$api" = 200 ]; then ok=true; break; fi
     sleep 2
   done
-  log "확인: /interview/=$web (200 기대), /interview/api/v1/categories=$api (200 기대)"
+  log "확인: $PUBLIC_BASE/=$web (200 기대), $PUBLIC_BASE/api/v1/categories=$api (200 기대)"
   [ "$ok" = true ] || { rollback; exit 1; }
   log "서비스 워커 미리 캐시 점검(배포 후)"
-  GATEWAY_URL="$CHECK_BASE" "$SW_CHECK" "$WEB_DIST_SPEC" /interview/ post || { log "ERROR: 미리 캐시 점검(배포 후) 실패"; rollback; exit 1; }
+  GATEWAY_URL="$CHECK_BASE" "$SW_CHECK" "$WEB_DIST_SPEC" "$PUBLIC_BASE/" post || { log "ERROR: 미리 캐시 점검(배포 후) 실패"; rollback; exit 1; }
 else
   # 게이트웨이 없이: 컨테이너 안에서 직접 확인한다
   docker exec "$API_CONTAINER" wget -qO- http://localhost:8088/api/v1/categories | grep -q '"success":true' || { log "ERROR: API 가 정상 응답을 주지 않는다"; rollback; exit 1; }

@@ -38,6 +38,12 @@ class DoroCurrentUser implements CurrentUser {
     }
 
     @Override
+    public boolean isAdmin() {
+        DoroUser user = DoroUserContext.getCurrentUser();
+        return user != null && user.isAdmin() && id().isPresent();
+    }
+
+    @Override
     public UUID require() {
         return activate().orElseThrow(() -> new InterviewException(ErrorCode.UNAUTHORIZED));
     }

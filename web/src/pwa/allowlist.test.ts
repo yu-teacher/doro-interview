@@ -47,6 +47,19 @@ describe('내비게이션 허용 목록', () => {
   });
 });
 
+describe('기본이 아닌 기준 경로(/dev/interview)', () => {
+  const dev = (p: string) => isAppNavigation(p, '/dev/interview/'); // 서비스 워커는 끝 슬래시가 붙은 Vite base 를 넘긴다
+
+  it('앱 화면은 허용하고 옛 기본 경로·API·자산은 가로채지 않는다', () => {
+    expect(dev('/dev/interview/')).toBe(true);
+    expect(dev('/dev/interview/t/transaction?tier=DEEP')).toBe(true);
+    expect(dev('/dev/interview/q/tx-04')).toBe(true);
+    for (const p of ['/interview/', '/interview/t/transaction', '/dev/interview/api/v1/bff/login', '/dev/interview/assets/index-abc.js', '/dev/', '/dev/interview/t']) {
+      expect(dev(p), p).toBe(false);
+    }
+  });
+});
+
 describe('앱 라우트 ↔ 허용 목록', () => {
   const app = readFileSync('src/App.tsx', 'utf-8');
 

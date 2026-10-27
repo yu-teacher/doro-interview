@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * 현재 로그인 상태. 로그인·콜백·로그아웃은 게이트웨이 뒤의 BFF(doro-bff)가 맡고, 이 서비스는 이 조회만 제공한다(docs/M2-PLAN.md D1).
  * 비로그인·잘못된 토큰·탈퇴한 사용자도 **200**(`authenticated=false`)이라 화면이 401 처리 없이 상태를 알 수 있다.
- * 로그인 뒤 첫 조회에서 이 서비스의 사용자 행이 한 번만 만들어진다. 이메일·역할·세션 id 는 화면에 필요 없어서 싣지 않는다.
+ * 로그인 뒤 첫 조회에서 이 서비스의 사용자 행이 한 번만 만들어진다. 이메일·세션 id 는 화면에 필요 없어서 싣지 않는다. 역할도 문자열로는 싣지 않고, 관리자 전용 링크(일반 허브로 돌아가기)를 보여 주는 데 쓰는 `admin` 불리언만 싣는다.
  */
 @RestController
 @RequestMapping("/api/v1/bff")
@@ -24,7 +24,7 @@ public class SessionController {
     public record SessionResponse(boolean authenticated, SessionUser user) {
     }
 
-    public record SessionUser(UUID userId) {
+    public record SessionUser(UUID userId, boolean admin) {
     }
 
     private final CurrentUser currentUser;
@@ -36,7 +36,7 @@ public class SessionController {
     @GetMapping("/session")
     public ResponseEntity<ApiResponse<SessionResponse>> session() {
         SessionResponse body = currentUser.activate()
-                .map(id -> new SessionResponse(true, new SessionUser(id)))
+                .map(id -> new SessionResponse(true, new SessionUser(id, currentUser.isAdmin())))
                 .orElse(new SessionResponse(false, null));
         // 사용자마다 다르고 로그인·로그아웃으로 바뀌므로 어디에도 저장하지 않는다
         return ResponseEntity.ok().header(HttpHeaders.CACHE_CONTROL, "no-store").body(ApiResponse.success(body));

@@ -79,6 +79,21 @@ class CurrentUserTest extends AbstractAuthTest {
     }
 
     @Test
+    void isAdmin은_ADMIN과_SUPER_ADMIN만_true이고_익명_탈퇴는_false다() {
+        UUID id = UUID.randomUUID();
+        assertThat(currentUser.isAdmin()).isFalse();
+        for (String role : new String[]{"ADMIN", "SUPER_ADMIN"}) {
+            DoroUserContext.setCurrentUser(new DoroUser(id, "a@example.test", UUID.randomUUID(), 0, role));
+            assertThat(currentUser.isAdmin()).as(role).isTrue();
+        }
+        DoroUserContext.setCurrentUser(new DoroUser(id, "a@example.test", UUID.randomUUID(), 0, "USER"));
+        assertThat(currentUser.isAdmin()).isFalse();
+        markDeleted(id);
+        DoroUserContext.setCurrentUser(new DoroUser(id, "a@example.test", UUID.randomUUID(), 0, "ADMIN"));
+        assertThat(currentUser.isAdmin()).isFalse();
+    }
+
+    @Test
     void 사용자_id가_없는_인증은_익명이다() {
         DoroUserContext.setCurrentUser(new DoroUser(null, "anonymous", null, 0, "ANON", null));
         assertThat(currentUser.id()).isEmpty();

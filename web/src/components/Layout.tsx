@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { HUB_PATH, SERVICE_NAME } from '../config';
+import { SERVICE_NAME } from '../config';
 import { loginUrl, useSession } from '../session/SessionProvider';
 import { AnalyticsGate, AnalyticsNotice } from './AnalyticsGate';
 import { ChromeContext, useChromeState } from './chrome';
 import { HubHomeIcon, SearchIcon } from './icons';
 import { SearchBox } from './SearchBox';
+import { DEV_HOME_LABEL, DEV_HOME_PATH } from '../lib/portalLinks';
 import ServiceLauncher from './ServiceLauncher';
 import { TabBar, TABS, useActiveTab } from './TabBar';
 
@@ -94,11 +95,11 @@ export function Layout() {
           본문으로 건너뛰기
         </a>
         <header className="flex flex-wrap items-center gap-x-4 gap-y-2 py-3">
-          {/* 도로 허브(게이트웨이의 `/`)로 나가는 링크: 다른 앱이므로 라우터 링크가 아니라 전체 페이지 이동이다 */}
+          {/* Doro Dev 홈(`/dev/`)으로 나가는 링크: 다른 앱이므로 라우터 링크가 아니라 전체 페이지 이동이다 */}
           <a
-            href={HUB_PATH}
-            aria-label="도로 홈으로"
-            title="도로 홈으로"
+            href={DEV_HOME_PATH}
+            aria-label={`${DEV_HOME_LABEL}으로`}
+            title={`${DEV_HOME_LABEL}으로`}
             className="-mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-md text-[var(--color-muted)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
           >
             <HubHomeIcon />

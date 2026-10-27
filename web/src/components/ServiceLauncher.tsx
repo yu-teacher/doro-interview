@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { loadServices, type LauncherService } from '../lib/servicesManifest';
+import { DEV_HOME_LABEL, DEV_HOME_PATH, HUB_HOME_DESC, HUB_HOME_LABEL, HUB_HOME_PATH } from '../lib/portalLinks';
+import { useSession } from '../session/SessionProvider';
+import { forDeveloperProduct, loadServices, type LauncherService } from '../lib/servicesManifest';
 
 interface ServiceLauncherProps {
   /** 지금 보고 있는 서비스의 id(services.json 의 id). 목록에서 강조한다. */
@@ -7,12 +9,15 @@ interface ServiceLauncherProps {
 }
 
 /**
- * 헤더의 "도로 서비스 목록" 버튼. 누르면 도로 홈과 모든 서비스로 가는 링크가 뜬다.
- * 목록은 허브의 /services.json 에서 읽는다(servicesManifest.ts). 이 앱은 목록을 코드에 두지 않는다.
- * 허브·서비스는 이 앱의 라우터 밖이라 일반 링크(<a>)로 이동한다.
+ * 헤더의 "도로 서비스 목록" 버튼. 누르면 Doro Dev 홈과 개발자 제품의 서비스로 가는 링크가 뜬다.
+ * 목록은 포털의 /services.json 에서 읽는다(servicesManifest.ts). 이 앱은 목록을 코드에 두지 않는다.
+ * 관리자 계정(세션의 admin)에게만 일반 허브(`/`)로 가는 링크가 하나 더 보인다. 일반 사용자·비로그인에게는 허브를 드러내지 않는다.
+ * 포털·서비스는 이 앱의 라우터 밖이라 일반 링크(<a>)로 이동한다.
  * 목록 창은 가장 가까운 position:relative 조상(헤더 오른쪽 묶음)의 오른쪽 끝에 맞춰 열려서 좁은 폰에서도 화면 안에 들어온다.
  */
 export default function ServiceLauncher({ currentId }: ServiceLauncherProps) {
+  const { state } = useSession();
+  const isAdmin = state.status === 'authenticated' && state.admin;
   const [open, setOpen] = useState(false);
   const [services, setServices] = useState<LauncherService[] | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -22,7 +27,7 @@ export default function ServiceLauncher({ currentId }: ServiceLauncherProps) {
     if (!open || services !== null) return;
     let active = true;
     void loadServices().then((list) => {
-      if (active) setServices(list);
+      if (active) setServices(forDeveloperProduct(list));
     });
     return () => {
       active = false;
@@ -82,11 +87,19 @@ export default function ServiceLauncher({ currentId }: ServiceLauncherProps) {
         >
           <ul className="m-0 list-none p-0 text-sm">
             <li>
-              <a href="/" className={linkClass}>
-                <span className="font-semibold">도로 홈</span>
-                <span className="text-xs text-[var(--color-muted)]">모든 서비스 한눈에</span>
+              <a href={DEV_HOME_PATH} className={linkClass}>
+                <span className="font-semibold">{DEV_HOME_LABEL}</span>
+                <span className="text-xs text-[var(--color-muted)]">개발자 서비스 한눈에</span>
               </a>
             </li>
+            {isAdmin && (
+              <li>
+                <a href={HUB_HOME_PATH} className={linkClass}>
+                  <span className="font-semibold">{HUB_HOME_LABEL}</span>
+                  <span className="text-xs text-[var(--color-muted)]">{HUB_HOME_DESC}</span>
+                </a>
+              </li>
+            )}
             {(services ?? []).map((service) => (
               <li key={service.id}>
                 <a
@@ -102,7 +115,7 @@ export default function ServiceLauncher({ currentId }: ServiceLauncherProps) {
           </ul>
           {services === null && <p className="px-3 py-2 text-xs text-[var(--color-muted)]">서비스 목록을 불러오는 중…</p>}
           {services !== null && services.length === 0 && (
-            <p className="px-3 py-2 text-xs text-[var(--color-muted)]">서비스 목록을 불러오지 못했어요. 도로 홈에서 모두 볼 수 있어요.</p>
+            <p className="px-3 py-2 text-xs text-[var(--color-muted)]">서비스 목록을 불러오지 못했어요. {DEV_HOME_LABEL}에서 볼 수 있어요.</p>
           )}
         </nav>
       )}

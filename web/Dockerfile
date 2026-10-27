@@ -4,11 +4,13 @@ WORKDIR /web
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 COPY . .
-RUN npm run build
+# 공개 하위 경로(Vite base). 비우면 /interview. 개발 배포는 /dev/interview 로 빌드한다(게이트웨이가 /interview 로 되돌려 전달한다).
+ARG VITE_BASE_PATH=/interview
+RUN VITE_BASE_PATH="$VITE_BASE_PATH" npm run build
 
 FROM nginx:1.27-alpine
 
-# Vite base(/interview/)와 같은 경로 아래에 파일을 둔다. 게이트웨이가 /interview/ 를 그대로 전달한다.
+# 컨테이너는 공개 경로와 상관없이 항상 /interview/ 아래에 파일을 둔다. 게이트웨이가 공개 경로(기본 /interview/)를 /interview/ 로 전달한다.
 COPY --from=build /web/dist /usr/share/nginx/html/interview
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 

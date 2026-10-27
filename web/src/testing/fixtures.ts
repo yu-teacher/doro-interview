@@ -31,7 +31,7 @@ export function topicView(questions: QuestionSummary[], over: Partial<TopicView>
 }
 
 export const SESSION_URL = '/interview/api/v1/bff/session';
-export const authed = (userId = 'u-1') => ({ authenticated: true, user: { userId } });
+export const authed = (userId = 'u-1', admin?: boolean) => ({ authenticated: true, user: admin === undefined ? { userId } : { userId, admin } });
 export const anonymous = () => ({ authenticated: false });
 
 export function quizItem(seq: number, over: Partial<import('../api/types').QuizItem> = {}): import('../api/types').QuizItem {
