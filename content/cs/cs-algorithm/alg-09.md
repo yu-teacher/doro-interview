@@ -7,7 +7,7 @@ title: "힙 정렬은 어떻게 동작하고 시간 복잡도와 안정성은 �
 keywords: ["힙을 만든 뒤 최댓값 반복 추출", "O(n log n)", "제자리 정렬", "불안정", "선택 정렬의 변형"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/heapSort.html", "https://xlinux.nist.gov/dads/HTML/selectionSort.html", "https://xlinux.nist.gov/dads/HTML/inplacesort.html", "https://opendatastructures.org/"]
 refs: ["Open Data Structures (Java), 11.1.3 Heap-sort, PDF p.245-246", "Open Data Structures (Java), 11.3 Discussion and Exercises 비교표, PDF p.255"]
 concepts: [complexity-sorting, tree-heap]

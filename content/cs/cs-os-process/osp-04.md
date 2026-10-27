@@ -7,7 +7,7 @@ title: "fork()와 exec()는 각각 무엇을 하고, 왜 둘로 나뉘어 있나
 keywords: ["fork는 프로세스 복제", "자식은 0, 부모는 자식 PID", "exec는 프로세스 이미지 교체", "PID 유지", "FD_CLOEXEC"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/fork.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/exec.html", "https://man7.org/linux/man-pages/man2/fork.2.html", "https://man7.org/linux/man-pages/man2/execve.2.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, Interlude: Process API (cpu-api), 5.4 Why? Motivating The API, PDF p.6-7", "OSTEP, Interlude: Process API (cpu-api), Aside: Key Process API Terms, PDF p.11"]
 concepts: [process-management]

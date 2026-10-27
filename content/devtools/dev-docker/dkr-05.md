@@ -7,7 +7,7 @@ title: "Dockerfile의 ENV와 ARG는 무엇이 다르고, 비밀 값을 넣어도
 keywords: ["ARG는 빌드 시점 변수", "ENV는 컨테이너에도 유지", "--build-arg로 전달", "docker history에 값 노출", "비밀 값은 secret 마운트"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://docs.docker.com/reference/dockerfile/", "https://docs.docker.com/build/building/best-practices/", "https://docs.docker.com/build/building/secrets/", "https://docs.docker.com/reference/build-checks/secrets-used-in-arg-or-env/"]
 concepts: [container, externalized-config]
 importance: 2

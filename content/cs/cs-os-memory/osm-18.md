@@ -7,7 +7,7 @@ title: "fork()로 프로세스를 복제하면 메모리를 전부 복사하나�
 keywords: ["페이지 테이블 복제", "쓰기 시점에 페이지 복사", "부모와 자식의 격리 유지", "fork 비용은 페이지 테이블 복제 수준", "쓰기 비용은 나중에 지불"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/fork.html", "https://man7.org/linux/man-pages/man2/fork.2.html", "https://www.kernel.org/doc/html/latest/mm/page_tables.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 23장 Complete Virtual Memory Systems(Other Neat Tricks: demand zeroing, copy-on-write), PDF p.7-8"]
 concepts: [virtual-memory, process-management]

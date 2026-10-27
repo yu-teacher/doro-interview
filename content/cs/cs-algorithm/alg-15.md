@@ -7,7 +7,7 @@ title: "위상 정렬은 언제 가능하고 어떻게 구하며 사이클은 �
 keywords: ["DAG에서만 가능", "간선 u→v이면 u가 앞", "진입 차수 0인 정점부터 처리", "사이클이면 일부만 출력", "순서가 유일하지 않음"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/topologicalSort.html", "https://xlinux.nist.gov/dads/HTML/topologicalOrder.html", "https://xlinux.nist.gov/dads/HTML/directAcycGraph.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/"]
 refs: ["Algorithms (Erickson), 6.2 Detecting Cycles, PDF p.249", "Algorithms (Erickson), 6.3 Topological Sort, PDF p.250-251"]
 concepts: [graph-algorithms]

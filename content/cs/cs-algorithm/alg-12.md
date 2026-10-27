@@ -7,7 +7,7 @@ title: "동적 계획법을 쓸 수 있는 문제의 조건은 무엇이고 분�
 keywords: ["겹치는 부분문제", "최적 부분 구조", "분할 정복은 부분문제가 독립", "서로 다른 부분문제 수"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/dynamicprog.html", "https://xlinux.nist.gov/dads/HTML/principle.html", "https://xlinux.nist.gov/dads/HTML/divideAndConquer.html", "https://xlinux.nist.gov/dads/HTML/memoize.html", "https://xlinux.nist.gov/dads/HTML/knapsackProblem.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/"]
 refs: ["Algorithms (Erickson), 1.6 The Pattern (divide and conquer), PDF p.49", "Algorithms (Erickson), 3.3 Interpunctio Verborum Redux, PDF p.123", "Algorithms (Erickson), 3.4 The Pattern: Smart Recursion, PDF p.123-125", "Algorithms (Erickson), 3.8 Subset Sum, PDF p.134-135"]
 concepts: [recursion-dp]

@@ -7,7 +7,7 @@ title: "스래싱(thrashing)은 무엇이고 왜 발생하며 어떻게 완화�
 keywords: ["작업 집합이 물리 메모리보다 큼", "폴트와 교체가 계속 반복", "실제 연산보다 I/O 대기", "작업 집합 보호·프로세스 수 줄이기", "OOM killer로 압력 해소"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.kernel.org/doc/html/latest/admin-guide/mm/multigen_lru.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://www.kernel.org/doc/html/latest/mm/multigen_lru.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 22장 Beyond Physical Memory: Policies(22.11 Thrashing), PDF p.14"]
 concepts: [virtual-memory]

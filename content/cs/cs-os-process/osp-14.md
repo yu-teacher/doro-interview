@@ -7,7 +7,7 @@ title: "데드락을 예방·회피·탐지하는 방법은 무엇이고 실무�
 keywords: ["락 획득 순서 고정", "은행원 알고리즘 안전 상태", "trylock·타임아웃", "탐지 후 복구", "lockdep 락 순서 검증"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.kernel.org/doc/html/latest/locking/lockdep-design.html", "https://www.kernel.org/doc/html/latest/locking/mutex-design.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, Common Concurrency Problems (threads-bugs), 32.3 Deadlock Bugs(예방), PDF p.6-10", "OSTEP, Common Concurrency Problems (threads-bugs), Deadlock Avoidance via Scheduling, PDF p.12-13", "OSTEP, Common Concurrency Problems (threads-bugs), Detect and Recover, PDF p.13-14", "OSTEP, Common Concurrency Problems (threads-bugs), 32.4 Summary, PDF p.14"]
 concepts: [deadlock]

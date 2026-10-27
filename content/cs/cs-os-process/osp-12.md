@@ -7,7 +7,7 @@ title: "조건 변수는 왜 mutex와 같이 쓰고, 왜 while 루프로 조건�
 keywords: ["wait가 mutex를 원자적으로 해제", "깨어난 뒤 mutex 재획득", "while로 predicate 재검사", "spurious wakeup", "signal 유실"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_cond_wait.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_cond_signal.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, Condition Variables (threads-cv), 30.1 Definition and Routines(상태 변수의 필요), PDF p.4-5", "OSTEP, Condition Variables (threads-cv), 30.2 The Producer/Consumer (Bounded Buffer) Problem, PDF p.9-10", "OSTEP, Condition Variables (threads-cv), Tip: Use While (Not If) For Conditions, PDF p.14"]
 concepts: [race-condition]

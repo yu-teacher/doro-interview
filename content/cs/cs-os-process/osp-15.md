@@ -7,7 +7,7 @@ title: "멀티프로세스와 멀티스레드 중 무엇을 선택하나요?"
 keywords: ["메모리와 장애 격리", "스레드 간 데이터 공유가 빠름", "생성·전환 비용", "공유 데이터 동기화 부담", "스레드 오류가 프로세스 전체에 영향"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://man7.org/linux/man-pages/man7/pthreads.7.html", "https://man7.org/linux/man-pages/man2/fork.2.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/fork.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, Concurrency: An Introduction (threads-intro), 26.1 Why Use Threads?, PDF p.3", "OSTEP, Concurrency: An Introduction (threads-intro), 도입부(스레드 전환과 스택), PDF p.1", "OSTEP, Concurrency: An Introduction (threads-intro), 26.4 Uncontrolled Scheduling, PDF p.9-10"]
 concepts: [thread-process, process-management]

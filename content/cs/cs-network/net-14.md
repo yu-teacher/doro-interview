@@ -7,7 +7,7 @@ title: "ARP는 무엇이고, 같은 네트워크의 호스트에 IP 패킷을 �
 keywords: ["MAC 주소", "브로드캐스트", "자기 MAC 주소를 담아 응답", "ARP 캐시", "같은 링크 안에서만", "Neighbor Discovery"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.rfc-editor.org/rfc/rfc826.html", "https://www.rfc-editor.org/rfc/rfc4861.html", "https://book.systemsapproach.org/internetworking/basic-ip.html"]
 refs: ["Computer Networks: A Systems Approach, 3.3.4 Datagram Forwarding in IP·3.3.6 Address Translation (ARP) (웹 판)"]
 concepts: [network-layers]

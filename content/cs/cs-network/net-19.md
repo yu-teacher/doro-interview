@@ -7,7 +7,7 @@ title: "대역폭이 큰데도 한 TCP 연결이 느린 이유는 무엇이고, 
 keywords: ["대역폭", "RTT", "윈도우를 RTT로 나눈 값", "BDP", "윈도우 스케일 옵션", "slow start"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.rfc-editor.org/rfc/rfc7323.html", "https://www.rfc-editor.org/rfc/rfc5681.html", "https://www.rfc-editor.org/rfc/rfc6298.html", "https://www.rfc-editor.org/rfc/rfc9293.html", "https://book.systemsapproach.org/foundation/performance.html"]
 refs: ["Computer Networks: A Systems Approach, 1.5.1 Bandwidth and Latency·1.5.2 Delay × Bandwidth Product", "Computer Networks: A Systems Approach, 5.2.10 Alternative Design Choices (윈도우와 속도의 이중성) (웹 판)"]
 concepts: [tcp]

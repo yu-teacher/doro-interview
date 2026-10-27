@@ -7,7 +7,7 @@ title: "Nagle 알고리즘과 지연 ACK는 각각 무엇이고, 함께 쓰이�
 keywords: ["아직 ACK를 받지 못한 데이터", "지연 ACK", "0.5초 미만", "서로를 기다리는 지연", "TCP_NODELAY"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc8085.html", "https://book.systemsapproach.org/e2e/tcp.html"]
 refs: ["Computer Networks: A Systems Approach, 5.2.5 Triggering Transmission, Nagle’s Algorithm (웹 판)"]
 concepts: [tcp]

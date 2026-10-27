@@ -7,7 +7,7 @@ title: "페이지 교체 알고리즘 FIFO, LRU, Clock은 각각 어떻게 동�
 keywords: ["FIFO는 가장 먼저 들어온 페이지 교체", "LRU는 가장 오래 쓰지 않은 페이지 교체", "정확한 LRU의 기록 비용", "Clock은 참조 비트로 근사", "실제 OS는 접근 비트 기반 LRU 근사"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.kernel.org/doc/html/latest/mm/multigen_lru.html", "https://www.kernel.org/doc/html/latest/admin-guide/mm/multigen_lru.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 22장 Beyond Physical Memory: Policies(22.3 FIFO, 22.5 Using History: LRU), PDF p.4-5, 7", "OSTEP, 22장 Beyond Physical Memory: Policies(22.7 Implementing Historical Algorithms, 22.8 Approximating LRU), PDF p.11-12"]
 concepts: [virtual-memory]

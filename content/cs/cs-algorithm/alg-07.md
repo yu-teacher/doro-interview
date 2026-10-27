@@ -7,7 +7,7 @@ title: "BFS와 DFS는 어떻게 다르고 각각 언제 쓰나요?"
 keywords: ["큐 기반 BFS", "재귀·스택 기반 DFS", "간선 수 최단 경로는 BFS", "정점과 간선 한 번씩 O(V+E)"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/breadthfirst.html", "https://xlinux.nist.gov/dads/HTML/depthfirst.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/"]
 refs: ["Algorithms (Erickson), 5.5 Whatever-First Search, PDF p.217-219", "Algorithms (Erickson), 5.6 Important Variants, PDF p.219-220", "Algorithms (Erickson), 8.4 Unweighted Graphs: Breadth-First Search, PDF p.296-297", "Algorithms (Erickson), 6.2 Detecting Cycles, PDF p.249", "Algorithms (Erickson), 6.3 Topological Sort, PDF p.250-251"]
 concepts: [graph-algorithms]

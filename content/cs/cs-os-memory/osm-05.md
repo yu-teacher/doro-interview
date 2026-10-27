@@ -7,7 +7,7 @@ title: "내부 단편화와 외부 단편화는 무엇이고, 페이징은 어�
 keywords: ["할당 단위 내부 낭비", "자유 공간이 흩어져 큰 연속 공간 확보 실패", "페이징은 외부 단편화 완화", "마지막 페이지 낭비", "압축(compaction)"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/mmap.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 17장 Free-Space Management(도입, 17.1 Assumptions), PDF p.1-2", "OSTEP, 18장 Paging: Introduction(18.6 Summary), PDF p.12", "OSTEP, 20장 Paging: Smaller Tables(20.1 Simple Solution: Bigger Pages), PDF p.2"]
 concepts: [virtual-memory]

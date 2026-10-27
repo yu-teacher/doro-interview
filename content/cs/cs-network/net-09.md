@@ -7,7 +7,7 @@ title: "TCP 연결을 먼저 닫은 쪽이 TIME_WAIT 상태에 머무는 이유�
 keywords: ["마지막 ACK가 유실", "지연된 세그먼트", "2×MSL", "MSL을 2분", "어느 쪽이 먼저 닫을지", "타임스탬프"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.rfc-editor.org/rfc/rfc9293.html", "https://www.rfc-editor.org/rfc/rfc8085.html", "https://book.systemsapproach.org/applications/traditional.html"]
 refs: ["Computer Networks: A Systems Approach, 9.1.2 World Wide Web (HTTP), 지속 연결 부분 (웹 판)"]
 concepts: [tcp]

@@ -7,7 +7,7 @@ title: "리눅스의 pthread는 사용자 스레드인가요 커널 스레드인
 keywords: ["1:1 스레드 모델", "커널이 스케줄링하는 스레드", "NPTL", "futex", "경쟁 없으면 사용자 공간 처리"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://man7.org/linux/man-pages/man7/pthreads.7.html", "https://man7.org/linux/man-pages/man7/nptl.7.html", "https://man7.org/linux/man-pages/man2/wait.2.html", "https://man7.org/linux/man-pages/man2/futex.2.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_attr_getscope.html", "https://man7.org/linux/man-pages/man3/pthread_attr_setscope.3.html", "https://www.kernel.org/doc/html/latest/locking/rt-mutex.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, Locks (threads-locks), 28.15 Different OS, Different Support(futex 락), PDF p.18-20", "OSTEP, Locks (threads-locks), 28.16 Two-Phase Locks, PDF p.20"]
 concepts: [thread-process]

@@ -7,7 +7,7 @@ title: "브라우저에 도메인을 입력하면 DNS는 어떤 순서로 IP를 
 keywords: ["스텁 리졸버", "재귀 질의", "루트 서버", "반복 질의", "위임 응답", "TTL 동안 캐시"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.rfc-editor.org/rfc/rfc1034.html", "https://www.rfc-editor.org/rfc/rfc1035.html", "https://book.systemsapproach.org/applications/infrastructure.html"]
 refs: ["Computer Networks: A Systems Approach, 9.3.1 Name Service (DNS), 이름 서버와 이름 해석 부분 (웹 판)"]
 concepts: [network-layers]

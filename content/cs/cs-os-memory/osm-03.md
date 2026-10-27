@@ -7,7 +7,7 @@ title: "스택과 힙은 무엇이 다르고, 각각 어떤 경우에 문제가 
 keywords: ["함수 호출 프레임 자동 관리", "힙은 명시적 할당과 해제", "스택 크기 제한", "스택 오버플로", "힙 누수·단편화"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://man7.org/linux/man-pages/man2/getrlimit.2.html", "https://man7.org/linux/man-pages/man3/malloc.3.html", "https://man7.org/linux/man-pages/man2/brk.2.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, 14장 Interlude: Memory API(14.1 Types of Memory, 14.3 The free() Call), PDF p.1-2, 4", "OSTEP, 13장 The Abstraction: Address Spaces(13.3), PDF p.3", "OSTEP, 17장 Free-Space Management(도입, 17.1 Assumptions), PDF p.1-2"]
 concepts: [memory-layout]

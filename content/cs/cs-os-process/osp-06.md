@@ -7,7 +7,7 @@ title: "뮤텍스와 세마포어는 어떻게 다르고 언제 각각 쓰나요
 keywords: ["소유자가 있는 뮤텍스", "카운터 기반 세마포어", "다른 스레드가 post 가능", "동시 N개 허용", "신호 전달 용도"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap03.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/sem_wait.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/sem_post.html", "https://man7.org/linux/man-pages/man7/sem_overview.7.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, Semaphores (threads-sema), 31.1 Semaphores: A Definition, PDF p.2", "OSTEP, Semaphores (threads-sema), 31.2 Binary Semaphores (Locks), PDF p.3-4", "OSTEP, Semaphores (threads-sema), 31.3 Semaphores For Ordering, PDF p.4-5", "OSTEP, Semaphores (threads-sema), Tip: Setting The Value Of A Semaphore, PDF p.7", "OSTEP, Semaphores (threads-sema), 31.7 Thread Throttling, 31.8 How To Implement Semaphores, PDF p.16"]
 concepts: [race-condition]

@@ -7,7 +7,7 @@ title: "컨텍스트 스위치는 무엇이고 왜 비용이 드나요? PCB는 �
 keywords: ["실행 상태 저장·복원", "PCB", "프로그램 카운터·레지스터", "순수 오버헤드", "캐시·TLB 영향"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://man7.org/linux/man-pages/man7/sched.7.html", "https://www.kernel.org/doc/html/latest/locking/mutex-design.html", "https://man7.org/linux/man-pages/man2/fork.2.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, Mechanism: Limited Direct Execution (cpu-mechanisms), Saving and Restoring Context, PDF p.9-10", "OSTEP, The Abstraction: The Process (cpu-intro), 4.5 Data Structures(PCB), PDF p.7-9", "OSTEP, Scheduling: Introduction (cpu-sched), 7.7 Round Robin(전환 비용·캐시·TLB 상태), PDF p.8", "OSTEP, Paging: Faster Translations (vm-tlbs), 19.5 TLB Issue: Context Switches, PDF p.9-10", "OSTEP, Concurrency: An Introduction (threads-intro), 도입부(스레드 전환), PDF p.1"]
 concepts: [process-management, thread-process]

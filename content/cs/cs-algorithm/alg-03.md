@@ -7,7 +7,7 @@ title: "병합 정렬은 어떻게 동작하고, 왜 O(n log n)이며 공간은 
 keywords: ["분할 후 병합", "재귀 깊이 log n", "단계마다 n번 비교", "추가 공간", "안정 정렬"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/mergesort.html", "https://xlinux.nist.gov/dads/HTML/divideAndConquer.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/", "https://opendatastructures.org/"]
 refs: ["Algorithms (Erickson), 1.4 Mergesort, PDF p.45-46", "Algorithms (Erickson), 1.7 Recursion Trees, PDF p.50-51", "Open Data Structures (Java), 11.3 Discussion and Exercises 비교표, PDF p.255"]
 concepts: [complexity-sorting, recursion-dp]

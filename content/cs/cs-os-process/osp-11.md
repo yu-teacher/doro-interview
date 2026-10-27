@@ -7,7 +7,7 @@ title: "스핀락과 뮤텍스는 어떻게 다르고, 언제 스핀락이 유�
 keywords: ["바쁜 대기", "잠들지 않고 반복 확인", "임계 구역이 매우 짧을 때", "CPU 낭비", "컨텍스트 스위치 회피"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_spin_lock.html", "https://www.kernel.org/doc/html/latest/locking/mutex-design.html", "https://www.kernel.org/doc/html/latest/locking/spinlocks.html", "https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html", "https://pages.cs.wisc.edu/~remzi/OSTEP/"]
 refs: ["OSTEP, Locks (threads-locks), 28.7-28.8 Spin Locks and Evaluating Spin Locks, PDF p.9-10", "OSTEP, Locks (threads-locks), 28.13 A Simple Approach: Just Yield, PDF p.15", "OSTEP, Locks (threads-locks), 28.16 Two-Phase Locks, PDF p.20"]
 concepts: [race-condition]

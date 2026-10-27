@@ -7,7 +7,7 @@ title: "컨테이너를 root로 실행하면 왜 위험하고, 비루트 사용�
 keywords: ["기본 사용자는 root", "USER로 비루트 전환", "침해 시 영향 축소", "capability 제한", "명시적 UID와 GID"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://docs.docker.com/engine/security/", "https://docs.docker.com/build/building/best-practices/", "https://docs.docker.com/reference/dockerfile/", "https://docs.docker.com/engine/security/rootless/", "https://docs.docker.com/engine/containers/run/"]
 concepts: [container]
 importance: 1

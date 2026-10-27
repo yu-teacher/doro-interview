@@ -7,7 +7,7 @@ title: "재귀 함수에 베이스 케이스가 없거나 재귀가 너무 깊�
 keywords: ["베이스 케이스", "호출마다 스택 프레임", "StackOverflowError", "파이썬 재귀 한도", "반복문이나 명시적 스택으로 변환"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/recursion.html", "https://xlinux.nist.gov/dads/HTML/tailRecursion.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackOverflowError.html", "https://docs.python.org/3/library/sys.html", "https://jeffe.cs.illinois.edu/teaching/algorithms/"]
 refs: ["Algorithms (Erickson), 1.2 Simplify and Delegate, PDF p.41", "Algorithms (Erickson), 5.5 Whatever-First Search, PDF p.217"]
 concepts: [recursion-dp, memory-layout]
