@@ -7,7 +7,7 @@ title: "ping과 traceroute는 ICMP와 TTL을 어떻게 이용해 동작하나요
 keywords: ["ICMP Echo Request", "Echo Reply", "TTL", "0이 되면", "Time Exceeded", "별표"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.rfc-editor.org/rfc/rfc792.html", "https://www.rfc-editor.org/rfc/rfc791.html", "https://www.rfc-editor.org/rfc/rfc1122.html", "https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml"]
 concepts: [network-layers]
 importance: 2

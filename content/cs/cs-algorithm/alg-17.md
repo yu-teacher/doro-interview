@@ -7,7 +7,7 @@ title: "꼬리 재귀는 스택을 쓰지 않나요? 자바와 파이썬에서�
 keywords: ["꼬리 호출 최적화는 선택 사항", "스택 프레임 재사용", "자바·파이썬은 깊이 제한에 걸림", "컴파일러 최적화 수준에 의존", "반복문으로 직접 변환"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://xlinux.nist.gov/dads/HTML/tailRecursion.html", "https://docs.python.org/3/library/sys.html", "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackOverflowError.html"]
 concepts: [recursion-dp]
 importance: 1

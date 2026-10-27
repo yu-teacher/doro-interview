@@ -7,7 +7,7 @@ title: "URL 에 한글이나 공백, & 같은 문자를 넣을 때 왜 퍼센트
 keywords: ["예약 문자는 구분자 역할", "% 뒤 16진수 두 자리", "UTF-8 바이트 단위 인코딩", "비예약 문자는 그대로", "두 번 인코딩 금지"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.rfc-editor.org/rfc/rfc3986.html"]
 concepts: [http-protocol]
 importance: 2

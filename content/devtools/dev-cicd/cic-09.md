@@ -7,7 +7,7 @@ title: "matrix 전략은 무엇이고, include·exclude, fail-fast는 어떻게 
 keywords: ["변수 조합마다 job 생성", "include로 조합 추가·확장", "exclude로 조합 제외", "fail-fast 기본 동작", "버전 값은 문자열로 따옴표"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations", "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax", "https://docs.github.com/en/actions/tutorials/build-and-test-code/java-with-gradle"]
 concepts: [ci-pipeline]
 importance: 1

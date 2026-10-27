@@ -7,7 +7,7 @@ title: "트랜잭션을 ROLLBACK하면 serial(시퀀스) 값도 되돌아가나�
 keywords: ["시퀀스", "롤백되지 않습니다", "즉시 다른 모든 트랜잭션에 보이는", "id에 공백", "빈틈없이"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/transaction-iso.html", "https://www.postgresql.org/docs/16/sql-truncate.html", "https://www.postgresql.org/docs/16/functions-sequence.html"]
 concepts: [acid, schema-design]
 importance: 1

@@ -7,7 +7,7 @@ title: "Redis의 `MULTI`/`EXEC` 트랜잭션은 무엇을 보장하고, 중간�
 keywords: ["MULTI EXEC 순차 실행", "다른 클라이언트 명령이 끼어들지 않음", "롤백 미지원", "큐잉 중 오류는 EXECABORT", "실행 중 오류는 나머지 계속"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://redis.io/docs/latest/develop/using-commands/transactions/"]
 concepts: [redis, acid]
 importance: 2

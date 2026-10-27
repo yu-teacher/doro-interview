@@ -7,7 +7,7 @@ title: "기본키로 UUID와 bigint identity 중 무엇을 고르나요? 크기�
 keywords: ["UUID 16바이트", "bigint 8바이트", "무작위 UUID는 삽입 위치가 흩어짐", "분산 환경 유일성", "InnoDB 클러스터드 인덱스"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/datatype-uuid.html", "https://www.postgresql.org/docs/16/functions-uuid.html", "https://www.postgresql.org/docs/current/functions-uuid.html", "https://www.postgresql.org/docs/16/sql-cluster.html", "https://dev.mysql.com/doc/refman/8.4/en/innodb-index-types.html", "https://dev.mysql.com/doc/refman/8.4/en/miscellaneous-functions.html"]
 concepts: [schema-design, index-structure, id-generation]
 importance: 2

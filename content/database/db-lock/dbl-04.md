@@ -7,7 +7,7 @@ title: "갱신 손실(lost update)은 무엇이고 PostgreSQL에서는 어떻게
 keywords: ["읽고 계산해 쓰기 덮어쓰기", "balance = balance + n 원자적 UPDATE", "SELECT FOR UPDATE", "REPEATABLE READ 직렬화 실패 재시도"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/transaction-iso.html", "https://www.postgresql.org/docs/16/explicit-locking.html", "https://www.postgresql.org/docs/16/applevel-consistency.html"]
 concepts: [race-condition, isolation-level]
 importance: 3

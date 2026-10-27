@@ -7,7 +7,7 @@ title: "Maven의 라이프사이클과 단계(phase)는 무엇이고, `mvn packa
 keywords: ["default 라이프사이클", "앞 단계까지 순서대로 실행", "phase에 묶인 plugin goal", "확실하지 않으면 verify"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html"]
 concepts: [build-tool]
 importance: 2

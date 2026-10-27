@@ -7,7 +7,7 @@ title: "Redis Pub/Sub 메시지는 구독자가 없거나 연결이 끊겼을 �
 keywords: ["최대 한 번 전달", "구독자 없으면 소실", "끊기면 메시지 영구 손실", "Streams는 메시지 영속", "RESP2 구독 중 일부 명령만"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://redis.io/docs/latest/develop/pubsub/"]
 concepts: [messaging, redis]
 importance: 1

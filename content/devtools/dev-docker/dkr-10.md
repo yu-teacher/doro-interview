@@ -7,7 +7,7 @@ title: "도커 이미지 크기를 줄이는 방법에는 어떤 것들이 있�
 keywords: ["작은 베이스 이미지", "멀티 스테이지 빌드", "불필요한 패키지 설치 금지", "같은 RUN에서 캐시 정리", "dockerignore로 컨텍스트 축소"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://docs.docker.com/build/building/best-practices/", "https://docs.docker.com/build/building/multi-stage/", "https://docs.docker.com/build/building/context/"]
 concepts: [container]
 importance: 2

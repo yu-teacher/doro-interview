@@ -7,7 +7,7 @@ title: "이미 만든 커밋을 고치거나 여러 커밋을 하나로 합치�
 keywords: ["git commit --amend", "interactive rebase", "squash/fixup/reword/drop", "새 커밋으로 대체된 히스토리", "메시지 첫 줄 요약"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://git-scm.com/docs/git-commit", "https://git-scm.com/docs/git-rebase", "https://git-scm.com/docs/gitworkflows", "https://git-scm.com/book/ko/v2/Git-%EB%8F%84%EA%B5%AC-%ED%9E%88%EC%8A%A4%ED%86%A0%EB%A6%AC-%EB%8B%A8%EC%9E%A5%ED%95%98%EA%B8%B0"]
 concepts: [git-undo, git-branching]
 importance: 2

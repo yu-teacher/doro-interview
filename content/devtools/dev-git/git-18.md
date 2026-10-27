@@ -7,7 +7,7 @@ title: "`git reset --hard`로 커밋을 날렸을 때 `git reflog`로 복구할 
 keywords: ["reflog는 ref 이동 기록", "HEAD@{n}으로 복구", "reset --hard로 복구", "미커밋 변경은 복구 불가", "로컬 전용, 만료 기한"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://git-scm.com/docs/git-reflog", "https://git-scm.com/docs/git-config", "https://git-scm.com/book/ko/v2/Git%EC%9D%98-%EB%82%B4%EB%B6%80-%EC%9A%B4%EC%98%81-%EB%B0%8F-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%B3%B5%EA%B5%AC", "https://git-scm.com/docs/git-reset"]
 concepts: [git-undo]
 importance: 2

@@ -7,7 +7,7 @@ title: "INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL JOIN, CROSS JOIN은 각각 어�
 keywords: ["INNER는 매칭 행만", "LEFT는 왼쪽 행 전부 유지", "FULL은 양쪽 유지", "CROSS는 곱집합", "매칭 없으면 NULL"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/queries-table-expressions.html", "https://dev.mysql.com/doc/refman/8.4/en/join.html"]
 concepts: [join-query]
 importance: 3

@@ -7,7 +7,7 @@ title: "정규화는 무엇이고 1NF, 2NF, 3NF는 각각 무엇을 없애나요
 keywords: ["중복과 갱신 이상 제거", "1NF 원자값", "2NF 부분 함수 종속 제거", "3NF 이행 종속 제거", "반정규화 트레이드오프"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/ddl-constraints.html"]
 concepts: [schema-design]
 importance: 3

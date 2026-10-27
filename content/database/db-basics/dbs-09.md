@@ -7,7 +7,7 @@ title: "SQL은 어떤 순서로 처리되고, 그래서 WHERE에서 SELECT 별�
 keywords: ["FROM, WHERE, GROUP BY, HAVING 순서", "SELECT 이후 DISTINCT와 ORDER BY", "WHERE에서 별칭 불가", "ORDER BY는 별칭 가능", "논리적 순서와 실제 실행은 다름"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.postgresql.org/docs/16/queries-table-expressions.html", "https://www.postgresql.org/docs/16/queries-select-lists.html", "https://www.postgresql.org/docs/16/queries-order.html", "https://www.postgresql.org/docs/16/tutorial-window.html", "https://www.postgresql.org/docs/16/sql-select.html", "https://dev.mysql.com/doc/refman/8.4/en/problems-with-alias.html", "https://dev.mysql.com/doc/refman/8.4/en/select.html"]
 concepts: [sql-aggregation]
 importance: 2

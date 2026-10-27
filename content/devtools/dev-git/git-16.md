@@ -7,7 +7,7 @@ title: "이미 push해서 다른 사람이 쓰는 브랜치를 rebase하면 안 
 keywords: ["rebase는 커밋을 새로 만듦", "같은 내용 커밋이 중복", "force push 필요", "동료의 로컬 히스토리와 불일치", "push 전 정리는 괜찮음"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://git-scm.com/docs/git-rebase", "https://git-scm.com/book/ko/v2/Git-%EB%B8%8C%EB%9E%9C%EC%B9%98-Rebase-%ED%95%98%EA%B8%B0", "https://git-scm.com/docs/git-push"]
 concepts: [git-branching]
 importance: 2

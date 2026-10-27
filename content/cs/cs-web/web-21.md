@@ -7,7 +7,7 @@ title: "POST 요청이 타임아웃 났을 때 그냥 다시 보내도 되나요
 keywords: ["POST는 멱등 아님", "비멱등 자동 재시도 금지", "서버에서는 이미 처리됐을 수 있음", "클라이언트가 만드는 요청 식별자", "서버 측 중복 제거"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://www.rfc-editor.org/rfc/rfc9110.html"]
 concepts: [idempotency, http-protocol]
 importance: 2

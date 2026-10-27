@@ -7,7 +7,7 @@ title: "Open-in-view(OSIV)는 무엇이고 켜 두면 어떤 문제가 있나요
 keywords: ["OSIV", "spring.jpa.open-in-view", "커넥션 점유", "서비스에서 DTO 변환"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-boot/reference/data/sql.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/orm/jpa/support/OpenEntityManagerInViewInterceptor.html", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/orm/jpa/support/OpenEntityManagerInViewFilter.html"]
 concepts: [fetch-strategy, connection-pool]
 importance: 2

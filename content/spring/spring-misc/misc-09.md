@@ -7,7 +7,7 @@ title: "스프링에서 가상 스레드는 어떻게 쓰나요?"
 keywords: ["JDK 21", "`spring.threads.virtual.enabled`", "VirtualThreadTaskExecutor", "pinning", "커넥션 풀이 새 병목"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://docs.spring.io/spring-boot/reference/features/task-execution-and-scheduling.html", "https://docs.spring.io/spring-boot/appendix/application-properties/index.html", "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-6.1-Release-Notes", "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/task/VirtualThreadTaskExecutor.html", "https://docs.spring.io/spring-boot/reference/features/spring-application.html"]
 concepts: [virtual-thread, thread-pool]
 importance: 2

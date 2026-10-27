@@ -7,7 +7,7 @@ title: "JUnit의 `assertEquals` 같은 단언과 AssertJ의 `assertThat`은 무�
 keywords: ["static 단언 메서드", "assertThat 체이닝", "읽기 쉬운 실패 메시지", "소프트 단언", "assertAll"]
 has_extra: false
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://docs.junit.org/5.14.4/writing-tests/assertions.html", "https://assertj.github.io/doc/", "https://docs.spring.io/spring-boot/reference/testing/test-scope-dependencies.html", "https://javadoc.io/static/org.assertj/assertj-core/3.27.6/org/assertj/core/api/SoftAssertions.html"]
 concepts: [mocking-junit]
 importance: 2

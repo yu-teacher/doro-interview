@@ -7,7 +7,7 @@ title: "`.gitignore`에 파일을 추가했는데도 Git이 계속 그 파일의
 keywords: [".gitignore는 추적 안 된 파일에만 적용", "이미 추적 중인 파일", "git rm --cached", "커밋 후 .gitignore 반영", "과거 히스토리에는 남음"]
 has_extra: true
 status: REVIEWED
-reviewed_at: 2026-10-20
+reviewed_at: 2026-10-27
 sources: ["https://git-scm.com/docs/gitignore", "https://git-scm.com/docs/git-rm"]
 concepts: [git-internals]
 importance: 2
