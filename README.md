@@ -91,7 +91,7 @@ api      → 전부                          HTTP 합성
 
 ## 로컬에서 실행하기
 
-필요: Docker, Java 25, Node 24, Python 3, 형제 디렉터리의 [Doro](https://github.com/yu-teacher/doro) 체크아웃(`../Doro`, 백엔드가 SDK를 소스로 빌드합니다), Playwright 내장 Chromium.
+필요: Docker, Java 25, Node 24, Python 3, 형제 디렉터리의 [Doro](https://github.com/yu-teacher/doro) 체크아웃(`../Doro`, 백엔드가 SDK를 소스로 빌드합니다). SDK 버전은 `.doro-sdk-ref`의 태그로 고정합니다. CI와 배포는 그 태그를 받고, 로컬도 같은 태그로 맞추려면 `git -C ../Doro checkout $(cat .doro-sdk-ref)`, Playwright 내장 Chromium.
 
 ```bash
 cd web && npm ci && npx playwright install chromium && cd ..
