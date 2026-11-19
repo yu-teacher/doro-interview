@@ -8,7 +8,7 @@ COPY . .
 ARG VITE_BASE_PATH=/interview
 RUN VITE_BASE_PATH="$VITE_BASE_PATH" npm run build
 
-FROM nginx:1.27-alpine
+FROM nginx:1.31.9-alpine
 
 # 컨테이너는 공개 경로와 상관없이 항상 /interview/ 아래에 파일을 둔다. 게이트웨이가 공개 경로(기본 /interview/)를 /interview/ 로 전달한다.
 COPY --from=build /web/dist /usr/share/nginx/html/interview
