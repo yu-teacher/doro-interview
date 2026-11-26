@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { installApi, MINE_ID, QUIZ_ACTIVE_ID, QUIZ_DONE_ID, type SessionMode } from './fixtures';
+import { installApi, MINE_ID, MOCK_ACTIVE_ID, MOCK_DONE_ID, QUIZ_ACTIVE_ID, QUIZ_DONE_ID, type SessionMode } from './fixtures';
 import { auditAxe, auditLayout } from './mobileAudit';
 
 /** 화면 8종(+오류)을 라이트·다크 모드로 열어 레이아웃과 접근성(색 대비 포함)을 실제 브라우저에서 잰다. */
@@ -90,6 +90,20 @@ const PAGES: Case[] = [
     },
   },
   { name: '시험 결과', path: `/quiz/${QUIZ_DONE_ID}`, session: 'authenticated', ready: (p) => p.getByRole('link', { name: /사전에서 보기/ }).first().waitFor() },
+  // M7a: 꼬리질문 모의면접
+  { name: '모의면접 시작', path: '/mock', session: 'authenticated', ready: (p) => p.getByRole('button', { name: '모의면접 시작' }).waitFor() },
+  { name: '모의면접 시작(비로그인)', path: '/mock', ready: (p) => p.getByRole('link', { name: '로그인하고 모의면접 보기' }).waitFor() },
+  { name: '모의면접 진행(꼬리질문)', path: `/mock/${MOCK_ACTIVE_ID}`, session: 'authenticated', ready: (p) => p.getByTestId('speak-timer').waitFor() },
+  {
+    name: '모의면접 진행(답 적기·모범 답변 공개)', path: `/mock/${MOCK_ACTIVE_ID}`, session: 'authenticated',
+    ready: (p) => p.getByTestId('speak-timer').waitFor(),
+    act: async (p) => {
+      await p.getByText('답 적어 두기 (선택)').click();
+      await p.getByRole('button', { name: '모범 답변 보기' }).click();
+      await p.getByRole('button', { name: '맞음' }).waitFor();
+    },
+  },
+  { name: '모의면접 결과', path: `/mock/${MOCK_DONE_ID}`, session: 'authenticated', ready: (p) => p.getByRole('list', { name: '질문 줄기' }).waitFor() },
   { name: '내 현황', path: '/stats', session: 'authenticated', ready: (p) => p.getByRole('region', { name: '자주 틀린 질문' }).waitFor() },
   { name: '훑기 주제 선택', path: '/skim', ready: (p) => p.getByRole('link', { name: 'JPA' }).waitFor() },
   { name: '훑기(키워드 공개)', path: '/skim/transaction', ready: (p) => p.getByRole('button', { name: '키워드 보기' }).waitFor(), act: (p) => p.getByRole('button', { name: '키워드 보기' }).click() },

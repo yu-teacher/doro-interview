@@ -86,6 +86,28 @@ const doneSession = quizSession(
   [quizItem(1, { result: 'CORRECT', seconds: 40 }), quizItem(2, { result: 'WRONG', seconds: 95, answerText: LONG_NOTE_SHORT, feedback: LONG_FEEDBACK }), quizItem(3, { result: 'SKIPPED', seconds: 3 })],
   '2026-10-20T00:10:00Z',
 );
+// 모의면접(docs/M7-PLAN.md): 진행 중(꼬리질문 2단계를 묻는 중)과 끝난 세션
+export const MOCK_ACTIVE_ID = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
+export const MOCK_DONE_ID = 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee';
+const mockTurn = (seq: number, origin: string, depth: number, parentSeq: number | null, over: Record<string, unknown> = {}) => ({
+  ...quizItem(seq), parentSeq, depth, origin, ...over,
+});
+const mockSession = (id: string, turns: unknown[], finishedAt: string | null) => ({
+  sessionId: id, mainCount: 3, plannedMains: 3, maxDepth: 2, includeUnlearned: false, startedAt: '2026-11-26T00:00:00Z', finishedAt, turns,
+});
+const mockActive = mockSession(MOCK_ACTIVE_ID, [
+  mockTurn(1, 'MAIN', 0, null, { result: 'CORRECT', seconds: 50 }),
+  mockTurn(2, 'LINK', 1, 1, { result: 'CORRECT', seconds: 40 }),
+  mockTurn(3, 'LINK', 2, 2),
+], null);
+const mockDone = mockSession(MOCK_DONE_ID, [
+  mockTurn(1, 'MAIN', 0, null, { result: 'CORRECT', seconds: 50 }),
+  mockTurn(2, 'LINK', 1, 1, { result: 'CORRECT', seconds: 40 }),
+  mockTurn(3, 'LINK', 2, 2, { result: 'WRONG', seconds: 95 }),
+  mockTurn(4, 'MAIN', 0, null, { result: 'WRONG', seconds: 70 }),
+  mockTurn(5, 'PREREQ', 0, 4, { result: 'CORRECT', seconds: 30 }),
+  mockTurn(6, 'MAIN', 0, null, { result: 'SKIPPED', seconds: 3 }),
+], '2026-11-26T00:20:00Z');
 const mineItem = (i: number, over: Record<string, unknown> = {}) => ({
   id: i === 1 ? MINE_ID : `cccccccc-cccc-4ccc-8ccc-${String(i).padStart(12, '0')}`, slug: '', title: i % 2 === 1 ? `강사님이 짚어 준 질문 ${i}` : LONG_TITLE,
   answerText: i % 3 === 1 ? '' : `${LONG_TOKEN} 가 하는 일을 내 말로 정리한 답입니다.\n${'길게 이어지는 설명 문장입니다. '.repeat(10)}`,
@@ -144,6 +166,10 @@ export async function installApi(page: Page, session: SessionMode = 'anonymous',
         return route.fulfill(authenticated ? ok(stats) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
       case path === '/v1/review-candidates':
         return route.fulfill(authenticated ? ok(reviewCandidates) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
+      case path === `/v1/mock/${MOCK_ACTIVE_ID}`:
+        return route.fulfill(authenticated ? ok(mockActive) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
+      case path === `/v1/mock/${MOCK_DONE_ID}`:
+        return route.fulfill(authenticated ? ok(mockDone) : fail(401, 'AUTH-401-01', '로그인이 필요합니다.'));
       case path === `/v1/quiz/${ACTIVE_ID}`:
         return route.fulfill(ok(activeSession));
       case path === `/v1/quiz/${DONE_ID}`:

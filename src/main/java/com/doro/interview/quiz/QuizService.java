@@ -194,16 +194,25 @@ public class QuizService {
         Instant now = clock.instant();
         jdbc.update("UPDATE quiz_item SET result = ?, seconds = ?, answer_text = ?, answered_at = ? WHERE session_id = ? AND seq = ?",
                 result.name(), seconds, answer, toOffset(now), sessionId, seq);
-        if (result != Result.SKIPPED) {
-            boolean wrong = result == Result.WRONG;
-            jdbc.update("""
-                    INSERT INTO quiz_question_stats (user_id, question_slug, ask_count, miss_count, last_asked_at, last_result)
-                    VALUES (?, ?, 1, ?, ?, ?)
-                    ON CONFLICT (user_id, question_slug) DO UPDATE SET ask_count = quiz_question_stats.ask_count + 1,
-                        miss_count = quiz_question_stats.miss_count + EXCLUDED.miss_count,
-                        last_asked_at = EXCLUDED.last_asked_at, last_result = EXCLUDED.last_result""",
-                    userId, row.get("question_slug"), wrong ? 1 : 0, toOffset(now), result.name());
+        recordStats(jdbc, userId, (String) row.get("question_slug"), result, now);
+    }
+
+    /**
+     * 출제 통계에 결과 하나를 반영한다(맞음·틀림만, 건너뛰기는 기록하지 않는다). 시험과 모의면접(docs/M7-PLAN.md D6)이 같은 규칙으로 쓴다.
+     * 호출하는 쪽이 같은 결과를 두 번 반영하지 않게 잠가야 한다.
+     */
+    static void recordStats(JdbcTemplate jdbc, UUID userId, String questionSlug, Result result, Instant now) {
+        if (result == Result.SKIPPED) {
+            return;
         }
+        boolean wrong = result == Result.WRONG;
+        jdbc.update("""
+                INSERT INTO quiz_question_stats (user_id, question_slug, ask_count, miss_count, last_asked_at, last_result)
+                VALUES (?, ?, 1, ?, ?, ?)
+                ON CONFLICT (user_id, question_slug) DO UPDATE SET ask_count = quiz_question_stats.ask_count + 1,
+                    miss_count = quiz_question_stats.miss_count + EXCLUDED.miss_count,
+                    last_asked_at = EXCLUDED.last_asked_at, last_result = EXCLUDED.last_result""",
+                userId, questionSlug, wrong ? 1 : 0, toOffset(now), result.name());
     }
 
     /** 시험을 끝낸다(멱등). 안 푼 문항은 그대로 비어 있다. */
@@ -293,7 +302,7 @@ public class QuizService {
         return new SessionView(s.sessionId(), s.plannedCount(), s.includeUnlearned(), s.mode(), s.startedAt(), s.finishedAt(), List.copyOf(items));
     }
 
-    private Map<String, Stat> statsFor(UUID userId, List<String> pool) {
+    Map<String, Stat> statsFor(UUID userId, java.util.Collection<String> pool) {
         Map<String, Stat> stats = new HashMap<>();
         Set<String> inPool = new HashSet<>(pool);
         jdbc.query("SELECT question_slug, ask_count, miss_count, last_asked_at FROM quiz_question_stats WHERE user_id = ?", rs -> {
@@ -323,12 +332,12 @@ public class QuizService {
         return json.writeValueAsString(map);
     }
 
-    private static OffsetDateTime toOffset(Instant instant) {
+    static OffsetDateTime toOffset(Instant instant) {
         return OffsetDateTime.ofInstant(instant, ZoneOffset.UTC);
     }
 
     /** 공백뿐인 답은 "답 없음"(null)이다. NUL(PostgreSQL TEXT 가 못 담는다)과 길이 초과는 400. */
-    private static String normalizeAnswer(String text) {
+    static String normalizeAnswer(String text) {
         if (text == null) {
             return null;
         }

@@ -3,6 +3,7 @@ package com.doro.interview.catalog;
 import com.doro.interview.catalog.CatalogViews.CategoryView;
 import com.doro.interview.catalog.CatalogViews.ConceptDetail;
 import com.doro.interview.catalog.CatalogViews.ConceptView;
+import com.doro.interview.catalog.CatalogViews.LinkEdge;
 import com.doro.interview.catalog.CatalogViews.QuestionHeading;
 import com.doro.interview.catalog.CatalogViews.QuestionIndexEntry;
 import com.doro.interview.catalog.CatalogViews.QuestionView;
@@ -53,6 +54,12 @@ public interface CatalogReader {
      * (카테고리·주제 정렬 순서, 주제 안에서는 표시 순서) 최대 {@code limit} 개를 고른다. 없으면 빈 목록.
      */
     List<QuestionHeading> featuredQuestions(int limit);
+
+    /**
+     * 주어진 종류의 질문 연결 전부(사람이 지정한 방향 그대로, from → to). **양 끝이 모두 보이는 질문**인 연결만 나온다.
+     * 순서는 from, 대상의 tier(기본·심화·함정), 대상의 표시 순서. 모의면접(docs/M7-PLAN.md)이 꼬리질문(FOLLOWUP)·기초 확인(PREREQ)에 쓴다.
+     */
+    List<LinkEdge> visibleLinks(String kind);
 
     /** 주어진 slug 중 **보이는** 질문의 제목·tier·주제(모범 답변 없음). 보이지 않는 질문은 결과에 없다. */
     Map<String, QuestionHeading> visibleQuestionHeadings(Collection<String> slugs);

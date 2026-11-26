@@ -207,6 +207,45 @@ export interface QuizStartRequest {
   mode?: QuizMode;
 }
 
+/** 모의면접 턴의 출처(docs/M7-PLAN.md): 본 질문, 꼬리질문(FOLLOWUP 연결), 기초 확인(PREREQ 연결), AI 탐침(M7b). */
+export type MockOrigin = 'MAIN' | 'LINK' | 'PREREQ' | 'AI_PROBE';
+
+export interface MockTurn {
+  seq: number;
+  parentSeq: number | null;
+  depth: number;
+  origin: MockOrigin;
+  questionSlug: string | null;
+  title: string | null;
+  tier: Tier | null;
+  topicSlug: string | null;
+  topicName: string | null;
+  result: QuizResult | null;
+  seconds: number | null;
+  answerText: string | null;
+  answeredAt: string | null;
+}
+
+export interface MockSession {
+  sessionId: string;
+  mainCount: number;
+  /** 실제로 뽑힌 본 질문 수(풀이 작으면 mainCount 보다 적다) */
+  plannedMains: number;
+  maxDepth: number;
+  includeUnlearned: boolean;
+  startedAt: string;
+  finishedAt: string | null;
+  turns: MockTurn[];
+}
+
+export interface MockStartRequest {
+  mainCount: number;
+  maxDepth: number;
+  includeUnlearned: boolean;
+  topics?: string[];
+  tiers?: Tier[];
+}
+
 export interface MissedQuestion {
   questionSlug: string;
   title: string;

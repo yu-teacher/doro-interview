@@ -8,6 +8,7 @@ public enum ErrorCode {
     INVALID_SEARCH_QUERY(HttpStatus.BAD_REQUEST, "SEARCH-400-01", "검색어가 올바르지 않습니다."),
 
     QUIZ_POOL_EMPTY(HttpStatus.BAD_REQUEST, "QUIZ-400-01", "시험을 볼 질문이 없습니다. 질문을 학습함으로 체크하거나 범위를 넓혀 주세요."),
+    MOCK_POOL_EMPTY(HttpStatus.BAD_REQUEST, "QUIZ-400-02", "꼬리질문을 이어 갈 수 있는 질문이 없습니다. 질문을 학습함으로 체크하거나 '미학습 포함'을 켜 주세요."),
 
     // 401 Unauthorized
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-401-01", "로그인이 필요합니다."),

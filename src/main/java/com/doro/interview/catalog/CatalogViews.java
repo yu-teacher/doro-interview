@@ -48,6 +48,10 @@ public final class CatalogViews {
     public record QuestionIndexEntry(String slug, String topicSlug, String categorySlug, String tier) {
     }
 
+    /** 질문 연결 한 줄(양 끝이 모두 보이는 질문). {@code kind} 는 FOLLOWUP·PREREQ·RELATED. 모의면접의 꼬리질문 재료다. */
+    public record LinkEdge(String fromSlug, String toSlug, String kind) {
+    }
+
     /** 개념 목록의 한 줄. {@code questionCount} 는 보이는 질문 수다. */
     public record ConceptView(String slug, String name, String description, int questionCount) {
     }

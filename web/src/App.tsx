@@ -8,6 +8,8 @@ import { ExplorePage } from './pages/ExplorePage';
 import { HomePage } from './pages/HomePage';
 import { MeHubPage } from './pages/MeHubPage';
 import { MineDetailPage, MinePage } from './pages/MinePage';
+import { MockPage } from './pages/MockPage';
+import { MockStartPage } from './pages/MockStartPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { QuestionPage } from './pages/QuestionPage';
 import { QuizPage } from './pages/QuizPage';
@@ -30,6 +32,8 @@ const PAGES: Record<AppRoutePath, ReactElement> = {
   '/search': <SearchPage />,
   '/quiz': <QuizStartPage />,
   '/quiz/:id': <QuizPage />,
+  '/mock': <MockStartPage />,
+  '/mock/:id': <MockPage />,
   '/skim': <SkimPage />,
   '/skim/:topic': <SkimTopicPage />,
   '/stats': <StatsPage />,

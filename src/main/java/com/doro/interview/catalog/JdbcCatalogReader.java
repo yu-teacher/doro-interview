@@ -257,6 +257,19 @@ public class JdbcCatalogReader implements CatalogReader {
     }
 
     @Override
+    public List<CatalogViews.LinkEdge> visibleLinks(String kind) {
+        return jdbc.query("""
+                SELECT f.slug AS from_slug, o.slug AS to_slug, l.kind
+                FROM question_link l
+                JOIN question f ON f.id = l.from_id JOIN topic ft ON ft.slug = f.topic_slug
+                JOIN question o ON o.id = l.to_id JOIN topic ot ON ot.slug = o.topic_slug
+                WHERE l.kind = ? AND %s AND %s
+                ORDER BY f.slug, CASE o.tier WHEN 'BASIC' THEN 1 WHEN 'DEEP' THEN 2 ELSE 3 END, o.sort, o.slug"""
+                        .formatted(visibility.questionVisible("f", "ft"), visibility.questionVisible("o", "ot")),
+                (rs, n) -> new CatalogViews.LinkEdge(rs.getString("from_slug"), rs.getString("to_slug"), rs.getString("kind")), kind);
+    }
+
+    @Override
     public Map<String, QuestionHeading> visibleQuestionHeadings(java.util.Collection<String> slugs) {
         if (slugs.isEmpty()) {
             return Map.of();

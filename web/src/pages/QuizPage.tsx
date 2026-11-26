@@ -43,8 +43,8 @@ function useElapsed(resetKey: string): () => number {
   return useCallback(() => Math.floor((Date.now() - startedRef.current) / 1000), []);
 }
 
-/** 공용 질문의 모범 답변 카드. */
-function CatalogAnswerCard({ q }: { q: QuestionDetail }) {
+/** 공용 질문의 모범 답변 카드(모의면접도 같은 카드를 쓴다). */
+export function CatalogAnswerCard({ q }: { q: QuestionDetail }) {
   return (
     <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
       <LazyMarkdown source={q.spokenAnswer} />
