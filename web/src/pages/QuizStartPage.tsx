@@ -8,7 +8,7 @@ import { AsyncView } from '../components/AsyncView';
 import { useApi } from '../hooks/useApi';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { TIER_LABEL, TIERS } from '../lib/labels';
-import { quizPath, skimPath } from '../routes';
+import { mockStartPath, quizPath, skimPath } from '../routes';
 import { loginUrl, useSession, useSessionKey } from '../session/SessionProvider';
 
 const FIELD = 'min-h-11 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-base';
@@ -241,6 +241,13 @@ export function QuizStartPage() {
     <div>
       <h1 className="text-2xl font-bold">시험 보기</h1>
       <p className="mt-1 text-[var(--color-muted)]">학습함으로 체크한 질문 중에서 무작위로 묻습니다. 내 답을 말해 본 뒤 모범 답변과 비교해 맞음·틀림을 스스로 고릅니다.</p>
+      <p className="mt-3 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
+        실제 면접처럼 이어서 묻는 연습은{' '}
+        <Link to={mockStartPath()} className="inline-flex min-h-11 items-center font-semibold">
+          꼬리질문 모의면접
+        </Link>
+        에서 할 수 있습니다.
+      </p>
       <p className="text-sm">
         기록 없이 가볍게 보고 싶다면{' '}
         <Link to={skimPath()} className="inline-flex min-h-11 items-center">
