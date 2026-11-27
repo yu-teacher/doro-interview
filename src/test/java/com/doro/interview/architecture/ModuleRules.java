@@ -17,6 +17,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
  * mine     -> account            (내 질문, docs/M4-PLAN.md D8)
  * progress -> catalog, account, mine.read(읽기 전용 패키지)
  * quiz     -> catalog, account, progress.read, mine.read(읽기 전용 패키지)
+ * reminder -> catalog, account, progress.read, mine.read, quiz.read(읽기 전용 패키지만. 복습 알림)
  * api      -> 전부 (아무도 api 에 의존하지 않는다)
  * </pre>
  *
@@ -24,22 +25,26 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
  */
 final class ModuleRules {
 
-    private static final List<String> MODULES = List.of("common", "account", "catalog", "mine", "progress", "quiz", "api");
+    private static final List<String> MODULES = List.of("common", "account", "catalog", "mine", "progress", "quiz", "reminder", "api");
 
     private ModuleRules() {
     }
 
     static List<ArchRule> all(String base) {
         return List.of(
-                forbid(base, "common", "account", "catalog", "mine", "progress", "quiz", "api"),
-                forbid(base, "account", "catalog", "mine", "progress", "quiz", "api"),
-                forbid(base, "catalog", "account", "mine", "progress", "quiz", "api"),
-                forbid(base, "mine", "catalog", "progress", "quiz", "api"),
-                forbid(base, "progress", "quiz", "api"),
-                forbid(base, "quiz", "api"),
+                forbid(base, "common", "account", "catalog", "mine", "progress", "quiz", "reminder", "api"),
+                forbid(base, "account", "catalog", "mine", "progress", "quiz", "reminder", "api"),
+                forbid(base, "catalog", "account", "mine", "progress", "quiz", "reminder", "api"),
+                forbid(base, "mine", "catalog", "progress", "quiz", "reminder", "api"),
+                forbid(base, "progress", "quiz", "reminder", "api"),
+                forbid(base, "quiz", "reminder", "api"),
+                forbid(base, "reminder", "api"),
+                onlyReadPackage(base, "reminder", "progress"),
+                onlyReadPackage(base, "reminder", "quiz"),
                 quizDoesNotWriteProgress(base),
                 onlyMineRead(base, "progress"),
                 onlyMineRead(base, "quiz"),
+                onlyMineRead(base, "reminder"),
                 sdkOnlyInAccountAndConfig(base));
     }
 
@@ -74,6 +79,20 @@ final class ModuleRules {
                                         && !c.getPackageName().equals(base + ".mine.read")
                                         && !c.getPackageName().startsWith(base + ".mine.read.")))
                 .as(from + " 모듈은 mine.read 패키지만 쓴다")
+                .allowEmptyShould(true);
+    }
+
+    /** reminder 는 다른 모듈의 읽기 창구({@code <모듈>.read})만 쓴다: 진도·시험 기록을 쓰지 않는다. */
+    private static ArchRule onlyReadPackage(String base, String from, String module) {
+        String root = base + "." + module;
+        return noClasses().that().resideInAPackage(base + "." + from + "..")
+                .should().dependOnClassesThat(
+                        com.tngtech.archunit.base.DescribedPredicate.describe(
+                                module + " 모듈에서 " + module + ".read 밖의 클래스",
+                                c -> (c.getPackageName().equals(root) || c.getPackageName().startsWith(root + "."))
+                                        && !c.getPackageName().equals(root + ".read")
+                                        && !c.getPackageName().startsWith(root + ".read.")))
+                .as(from + " 모듈은 " + module + ".read 패키지만 쓴다")
                 .allowEmptyShould(true);
     }
 

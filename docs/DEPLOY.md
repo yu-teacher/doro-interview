@@ -154,6 +154,8 @@ ssh mini 'cd ~/doro-interview && git pull --ff-only && scripts/apply-gateway-int
 ```
 끄려면 `.env` 에서 `INTERVIEW_AI_ENABLED` 를 `false` 로(GA 는 `INTERVIEW_GA_ID` 줄 삭제) 바꾸고 2) 를 다시 한다. 선택 변수: `INTERVIEW_AI_PROVIDER`(gemini 기본, anthropic), `INTERVIEW_AI_PER_USER_PER_DAY`(10), `INTERVIEW_AI_GLOBAL_PER_DAY`(100). 설계·한도는 [M6-PLAN.md](M6-PLAN.md), 통계는 [ANALYTICS.md](ANALYTICS.md).
 
+복습 알림(선택, 기본 꺼짐)은 알림 서비스와 같은 호출자 토큰을 양쪽 `.env` 에 넣어 켠다: [REMINDER.md](REMINDER.md).
+
 ### 자동 배포(CD, 선택)
 
 `.github/workflows/deploy.yml`: CI 가 **main 에서 push 로** 통과한 커밋만, 서버의 셀프호스티드 러너가 `scripts/deploy-on-server.sh --apply` 를 실행한다(`INTERVIEW_ENV_FILE=$HOME/doro-interview/.env`, `DORO_DIR` = 러너가 받은 Doro 체크아웃). `pull_request` 에는 절대 반응하지 않는다(공개 저장소: 외부 기여자의 코드가 서버 러너에서 돌면 안 된다 — `scripts/test_workflows.py` 가 고정한다). 저장소 변수 `CD_ENABLED=true` 가 아니면 건너뛴다.
