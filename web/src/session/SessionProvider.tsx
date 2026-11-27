@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { fetchSession, postLogout } from '../api/progress';
 import { apiPath } from '../config';
+import { detachThisDevice } from '../push/reviewPush';
 
 /**
  * 로그인 상태. 로그인·로그아웃과 토큰은 서버(BFF)가 맡고 브라우저에는 HttpOnly 쿠키만 있다. 여기에는 "누구인지" 의 id 와 관리자 여부(`admin`, 관리자 전용 링크용)만 있다.
@@ -78,6 +79,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, []);
   const markAnonymous = useCallback(() => setState({ status: 'anonymous' }), []);
   const logout = useCallback(async () => {
+    try {
+      // 이 기기의 복습 알림을 계정에서 떼어 낸다(같은 기기로 다른 사람이 로그인했을 때 이전 계정의 알림이 오지 않게)
+      await detachThisDevice();
+    } catch (e) {
+      console.error('알림 기기 해제 실패', e);
+    }
     try {
       await postLogout();
     } catch (e) {

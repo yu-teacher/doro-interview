@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ApiError, userMessage } from '../api/client';
 import { resetProgress } from '../api/quiz';
+import { ReviewPushSettings } from '../components/ReviewPushSettings';
 import { Segmented } from '../components/Segmented';
 import { Sheet } from '../components/Sheet';
 import { readTheme, saveTheme, type Theme } from '../lib/theme';
@@ -107,6 +108,7 @@ export function MeHubPage() {
               ]}
             />
           </section>
+          {session.authenticated && <ReviewPushSettings />}
           {session.authenticated && (
             <section aria-labelledby="reset-heading" className="mt-6">
               <h2 id="reset-heading" className="mb-1 font-bold">

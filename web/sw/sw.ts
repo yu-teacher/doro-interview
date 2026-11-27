@@ -7,6 +7,7 @@
 import { cleanupOutdatedCaches, getCacheKeyForURL, matchPrecache, precache } from 'workbox-precaching';
 import { NavigationRoute, registerRoute } from 'workbox-routing';
 import { navigationAllowlist } from '../src/pwa/allowlist';
+import { notificationTarget } from '../src/pwa/notificationTarget';
 
 declare const self: ServiceWorkerGlobalScope & { __WB_MANIFEST: { url: string; revision: string | null }[] };
 
@@ -50,4 +51,63 @@ self.addEventListener('message', (event) => {
 // 새 서비스 워커가 활성화되면 열려 있는 화면을 바로 제어한다(적용 시점은 위의 메시지가 정한다)
 self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim());
+});
+
+// ---- 복습 알림(웹 푸시). 알림 서비스가 보낸 JSON({title, body, url, tag})으로 알림을 띄우고, 누르면 그 화면을 연다.
+const PUSH_FALLBACK = { title: '도로 면접', body: '다시 볼 질문이 있어요', url: '', tag: 'interview-review' };
+
+function pushText(value: unknown): string {
+  return typeof value === 'string' ? value : '';
+}
+
+function readPush(event: PushEvent): typeof PUSH_FALLBACK {
+  if (!event.data) {
+    return PUSH_FALLBACK;
+  }
+  try {
+    const data = event.data.json() as Record<string, unknown>;
+    return {
+      title: pushText(data.title) || PUSH_FALLBACK.title,
+      body: pushText(data.body),
+      url: pushText(data.url),
+      tag: pushText(data.tag) || PUSH_FALLBACK.tag,
+    };
+  } catch {
+    // 형식이 달라도 알림은 띄운다(푸시를 받고 알림을 안 띄우면 브라우저가 구독을 제한할 수 있다)
+    return PUSH_FALLBACK;
+  }
+}
+
+self.addEventListener('push', (event) => {
+  const message = readPush(event);
+  event.waitUntil(
+    self.registration.showNotification(message.title, {
+      body: message.body,
+      tag: message.tag,
+      icon: new URL('icon-192.png', self.registration.scope).href,
+      data: { url: message.url },
+    }),
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const data = event.notification.data as { url?: unknown } | null;
+  const target = notificationTarget(pushText(data?.url), self.registration.scope);
+  event.waitUntil(
+    (async () => {
+      const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+      const open = windows.find((client) => client.url.startsWith(self.registration.scope));
+      if (open) {
+        try {
+          await open.focus();
+          await open.navigate(target);
+          return;
+        } catch {
+          // 이동하지 못하면 새 창으로 연다
+        }
+      }
+      await self.clients.openWindow(target);
+    })(),
+  );
 });

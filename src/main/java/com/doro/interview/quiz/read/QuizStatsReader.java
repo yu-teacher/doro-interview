@@ -1,6 +1,8 @@
 package com.doro.interview.quiz.read;
 
+import java.time.Instant;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,4 +17,10 @@ public interface QuizStatsReader {
 
     /** 이 사용자의 마지막 출제 결과가 틀림인 모든 질문. */
     Set<String> lastWrong(UUID userId);
+
+    /**
+     * 마지막 출제 결과가 틀림이고 그 시각이 [{@code from}, {@code to}) 안인 질문을 사용자별로 모은다(복습 알림이 쓴다).
+     * 틀림이 마지막 결과일 때 {@code last_asked_at} 은 그 틀린 시각이다(건너뛰기는 통계를 바꾸지 않는다).
+     */
+    Map<UUID, Set<String>> lastWrongAskedBetween(Instant from, Instant to);
 }
